@@ -24,6 +24,14 @@ const MENU_ITEMS: MenuItemTypes[] = [
         url: '/dashboard',
     },
 
+    { key: 'master', label: 'Master', isTitle: true },
+    {
+        key: 'view-employee',
+        label: 'Employee',
+        isTitle: false,
+        icon: 'mdi mdi-calendar-blank-outline',
+        url: '/view/employee',
+    },
     { key: 'apps', label: 'Apps', isTitle: true },
     {
         key: 'apps-calendar',
