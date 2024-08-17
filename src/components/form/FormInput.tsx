@@ -255,7 +255,6 @@ const FormInput = ({
                                 name={name}
                                 placeholder={placeholder}
                                 refCallback={refCallback}
-                                errors={errors}
                                 register={register}
                                 comp={comp}
                                 className={className}

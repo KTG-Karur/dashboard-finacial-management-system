@@ -1,25 +1,25 @@
-import React from 'react'
+import React from 'react';
 import FormComponent from './formComponent';
 
-function FormLayout(props) {
-    const { dynamicForm, noOfColumns } = props;
-
+const FormLayout = (props) => {
+    const { dynamicForm, noOfColumns, value, setValue, errors } = props;
     const screenWidth = window.innerWidth;
     const noOfCol = 12 / noOfColumns;
+
     return (
         <div className='row'>
-            {
-                dynamicForm.map((rowData, index) => {
-                    return (
-                        <div key={index} className={screenWidth > 600 ? `col-${noOfCol}` : 'col-12'}>
-                            <FormComponent formField={rowData?.employeeFormData} />
-                        </div>
-                    )
-
-                })
-            }
+            {dynamicForm.map((rowData, index) => (
+                <div key={index} className={screenWidth > 600 ? `col-${noOfCol}` : 'col-12'}>
+                    <FormComponent
+                        formField={rowData?.formFields}
+                        setValue={setValue}
+                        value={value}
+                        errors={errors}
+                    />
+                </div>
+            ))}
         </div>
-    )
-}
+    );
+};
 
-export default FormLayout
+export default FormLayout;
