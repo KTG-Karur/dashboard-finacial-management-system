@@ -1,7 +1,7 @@
  const getFormFieldName = (dynamicForm) => {
     let arr = [];
-    dynamicForm.map((formDataArr) => {
-        formDataArr?.formFields.map(subFormData => {
+    dynamicForm.forEach((formDataArr) => {
+        formDataArr?.formFields.forEach(subFormData => {
             if (subFormData?.require) {
                 arr.push(subFormData?.name)
             }

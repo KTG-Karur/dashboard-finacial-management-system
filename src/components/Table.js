@@ -13,17 +13,10 @@ import classNames from 'classnames';
 // components
 import Pagination from './Pagination';
 
-type GlobalFilterProps = {
-    preGlobalFilteredRows: any;
-    globalFilter: any;
-    setGlobalFilter: any;
-    searchBoxClass: any;
-};
-
 // Define a default UI for filtering
-const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }: GlobalFilterProps) => {
+const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
     const count = preGlobalFilteredRows.length;
-    const [value, setValue] = useState<any>(globalFilter);
+    const [value, setValue] = useState(globalFilter);
     const onChange = useAsyncDebounce((value) => {
         setGlobalFilter(value || undefined);
     }, 200);
@@ -35,7 +28,7 @@ const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, se
                 <input
                     type="search"
                     value={value || ''}
-                    onChange={(e: any) => {
+                    onChange={(e) => {
                         setValue(e.target.value);
                         onChange(e.target.value);
                     }}
@@ -47,56 +40,25 @@ const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, se
     );
 };
 
-type IndeterminateCheckboxProps = {
-    indeterminate: any;
-    children?: React.ReactNode;
-};
+const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
+    const defaultRef = useRef();
+    const resolvedRef = ref || defaultRef;
 
-const IndeterminateCheckbox = forwardRef<HTMLInputElement, IndeterminateCheckboxProps>(
-    ({ indeterminate, ...rest }, ref) => {
-        const defaultRef = useRef();
-        const resolvedRef: any = ref || defaultRef;
+    useEffect(() => {
+        resolvedRef.current.indeterminate = indeterminate;
+    }, [resolvedRef, indeterminate]);
 
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate;
-        }, [resolvedRef, indeterminate]);
+    return (
+        <>
+            <div className="form-check">
+                <input type="checkbox" className="form-check-input" ref={resolvedRef} {...rest} />
+                <label htmlFor="form-check-input" className="form-check-label"></label>
+            </div>
+        </>
+    );
+});
 
-        return (
-            <>
-                <div className="form-check">
-                    <input type="checkbox" className="form-check-input" ref={resolvedRef} {...rest} />
-                    <label htmlFor="form-check-input" className="form-check-label"></label>
-                </div>
-            </>
-        );
-    }
-);
-
-type TableProps = {
-    isSearchable?: boolean;
-    isSortable?: boolean;
-    pagination?: boolean;
-    isSelectable?: boolean;
-    isExpandable?: boolean;
-    sizePerPageList?: {
-        text: string;
-        value: number;
-    }[];
-    columns: {
-        Header: string;
-        accessor: string;
-        sort?: boolean;
-        Cell?: any;
-        className?: string;
-    }[];
-    data: any[];
-    pageSize?: number;
-    searchBoxClass?: string;
-    tableClass?: string;
-    theadClass?: string;
-};
-
-const Table = (props: TableProps) => {
+const Table = (props) => {
     const isSearchable = props['isSearchable'] || false;
     const isSortable = props['isSortable'] || false;
     const pagination = props['pagination'] || false;
@@ -104,7 +66,7 @@ const Table = (props: TableProps) => {
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageList = props['sizePerPageList'] || [];
 
-    let otherProps: any = {};
+    let otherProps = {};
 
     if (isSearchable) {
         otherProps['useGlobalFilter'] = useGlobalFilter;
@@ -135,20 +97,15 @@ const Table = (props: TableProps) => {
         otherProps.hasOwnProperty('useRowSelect') && otherProps['useRowSelect'],
         (hooks) => {
             isSelectable &&
-                hooks.visibleColumns.push((columns: any) => [
-                    // Let's make a column for selection
+                hooks.visibleColumns.push((columns) => [
                     {
                         id: 'selection',
-                        // The header can use the table's getToggleAllRowsSelectedProps method
-                        // to render a checkbox
-                        Header: ({ getToggleAllPageRowsSelectedProps }: any) => (
+                        Header: ({ getToggleAllPageRowsSelectedProps }) => (
                             <div>
                                 <IndeterminateCheckbox {...getToggleAllPageRowsSelectedProps()} />
                             </div>
                         ),
-                        // The cell can use the individual row's getToggleRowSelectedProps method
-                        // to the render a checkbox
-                        Cell: ({ row }: any) => (
+                        Cell: ({ row }) => (
                             <div>
                                 <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
                             </div>
@@ -158,24 +115,17 @@ const Table = (props: TableProps) => {
                 ]);
 
             isExpandable &&
-                hooks.visibleColumns.push((columns: any) => [
-                    // Let's make a column for selection
+                hooks.visibleColumns.push((columns) => [
                     {
-                        // Build our expander column
-                        id: 'expander', // Make sure it has an ID
-                        Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }: any) => (
+                        id: 'expander',
+                        Header: ({ getToggleAllRowsExpandedProps, isAllRowsExpanded }) => (
                             <span {...getToggleAllRowsExpandedProps()}>{isAllRowsExpanded ? '-' : '+'}</span>
                         ),
                         Cell: ({ row }) =>
-                            // Use the row.canExpand and row.getToggleRowExpandedProps prop getter
-                            // to build the toggle for expanding a row
                             row.canExpand ? (
                                 <span
                                     {...row.getToggleRowExpandedProps({
                                         style: {
-                                            // We can even use the row.depth property
-                                            // and paddingLeft to indicate the depth
-                                            // of the row
                                             paddingLeft: `${row.depth * 2}rem`,
                                         },
                                     })}
@@ -208,9 +158,9 @@ const Table = (props: TableProps) => {
                     className={classNames('table table-centered react-table', props['tableClass'])}
                 >
                     <thead className={props['theadClass']}>
-                        {(dataTable.headerGroups || []).map((headerGroup: any) => (
+                        {(dataTable.headerGroups || []).map((headerGroup) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
-                                {(headerGroup.headers || []).map((column: any) => (
+                                {(headerGroup.headers || []).map((column) => (
                                     <th
                                         {...column.getHeaderProps(column.sort && column.getSortByToggleProps())}
                                         className={classNames({
@@ -226,11 +176,11 @@ const Table = (props: TableProps) => {
                         ))}
                     </thead>
                     <tbody {...dataTable.getTableBodyProps()}>
-                        {(rows || []).map((row: any, i: number) => {
+                        {(rows || []).map((row, i) => {
                             dataTable.prepareRow(row);
                             return (
                                 <tr {...row.getRowProps()}>
-                                    {(row.cells || []).map((cell: any) => {
+                                    {(row.cells || []).map((cell) => {
                                         return (
                                             <td
                                                 {...cell.getCellProps([

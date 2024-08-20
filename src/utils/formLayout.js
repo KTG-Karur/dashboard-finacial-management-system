@@ -2,7 +2,7 @@ import React from 'react';
 import FormComponent from './formComponent';
 
 const FormLayout = (props) => {
-    const { dynamicForm, noOfColumns, value, setValue, errors } = props;
+    const { dynamicForm, noOfColumns, value, setValue, errors,removeHanldeErrors } = props;
     const screenWidth = window.innerWidth;
     const noOfCol = 12 / noOfColumns;
 
@@ -15,6 +15,7 @@ const FormLayout = (props) => {
                         setValue={setValue}
                         value={value}
                         errors={errors}
+                        removeHanldeErrors={removeHanldeErrors}
                     />
                 </div>
             ))}
