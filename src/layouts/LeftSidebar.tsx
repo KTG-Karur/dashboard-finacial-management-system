@@ -58,22 +58,22 @@ const UserBox = () => {
                     to="#"
                     as={Link}
                     onClick={toggleDropdown}
-                    className="user-name h5 mt-2 mb-1 d-block"
-                >
+                    className="user-name h5 mt-2 mb-1 d-block">
                     Nowak Helme
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="user-pro-dropdown">
                     <div onClick={toggleDropdown}>
                         {(ProfileMenus || []).map((item, index) => {
                             return (
-                                <Link
-                                    to={item.redirectTo}
-                                    className="dropdown-item notify-item"
-                                    key={index + '-profile-menu'}
-                                >
-                                    <i className={classNames(item.icon, 'me-1')}></i>
-                                    <span>{item.label}</span>
-                                </Link>
+                                <></>
+                                // <Link
+                                //     to={item.redirectTo}
+                                //     className="dropdown-item notify-item"
+                                //     key={index + '-profile-menu'}
+                                // >
+                                //     <i className={classNames(item.icon, 'me-1')}></i>
+                                //     <span>{item.label}</span>
+                                // </Link>
                             );
                         })}
                     </div>

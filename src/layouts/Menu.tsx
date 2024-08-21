@@ -7,22 +7,23 @@ import classNames from 'classnames';
 import { findAllParent, findMenuItem } from '../helpers/menu';
 
 // constants
-import { MenuItemTypes } from '../constants/menu';
+// import { MenuItemTypes } from '../constants/menu';
+import { NavigateTypes } from '../constants/navigate';
 
 type SubMenus = {
-    item: MenuItemTypes;
+    item: NavigateTypes;
     linkClassName?: string;
     subMenuClassNames?: string;
     activeMenuItems?: Array<string>;
-    toggleMenu?: (item: MenuItemTypes, status: boolean) => void;
+    toggleMenu?: (item: NavigateTypes, status: boolean) => void;
     className?: string;
 };
 
 const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMenuItems, toggleMenu }: SubMenus) => {
-    const [open, setOpen] = useState<boolean>(activeMenuItems!.includes(item.key));
+    const [open, setOpen] = useState<boolean>(activeMenuItems!.includes(item.label));
 
     useEffect(() => {
-        setOpen(activeMenuItems!.includes(item.key));
+        setOpen(activeMenuItems!.includes(item.label));
     }, [activeMenuItems, item]);
 
     const toggleMenuItem = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -38,10 +39,10 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
             <Link
                 to="#"
                 onClick={toggleMenuItem}
-                data-menu-key={item.key}
+                data-menu-key={item.label}
                 aria-expanded={open}
                 className={classNames('has-arrow', 'side-sub-nav-link', linkClassName, {
-                    'menuitem-active': activeMenuItems!.includes(item.key) ? 'active' : '',
+                    'menuitem-active': activeMenuItems!.includes(item.label) ? 'active' : '',
                 })}
             >
                 {item.icon && <i className={item.icon} />}
@@ -65,7 +66,7 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
                                             {/* parent */}
                                             <MenuItemWithChildren
                                                 item={child}
-                                                linkClassName={activeMenuItems!.includes(child.key) ? 'active' : ''}
+                                                linkClassName={activeMenuItems!.includes(child.label) ? 'active' : ''}
                                                 activeMenuItems={activeMenuItems}
                                                 subMenuClassNames="side-nav-third-level"
                                                 toggleMenu={toggleMenu}
@@ -77,9 +78,9 @@ const MenuItemWithChildren = ({ item, linkClassName, subMenuClassNames, activeMe
                                             <MenuItem
                                                 item={child}
                                                 className={
-                                                    activeMenuItems!.includes(child.key) ? 'menuitem-active' : ''
+                                                    activeMenuItems!.includes(child.label) ? 'menuitem-active' : ''
                                                 }
-                                                linkClassName={activeMenuItems!.includes(child.key) ? 'active' : ''}
+                                                linkClassName={activeMenuItems!.includes(child.label) ? 'active' : ''}
                                             />
                                         </>
                                     )}
@@ -107,7 +108,7 @@ const MenuItemLink = ({ item, className }: SubMenus) => {
             to={item.url!}
             target={item.target}
             className={classNames('side-nav-link-ref', 'side-sub-nav-link', className)}
-            data-menu-key={item.key}
+            data-menu-key={item.label}
         >
             {item.icon && <i className={item.icon} />}
             {item.badge && (
@@ -124,7 +125,7 @@ const MenuItemLink = ({ item, className }: SubMenus) => {
  * Renders the application menu
  */
 type AppMenuProps = {
-    menuItems: MenuItemTypes[];
+    menuItems: NavigateTypes[];
 };
 
 const AppMenu = ({ menuItems }: AppMenuProps) => {
@@ -137,8 +138,8 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
     /*
      * toggle the menus
      */
-    const toggleMenu = (menuItem: MenuItemTypes, show: boolean) => {
-        if (show) setActiveMenuItems([menuItem['key'], ...findAllParent(menuItems, menuItem)]);
+    const toggleMenu = (menuItem: NavigateTypes, show: boolean) => {
+        if (show) setActiveMenuItems([menuItem['label'], ...findAllParent(menuItems, menuItem)]);
     };
 
     /**
@@ -161,7 +162,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
                 const mid = matchingMenuItem.getAttribute('data-menu-key');
                 const activeMt = findMenuItem(menuItems, mid);
                 if (activeMt) {
-                    setActiveMenuItems([activeMt['key'], ...findAllParent(menuItems, activeMt)]);
+                    setActiveMenuItems([activeMt['label'], ...findAllParent(menuItems, activeMt)]);
                 }
             }
         }
@@ -199,7 +200,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
                                         <MenuItem
                                             item={item}
                                             linkClassName="side-nav-link"
-                                            className={activeMenuItems!.includes(item.key) ? 'menuitem-active' : ''}
+                                            className={activeMenuItems!.includes(item.label) ? 'menuitem-active' : ''}
                                         />
                                     )}
                                 </>

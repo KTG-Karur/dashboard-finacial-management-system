@@ -14,6 +14,7 @@ import { splitArray } from '../../utils/';
 
 // custom hook
 import { useViewport } from '../../hooks';
+import { Navigate } from '../../constants/navigate';
 
 type MenuItems = {
     item: MenuItemTypes;
@@ -200,7 +201,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
      * toggle the menus
      */
     const toggleMenu = (menuItem: MenuItemTypes, show: boolean) => {
-        if (show) setActiveMenuItems([menuItem['key'], ...findAllParent(topnavMenuItems, menuItem)]);
+        if (show) setActiveMenuItems([menuItem['label'], ...findAllParent(topnavMenuItems, menuItem)]);
     };
 
     /**
@@ -223,7 +224,7 @@ const AppMenu = ({ menuItems }: AppMenuProps) => {
                 const mid = matchingMenuItem.getAttribute('data-menu-key');
                 const activeMt = findMenuItem(topnavMenuItems, mid);
                 if (activeMt) {
-                    setActiveMenuItems([activeMt['key'], ...findAllParent(topnavMenuItems, activeMt)]);
+                    setActiveMenuItems([activeMt['label'], ...findAllParent(topnavMenuItems, activeMt)]);
                 }
             }
         }

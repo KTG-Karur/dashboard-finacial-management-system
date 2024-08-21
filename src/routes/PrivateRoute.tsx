@@ -17,11 +17,16 @@ type PrivateRouteProps = {
  * @returns
  */
 const PrivateRoute = ({ component: RouteComponent, roles, ...rest }: PrivateRouteProps) => {
+
     let location = useLocation();
     const [loggedInUser] = useUser();
 
     const api = new APICore();
 
+    console.log("loggedInUser")
+    console.log(loggedInUser)
+    console.log("location")
+    console.log(location)
     /**
      * not logged in so redirect to login page with the return url
      */

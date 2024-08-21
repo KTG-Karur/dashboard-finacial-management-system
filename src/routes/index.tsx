@@ -16,102 +16,76 @@ import { LayoutTypes } from '../constants';
 // hooks
 import { useRedux } from '../hooks';
 
-// lazy load all the views
-// auth
-const Login = React.lazy(() => import('../pages/auth/Login'));
-const Register = React.lazy(() => import('../pages/auth/Register'));
-const Confirm = React.lazy(() => import('../pages/auth/Confirm'));
-const ForgetPassword = React.lazy(() => import('../pages/auth/ForgetPassword'));
-const LockScreen = React.lazy(() => import('../pages/auth/LockScreen'));
-const Logout = React.lazy(() => import('../pages/auth/Logout'));
-
-// dashboards
-const DashBoard1 = React.lazy(() => import('../pages/dashboards/DashBoard1/'));
-
-// master
-const Employee = React.lazy(() => import('../view/employee'));
-
-// apps
-const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));
-const ChatApp = React.lazy(() => import('../pages/apps/Chat'));
-const Inbox = React.lazy(() => import('../pages/apps/Email/Inbox'));
-const Kanban = React.lazy(() => import('../pages/apps/Tasks/Board'));
-const TaskDetail = React.lazy(() => import('../pages/apps/Tasks/Detail'));
-const Projects = React.lazy(() => import('../pages/apps/Projects'));
-const List = React.lazy(() => import('../pages/apps/Contacts/List'));
-const Profile = React.lazy(() => import('../pages/apps/Contacts/Profile'));
-
-// extra pages
-const Starter = React.lazy(() => import('../pages/other/Starter'));
-const Pricing = React.lazy(() => import('../pages/other/Pricing'));
-const Timeline = React.lazy(() => import('../pages/other/Timeline'));
-const Invoice = React.lazy(() => import('../pages/other/Invoice'));
-const FAQ = React.lazy(() => import('../pages/other/FAQ'));
-const Gallery = React.lazy(() => import('../pages/other/Gallery'));
-const Error404 = React.lazy(() => import('../pages/other/Error404'));
-const Error500 = React.lazy(() => import('../pages/other/Error500'));
-const Maintenance = React.lazy(() => import('../pages/other/Maintenance'));
-const ComingSoon = React.lazy(() => import('../pages/other/ComingSoon'));
-
-// base ui
-const Buttons = React.lazy(() => import('../pages/uikit/Buttons'));
-const Cards = React.lazy(() => import('../pages/uikit/Cards'));
-const Avatars = React.lazy(() => import('../pages/uikit/Avatars'));
-const TabsAccordions = React.lazy(() => import('../pages/uikit/TabsAccordions'));
-const Notifications = React.lazy(() => import('../pages/uikit/Notifications'));
-const Modals = React.lazy(() => import('../pages/uikit/Modals'));
-const Progress = React.lazy(() => import('../pages/uikit/Progress'));
-const Offcanvases = React.lazy(() => import('../pages/uikit/Offcanvases'));
-const Placeholders = React.lazy(() => import('../pages/uikit/Placeholders'));
-const Spinners = React.lazy(() => import('../pages/uikit/Spinners'));
-const Images = React.lazy(() => import('../pages/uikit/Images'));
-const Carousel = React.lazy(() => import('../pages/uikit/Carousel'));
-const EmbedVedio = React.lazy(() => import('../pages/uikit/EmbedVideo'));
-const Dropdowns = React.lazy(() => import('../pages/uikit/Dropdowns'));
-const PopoversAndTooltips = React.lazy(() => import('../pages/uikit/PopoversAndTooltips'));
-const GeneralUI = React.lazy(() => import('../pages/uikit/GeneralUI'));
-const Typography = React.lazy(() => import('../pages/uikit/Typography'));
-const Grid = React.lazy(() => import('../pages/uikit/Grid'));
-
-// widgets
-const Widgets = React.lazy(() => import('../pages/uikit/Widgets'));
-
-// extended ui
-const RangeSliders = React.lazy(() => import('../pages/uikit/RangeSlider'));
-const NestableList = React.lazy(() => import('../pages/uikit/NestableList'));
-const SweetAlerts = React.lazy(() => import('../pages/uikit/SweetAlerts'));
-const Tourpage = React.lazy(() => import('../pages/uikit/TourPage'));
-const TreeViewExample = React.lazy(() => import('../pages/uikit/TreeView'));
-
-// icons
-const FeatherIcons = React.lazy(() => import('../pages/icons/FeatherIcons'));
-const MDIIcons = React.lazy(() => import('../pages/icons/MDIIcons'));
-const Dripicons = React.lazy(() => import('../pages/icons/DripiIcons'));
-const FontAwesomeIcons = React.lazy(() => import('../pages/icons/FontAwesomeIcons'));
-const ThemifyIcons = React.lazy(() => import('../pages/icons/ThemifyIcons'));
-
-// forms
-const GeneralElements = React.lazy(() => import('../pages/forms/Basic'));
-const FormAdvanced = React.lazy(() => import('../pages/forms/Advanced'));
-const Validation = React.lazy(() => import('../pages/forms/Validation'));
-const FormWizard = React.lazy(() => import('../pages/forms/Wizard'));
-const FileUpload = React.lazy(() => import('../pages/forms/FileUpload'));
-const Editors = React.lazy(() => import('../pages/forms/Editors'));
-
-// tables
-const BasicTable = React.lazy(() => import('../pages/tables/BasicTable'));
-const AdvancedTable = React.lazy(() => import('../pages/tables/AdvancedTable'));
-
-// charts
-const ApexChart = React.lazy(() => import('../pages/chart/ApexChart'));
-const ChartJs = React.lazy(() => import('../pages/chart/ChartJs'));
-
-// maps
-const GoogleMaps = React.lazy(() => import('../pages/maps/GoogleMaps'));
-const VectorMaps = React.lazy(() => import('../pages/maps/VectorMaps'));
-
-// lamding
-const Landing = React.lazy(() => import('../pages/Landing'));
+import {
+    Login,
+    Buttons,
+    Register,
+    Confirm,
+    ForgetPassword,
+    LockScreen,
+    Logout,
+    DashBoard1,
+    Employee,
+    CalendarApp,
+    ChatApp,
+    Inbox,
+    Kanban,
+    TaskDetail,
+    Projects,
+    List,
+    Profile,
+    Starter,
+    Pricing,
+    Timeline,
+    Invoice,
+    FAQ,
+    Gallery,
+    Error404,
+    Error500,
+    Maintenance,
+    ComingSoon,
+    Cards,
+    Avatars,
+    TabsAccordions,
+    Notifications,
+    Modals,
+    Progress,
+    Offcanvases,
+    Placeholders,
+    Spinners,
+    Images,
+    Carousel,
+    EmbedVedio,
+    Dropdowns,
+    PopoversAndTooltips,
+    GeneralUI,
+    Typography,
+    Grid,
+    Widgets,
+    RangeSliders,
+    NestableList,
+    SweetAlerts,
+    Tourpage,
+    TreeViewExample,
+    FeatherIcons,
+    MDIIcons,
+    Dripicons,
+    FontAwesomeIcons,
+    ThemifyIcons,
+    GeneralElements,
+    FormAdvanced,
+    Validation,
+    FormWizard,
+    FileUpload,
+    Editors,
+    BasicTable,
+    AdvancedTable,
+    ApexChart,
+    ChartJs,
+    GoogleMaps,
+    VectorMaps,
+    Landing,
+} from './Route_Menu';
 
 const loading = () => <div className=""></div>;
 

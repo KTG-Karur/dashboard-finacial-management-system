@@ -1,5 +1,5 @@
 // react
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // react-boostrap
 import { Button, Card, Col, Row } from 'react-bootstrap';
 // component
@@ -13,7 +13,9 @@ import Table from '../../components/Table';
 //dummy data
 import { getFormFieldName } from '../../utils/AllFunction';
 import { sizePerPageList } from '../../utils/constData';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { SET_EMPLOYEE_DATA } from '../../redux/actions_const';
+import { getEmployee } from '../../api/employeeApi';
 function Index() {
     // setHeader
     usePageTitle({
@@ -25,6 +27,10 @@ function Index() {
             },
         ],
     });
+
+    // dispatch
+    const dispatch = useDispatch();
+
 
     //Table column
     const columns = [
@@ -95,6 +101,22 @@ function Index() {
             dateofjoining: '10-08-2003',
         },
     ];
+
+    // useEffect
+    useEffect(() => {
+        getEmployee();
+        dispatch({ type: SET_EMPLOYEE_DATA, payload: tableData });
+    }, [])
+
+
+    const { employeeData } = useSelector((state) => state.employeeReducer)
+
+
+    // console.log("employeeData")
+    // console.log(employeeData)
+
+
+
 
     // useStates
     const [value, setValue] = useState();

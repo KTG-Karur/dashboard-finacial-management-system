@@ -1,5 +1,5 @@
 import { Suspense, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 // hooks
 import { useRedux } from '../hooks/';
@@ -7,11 +7,9 @@ import { useRedux } from '../hooks/';
 // utils
 import { changeBodyAttribute } from '../utils';
 
-const loading = () => <div className=""></div>;
+const loading = () => <div>Loading...</div>;
 
-type DefaultLayoutProps = {};
-
-const DefaultLayout = (props: DefaultLayoutProps) => {
+const DefaultLayout = () => {
     const { appSelector } = useRedux();
 
     const { layoutColor } = appSelector((state) => ({
@@ -22,10 +20,13 @@ const DefaultLayout = (props: DefaultLayoutProps) => {
         changeBodyAttribute('data-layout-color', layoutColor);
     }, [layoutColor]);
 
-    return (
-        <Suspense fallback={loading()}>
-            <Outlet />
-        </Suspense>
-    );
+    const userDetail = sessionStorage.getItem('adminto_user');
+
+    if (userDetail) {
+        return <Navigate to="/dashboard" replace />;
+    }
+
+    return <Suspense fallback={loading()}><Outlet /></Suspense>;
 };
+
 export default DefaultLayout;

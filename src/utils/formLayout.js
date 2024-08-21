@@ -14,7 +14,7 @@ const FormLayout = (props) => {
                         formField={rowData?.formFields}
                         setValue={setValue}
                         value={value}
-                        errors={errors}
+                        errors={errors} 
                         removeHanldeErrors={removeHanldeErrors}
                     />
                 </div>
