@@ -23,10 +23,6 @@ const PrivateRoute = ({ component: RouteComponent, roles, ...rest }: PrivateRout
 
     const api = new APICore();
 
-    console.log("loggedInUser")
-    console.log(loggedInUser)
-    console.log("location")
-    console.log(location)
     /**
      * not logged in so redirect to login page with the return url
      */

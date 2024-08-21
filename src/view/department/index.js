@@ -11,6 +11,7 @@ import Table from '../../components/Table';
 //dummy data
 import { getFormFieldName, showConfirmationDialog } from '../../utils/AllFunction';
 import { sizePerPageList } from '../../utils/constData';
+
 function Index() {
 
     //Table column
@@ -20,38 +21,23 @@ function Index() {
             accessor: 'id',
             Cell: ((row) => (
                 <div>{row?.row?.index + 1}</div>
-
             ))
         },
         {
-            Header: 'Employee Name',
-            accessor: 'employeename',
+            Header: 'Department Name',
+            accessor: 'departmentName',
             sort: true,
         },
         {
-            Header: 'Contact Number',
-            accessor: 'contactnumber',
-            sort: false,
-        },
-        {
-            Header: 'DOB',
-            accessor: 'dob',
-            sort: false,
-        },
-        {
-            Header: 'Address',
-            accessor: 'address',
-            sort: false,
-        },
-        {
-            Header: 'Designation',
-            accessor: 'designation',
-            sort: true,
-        },
-        {
-            Header: 'Date of Joining',
-            accessor: 'dateofjoining',
-            sort: true,
+            Header: 'Status',
+            accessor: 'isActive',
+            Cell: ({ row }) => (
+                <div>
+                    {row?.original?.isActive ?
+                        <Badge bg={"success"}>Active</Badge> : <Badge bg={"danger"}>In active</Badge>
+                    }
+                </div>
+            ),
         },
         {
             Header: 'Actions',
@@ -60,12 +46,12 @@ function Index() {
                 <div>
                     <span
                         className="text-success  me-2 cursor-pointer"
-                        onClick={() => handleEdit(row?.original)}>
+                        onClick={() => handleEdit(row?.original, row?.row?.index)}>
                         <i className={'fe-edit-1'}></i> Edit
                     </span>
                     <span
                         className="text-danger cursor-pointer"
-                        onClick={() => handleDelete(row?.row?.index + 1)}>
+                        onClick={() => handleDelete(row?.original, row?.row?.index)}>
                         <i className={'fe-trash-2'}></i> Delete
                     </span>
                 </div>
@@ -75,29 +61,25 @@ function Index() {
 
     // useStates
     const [value, setValue] = useState({});
-    const [tbl_list, setTbl_list] = useState();
+    const [tbl_list, setTbl_list] = useState([]);
     const [modal, setModal] = useState(false);
     const [errors, setErrors] = useState([]);
 
-    useEffect(() => {
 
+    useEffect(() => {
         const tableData = [
             {
-                employeename: 'surya',
-                contactnumber: '9876543456',
-                dob: '2013-09-25',
-                address: '53,vaiyapurinagar,karur,tamilnadu,india',
-                designation: 'admin',
-                dateofjoining: '2009-11-14',
+                "departmentName": "Human Resource",
+                "isActive": 1,
             },
             {
-                employeename: 'Raja',
-                contactnumber: '987123456',
-                dob: '2003-05-22',
-                address: '63,thindal,erode,tamilnadu,india',
-                designation: 'admin',
-                dateofjoining: '2003-10-05',
+                "departmentName": "Developer",
+                "isActive": 1,
             },
+            {
+                "departmentName": "HR",
+                "isActive": 1,
+            }
         ];
         setTbl_list(tableData)
     }, [])
@@ -105,6 +87,7 @@ function Index() {
     // Functions
     // Show/hide the modal
     const toggle = () => {
+
         setModal(!modal);
     };
 
@@ -127,50 +110,38 @@ function Index() {
         setErrors(copytheArr);
     };
 
-    // handleSubmit
-    const handleSubmit = async () => {
-        if (await validateFormFields()) {
-            console.log('Called HanldeSubmit');
-            setModal(false);
-            console.log(value);
-            handleClear();
-        }
-    };
-
+    //handleClear
     const handleClear = () => {
         setValue({
-            employeename: "",
-            contactnumber: "",
-            dob: "",
-            address: "",
-            designation: "",
-            dateofjoining: "",
+            ...value,
+            departmentName: ""
         })
     }
 
+    // handleSubmit
+    const handleSubmit = async () => {
+        if (await validateFormFields()) {
+            setModal(false);
+            console.log(value);
+            handleClear()
+        }
+    };
+
     //handleEdit
-    const handleEdit = (data) => {
-        const selectObj = { value: 'Admin', label: 'Admin' }
+    const handleEdit = (data, index) => {
         setValue({
-            employeename: data.employeename,
-            contactnumber: data.contactnumber,
-            dob: data.dob,
-            address: data.address,
-            designation: selectObj,
-            dateofjoining: data.dateofjoining,
+            ...value,
+            departmentName: data.departmentName,
+            id: index
         })
         toggle()
-
-
-
     }
 
     //handleDelete
     const handleDelete = (index) => {
         showConfirmationDialog("You won't be able to revert this!", "Yes, Delete it!")
-
+        console.log(index)
     }
-
 
     return (
         <React.Fragment>
@@ -178,7 +149,7 @@ function Index() {
 
             <Table
                 columns={columns}
-                Title={"Employee List"}
+                Title={"Department List"}
                 data={tbl_list || []}
                 pageSize={5}
                 toggle={toggle}
@@ -192,7 +163,7 @@ function Index() {
             <ModelViewBox
                 modal={modal}
                 toggle={toggle}
-                modelHeader={'Employee'}
+                modelHeader={'Department'}
                 modelSize={'md'}
                 handleSubmit={handleSubmit}>
                 <FormLayout
@@ -205,7 +176,6 @@ function Index() {
                     errors={errors}
                 />
             </ModelViewBox>
-
 
         </React.Fragment>
     );

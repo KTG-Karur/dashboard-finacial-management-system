@@ -65,15 +65,13 @@ const UserBox = () => {
                     <div onClick={toggleDropdown}>
                         {(ProfileMenus || []).map((item, index) => {
                             return (
-                                <></>
-                                // <Link
-                                //     to={item.redirectTo}
-                                //     className="dropdown-item notify-item"
-                                //     key={index + '-profile-menu'}
-                                // >
-                                //     <i className={classNames(item.icon, 'me-1')}></i>
-                                //     <span>{item.label}</span>
-                                // </Link>
+                                <Link
+                                    to={item.redirectTo}
+                                    className="dropdown-item notify-item"
+                                    key={index + '-profile-menu'}>
+                                    <i className={classNames(item.icon, 'me-1')}></i>
+                                    <span>{item.label}</span>
+                                </Link>
                             );
                         })}
                     </div>

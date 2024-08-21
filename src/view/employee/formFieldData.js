@@ -3,14 +3,14 @@ const employeeFormContainer = [
         formFields: [
             {
                 'label': "Employee Name",
-                'name': "employeeName",
+                'name': "employeename",
                 'inputType': "text",
                 'placeholder': "Enter Employee Name",
                 'require': true
             },
             {
                 'label': "Contact Number",
-                'name': "contanctNo",
+                'name': "contactnumber",
                 'inputType': "number",
                 'placeholder': "Enter Contact Number",
                 'require': true
@@ -24,6 +24,7 @@ const employeeFormContainer = [
             {
                 'label': "Address",
                 'name': "address",
+                'placeholder': "Address",
                 'inputType': "textarea",
                 'require': false
             },
@@ -31,87 +32,23 @@ const employeeFormContainer = [
                 'label': "Select Designation",
                 'name': "designation",
                 'inputType': "select",
-                'optionList': "roleList",
+                'optionList': [
+                    { value: 'Admin', label: 'Admin' },
+                    { value: 'Fund Collector', label: 'Fund Collector' },
+                    { value: 'Manager', label: 'Manager' },
+                ],
                 'displayKey': 'roleName',
                 'uniqueKey': 'roleId',
                 'require': false
             },
             {
                 'label': "Date of Joining",
-                'name': "dateOfJoining",
+                'name': "dateofjoining",
                 'inputType': "date",
                 'require': true
             },
         ]
     },
-    // {
-    //     employeeFormData: [
-    //         {
-    //             'label': "Name",
-    //             'name': "empName",
-    //             'inputType': "text",
-    //             'placeholder': "Enter Name",
-    //             'require': true,
-    //             'isDisabled': false
-    //         },
-    //         {
-    //             'label': "Number",
-    //             'name': "empnumber",
-    //             'inputType': "number",
-    //             'placeholder': "Enter Number",
-    //             'require': true
-    //         },
-    //         {
-    //             'label': "Text Area",
-    //             'name': "emptextarea",
-    //             'inputType': "textarea",
-    //             'require': true,
-    //             'placeholder': "Enter Number",
-    //             'textAreaRows': 5
-    //         },
-    //         {
-    //             'label': "Multiple Selector",
-    //             'name': "empmultiselect",
-    //             'inputType': "select",
-    //             'optionList': "roleList",
-    //             'displayKey': 'roleName',
-    //             'uniqueKey': 'roleId',
-    //             'require': true,
-    //             'isMultiple': false,
-    //         },
-    //         {
-    //             'label': "Date",
-    //             'name': "empdate",
-    //             'inputType': "date",
-    //             'require': true
-    //         },
-    //         {
-    //             'label': "file",
-    //             'name': "empfile",
-    //             'multiple': false,
-    //             'inputType': "file",
-    //             'require': true
-    //         },
-    //         {
-    //             'label': "checkbox",
-    //             'name': "empcheckbox",
-    //             'inputType': "checkbox",
-    //             'optionList': "roleList",
-    //             'displayKey': 'roleName',
-    //             'uniqueKey': 'roleId',
-    //             'require': true
-    //         },
-    //         {
-    //             'label': "radio",
-    //             'name': "empradio",
-    //             'inputType': "radio",
-    //             'optionList': "roleList",
-    //             'displayKey': 'roleName',
-    //             'uniqueKey': 'roleId',
-    //             'require': true
-    //         },
-    //     ]
-    // },
 ]
 
 export {

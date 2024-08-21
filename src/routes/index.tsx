@@ -17,6 +17,7 @@ import { LayoutTypes } from '../constants';
 import { useRedux } from '../hooks';
 
 import {
+    Department,
     Login,
     Buttons,
     Register,
@@ -176,6 +177,10 @@ const AllRoutes = () => {
                         {
                             path: 'employee',
                             element: <LoadComponent component={Employee} />,
+                        },
+                        {
+                            path: 'department',
+                            element: <LoadComponent component={Department} />,
                         },
                     ],
                 },

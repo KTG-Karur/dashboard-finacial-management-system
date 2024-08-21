@@ -2,20 +2,28 @@ import React from 'react';
 import { FormInput } from '../components/form';
 import Select from 'react-select';
 import { Form } from 'react-bootstrap';
+import { formatDate } from './AllFunction';
 
 function FormComponent(props) {
-    const { formField, setValue, errors, removeHanldeErrors } = props;
+    const { formField, setValue, errors, removeHanldeErrors, value } = props;
 
     // let formBox = []; for Checkbox
+
     const handleChange = async (e, formType, formName) => {
         switch (formType) {
             case 'text':
             case 'number':
             case 'textarea':
-            case 'date':
                 setValue((prev) => ({
                     ...prev,
                     [formName]: e?.target?.value,
+                }));
+                break;
+            case 'date':
+                const formate = await formatDate(e?.target?.value)
+                setValue((prev) => ({
+                    ...prev,
+                    [formName]: formate,
                 }));
                 break;
             case 'select':
@@ -24,36 +32,54 @@ function FormComponent(props) {
                     [formName]: e?.value,
                 }));
                 break;
-            // case 'checkbox':
-            //   !formBox.includes(e) ? formBox.push(e) : formBox.splice(formBox.indexOf(e), 1)
-            //   formBox = [...formBox];
-            //   setValue((prev) => ({
-            //     ...prev,
-            //     [formName]: formBox
-            //   }));
-            //   break;
             case 'radio':
                 setValue((prev) => ({
                     ...prev,
                     [formName]: e,
                 }));
                 break;
-            case 'file':
-                setValue((prev) => ({
-                    ...prev,
-                    [formName]: e?.target?.files[0],
-                }));
-                break;
             default:
-              console.log("formName ", formName);
-            
+                console.log("formName ", formName);
+
         }
     };
+
 
     return (
         <div>
             {formField.map((form, index) => {
                 switch (form?.inputType) {
+                    case 'textarea':
+                        return (
+                            <div key={index} className="mb-2">
+                                <FormInput
+                                    label={
+                                        <span>
+                                            {form?.label}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    }
+                                    type="textarea"
+                                    name={form?.name}
+                                    className="mb-1"
+                                    placeholder={form?.placeholder}
+                                    required={form?.require}
+                                    value={value[form?.name]}
+                                    disabled={form?.isDisabled}
+                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                    onChange={(e) => {
+                                        handleChange(e, 'textarea', form?.name);
+                                    }}
+                                />
+                                {errors.includes(form?.name) && (
+                                    <p
+                                        className="text-danger"
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                )}
+                            </div>
+                        );
                     case 'text':
                         return (
                             <div key={index} className="mb-2">
@@ -71,6 +97,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
+                                    value={value[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -101,6 +128,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
+                                    value={value[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -132,6 +160,7 @@ function FormComponent(props) {
                                     key={index}
                                     placeholder={form?.placeholder}
                                     required={form?.require}
+                                    value={value[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -145,43 +174,10 @@ function FormComponent(props) {
                                 )}
                             </div>
                         );
-                    case 'file':
-                        return (
-                            <div key={index} className="mb-2">
-                                <FormInput
-                                    label={
-                                        <span>
-                                            {form?.label}{' '}
-                                            {form?.require ? (
-                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                            ) : null}
-                                        </span>
-                                    }
-                                    type="file"
-                                    name={form?.name}
-                                    className="mb-1"
-                                    multiple={form?.multiple}
-                                    key={index}
-                                    placeholder={form?.placeholder}
-                                    required={form?.require}
-                                    disabled={form?.isDisabled}
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    onChange={(e) => {
-                                        handleChange(e, 'file', form?.name);
-                                    }}
-                                />
-                                {errors.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                )}
-                            </div>
-                        );
                     case 'select':
                         return (
                             <div className={'mb-3'} key={index}>
                                 <p className="mb-1 fw-bold text-muted">
-                                    {' '}
                                     {
                                         <span>
                                             {form?.label}{' '}
@@ -198,14 +194,14 @@ function FormComponent(props) {
                                     onChange={(e) => {
                                         handleChange(e, 'select', form?.name);
                                     }}
+                                    getOptionLabel={(option) => `${option?.label}`}
+                                    getOptionValue={(option) => `${option?.value}`}
+                                    value={value[form?.name]}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
+                                    isSearchable
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    options={[
-                                        { value: 'Admin', label: 'Admin' },
-                                        { value: 'Fund Collector', label: 'Fund Collector' },
-                                        { value: 'Manager', label: 'Manager' },
-                                    ]}></Select>
+                                    options={form?.optionList}></Select>
                             </div>
                         );
                     case 'checkbox':
@@ -231,6 +227,7 @@ function FormComponent(props) {
                                         <Form.Check
                                             key={i}
                                             label={form?.label}
+                                            value={value[form?.name]}
                                             type="checkbox"
                                             id={`basic-checkbox-${i}`}
                                             name={form?.name}
@@ -272,6 +269,7 @@ function FormComponent(props) {
                                             name={form?.name}
                                             className={'mb-2 form-check-Primary'}
                                             defaultChecked={form?.defaultChecked}
+                                            value={value[form?.name]}
                                             onChange={(e) => {
                                                 handleChange(item, 'radio', form?.name);
                                             }}
@@ -280,7 +278,7 @@ function FormComponent(props) {
                                 })}
                             </div>
                         );
-                      default:
+                    default:
                         console.log("form?.inputType : ", form?.inputType)
                 }
             })}

@@ -1,4 +1,5 @@
 import { useRef, useEffect, forwardRef, useState } from 'react';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import {
     useTable,
     useSortBy,
@@ -65,6 +66,7 @@ const Table = (props) => {
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageList = props['sizePerPageList'] || [];
+    const { toggle, Title } = props;
 
     let otherProps = {};
 
@@ -143,63 +145,90 @@ const Table = (props) => {
 
     return (
         <>
-            {isSearchable && (
-                <GlobalFilter
-                    preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
-                    globalFilter={dataTable.state.globalFilter}
-                    setGlobalFilter={dataTable.setGlobalFilter}
-                    searchBoxClass={props['searchBoxClass']}
-                />
-            )}
+            <Row>
+                <Col>
+                    <Card>
+                        <Card.Body>
+                            <Row>
+                                <Col xs={12}>
+                                    <Card>
+                                        <Row>
+                                            <Col md={4}>
+                                                <h4 className='page-title-main' style={{ lineHeight: "100%" }}>  {Title}</h4>
+                                            </Col>
+                                            <Col md={8} className="d-flex justify-content-end">
+                                                {isSearchable && (
+                                                    <GlobalFilter
+                                                        preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
+                                                        globalFilter={dataTable.state.globalFilter}
+                                                        setGlobalFilter={dataTable.setGlobalFilter}
+                                                        searchBoxClass={props['searchBoxClass']}
+                                                    />
+                                                )}
+                                                <Button variant="success" className="waves-effect waves-light" onClick={toggle}>
+                                                    <i className="mdi mdi-plus-circle me-1"></i>
+                                                    Add
+                                                </Button>
+                                            </Col>
+                                        </Row>
+                                    </Card>
+                                </Col>
+                            </Row >
 
-            <div className="table-responsive">
-                <table
-                    {...dataTable.getTableProps()}
-                    className={classNames('table table-centered react-table', props['tableClass'])}
-                >
-                    <thead className={props['theadClass']}>
-                        {(dataTable.headerGroups || []).map((headerGroup) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {(headerGroup.headers || []).map((column) => (
-                                    <th
-                                        {...column.getHeaderProps(column.sort && column.getSortByToggleProps())}
-                                        className={classNames({
-                                            sorting_desc: column.isSortedDesc === true,
-                                            sorting_asc: column.isSortedDesc === false,
-                                            sortable: column.sort === true,
+                            <div className="table-responsive">
+                                <table
+                                    {...dataTable.getTableProps()}
+                                    className={classNames('table table-centered react-table', props['tableClass'])}
+                                >
+                                    <thead className={props['theadClass']}>
+                                        {(dataTable.headerGroups || []).map((headerGroup) => (
+                                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                                {(headerGroup.headers || []).map((column) => (
+                                                    <th
+                                                        {...column.getHeaderProps(column.sort && column.getSortByToggleProps())}
+                                                        className={classNames({
+                                                            sorting_desc: column.isSortedDesc === true,
+                                                            sorting_asc: column.isSortedDesc === false,
+                                                            sortable: column.sort === true,
+                                                        })}
+                                                    >
+                                                        {column.render('Header')}
+                                                    </th>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </thead>
+                                    <tbody {...dataTable.getTableBodyProps()}>
+                                        {(rows || []).map((row, i) => {
+                                            dataTable.prepareRow(row);
+                                            return (
+                                                <tr {...row.getRowProps()}>
+                                                    {(row.cells || []).map((cell) => {
+                                                        return (
+                                                            <td
+                                                                {...cell.getCellProps([
+                                                                    {
+                                                                        className: cell.column.className,
+                                                                    },
+                                                                ])}
+                                                                className="cursor-pointer"
+                                                            >
+                                                                {cell.render('Cell')}
+                                                            </td>
+                                                        );
+                                                    })}
+                                                </tr>
+                                            );
                                         })}
-                                    >
-                                        {column.render('Header')}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...dataTable.getTableBodyProps()}>
-                        {(rows || []).map((row, i) => {
-                            dataTable.prepareRow(row);
-                            return (
-                                <tr {...row.getRowProps()}>
-                                    {(row.cells || []).map((cell) => {
-                                        return (
-                                            <td
-                                                {...cell.getCellProps([
-                                                    {
-                                                        className: cell.column.className,
-                                                    },
-                                                ])}
-                                            >
-                                                {cell.render('Cell')}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-            {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         </>
     );
 };
