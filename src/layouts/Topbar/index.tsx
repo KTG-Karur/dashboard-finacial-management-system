@@ -60,7 +60,7 @@ const Topbar = ({ openLeftMenuCallBack, containerClass }: TopbarProps) => {
         <div className="navbar-custom">
             <div className={containerClass}>
                 <ul className="list-unstyled topnav-menu float-end mb-0">
-                    <li className="d-none d-lg-block">
+                    {/* <li className="d-none d-lg-block">
                         <TopbarSearch options={searchOptions} />
                     </li>
 
@@ -69,14 +69,14 @@ const Topbar = ({ openLeftMenuCallBack, containerClass }: TopbarProps) => {
                     </li>
                     <li className="dropdown notification-list topbar-dropdown">
                         <NotificationDropdown notifications={notifications} />
-                    </li>
+                    </li> */}
                     <li className="dropdown notification-list topbar-dropdown">
                         {/* User */}
-                        <ProfileDropdown userImage={avatar1} username={'Nowak'} menuItems={profileMenus} />
+                        <ProfileDropdown userImage={avatar1} username={'Guru'} menuItems={profileMenus} />
                     </li>
-                    <li className="dropdown notification-list">
+                    {/* <li className="dropdown notification-list">
                         <ThemeSetting handleRightSideBar={handleRightSideBar} />
-                    </li>
+                    </li> */}
                 </ul>
 
                 {/* LOGO  */}

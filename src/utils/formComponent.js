@@ -5,7 +5,7 @@ import { Form } from 'react-bootstrap';
 import { formatDate } from './AllFunction';
 
 function FormComponent(props) {
-    const { formField, setValue, errors, removeHanldeErrors, value } = props;
+    const { formField, setState, errors, removeHanldeErrors, state } = props;
 
     // let formBox = []; for Checkbox
 
@@ -14,26 +14,26 @@ function FormComponent(props) {
             case 'text':
             case 'number':
             case 'textarea':
-                setValue((prev) => ({
+                setState((prev) => ({
                     ...prev,
                     [formName]: e?.target?.value,
                 }));
                 break;
             case 'date':
                 const formate = await formatDate(e?.target?.value)
-                setValue((prev) => ({
+                setState((prev) => ({
                     ...prev,
                     [formName]: formate,
                 }));
                 break;
             case 'select':
-                setValue((prev) => ({
+                setState((prev) => ({
                     ...prev,
                     [formName]: e?.value,
                 }));
                 break;
             case 'radio':
-                setValue((prev) => ({
+                setState((prev) => ({
                     ...prev,
                     [formName]: e,
                 }));
@@ -66,7 +66,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={value[form?.name]}
+                                    value={state[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -97,7 +97,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={value[form?.name]}
+                                    value={state[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -128,7 +128,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={value[form?.name]}
+                                    value={state[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -160,7 +160,7 @@ function FormComponent(props) {
                                     key={index}
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={value[form?.name]}
+                                    value={state[form?.name]}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -196,7 +196,7 @@ function FormComponent(props) {
                                     }}
                                     getOptionLabel={(option) => `${option?.label}`}
                                     getOptionValue={(option) => `${option?.value}`}
-                                    value={value[form?.name]}
+                                    value={state[form?.name]}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable
@@ -227,7 +227,7 @@ function FormComponent(props) {
                                         <Form.Check
                                             key={i}
                                             label={form?.label}
-                                            value={value[form?.name]}
+                                            value={state[form?.name]}
                                             type="checkbox"
                                             id={`basic-checkbox-${i}`}
                                             name={form?.name}
@@ -269,7 +269,7 @@ function FormComponent(props) {
                                             name={form?.name}
                                             className={'mb-2 form-check-Primary'}
                                             defaultChecked={form?.defaultChecked}
-                                            value={value[form?.name]}
+                                            value={state[form?.name]}
                                             onChange={(e) => {
                                                 handleChange(item, 'radio', form?.name);
                                             }}

@@ -13,7 +13,7 @@ const employeeFormContainer = [
                 'name': "contactnumber",
                 'inputType': "number",
                 'placeholder': "Enter Contact Number",
-                'require': true
+                'require': false
             },
             {
                 'label': "Employee DOB",
@@ -45,7 +45,7 @@ const employeeFormContainer = [
                 'label': "Date of Joining",
                 'name': "dateofjoining",
                 'inputType': "date",
-                'require': true
+                'require': false
             },
         ]
     },

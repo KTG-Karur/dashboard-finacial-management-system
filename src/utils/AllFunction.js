@@ -3,15 +3,15 @@ import Swal from 'sweetalert2';
 const getFormFieldName = (dynamicForm) => {
     let arr = [];
     dynamicForm.forEach((formDataArr) => {
-        formDataArr?.formFields.forEach(subFormData => {
+        formDataArr?.formFields.forEach((subFormData) => {
             if (subFormData?.require) {
-                arr.push(subFormData?.name)
+                arr.push(subFormData?.name);
             }
-        })
-    })
+        });
+    });
 
     return arr;
-}
+};
 
 function formatDate(date) {
     var d = new Date(date),
@@ -19,16 +19,44 @@ function formatDate(date) {
         day = '' + d.getDate(),
         year = d.getFullYear();
 
-    if (month.length < 2)
-        month = '0' + month;
-    if (day.length < 2)
-        day = '0' + day;
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
 
     return [year, month, day].join('-');
 }
 
+// const updateData = (arr, state, employeeId, setTblList) => {
+//     //    const result=  arr.filter((ar)=>{
+//     //          return ar.employeeId!==employeeId
+//     //     })
+//     let arr2 = [...arr];
+//     for (let i = 0; i < arr.length; i++) {
+//         if (employeeId == arr.employeeId) {
+//             arr2[i] = state;
+//         }
+//     }
+//     console.log(arr2);
+//     console.log('state : ', state);
+//     setTblList(arr2);
+// };
 
-const showConfirmationDialog = (message, confirmButtonText = 'Yes', cancelButtonText = 'No', title = 'Are you sure?') => {
+function updateData(arr, employeeId, newState) {
+    return arr.map((item) => (item.employeeId === employeeId ? newState : item));
+}
+
+function deleteData(arr, employeeId) {
+    return arr.filter((item) => {
+        return item.employeeId !== employeeId;
+    });
+}
+
+const showConfirmationDialog = (
+    message,
+    callback,
+    confirmButtonText = 'Yes',
+    cancelButtonText = 'No',
+    title = 'Are you sure?'
+) => {
     Swal.fire({
         title: title,
         text: message,
@@ -39,8 +67,8 @@ const showConfirmationDialog = (message, confirmButtonText = 'Yes', cancelButton
         confirmButtonText: confirmButtonText,
         cancelButtonText: cancelButtonText,
         customClass: {
-            icon: "swal-icon-custom"
-        }
+            icon: 'swal-icon-custom',
+        },
     }).then(function ({ value, dismiss }) {
         if (value) {
             Swal.fire({
@@ -49,7 +77,8 @@ const showConfirmationDialog = (message, confirmButtonText = 'Yes', cancelButton
                 icon: 'success',
                 confirmButtonColor: '#4a4fea',
             });
-        } 
+        }
+        callback();
         // else if (
         //     // Read more about handling dismissals
         //     dismiss === Swal.DismissReason.cancel
@@ -61,13 +90,7 @@ const showConfirmationDialog = (message, confirmButtonText = 'Yes', cancelButton
         //         confirmButtonColor: '#4a4fea',
         //     });
         // }
-    })
+    });
 };
 
-
-
-export {
-    getFormFieldName,
-    formatDate,
-    showConfirmationDialog
-}
+export { getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData };

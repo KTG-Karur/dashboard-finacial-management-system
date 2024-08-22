@@ -13,15 +13,12 @@ import { getFormFieldName, showConfirmationDialog } from '../../utils/AllFunctio
 import { sizePerPageList } from '../../utils/constData';
 
 function Index() {
-
     //Table column
     const columns = [
         {
             Header: 'ID',
             accessor: 'id',
-            Cell: ((row) => (
-                <div>{row?.row?.index + 1}</div>
-            ))
+            Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
             Header: 'Department Name',
@@ -33,9 +30,11 @@ function Index() {
             accessor: 'isActive',
             Cell: ({ row }) => (
                 <div>
-                    {row?.original?.isActive ?
-                        <Badge bg={"success"}>Active</Badge> : <Badge bg={"danger"}>In active</Badge>
-                    }
+                    {row?.original?.isActive ? (
+                        <Badge bg={'success'}>Active</Badge>
+                    ) : (
+                        <Badge bg={'danger'}>In active</Badge>
+                    )}
                 </div>
             ),
         },
@@ -44,14 +43,12 @@ function Index() {
             accessor: 'actions',
             Cell: ({ row }) => (
                 <div>
-                    <span
-                        className="text-success  me-2 cursor-pointer"
-                        onClick={() => handleEdit(row?.original, row?.row?.index)}>
+                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original)}>
                         <i className={'fe-edit-1'}></i> Edit
                     </span>
                     <span
                         className="text-danger cursor-pointer"
-                        onClick={() => handleDelete(row?.original, row?.row?.index)}>
+                        onClick={() => handleDelete(row?.original?.departmentId)}>
                         <i className={'fe-trash-2'}></i> Delete
                     </span>
                 </div>
@@ -60,34 +57,36 @@ function Index() {
     ];
 
     // useStates
-    const [value, setValue] = useState({});
-    const [tbl_list, setTbl_list] = useState([]);
+    const [state, setState] = useState({});
+    const [tblList, setTblList] = useState([]);
     const [modal, setModal] = useState(false);
     const [errors, setErrors] = useState([]);
-
+    const [isEdit, setIsEdit] = useState(false);
 
     useEffect(() => {
         const tableData = [
             {
-                "departmentName": "Human Resource",
-                "isActive": 1,
+                departmentId: '1',
+                departmentName: 'Human Resource',
+                isActive: 1,
             },
             {
-                "departmentName": "Developer",
-                "isActive": 1,
+                departmentId: '2',
+                departmentName: 'Developer',
+                isActive: 1,
             },
             {
-                "departmentName": "HR",
-                "isActive": 1,
-            }
+                departmentId: '9',
+                departmentName: 'HR',
+                isActive: 1,
+            },
         ];
-        setTbl_list(tableData)
-    }, [])
+        setTblList(tableData);
+    }, []);
 
     // Functions
     // Show/hide the modal
     const toggle = () => {
-
         setModal(!modal);
     };
 
@@ -96,7 +95,7 @@ function Index() {
         let arr = [];
         const getFormName = await getFormFieldName(employeeFormContainer);
         getFormName.forEach((formFieldObj) => {
-            if (value?.[formFieldObj] === undefined || value?.[formFieldObj] === null || value?.[formFieldObj] === '') {
+            if (state?.[formFieldObj] === undefined || state?.[formFieldObj] === null || state?.[formFieldObj] === '') {
                 arr.push(formFieldObj);
             }
         });
@@ -112,36 +111,37 @@ function Index() {
 
     //handleClear
     const handleClear = () => {
-        setValue({
-            ...value,
-            departmentName: ""
-        })
-    }
+        setState({
+            ...state,
+            departmentName: '',
+        });
+    };
 
     // handleSubmit
     const handleSubmit = async () => {
         if (await validateFormFields()) {
             setModal(false);
-            console.log(value);
-            handleClear()
+            console.log(state);
+            handleClear();
         }
     };
 
     //handleEdit
-    const handleEdit = (data, index) => {
-        setValue({
-            ...value,
+    const handleEdit = (data) => {
+        console.log(data);
+        setIsEdit(true);
+        setState({
+            ...state,
             departmentName: data.departmentName,
-            id: index
-        })
-        toggle()
-    }
+        });
+        toggle();
+    };
 
     //handleDelete
-    const handleDelete = (index) => {
-        showConfirmationDialog("You won't be able to revert this!", "Yes, Delete it!")
-        console.log(index)
-    }
+    const handleDelete = (departmentId) => {
+        showConfirmationDialog("You won't be able to revert this!", 'Yes, Delete it!');
+        console.log(departmentId);
+    };
 
     return (
         <React.Fragment>
@@ -149,14 +149,15 @@ function Index() {
 
             <Table
                 columns={columns}
-                Title={"Department List"}
-                data={tbl_list || []}
+                Title={'Department List'}
+                data={tblList || []}
                 pageSize={5}
-                toggle={toggle}
                 sizePerPageList={sizePerPageList}
                 isSortable={true}
                 pagination={true}
                 isSearchable={true}
+                toggle={toggle}
+                setIsEdit={setIsEdit}
             />
 
             {/* FormModal */}
@@ -165,18 +166,17 @@ function Index() {
                 toggle={toggle}
                 modelHeader={'Department'}
                 modelSize={'md'}
+                isEdit={isEdit}
                 handleSubmit={handleSubmit}>
                 <FormLayout
                     dynamicForm={employeeFormContainer}
                     removeHanldeErrors={removeHanldeErrors}
-                    setValue={setValue}
-                    value={value}
-                    editData={value}
+                    setState={setState}
+                    state={state}
                     noOfColumns={1}
                     errors={errors}
                 />
             </ModelViewBox>
-
         </React.Fragment>
     );
 }

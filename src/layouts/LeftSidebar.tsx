@@ -100,7 +100,7 @@ const UserBox = () => {
 const SideBarContent = () => {
     return (
         <>
-            <UserBox />
+            {/* <UserBox /> */}
 
             <div id="sidebar-menu">
                 <AppMenu menuItems={getMenuItems()} />

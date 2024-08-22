@@ -25,7 +25,7 @@ const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, se
     return (
         <div className={classNames(searchBoxClass)}>
             <span className="d-flex align-items-center">
-                Search :{' '}
+                {/* Search :{' '} */}
                 <input
                     type="search"
                     value={value || ''}
@@ -34,7 +34,7 @@ const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, se
                         onChange(e.target.value);
                     }}
                     placeholder={`${count} records...`}
-                    className="form-control w-auto ms-1"
+                    className="form-control w-auto ms-1 mr-1"
                 />
             </span>
         </div>
@@ -130,8 +130,7 @@ const Table = (props) => {
                                         style: {
                                             paddingLeft: `${row.depth * 2}rem`,
                                         },
-                                    })}
-                                >
+                                    })}>
                                     {row.isExpanded ? '-' : '+'}
                                 </span>
                             ) : null,
@@ -154,44 +153,56 @@ const Table = (props) => {
                                     <Card>
                                         <Row>
                                             <Col md={4}>
-                                                <h4 className='page-title-main' style={{ lineHeight: "100%" }}>  {Title}</h4>
+                                                <h4 className="n" style={{ lineHeight: '100%' }}>
+                                                    {' '}
+                                                    {Title}
+                                                </h4>
                                             </Col>
-                                            <Col md={8} className="d-flex justify-content-end">
-                                                {isSearchable && (
-                                                    <GlobalFilter
-                                                        preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
-                                                        globalFilter={dataTable.state.globalFilter}
-                                                        setGlobalFilter={dataTable.setGlobalFilter}
-                                                        searchBoxClass={props['searchBoxClass']}
-                                                    />
-                                                )}
-                                                <Button variant="success" className="waves-effect waves-light" onClick={toggle}>
-                                                    <i className="mdi mdi-plus-circle me-1"></i>
-                                                    Add
-                                                </Button>
+                                            <Col md={8} xs={12} className="d-flex justify-content-end">
+                                                <Row>
+                                                    <Col xs={8}>
+                                                        {isSearchable && (
+                                                            <GlobalFilter
+                                                                preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
+                                                                globalFilter={dataTable.state.globalFilter}
+                                                                setGlobalFilter={dataTable.setGlobalFilter}
+                                                                searchBoxClass={props['searchBoxClass']}
+                                                            />
+                                                        )}
+                                                    </Col>
+                                                    <Col xs={4}>
+                                                        <Button
+                                                            variant="success"
+                                                            className="waves-effect waves-light"
+                                                            onClick={toggle}>
+                                                            <i className="mdi mdi-plus-circle "></i>
+                                                            Add
+                                                        </Button>
+                                                    </Col>
+                                                </Row>
                                             </Col>
                                         </Row>
                                     </Card>
                                 </Col>
-                            </Row >
+                            </Row>
 
                             <div className="table-responsive">
                                 <table
                                     {...dataTable.getTableProps()}
-                                    className={classNames('table table-centered react-table', props['tableClass'])}
-                                >
+                                    className={classNames('table table-centered react-table', props['tableClass'])}>
                                     <thead className={props['theadClass']}>
                                         {(dataTable.headerGroups || []).map((headerGroup) => (
                                             <tr {...headerGroup.getHeaderGroupProps()}>
                                                 {(headerGroup.headers || []).map((column) => (
                                                     <th
-                                                        {...column.getHeaderProps(column.sort && column.getSortByToggleProps())}
+                                                        {...column.getHeaderProps(
+                                                            column.sort && column.getSortByToggleProps()
+                                                        )}
                                                         className={classNames({
                                                             sorting_desc: column.isSortedDesc === true,
                                                             sorting_asc: column.isSortedDesc === false,
                                                             sortable: column.sort === true,
-                                                        })}
-                                                    >
+                                                        })}>
                                                         {column.render('Header')}
                                                     </th>
                                                 ))}
@@ -211,8 +222,7 @@ const Table = (props) => {
                                                                         className: cell.column.className,
                                                                     },
                                                                 ])}
-                                                                className="cursor-pointer"
-                                                            >
+                                                                className="cursor-pointer">
                                                                 {cell.render('Cell')}
                                                             </td>
                                                         );
@@ -223,7 +233,7 @@ const Table = (props) => {
                                     </tbody>
                                 </table>
                             </div>
-                            
+
                             {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
                         </Card.Body>
                     </Card>

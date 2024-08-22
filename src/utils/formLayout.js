@@ -2,7 +2,7 @@ import React from 'react';
 import FormComponent from './formComponent';
 
 const FormLayout = (props) => {
-    const { dynamicForm, noOfColumns, value, setValue, errors,removeHanldeErrors } = props;
+    const { dynamicForm, noOfColumns, state, setState, errors,removeHanldeErrors } = props;
     const screenWidth = window.innerWidth;
     const noOfCol = 12 / noOfColumns;
 
@@ -12,8 +12,8 @@ const FormLayout = (props) => {
                 <div key={index} className={screenWidth > 600 ? `col-${noOfCol}` : 'col-12'}>
                     <FormComponent
                         formField={rowData?.formFields}
-                        setValue={setValue}
-                        value={value}
+                        setState={setState}
+                        state={state}
                         errors={errors} 
                         removeHanldeErrors={removeHanldeErrors}
                     />
