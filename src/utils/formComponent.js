@@ -2,7 +2,7 @@ import React from 'react';
 import { FormInput } from '../components/form';
 import Select from 'react-select';
 import { Form } from 'react-bootstrap';
-import { formatDate } from './AllFunction';
+import { formatDate,findObj } from './AllFunction';
 
 function FormComponent(props) {
     const { formField, setState, errors, removeHanldeErrors, state } = props;
@@ -196,7 +196,7 @@ function FormComponent(props) {
                                     }}
                                     getOptionLabel={(option) => `${option?.label}`}
                                     getOptionValue={(option) => `${option?.value}`}
-                                    value={state[form?.name]}
+                                    value={findObj(form?.optionList, state[form?.name])}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable

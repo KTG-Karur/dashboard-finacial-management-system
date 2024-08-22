@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
-
+import 'react-notifications/lib/notifications.css';
 // layouts
 import DefaultLayout from '../layouts/Default';
 import VerticalLayout from '../layouts/Vertical';

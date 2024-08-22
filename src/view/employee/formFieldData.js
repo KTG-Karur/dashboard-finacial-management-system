@@ -13,7 +13,7 @@ const employeeFormContainer = [
                 'name': "contactnumber",
                 'inputType': "number",
                 'placeholder': "Enter Contact Number",
-                'require': false
+                'require': true
             },
             {
                 'label': "Employee DOB",

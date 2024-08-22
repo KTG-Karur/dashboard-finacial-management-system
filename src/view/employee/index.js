@@ -1,7 +1,6 @@
 // react
-import React, { useEffect, useState } from 'react';
-// react-boostrap
-import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
+import React, { useEffect, useRef, useState } from 'react';
+
 // component
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
@@ -9,8 +8,10 @@ import { employeeFormContainer } from './formFieldData';
 // import HoverableTable from '../../pages/tables/BasicTable/HoverableTable';
 import Table from '../../components/Table';
 //dummy data
-import { getFormFieldName, showConfirmationDialog, updateData, deleteData } from '../../utils/AllFunction';
+import { showConfirmationDialog, updateData, deleteData, showMessage } from '../../utils/AllFunction';
 import { sizePerPageList } from '../../utils/constData';
+import { NotificationContainer } from 'react-notifications';
+
 function Index() {
     //Table column
     const columns = [
@@ -59,13 +60,12 @@ function Index() {
                     </span>
                     <span
                         className="text-danger cursor-pointer"
-                        onClick={
-                            () => handleDelete(row?.original?.employeeId)
-                            // showConfirmationDialog(
-                            //     "You won't be able to revert this!",
-                            //     () => handleDelete(row?.original?.employeeId),
-                            //     'Yes, Delete it!'
-                            // )
+                        onClick={() =>
+                            showConfirmationDialog(
+                                "You won't be able to revert this!",
+                                () => handleDelete(row?.original?.id),
+                                'Yes, Delete it!'
+                            )
                         }>
                         <i className={'fe-trash-2'}></i> Delete
                     </span>
@@ -75,49 +75,44 @@ function Index() {
     ];
 
     // useStates
-    const [state, setState] = useState({
-        employeeId: '',
-        employeename: '',
-        contactnumber: '',
-        dob: '',
-        address: '',
-        designation: '',
-        dateofjoining: '',
-    });
-    const [tblList, setTblList] = useState([]);
+    const [state, setState] = useState({});
+    const [tblList, setTblList] = useState([
+        {
+            id: '1',
+            employeename: 'surya',
+            contactnumber: '9876543456',
+            dob: '2013-09-25',
+            address: '53,vaiyapurinagar,karur,tamilnadu,india',
+            designation: 'Admin',
+            dateofjoining: '2009-11-14',
+        },
+        {
+            id: '2',
+            employeename: 'Raja',
+            contactnumber: '987123456',
+            dob: '2003-05-22',
+            address: '63,thindal,erode,tamilnadu,india',
+            designation: 'Manager',
+            dateofjoining: '2003-10-05',
+        },
+    ]);
     const [modal, setModal] = useState(false);
     const [errors, setErrors] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
+    const [optionList, setOptionList] = useState([
+        { value: 'Admin', label: 'Admin' },
+        { value: 'Fund Collector', label: 'Fund Collector' },
+        { value: 'Manager', label: 'Manager' },
+    ]);
+    const errorHandle = useRef();
 
-    useEffect(() => {
-        const tableData = [
-            {
-                employeeId: '1',
-                employeename: 'surya',
-                contactnumber: '9876543456',
-                dob: '2013-09-25',
-                address: '53,vaiyapurinagar,karur,tamilnadu,india',
-                designation: 'admin',
-                dateofjoining: '2009-11-14',
-            },
-            {
-                employeeId: '2',
-                employeename: 'Raja',
-                contactnumber: '987123456',
-                dob: '2003-05-22',
-                address: '63,thindal,erode,tamilnadu,india',
-                designation: 'admin',
-                dateofjoining: '2003-10-05',
-            },
-        ];
-        setTblList(tableData);
-    }, []);
+
 
     useEffect(() => {
         if (!isEdit)
             setState((prevState) => ({
                 ...prevState,
-                employeeId: tblList?.length + 1,
+                id: tblList?.length + 1,
             }));
     }, [modal]);
 
@@ -131,45 +126,16 @@ function Index() {
         setModal(!modal);
     };
 
-    // Validation
-    const validateFormFields = async () => {
-        let arr = [];
-        const getFormName = await getFormFieldName(employeeFormContainer);
-        getFormName.forEach((formFieldObj) => {
-            if (state?.[formFieldObj] === undefined || state?.[formFieldObj] === null || state?.[formFieldObj] === '') {
-                arr.push(formFieldObj);
-            }
-        });
-        setErrors(arr);
-        return arr.length === 0;
-    };
 
-    //Remove Errors
-    const removeHanldeErrors = (formName) => {
-        let copytheArr = errors.filter((item) => item !== formName);
-        setErrors(copytheArr);
-    };
+    const handleValidation = () => {
+        errorHandle.current.validateFormFields();
+    }
 
-    // handleSubmit
-    const handleSubmit = async () => {
-        if (await validateFormFields()) {
-            setModal(false);
-            if (isEdit) {
-                const updata = await updateData(tblList, state?.employeeId, state);
-                console.log(updata);
-                setTblList(updata);
-            } else {
-                setTblList((prev) => [...prev, state]);
-            }
-
-            handleClear();
-        }
-    };
-
+    //handleClear
     const handleClear = () => {
         setState({
             ...state,
-            employeeId: '',
+            id: '',
             employeename: '',
             contactnumber: '',
             dob: '',
@@ -179,35 +145,50 @@ function Index() {
         });
     };
 
+    // handleSubmit
+    const handleSubmit = async () => {
+        setModal(false);
+        if (isEdit) {
+            const updata = await updateData(tblList, state?.id, state);
+            setTblList(updata);
+
+            showMessage('success', "Updated Successfully");
+        } else {
+            setTblList((prev) => [...prev, state]);
+            showMessage('success', "Created Successfully")
+        }
+
+        handleClear();
+    };
+
+
     //handleEdit
-    const handleEdit = (data) => {
-        // const selectObj = { state: 'Admin', label: 'Admin' };
-        const selectObj = 'admin';
-        console.log(data);
+    const handleEdit = async (data) => {
         setIsEdit(true);
         setState({
             ...state,
-            employeeId: data.employeeId,
+            id: data.id,
             employeename: data.employeename,
             contactnumber: data.contactnumber,
             dob: data.dob,
             address: data.address,
-            designation: selectObj,
+            designation: data?.designation,
             dateofjoining: data.dateofjoining,
         });
         toggle();
     };
 
     //handleDelete
-    const handleDelete = (employeeId) => {
-        const delData = deleteData(tblList, employeeId);
+    const handleDelete = (id) => {
+        const delData = deleteData(tblList, id);
         setTblList(delData);
     };
 
     return (
         <React.Fragment>
-            {/* Table */}
+            <NotificationContainer />
 
+            {/* Table */}
             <Table
                 columns={columns}
                 Title={'Employee List'}
@@ -227,17 +208,21 @@ function Index() {
                 modelHeader={'Employee'}
                 modelSize={'md'}
                 isEdit={isEdit}
-                handleSubmit={handleSubmit}>
+                handleSubmit={handleValidation}>
                 <FormLayout
                     dynamicForm={employeeFormContainer}
-                    removeHanldeErrors={removeHanldeErrors}
+                    handleSubmit={handleSubmit}
                     setState={setState}
                     state={state}
+                    ref={errorHandle}
                     editData={state}
                     noOfColumns={1}
                     errors={errors}
+                    setErrors={setErrors}
                 />
             </ModelViewBox>
+
+
         </React.Fragment>
     );
 }

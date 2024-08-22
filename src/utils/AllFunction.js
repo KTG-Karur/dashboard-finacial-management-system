@@ -1,4 +1,25 @@
+
 import Swal from 'sweetalert2';
+import { NotificationManager, } from "react-notifications";
+
+
+const showMessage = (type, msg, title = null) => {
+  switch (type) {
+    case 'info':
+      NotificationManager.info(msg, title);
+      break;
+    case 'success':
+      NotificationManager.success(msg, title);
+      break;
+    case 'warning':
+      NotificationManager.warning(msg, title);
+      break;
+    case 'error':
+      NotificationManager.error(msg, title);
+      break;
+  }
+}
+
 
 const getFormFieldName = (dynamicForm) => {
     let arr = [];
@@ -25,13 +46,13 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-// const updateData = (arr, state, employeeId, setTblList) => {
+// const updateData = (arr, state, id, setTblList) => {
 //     //    const result=  arr.filter((ar)=>{
-//     //          return ar.employeeId!==employeeId
+//     //          return ar.id!==id
 //     //     })
 //     let arr2 = [...arr];
 //     for (let i = 0; i < arr.length; i++) {
-//         if (employeeId == arr.employeeId) {
+//         if (id == arr.id) {
 //             arr2[i] = state;
 //         }
 //     }
@@ -40,14 +61,18 @@ function formatDate(date) {
 //     setTblList(arr2);
 // };
 
-function updateData(arr, employeeId, newState) {
-    return arr.map((item) => (item.employeeId === employeeId ? newState : item));
+function updateData(arr, id, newState) {
+    return arr.map((item) => (item.id === id ? newState : item));
 }
 
-function deleteData(arr, employeeId) {
+function deleteData(arr, id) {
     return arr.filter((item) => {
-        return item.employeeId !== employeeId;
+        return item.id !== id;
     });
+}
+
+function findObj(optionList, designation) {
+    return optionList.filter((item) => (item.value === designation))
 }
 
 const showConfirmationDialog = (
@@ -69,28 +94,22 @@ const showConfirmationDialog = (
         customClass: {
             icon: 'swal-icon-custom',
         },
-    }).then(function ({ value, dismiss }) {
-        if (value) {
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callback();
+        } else {
             Swal.fire({
-                title: 'Deleted!',
-                text: 'Your file has been deleted.',
-                icon: 'success',
-                confirmButtonColor: '#4a4fea',
+                title: 'Cancelled!',
+                text: 'Permission denied.',
+                icon: 'error',
+                customClass: {
+                    icon: "swal-icon-custom"
+                },
+                timer: 1500,
             });
         }
-        callback();
-        // else if (
-        //     // Read more about handling dismissals
-        //     dismiss === Swal.DismissReason.cancel
-        // ) {
-        //     Swal.fire({
-        //         title: 'Cancelled',
-        //         text: 'Your imaginary file is safe :)',
-        //         icon: 'error',
-        //         confirmButtonColor: '#4a4fea',
-        //     });
-        // }
     });
 };
+;
 
-export { getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData };
+export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj };

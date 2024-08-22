@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { forwardRef, useImperativeHandle, useRef } from 'react';
 import FormComponent from './formComponent';
+import { getFormFieldName } from './AllFunction';
 
-const FormLayout = (props) => {
-    const { dynamicForm, noOfColumns, state, setState, errors,removeHanldeErrors } = props;
+const FormLayout = forwardRef((props, ref) => {
+    const { dynamicForm, noOfColumns, state, setState, errors, setErrors, handleSubmit } = props;
     const screenWidth = window.innerWidth;
     const noOfCol = 12 / noOfColumns;
+    const errorHandle = useRef(null);
 
+    useImperativeHandle(ref, () => ({
+        validateFormFields,
+    }));
+
+    // Validation
+    const validateFormFields = async () => {
+        let arr = [];
+        const getFormName = await getFormFieldName(dynamicForm);
+        getFormName.forEach((formFieldObj) => {
+            if (state?.[formFieldObj] === undefined || state?.[formFieldObj] === null || state?.[formFieldObj] === '') {
+                arr.push(formFieldObj);
+            }
+        });
+        setErrors(arr);
+        onSubmit(arr.length === 0);
+    };
+
+    const onSubmit = (result) => {
+        if (result)
+            handleSubmit();
+    }
+
+    //Remove Errors
+    const removeHanldeErrors = (formName) => {
+        let copytheArr = errors.filter((item) => item !== formName);
+        setErrors(copytheArr);
+    };
     return (
         <div className='row'>
             {dynamicForm.map((rowData, index) => (
@@ -14,13 +43,13 @@ const FormLayout = (props) => {
                         formField={rowData?.formFields}
                         setState={setState}
                         state={state}
-                        errors={errors} 
+                        errors={errors}
                         removeHanldeErrors={removeHanldeErrors}
                     />
                 </div>
             ))}
         </div>
     );
-};
+});
 
 export default FormLayout;

@@ -33,7 +33,7 @@ const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, se
                         setValue(e.target.value);
                         onChange(e.target.value);
                     }}
-                    placeholder={`${count} records...`}
+                    placeholder={`Search..`}
                     className="form-control w-auto ms-1 mr-1"
                 />
             </span>

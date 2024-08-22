@@ -17,7 +17,6 @@ type PrivateRouteProps = {
  * @returns
  */
 const PrivateRoute = ({ component: RouteComponent, roles, ...rest }: PrivateRouteProps) => {
-
     let location = useLocation();
     const [loggedInUser] = useUser();
 

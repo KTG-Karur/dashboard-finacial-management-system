@@ -8,10 +8,9 @@ const employeeFormContainer = [
                 'placeholder': "Enter Department Name",
                 'require': true
             },
-         
         ]
     },
-    
+
 ]
 
 export {
