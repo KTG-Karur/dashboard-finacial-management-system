@@ -21,20 +21,25 @@ const Navigate: NavigateTypes[] = [
         url: '/dashboard',
     },
 
+    { label: 'Master', isTitle: true },
     {
         label: 'Employee',
         isTitle: false,
         icon: 'mdi mdi-calendar-blank-outline',
         url: '/view/employee',
     },
-    { label: 'Master', isTitle: true },
     {
         label: 'Department',
         isTitle: false,
         icon: 'mdi mdi-calendar-blank-outline',
         url: '/view/department',
     },
-
+    {
+        label: 'Applicant',
+        isTitle: false,
+        icon: 'mdi mdi-calendar-blank-outline',
+        url: '/view/applicant',
+    },
     { label: 'Apps', isTitle: true },
     {
         label: 'Calendar',

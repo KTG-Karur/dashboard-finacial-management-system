@@ -13,6 +13,7 @@ export const DashBoard1 = React.lazy(() => import('../pages/dashboards/DashBoard
 // master
 export const Employee = React.lazy(() => import('../view/employee'));
 export const Department = React.lazy(() => import('../view/department'));
+export const Applicant = React.lazy(() => import('../view/applicants'));
 
 // apps
 export const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));

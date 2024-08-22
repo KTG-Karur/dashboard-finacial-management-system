@@ -73,7 +73,7 @@ function FormComponent(props) {
                                         handleChange(e, 'textarea', form?.name);
                                     }}
                                 />
-                                {errors.includes(form?.name) && (
+                                {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
                                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
@@ -104,7 +104,7 @@ function FormComponent(props) {
                                         handleChange(e, 'text', form?.name);
                                     }}
                                 />
-                                {errors.includes(form?.name) && (
+                                {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
                                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
@@ -135,7 +135,7 @@ function FormComponent(props) {
                                         handleChange(e, 'number', form?.name);
                                     }}
                                 />
-                                {errors.includes(form?.name) && (
+                                {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
                                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
@@ -167,7 +167,7 @@ function FormComponent(props) {
                                         handleChange(e, 'date', form?.name);
                                     }}
                                 />
-                                {errors.includes(form?.name) && (
+                                {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
                                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>

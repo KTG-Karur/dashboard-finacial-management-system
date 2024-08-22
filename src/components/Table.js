@@ -153,7 +153,7 @@ const Table = (props) => {
                                     <Card>
                                         <Row>
                                             <Col md={4}>
-                                                <h4 className="n" style={{ lineHeight: '100%' }}>
+                                                <h4 style={{ lineHeight: '100%' }}>
                                                     {' '}
                                                     {Title}
                                                 </h4>

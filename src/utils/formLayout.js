@@ -25,8 +25,8 @@ const FormLayout = forwardRef((props, ref) => {
         onSubmit(arr.length === 0);
     };
 
-    const onSubmit = (result) => {
-        if (result)
+    const onSubmit = (isValid) => {
+        if (isValid)
             handleSubmit();
     }
 

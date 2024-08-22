@@ -107,7 +107,7 @@ function Index() {
     const errorHandle = useRef();
 
 
-
+// useEffect
     useEffect(() => {
         if (!isEdit)
             setState((prevState) => ({
@@ -117,7 +117,6 @@ function Index() {
     }, [modal]);
 
     // Functions
-    // Show/hide the modal
     const toggle = () => {
         if (isEdit) {
             handleClear();
@@ -125,7 +124,6 @@ function Index() {
         }
         setModal(!modal);
     };
-
 
     const handleValidation = () => {
         errorHandle.current.validateFormFields();
@@ -151,7 +149,6 @@ function Index() {
         if (isEdit) {
             const updata = await updateData(tblList, state?.id, state);
             setTblList(updata);
-
             showMessage('success', "Updated Successfully");
         } else {
             setTblList((prev) => [...prev, state]);
@@ -160,7 +157,6 @@ function Index() {
 
         handleClear();
     };
-
 
     //handleEdit
     const handleEdit = async (data) => {
