@@ -3,7 +3,9 @@ import React, { useState, useRef } from 'react';
 import { WizardWithProgressbar } from "../../components/Atom/WizardViewBox";
 import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
-import { applicantTabs as tabList } from "./formFieldData";
+import { applicantTabs as tabList, addressType, country, district, states } from "./formFieldData";
+import ModelViewBox from '../../components/Atom/ModelViewBox';
+import { Button, Form } from 'react-bootstrap';
 
 const Index = () => {
     //Table column
@@ -68,7 +70,33 @@ const Index = () => {
         },
     ];
     // useStates
-    const [state, setState] = useState({});
+    const [state, setState] = useState({
+        // // personalInfo: {
+        // //     firstname: '',
+        // //     lastname: '',
+        // //     dob: '',
+        // //     contactno: '',
+        // //     alternativecontactno: '',
+        // //     email: '',
+        // //     gender: '',
+        // //     qualification: '',
+        // //     designation: '',
+        // // },
+        // // //addtional
+        // // additionalInfo: {
+        // //     fathername: '',
+        // //     mothername: '',
+        // //     fatherjob: '',
+        // //     fatherincome: '',
+        // //     motherjob: '',
+        // //     motherincome: '',
+        // //     fathercontact: '',
+        // //     mothercontact: ''
+        // // }
+    });
+
+
+    const [StateValue, setStateValue] = useState([]);
     const [errors, setErrors] = useState([]);
     const [tblList, setTblList] = useState([
         {
@@ -90,34 +118,80 @@ const Index = () => {
             applicantType: 'bussiness',
         },
     ]);
-    const [modal, setModal] = useState(true);
+    const [wizard, setWizard] = useState(true);
+    const [modal, setModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [tab, setTab] = useState('personalInfo');
+
+    const [getModelForm, setModelForm] = useState({});
+    const showSelectmodel = ["addressType", "district", "states", "country", "applicantType", "idProof"]
     const errorHandle = useRef();
-
-
-    console.log("state")
-    console.log(state)
     // Functions
     const toggle = () => {
+        setWizard(!wizard);
+    };
+    const toggleModal = (form) => {
         setModal(!modal);
+        setModelForm(form);
     };
 
     const handleValidation = () => {
         errorHandle.current.WizardRef();
     }
 
+    let val = { value: '', label: '' };
+    const handleChangeSelectOption = (value) => {
+
+        val.value = value;
+        val.label = value;
+    }
+
+    const handleSubmitSelectOption = () => {
+        if (val?.value === '')
+            return false;
+
+
+        addressType[addressType.length] = val;
+        toggleModal();
+    }
+
     // handleSubmit
     const handleSubmit = async () => {
-        console.log("handleSubmit")
+        console.log("handleSubmit from Applicant")
     };
 
+    console.log("getModelForm")
+    console.log(getModelForm?.optionList)
+    console.log("country")
+    console.log(country)
     return (
         <React.Fragment>
-
             {
-                modal ?
-                    <WizardWithProgressbar toggle={toggle} isEdit={isEdit} Title={"Applicant Details"} setTab={setTab} tab={tab} tabList={tabList} setState={setState} state={state} setErrors={setErrors} errors={errors} handleSubmit={handleValidation} ref={errorHandle} /> :
+                wizard ?
+                    <React.Fragment>
+                        <WizardWithProgressbar toggle={toggle} isEdit={isEdit} Title={"Applicant Details"} setTab={setTab} tab={tab} tabList={tabList} setState={setState} state={state} setErrors={setErrors} errors={errors} handleSubmit={handleValidation} ref={errorHandle} setStateValue={setStateValue} StateValue={StateValue} toggleModal={toggleModal} showSelectmodel={showSelectmodel} />
+                        <ModelViewBox
+                            modal={modal}
+                            toggle={toggleModal}
+                            modelHeader={getModelForm?.name || ""}
+                            modelSize={'md'}
+                            handleSubmit={handleSubmitSelectOption}>
+
+                            <Form.Label>
+                                {getModelForm?.name}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name={'selectmodel'}
+                                className="mb-1"
+                                placeholder={`Enter ${getModelForm?.name || ""}`}
+                                onChange={(e) => {
+                                    handleChangeSelectOption(e.target.value)
+                                }}
+                            />
+
+                        </ModelViewBox>
+                    </React.Fragment>
+                    :
                     <Table
                         columns={columns}
                         Title={'Applicant List'}

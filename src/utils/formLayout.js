@@ -3,7 +3,7 @@ import FormComponent from './formComponent';
 import { getFormFieldName } from './AllFunction';
 
 const FormLayout = forwardRef((props, ref) => {
-    const { dynamicForm, noOfColumns, state, setState, errors, setErrors, handleSubmit } = props;
+    const { dynamicForm, noOfColumns, state, setState, errors, setErrors, handleSubmit,toggleModal=null,showSelectmodel=[] } = props;
     const screenWidth = window.innerWidth;
     const noOfCol = 12 / noOfColumns;
     const errorHandle = useRef(null);
@@ -37,17 +37,20 @@ const FormLayout = forwardRef((props, ref) => {
     };
     return (
         <div className='row'>
-            {dynamicForm.map((rowData, index) => (
+            {dynamicForm.map((rowData, index) => {
+                return(
                 <div key={index} className={screenWidth > 600 ? `col-${noOfCol}` : 'col-12'}>
                     <FormComponent
                         formField={rowData?.formFields}
                         setState={setState}
                         state={state}
                         errors={errors}
+                        showSelectmodel={showSelectmodel}
+                        toggleModal={toggleModal}
                         removeHanldeErrors={removeHanldeErrors}
                     />
                 </div>
-            ))}
+            )})}
         </div>
     );
 });

@@ -1,7 +1,32 @@
+
+let addressType = [
+    { value: 'personal', label: 'Personal' },
+    { value: 'current', label: 'Current' },
+    { value: 'office', label: 'Office' },
+];
+
+let country = [
+    { countryId: '1', value: 'india', label: 'India' },
+    { countryId: '2', value: 'srilanka', label: 'Srilanka' },
+    { countryId: '3', value: 'pakistan', label: 'Pakistan' },
+];
+
+let states = [
+    { stateId: '1', value: 'karnataka', label: 'Karnataka', countryId: '1' },
+    { stateId: '2', value: 'colombo', label: 'Colombo', countryId: '2' },
+    { stateId: '3', value: 'tamilnadu', label: 'Tamilnadu', countryId: '1' },
+];
+
+let district = [
+    { districtId: '1', value: 'karur', label: 'Karur', statesId: '3' },
+    { districtId: '2', value: 'chennai', label: 'Chennai', statesId: '3' },
+    { districtId: '3', value: 'bangalore', label: 'bangalore', statesId: '1' },
+];
+
 const applicantTabs = [
     {
-        label: 'personalInfo',
-        name: 'Personal Info',
+        label: 'Personal Info',
+        name: 'personalInfo',
         icon: 'mdi mdi-account-circle',
         defaultActiveKey: 'personalInfo',
         activeKey: 'personalInfo',
@@ -10,17 +35,17 @@ const applicantTabs = [
                 formFields: [
                     {
                         label: 'First Name',
-                        name: 'firstname',
+                        name: 'firstName',
                         inputType: 'text',
                         placeholder: 'Enter First Name',
-                        require: true,
+                        require: false,
                     },
                     {
                         label: 'Last Name',
-                        name: 'lastname',
+                        name: 'lastName',
                         inputType: 'text',
                         placeholder: 'Enter Last Name',
-                        require: true,
+                        require: false,
                     },
                     {
                         label: 'DOB',
@@ -30,22 +55,22 @@ const applicantTabs = [
                     },
                     {
                         label: 'Contact No',
-                        name: 'contactno',
-                        placeholder: 'Contact No',
+                        name: 'contactNo',
+                        placeholder: 'Enter Contact No',
                         inputType: 'text',
                         require: false,
                     },
                     {
                         label: 'Alternative Contact No',
-                        name: 'alternativecontactno',
-                        placeholder: 'Contact No',
+                        name: 'alternativeContactNo',
+                        placeholder: 'Enter Alternative Contact No',
                         inputType: 'text',
                         require: false,
                     },
                     {
                         label: 'Email',
                         name: 'email',
-                        placeholder: 'Contact No',
+                        placeholder: 'Enter Email',
                         inputType: 'text',
                         require: false,
                     },
@@ -80,70 +105,70 @@ const applicantTabs = [
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
-                    },
+                    }
                 ],
-            },
+            }
         ],
     },
     {
-        label: 'additionalInfo',
-        name: 'Additional Info',
+        label: 'Additional Info',
+        name: 'additionalInfo',
         icon: 'mdi mdi-account-box-multiple',
         children: [
             {
                 formFields: [
                     {
                         label: 'Father Name',
-                        name: 'fathername',
+                        name: 'fatherName',
                         inputType: 'text',
                         placeholder: 'Enter Father Name',
                         require: false,
                     },
                     {
                         label: 'Mother Name',
-                        name: 'mothername',
+                        name: 'motherName',
                         inputType: 'text',
                         placeholder: 'Enter Mother Name',
                         require: false,
                     },
                     {
                         label: 'Father Job',
-                        name: 'fatherjob',
+                        name: 'fatherJob',
                         inputType: 'text',
                         placeholder: 'Enter Father Job',
                         require: false,
                     },
                     {
                         label: 'Father Income',
-                        name: 'fatherincome',
+                        name: 'fatherIncome',
                         inputType: 'text',
                         placeholder: 'Enter Father Income',
                         require: false,
                     },
                     {
                         label: 'Mother Job',
-                        name: 'motherjob',
+                        name: 'motherJob',
                         inputType: 'text',
                         placeholder: 'Enter Mother Job',
                         require: false,
                     },
                     {
                         label: 'Mother Income',
-                        name: 'motherincome',
+                        name: 'motherIncome',
                         inputType: 'text',
                         placeholder: 'Enter Mother Income',
                         require: false,
                     },
                     {
                         label: 'Father Contact',
-                        name: 'fathercontact',
+                        name: 'fatherContact',
                         inputType: 'text',
                         placeholder: 'Enter Father Contact',
                         require: false,
                     },
                     {
                         label: 'Mother Contact',
-                        name: 'mothercontact',
+                        name: 'motherContact',
                         inputType: 'text',
                         placeholder: 'Enter Mother Contact',
                         require: false,
@@ -153,21 +178,17 @@ const applicantTabs = [
         ],
     },
     {
-        label: 'addressInfo',
-        name: 'Address Info',
+        label: 'Address Info',
+        name: 'addressInfo',
         icon: 'mdi mdi-home',
         children: [
             {
                 formFields: [
                     {
                         label: 'Select Address type',
-                        name: 'addresstype',
+                        name: 'addressType',
                         inputType: 'select',
-                        optionList: [
-                            { value: 'personal', label: 'Personal' },
-                            { value: 'current', label: 'Current' },
-                            { value: 'office', label: 'Office' },
-                        ],
+                        optionList: addressType,
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -177,89 +198,78 @@ const applicantTabs = [
                         name: 'address',
                         inputType: 'text',
                         placeholder: 'Enter Address',
-                        require: true,
+                        require: false,
                     },
                     {
                         label: 'Land Mark',
                         name: 'landmark',
                         inputType: 'text',
                         placeholder: 'Enter Land Mark',
-                        require: true,
-                    },
-                    {
-                        label: 'Select District',
-                        name: 'district',
-                        inputType: 'select',
-                        optionList: [
-                            { districtId: '1', value: 'karur', label: 'Karur', stateId: '3' },
-                            { districtId: '2', value: 'chennai', label: 'Chennai', stateId: '3' },
-                            { districtId: '3', value: 'bangalore', label: 'bangalore', stateId: '1' },
-                        ],
-                        displayKey: 'roleName',
-                        uniqueKey: 'roleId',
-                        require: false,
-                    },
-                    {
-                        label: 'Select State',
-                        name: 'state',
-                        inputType: 'select',
-                        optionList: [
-                            { stateId: '1', value: 'karnataka', label: 'Karnataka', countryId: '1' },
-                            { stateId: '2', value: 'colombo', label: 'Colombo', countryId: '2' },
-                            { stateId: '3', value: 'tamilnadu', label: 'Tamilnadu', countryId: '1' },
-                        ],
-                        displayKey: 'roleName',
-                        uniqueKey: 'roleId',
                         require: false,
                     },
                     {
                         label: 'Select Country',
                         name: 'country',
                         inputType: 'select',
-                        optionList: [
-                            { countryId: '1', value: 'india', label: 'India' },
-                            { countryId: '2', value: 'srilanka', label: 'Srilanka' },
-                            { countryId: '3', value: 'pakistan', label: 'Pakistan' },
-                        ],
+                        optionList: country,
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
                     },
                     {
+                        label: 'Select State',
+                        name: 'states',
+                        inputType: 'select',
+                        optionList: states,
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Select District',
+                        name: 'district',
+                        inputType: 'select',
+                        optionList: district,
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+
+                    {
                         label: 'Pincode',
                         name: 'pincode',
                         inputType: 'text',
                         placeholder: 'Enter Pincode',
-                        require: true,
+                        require: false,
                     },
                     {
                         label: 'Latitude',
                         name: 'latitude',
                         inputType: 'text',
                         placeholder: 'Enter Latitude',
-                        require: true,
+                        require: false,
                     },
                     {
                         label: 'Longitude',
                         name: 'longitude',
                         inputType: 'text',
                         placeholder: 'Enter Longitude',
-                        require: true,
+                        require: false,
                     },
                 ],
             },
         ],
     },
     {
-        label: 'incomeInfo',
-        name: 'Income Info',
+        label: 'Income Info',
+        name: 'incomeInfo',
         icon: 'mdi mdi-cash',
         children: [
             {
                 formFields: [
                     {
                         label: 'Select Applicant type',
-                        name: 'district',
+                        name: 'applicantType',
                         inputType: 'select',
                         optionList: [
                             { applicantType: '1', value: 'salary', label: 'Salary' },
@@ -276,14 +286,14 @@ const applicantTabs = [
                     //             name: 'companyname',
                     //             inputType: 'text',
                     //             placeholder: 'Enter Company Name',
-                    //             require: true,
+                    //             require: false,
                     //         },
                     //         {
                     //             label: 'Company Address',
                     //             name: 'companyaddress',
                     //             inputType: 'text',
                     //             placeholder: 'Enter Company Address',
-                    //             require: true,
+                    //             require: false,
                     //         },
                     //         {
                     //             label: 'Date Of Joining',
@@ -312,21 +322,21 @@ const applicantTabs = [
                     //             name: 'bussinessname',
                     //             inputType: 'text',
                     //             placeholder: 'Enter Bussiness Name',
-                    //             require: true,
+                    //             require: false,
                     //         },
                     //         {
                     //             label: 'Bussiness Description',
                     //             name: 'bussinessdescription',
                     //             inputType: 'textarea',
                     //             placeholder: 'Enter Bussiness Description',
-                    //             require: true,
+                    //             require: false,
                     //         },
                     //         {
                     //             label: 'Bussiness Address',
                     //             name: 'bussinessaddress',
                     //             inputType: 'textarea',
                     //             placeholder: 'Enter Bussiness Description',
-                    //             require: true,
+                    //             require: false,
                     //         },
                     //         {
                     //             label: 'Bussiness Start Date',
@@ -355,15 +365,15 @@ const applicantTabs = [
         ],
     },
     {
-        label: 'idProof',
-        name: 'Id Proof',
+        label: 'Id Proof',
+        name: 'idProof',
         icon: 'mdi mdi-checkbox-marked-circle-outline',
         children: [
             {
                 formFields: [
                     {
-                        label: 'Select Applicant type',
-                        name: 'district',
+                        label: 'Select Id Proof',
+                        name: 'idProof',
                         inputType: 'select',
                         optionList: [
                             { applicantType: '1', value: 'addharcard', label: 'Addhar Card' },
@@ -376,21 +386,21 @@ const applicantTabs = [
                     },
                     {
                         label: 'Proof Id No',
-                        name: 'proofidno',
+                        name: 'proofIdNo',
                         inputType: 'text',
                         placeholder: 'Enter Proof Id No',
                         require: false,
                     },
                     // {
                     //     label: 'Image Proof',
-                    //     name: 'imageproof',
+                    //     name: 'imageProof',
                     //     inputType: 'file',
                     //     require: false,
                     // },
                 ],
             },
         ],
-    },
+    }
 ];
 
-export { applicantTabs };
+export { applicantTabs, addressType, country,district,states };

@@ -106,11 +106,6 @@ function Index() {
     const [modal, setModal] = useState(false);
     const [errors, setErrors] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
-    const [optionList, setOptionList] = useState([
-        { value: 'Admin', label: 'Admin' },
-        { value: 'Fund Collector', label: 'Fund Collector' },
-        { value: 'Manager', label: 'Manager' },
-    ]);
     const errorHandle = useRef();
 
     // useEffect
