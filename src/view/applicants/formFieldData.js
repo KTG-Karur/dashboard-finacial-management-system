@@ -1,177 +1,396 @@
-
 const applicantTabs = [
     {
-        'label': 'personalInfo',
-        'name': 'Personal Info',
-        'icon': 'mdi mdi-account-circle',
-        'defaultActiveKey': 'personalInfo',
-        'activeKey': 'personalInfo',
-        'children': [{
-            formFields: [
-                {
-                    'label': "First Name",
-                    'name': "firstname",
-                    'inputType': "text",
-                    'placeholder': "Enter First Name",
-                    'require': true
-                },
-                {
-                    'label': "Last Name",
-                    'name': "lastname",
-                    'inputType': "text",
-                    'placeholder': "Enter Last Name",
-                    'require': true
-                },
-                {
-                    'label': "Applicant DOB",
-                    'name': "dob",
-                    'inputType': "date",
-                    'require': false
-                },
-                {
-                    'label': "Contact No",
-                    'name': "contactno",
-                    'placeholder': "Contact No",
-                    'inputType': "text",
-                    'require': false
-                },
-                {
-                    'label': "Alternative Contact No",
-                    'name': "alternativecontactno",
-                    'placeholder': "Contact No",
-                    'inputType': "text",
-                    'require': false
-                },
-                {
-                    'label': "Email",
-                    'name': "email",
-                    'placeholder': "Contact No",
-                    'inputType': "text",
-                    'require': false
-                },
-                {
-                    'label': "Select Gender",
-                    'name': "gender",
-                    'inputType': "select",
-                    'optionList': [
-                        { value: 'male', label: 'Male' },
-                        { value: 'female', label: 'Female' },
-                        { value: 'other', label: 'other' },
-                    ],
-                    'displayKey': 'roleName',
-                    'uniqueKey': 'roleId',
-                    'require': false
-                },
-                {
-                    'label': "Qualification",
-                    'name': "qualification",
-                    'placeholder': "Qualification No",
-                    'inputType': "text",
-                    'require': false
-                },
-                {
-                    'label': "Select Marital status",
-                    'name': "designation",
-                    'inputType': "select",
-                    'optionList': [
-                        { value: 'married', label: 'Married' },
-                        { value: 'unmarried', label: 'Unmarried' },
-                    ],
-                    'displayKey': 'roleName',
-                    'uniqueKey': 'roleId',
-                    'require': false
-                },
-                {
-                    'label': "Select Designation",
-                    'name': "designation",
-                    'inputType': "select",
-                    'optionList': [
-                        { value: 'Admin', label: 'Admin' },
-                        { value: 'Fund Collector', label: 'Fund Collector' },
-                        { value: 'Manager', label: 'Manager' },
-                    ],
-                    'displayKey': 'roleName',
-                    'uniqueKey': 'roleId',
-                    'require': false
-                },
-            ]
-        }]
+        label: 'personalInfo',
+        name: 'Personal Info',
+        icon: 'mdi mdi-account-circle',
+        defaultActiveKey: 'personalInfo',
+        activeKey: 'personalInfo',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'First Name',
+                        name: 'firstname',
+                        inputType: 'text',
+                        placeholder: 'Enter First Name',
+                        require: true,
+                    },
+                    {
+                        label: 'Last Name',
+                        name: 'lastname',
+                        inputType: 'text',
+                        placeholder: 'Enter Last Name',
+                        require: true,
+                    },
+                    {
+                        label: 'DOB',
+                        name: 'dob',
+                        inputType: 'date',
+                        require: false,
+                    },
+                    {
+                        label: 'Contact No',
+                        name: 'contactno',
+                        placeholder: 'Contact No',
+                        inputType: 'text',
+                        require: false,
+                    },
+                    {
+                        label: 'Alternative Contact No',
+                        name: 'alternativecontactno',
+                        placeholder: 'Contact No',
+                        inputType: 'text',
+                        require: false,
+                    },
+                    {
+                        label: 'Email',
+                        name: 'email',
+                        placeholder: 'Contact No',
+                        inputType: 'text',
+                        require: false,
+                    },
+                    {
+                        label: 'Select Gender',
+                        name: 'gender',
+                        inputType: 'select',
+                        optionList: [
+                            { value: 'male', label: 'Male' },
+                            { value: 'female', label: 'Female' },
+                            { value: 'other', label: 'other' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Qualification',
+                        name: 'qualification',
+                        placeholder: 'Qualification No',
+                        inputType: 'text',
+                        require: false,
+                    },
+                    {
+                        label: 'Select Married status',
+                        name: 'designation',
+                        inputType: 'select',
+                        optionList: [
+                            { value: 'married', label: 'Married' },
+                            { value: 'unmarried', label: 'Unmarried' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                ],
+            },
+        ],
     },
     {
-        'label': 'additionalInfo',
-        'name': 'Additional Info',
-        'icon': 'mdi mdi-account-box-multiple',
-        'children': [{
-            formFields: [
-                {
-                    'label': "Employee Name",
-                    'name': "employeename",
-                    'inputType': "text",
-                    'placeholder': "Enter Employee Name",
-                    'require': true
-                },
-            ]
-        }]
+        label: 'additionalInfo',
+        name: 'Additional Info',
+        icon: 'mdi mdi-account-box-multiple',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Father Name',
+                        name: 'fathername',
+                        inputType: 'text',
+                        placeholder: 'Enter Father Name',
+                        require: false,
+                    },
+                    {
+                        label: 'Mother Name',
+                        name: 'mothername',
+                        inputType: 'text',
+                        placeholder: 'Enter Mother Name',
+                        require: false,
+                    },
+                    {
+                        label: 'Father Job',
+                        name: 'fatherjob',
+                        inputType: 'text',
+                        placeholder: 'Enter Father Job',
+                        require: false,
+                    },
+                    {
+                        label: 'Father Income',
+                        name: 'fatherincome',
+                        inputType: 'text',
+                        placeholder: 'Enter Father Income',
+                        require: false,
+                    },
+                    {
+                        label: 'Mother Job',
+                        name: 'motherjob',
+                        inputType: 'text',
+                        placeholder: 'Enter Mother Job',
+                        require: false,
+                    },
+                    {
+                        label: 'Mother Income',
+                        name: 'motherincome',
+                        inputType: 'text',
+                        placeholder: 'Enter Mother Income',
+                        require: false,
+                    },
+                    {
+                        label: 'Father Contact',
+                        name: 'fathercontact',
+                        inputType: 'text',
+                        placeholder: 'Enter Father Contact',
+                        require: false,
+                    },
+                    {
+                        label: 'Mother Contact',
+                        name: 'mothercontact',
+                        inputType: 'text',
+                        placeholder: 'Enter Mother Contact',
+                        require: false,
+                    },
+                ],
+            },
+        ],
     },
     {
-        'label': 'addressInfo',
-        'name': 'Address Info',
-        'icon': 'mdi mdi-home',
-        'children': [{
-            formFields: [
-                {
-                    'label': "Employee Name",
-                    'name': "employeename",
-                    'inputType': "text",
-                    'placeholder': "Enter Employee Name",
-                    'require': true
-                },
-                {
-                    'label': "Employee Name",
-                    'name': "employeename",
-                    'inputType': "text",
-                    'placeholder': "Enter Employee Name",
-                    'require': true
-                },
-            ]
-        }]
+        label: 'addressInfo',
+        name: 'Address Info',
+        icon: 'mdi mdi-home',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Select Address type',
+                        name: 'addresstype',
+                        inputType: 'select',
+                        optionList: [
+                            { value: 'personal', label: 'Personal' },
+                            { value: 'current', label: 'Current' },
+                            { value: 'office', label: 'Office' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Address',
+                        name: 'address',
+                        inputType: 'text',
+                        placeholder: 'Enter Address',
+                        require: true,
+                    },
+                    {
+                        label: 'Land Mark',
+                        name: 'landmark',
+                        inputType: 'text',
+                        placeholder: 'Enter Land Mark',
+                        require: true,
+                    },
+                    {
+                        label: 'Select District',
+                        name: 'district',
+                        inputType: 'select',
+                        optionList: [
+                            { districtId: '1', value: 'karur', label: 'Karur', stateId: '3' },
+                            { districtId: '2', value: 'chennai', label: 'Chennai', stateId: '3' },
+                            { districtId: '3', value: 'bangalore', label: 'bangalore', stateId: '1' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Select State',
+                        name: 'state',
+                        inputType: 'select',
+                        optionList: [
+                            { stateId: '1', value: 'karnataka', label: 'Karnataka', countryId: '1' },
+                            { stateId: '2', value: 'colombo', label: 'Colombo', countryId: '2' },
+                            { stateId: '3', value: 'tamilnadu', label: 'Tamilnadu', countryId: '1' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Select Country',
+                        name: 'country',
+                        inputType: 'select',
+                        optionList: [
+                            { countryId: '1', value: 'india', label: 'India' },
+                            { countryId: '2', value: 'srilanka', label: 'Srilanka' },
+                            { countryId: '3', value: 'pakistan', label: 'Pakistan' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Pincode',
+                        name: 'pincode',
+                        inputType: 'text',
+                        placeholder: 'Enter Pincode',
+                        require: true,
+                    },
+                    {
+                        label: 'Latitude',
+                        name: 'latitude',
+                        inputType: 'text',
+                        placeholder: 'Enter Latitude',
+                        require: true,
+                    },
+                    {
+                        label: 'Longitude',
+                        name: 'longitude',
+                        inputType: 'text',
+                        placeholder: 'Enter Longitude',
+                        require: true,
+                    },
+                ],
+            },
+        ],
     },
     {
-        'label': 'incomeInfo',
-        'name': 'Income Info',
-        'icon': 'mdi mdi-cash',
-        'children': [{
-            formFields: [
-                {
-                    'label': "Employee Name",
-                    'name': "employeename",
-                    'inputType': "text",
-                    'placeholder': "Enter Employee Name",
-                    'require': true
-                },
-            ]
-        }]
+        label: 'incomeInfo',
+        name: 'Income Info',
+        icon: 'mdi mdi-cash',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Select Applicant type',
+                        name: 'district',
+                        inputType: 'select',
+                        optionList: [
+                            { applicantType: '1', value: 'salary', label: 'Salary' },
+                            { applicantType: '2', value: 'bussiness', label: 'Bussiness' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    // {
+                    //     salary: [
+                    //         {
+                    //             label: 'Company Name',
+                    //             name: 'companyname',
+                    //             inputType: 'text',
+                    //             placeholder: 'Enter Company Name',
+                    //             require: true,
+                    //         },
+                    //         {
+                    //             label: 'Company Address',
+                    //             name: 'companyaddress',
+                    //             inputType: 'text',
+                    //             placeholder: 'Enter Company Address',
+                    //             require: true,
+                    //         },
+                    //         {
+                    //             label: 'Date Of Joining',
+                    //             name: 'dateofjoining',
+                    //             inputType: 'date',
+                    //             require: false,
+                    //         },
+                    //         {
+                    //             label: 'Monthly Income',
+                    //             name: 'monthlyincome',
+                    //             inputType: 'number',
+                    //             placeholder: 'Enter Monthly Income',
+                    //             require: false,
+                    //         },
+                    //         {
+                    //             label: 'Company Contact',
+                    //             name: 'companycontact',
+                    //             inputType: 'text',
+                    //             placeholder: 'Enter Company Contact',
+                    //             require: false,
+                    //         },
+                    //     ],
+                    //     bussiness: [
+                    //         {
+                    //             label: 'Bussiness Name',
+                    //             name: 'bussinessname',
+                    //             inputType: 'text',
+                    //             placeholder: 'Enter Bussiness Name',
+                    //             require: true,
+                    //         },
+                    //         {
+                    //             label: 'Bussiness Description',
+                    //             name: 'bussinessdescription',
+                    //             inputType: 'textarea',
+                    //             placeholder: 'Enter Bussiness Description',
+                    //             require: true,
+                    //         },
+                    //         {
+                    //             label: 'Bussiness Address',
+                    //             name: 'bussinessaddress',
+                    //             inputType: 'textarea',
+                    //             placeholder: 'Enter Bussiness Description',
+                    //             require: true,
+                    //         },
+                    //         {
+                    //             label: 'Bussiness Start Date',
+                    //             name: 'bussinessstartdate',
+                    //             inputType: 'date',
+                    //             require: false,
+                    //         },
+                    //         {
+                    //             label: 'Monthly Income',
+                    //             name: 'monthlyincome',
+                    //             inputType: 'number',
+                    //             placeholder: 'Enter Monthly Income',
+                    //             require: false,
+                    //         },
+                    //         {
+                    //             label: 'Office No',
+                    //             name: 'officeno',
+                    //             inputType: 'text',
+                    //             placeholder: 'Enter Office No',
+                    //             require: false,
+                    //         },
+                    //     ],
+                    // },
+                ],
+            },
+        ],
     },
     {
-        'label': 'idProof',
-        'name': 'Id Proof',
-        'icon': 'mdi mdi-checkbox-marked-circle-outline',
-        'children': [{
-            formFields: [
-                {
-                    'label': "Employee Name",
-                    'name': "employeename",
-                    'inputType': "text",
-                    'placeholder': "Enter Employee Name",
-                    'require': true
-                },
-            ]
-        }]
-    }
-]
+        label: 'idProof',
+        name: 'Id Proof',
+        icon: 'mdi mdi-checkbox-marked-circle-outline',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Select Applicant type',
+                        name: 'district',
+                        inputType: 'select',
+                        optionList: [
+                            { applicantType: '1', value: 'addharcard', label: 'Addhar Card' },
+                            { applicantType: '2', value: 'pancard', label: 'Pan Card' },
+                            { applicantType: '2', value: 'voteid', label: 'voteid' },
+                        ],
+                        displayKey: 'roleName',
+                        uniqueKey: 'roleId',
+                        require: false,
+                    },
+                    {
+                        label: 'Proof Id No',
+                        name: 'proofidno',
+                        inputType: 'text',
+                        placeholder: 'Enter Proof Id No',
+                        require: false,
+                    },
+                    // {
+                    //     label: 'Image Proof',
+                    //     name: 'imageproof',
+                    //     inputType: 'file',
+                    //     require: false,
+                    // },
+                ],
+            },
+        ],
+    },
+];
 
-
-
-
-
-export { applicantTabs }
+export { applicantTabs };

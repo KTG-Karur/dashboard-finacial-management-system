@@ -16,6 +16,10 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
         },
     }));
 
+
+    console.log("errors")
+    console.log(errors)
+
     return (
         <Card>
             <Card.Body>

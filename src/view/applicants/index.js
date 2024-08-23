@@ -96,6 +96,8 @@ const Index = () => {
     const errorHandle = useRef();
 
 
+    console.log("state")
+    console.log(state)
     // Functions
     const toggle = () => {
         setModal(!modal);

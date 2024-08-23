@@ -75,7 +75,14 @@ function Index() {
     ];
 
     // useStates
-    const [state, setState] = useState({});
+    const [state, setState] = useState({
+        employeename: '',
+        contactnumber: '',
+        dob: '',
+        address: '',
+        designation: '',
+        dateofjoining: '',
+    });
     const [tblList, setTblList] = useState([
         {
             id: '1',
@@ -106,8 +113,7 @@ function Index() {
     ]);
     const errorHandle = useRef();
 
-
-// useEffect
+    // useEffect
     useEffect(() => {
         if (!isEdit)
             setState((prevState) => ({
@@ -127,7 +133,7 @@ function Index() {
 
     const handleValidation = () => {
         errorHandle.current.validateFormFields();
-    }
+    };
 
     //handleClear
     const handleClear = () => {
@@ -149,10 +155,10 @@ function Index() {
         if (isEdit) {
             const updata = await updateData(tblList, state?.id, state);
             setTblList(updata);
-            showMessage('success', "Updated Successfully");
+            showMessage('success', 'Updated Successfully');
         } else {
             setTblList((prev) => [...prev, state]);
-            showMessage('success', "Created Successfully")
+            showMessage('success', 'Created Successfully');
         }
 
         handleClear();
@@ -217,8 +223,6 @@ function Index() {
                     setErrors={setErrors}
                 />
             </ModelViewBox>
-
-
         </React.Fragment>
     );
 }
