@@ -32,11 +32,7 @@ const employeeFormContainer = [
                 'label': "Select Designation",
                 'name': "designation",
                 'inputType': "select",
-                'optionList': [
-                    { value: 'Admin', label: 'Admin' },
-                    { value: 'Fund Collector', label: 'Fund Collector' },
-                    { value: 'Manager', label: 'Manager' },
-                ],
+                'optionList': 'designation',
                 'displayKey': 'roleName',
                 'uniqueKey': 'roleId',
                 'require': false

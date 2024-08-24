@@ -1,27 +1,5 @@
 
-let addressType = [
-    { value: 'personal', label: 'Personal' },
-    { value: 'current', label: 'Current' },
-    { value: 'office', label: 'Office' },
-];
 
-let country = [
-    { countryId: '1', value: 'india', label: 'India' },
-    { countryId: '2', value: 'srilanka', label: 'Srilanka' },
-    { countryId: '3', value: 'pakistan', label: 'Pakistan' },
-];
-
-let states = [
-    { stateId: '1', value: 'karnataka', label: 'Karnataka', countryId: '1' },
-    { stateId: '2', value: 'colombo', label: 'Colombo', countryId: '2' },
-    { stateId: '3', value: 'tamilnadu', label: 'Tamilnadu', countryId: '1' },
-];
-
-let district = [
-    { districtId: '1', value: 'karur', label: 'Karur', statesId: '3' },
-    { districtId: '2', value: 'chennai', label: 'Chennai', statesId: '3' },
-    { districtId: '3', value: 'bangalore', label: 'bangalore', statesId: '1' },
-];
 
 const applicantTabs = [
     {
@@ -78,11 +56,7 @@ const applicantTabs = [
                         label: 'Select Gender',
                         name: 'gender',
                         inputType: 'select',
-                        optionList: [
-                            { value: 'male', label: 'Male' },
-                            { value: 'female', label: 'Female' },
-                            { value: 'other', label: 'other' },
-                        ],
+                        optionList: "gender",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -98,10 +72,7 @@ const applicantTabs = [
                         label: 'Select Married status',
                         name: 'designation',
                         inputType: 'select',
-                        optionList: [
-                            { value: 'married', label: 'Married' },
-                            { value: 'unmarried', label: 'Unmarried' },
-                        ],
+                        optionList: "marriedStatus",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -188,7 +159,7 @@ const applicantTabs = [
                         label: 'Select Address type',
                         name: 'addressType',
                         inputType: 'select',
-                        optionList: addressType,
+                        optionList: "addressType",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -198,7 +169,7 @@ const applicantTabs = [
                         name: 'address',
                         inputType: 'text',
                         placeholder: 'Enter Address',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Land Mark',
@@ -211,7 +182,7 @@ const applicantTabs = [
                         label: 'Select Country',
                         name: 'country',
                         inputType: 'select',
-                        optionList: country,
+                        optionList: "country",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -220,7 +191,7 @@ const applicantTabs = [
                         label: 'Select State',
                         name: 'states',
                         inputType: 'select',
-                        optionList: states,
+                        optionList: "states",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -229,7 +200,7 @@ const applicantTabs = [
                         label: 'Select District',
                         name: 'district',
                         inputType: 'select',
-                        optionList: district,
+                        optionList: "district",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -240,7 +211,7 @@ const applicantTabs = [
                         name: 'pincode',
                         inputType: 'text',
                         placeholder: 'Enter Pincode',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Latitude',
@@ -271,10 +242,7 @@ const applicantTabs = [
                         label: 'Select Applicant type',
                         name: 'applicantType',
                         inputType: 'select',
-                        optionList: [
-                            { applicantType: '1', value: 'salary', label: 'Salary' },
-                            { applicantType: '2', value: 'bussiness', label: 'Bussiness' },
-                        ],
+                        optionList: "applicantType",
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -403,4 +371,4 @@ const applicantTabs = [
     }
 ];
 
-export { applicantTabs, addressType, country,district,states };
+export { applicantTabs};

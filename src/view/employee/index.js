@@ -107,6 +107,13 @@ function Index() {
     const [errors, setErrors] = useState([]);
     const [isEdit, setIsEdit] = useState(false);
     const errorHandle = useRef();
+    const [optionListState, setOptionListState] = useState({
+        designation: [
+            { value: 'Admin', label: 'Admin' },
+            { value: 'Fund Collector', label: 'Fund Collector' },
+            { value: 'Manager', label: 'Manager' },
+        ]
+    });
 
     // useEffect
     useEffect(() => {
@@ -161,6 +168,8 @@ function Index() {
 
     //handleEdit
     const handleEdit = async (data) => {
+        console.log(" from handle Edit")
+        console.log(data)
         setIsEdit(true);
         setState({
             ...state,
@@ -207,6 +216,7 @@ function Index() {
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>
                 <FormLayout
+                   optionListState={optionListState}
                     dynamicForm={employeeFormContainer}
                     handleSubmit={handleSubmit}
                     setState={setState}

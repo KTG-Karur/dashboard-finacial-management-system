@@ -3,14 +3,93 @@ import { Row, Col, Card, Form, Button, ProgressBar, Tab, Nav } from 'react-boots
 import { Link } from 'react-router-dom';
 import { Wizard, Steps, Step } from 'react-albus';
 import FormLayout from '../../utils/formLayout';
-
+import Table from '../../components/Table';
+import { sizePerPageList } from '../../utils/constData';
+import { deleteData, showConfirmationDialog, updateData } from '../../utils/AllFunction';
 
 const WizardWithProgressbar = forwardRef((props, ref) => {
-    const { toggle, isEdit, Title, tab, setTab, tabList, state, setState, setErrors, errors, handleSubmit, StateValue, setStateValue, toggleModal, showSelectmodel } = props;
+    const { toggle, isEdit, Title, tab, setTab, tabList, state, setState, setErrors, errors, handleSubmit, StateValue, setStateValue, toggleModal, showSelectmodel, optionListState, showMultiAdd } = props;
 
     const errorHandle = useRef();
 
+    const columns = [
+        {
+            Header: 'ID',
+            accessor: 'id',
+            Cell: (row) => <div>{row?.row?.index + 1}</div>,
+        },
+        {
+            Header: 'Address Type',
+            accessor: 'addressType',
+            sort: true,
+        },
+        {
+            Header: 'Address',
+            accessor: 'address',
+            sort: true,
+        },
+        {
+            Header: 'Country',
+            accessor: 'country',
+            sort: false,
+        },
+        {
+            Header: 'State',
+            accessor: 'states',
+            sort: true,
+        },
+        {
+            Header: 'District',
+            accessor: 'district',
+            sort: true,
+        },
+        {
+            Header: 'Pincode',
+            accessor: 'pincode',
+            sort: true,
+        },
+        {
+            Header: 'Latitude',
+            accessor: 'latitude',
+            sort: true,
+        },
+        {
+            Header: 'Logitude',
+            accessor: 'longitude',
+            sort: true,
+        },
+        {
+            Header: 'Actions',
+            accessor: 'actions',
+            Cell: ({ row }) => (
+                <div>
+                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original, row?.index)}>
+                        <i className={'fe-edit-1'}></i> Edit
+                    </span>
+                    <span
+                        className="text-danger cursor-pointer"
+                        onClick={
+                            () => {
+                                console.log("Called delete func")
+                                showConfirmationDialog(
+                                    "You won't be able to revert this!",
+                                    () => handleDelete(row?.index),
+                                    'Yes, Delete it!'
+                                )
+                            }
+                        }>
+                        <i className={'fe-trash-2'}></i> Delete
+                    </span>
+                </div>
+            ),
+        },
+    ];
+
     const [tabIndex, setTabIndex] = useState(0);
+    const [checkValidationforAddorNext, setCheckValidationforAddorNext] = useState(false);
+    const [arrVal, setArrVal] = useState([])
+    const [IsEditArrVal, setIsEditArrVal] = useState(false)
+    
 
     useImperativeHandle(ref, () => ({
         WizardRef: () => {
@@ -18,8 +97,32 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
         },
     }));
 
-    const checkValidation = () => {
+    useEffect(() => {
+        if (!IsEditArrVal)
+            setState((prevState) => ({
+                ...prevState,
+                id: arrVal?.length + 1,
+            }));
+    }, [arrVal])
+
+    const checkValidation = (condition) => {
+        setCheckValidationforAddorNext(condition)
         errorHandle.current.validateFormFields();
+    }
+
+    const handleAdd = async () => {
+        if (IsEditArrVal) {
+            console.log(state)
+            const updata = await updateData(arrVal, state?.id + 1, state);
+            setArrVal(updata);
+            console.log("updata");
+            console.log(updata);
+            setIsEditArrVal(false);
+            console.log(updata);
+        } else {
+            setArrVal(prevValues => [...prevValues, state]);
+            setState({});
+        }
     }
 
     const handleNext = (next) => {
@@ -35,12 +138,29 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
         setState(StateValue[tabList?.[tabIndex - 1]?.name] || {});
         previous();
     }
+
+    //handleEdit
+    const handleEdit = async (data, id) => {
+        setIsEditArrVal(true)
+        const updatedState = { ...data, id: id }
+        setState(updatedState);
+    };
+
+
+    //handleDelete
+    const handleDelete = async (id) => {
+        const delData = await deleteData(arrVal, id+1);
+        setArrVal(delData);
+        console.log(delData);
+    };
     // // console.log("errors")
     // // console.log(errors)
     // console.log("StateValue")
     // console.log(StateValue)
     // console.log("state")
     // console.log(state)
+    console.log("arrVal")
+    console.log(arrVal)
 
 
     return (
@@ -112,8 +232,9 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
                                                 return (
                                                     <Form>
                                                         <FormLayout
+                                                            optionListState={optionListState}
                                                             dynamicForm={tabList[tabIndex]?.children}
-                                                            handleSubmit={() => handleNext(next)}
+                                                            handleSubmit={checkValidationforAddorNext ? () => handleAdd() : () => handleNext(next)}
                                                             setState={setState}
                                                             state={state}
                                                             ref={errorHandle}
@@ -124,12 +245,25 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
                                                             showSelectmodel={showSelectmodel}
                                                         />
 
+                                                        {
+                                                            showMultiAdd.includes(tabList[tabIndex].name) &&
+                                                            <div className='d-flex justify-content-end'>
+                                                                <Button
+                                                                    onClick={() => {
+                                                                        checkValidation(true)
+                                                                    }}
+                                                                    variant="success"
+                                                                >
+                                                                    {IsEditArrVal ? "Update" : "Add"}
+                                                                </Button>
+                                                            </div>
+                                                        }
                                                         <ul className="pager wizard mb-0 list-inline mt-2">
                                                             {
                                                                 tabIndex != 0 && <li className="previous list-inline-item">
                                                                     <Button
                                                                         onClick={() => {
-                                                                            handlePrevious(previous, tabIndex);
+                                                                            handlePrevious(previous);
                                                                         }}
                                                                         variant="secondary"
                                                                     >
@@ -142,9 +276,9 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
                                                                     <li className="next list-inline-item float-end">
                                                                         <Button
                                                                             onClick={() => {
-                                                                                checkValidation(next, tabIndex)
+                                                                                checkValidation(false)
                                                                             }}
-                                                                            variant="secondary"
+                                                                            variant="primary"
                                                                         >
                                                                             Next
                                                                         </Button>
@@ -171,6 +305,20 @@ const WizardWithProgressbar = forwardRef((props, ref) => {
                         </Steps>
                     )}
                 />
+
+                {
+                    showMultiAdd.includes(tabList[tabIndex].name) &&
+                    <Table
+                        columns={columns}
+                        Title={`${tabList[tabIndex].name} List`}
+                        data={arrVal || []}
+                        pageSize={5}
+                        sizePerPageList={sizePerPageList}
+                        isSortable={true}
+                        pagination={true}
+                        isSearchable={true}
+                    />
+                }
             </Card.Body>
         </Card>
     );

@@ -1,9 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
 import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
-import { applicantTabs as tabList, addressType, country, district, states } from './formFieldData';
+import { applicantTabs as tabList } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
@@ -96,6 +96,42 @@ const Index = () => {
         // // }
     });
 
+    const [optionListState, setOptionListState] = useState({
+        addressType: [
+            { value: 'personal', label: 'Personal' },
+            { value: 'current', label: 'Current' },
+            { value: 'office', label: 'Office' },
+        ],
+        country: [
+            { countryId: '1', value: '1', label: 'India' },
+            { countryId: '2', value: '2', label: 'Srilanka' },
+            { countryId: '3', value: '3', label: 'Pakistan' },
+        ],
+        states: [
+            { stateId: '1', value: '1', label: 'Karnataka', countryId: '1' },
+            { stateId: '2', value: '2', label: 'Colombo', countryId: '2' },
+            { stateId: '3', value: '3', label: 'Tamilnadu', countryId: '1' },
+        ],
+        district: [
+            { districtId: '1', value: '1', label: 'Karur', statesId: '3' },
+            { districtId: '2', value: '2', label: 'Chennai', statesId: '3' },
+            { districtId: '3', value: '3', label: 'bangalore', statesId: '1' },
+        ],
+        gender: [
+            { value: 'male', label: 'Male' },
+            { value: 'female', label: 'Female' },
+            { value: 'other', label: 'other' },
+        ],
+        marriedStatus: [
+            { value: 'married', label: 'Married' },
+            { value: 'unmarried', label: 'Unmarried' },
+        ],
+        applicantType: [
+            { applicantType: '1', value: 'salary', label: 'Salary' },
+            { applicantType: '2', value: 'bussiness', label: 'Bussiness' },
+        ]
+    });
+
     const [StateValue, setStateValue] = useState([]);
     const [errors, setErrors] = useState([]);
     const [tblList, setTblList] = useState([
@@ -122,11 +158,47 @@ const Index = () => {
     const [modal, setModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [tab, setTab] = useState('personalInfo');
-
     const [getModelForm, setModelForm] = useState({});
-    const showSelectmodel = ['addressType', 'district', 'states', 'country', 'applicantType', 'idProof'];
+    const copyStateDistrict = {
+        states: [
+            { stateId: '1', value: '1', label: 'Karnataka', countryId: '1' },
+            { stateId: '2', value: '2', label: 'Colombo', countryId: '2' },
+            { stateId: '3', value: '3', label: 'Tamilnadu', countryId: '1' },
+        ],
+        district: [
+            { districtId: '1', value: '1', label: 'Karur', statesId: '3' },
+            { districtId: '2', value: '2', label: 'Chennai', statesId: '3' },
+            { districtId: '3', value: '3', label: 'bangalore', statesId: '1' },
+        ]
+    };
+    const showSelectmodel = ['addressType', 'district', 'states', 'country', 'idProof'];
+    const showMultiAdd = ["idProof", "addressInfo"];
     const errorHandle = useRef();
-    // Functions
+
+    useEffect(() => {
+        fetchDistrict();
+        fetchState();
+    }, [state?.country, state?.states])
+
+
+    // Fetch District and State
+    const fetchDistrict = async () => {
+        const result = copyStateDistrict.district.filter(item => item.statesId === state?.states)
+
+        setOptionListState(prevState => ({
+            ...prevState,
+            district: result
+        }));
+    };
+    const fetchState = async () => {
+        const result = copyStateDistrict.states.filter(item => item.countryId === state?.country)
+        setOptionListState(prevState => ({
+            ...prevState,
+            states: result
+        }));
+    };
+
+    // Toggle
     const toggle = () => {
         setWizard(!wizard);
     };
@@ -135,20 +207,20 @@ const Index = () => {
         setModelForm(form);
     };
 
+    // Validation
     const handleValidation = () => {
         errorHandle.current.WizardRef();
     };
 
+    // Select Option Create Operation
     let val = { value: '', label: '' };
     const handleChangeSelectOption = (value, name = "") => {
         if (name === "states") {
             val = { ...val, countryId: value?.countryId }
-        }else if(name === "district"){
-            // console.log(first)
-            val = { ...val, statesId: value?.statesId }
+        } else if (name === "district") {
+            val = { ...val, stateId: value?.stateId }
         }
-
-        val.value = value;
+        val.value = value
         val.label = value;
     };
 
@@ -157,16 +229,28 @@ const Index = () => {
 
         switch (getModelForm?.name || '') {
             case 'addressType':
-                addressType[addressType.length] = val;
+                setOptionListState(prevState => ({
+                    ...prevState,
+                    addressType: [...prevState.addressType, val ]
+                }));
                 break;
             case 'country':
-                country[country.length] = { countryId: country.length + 1, ...val };
+                setOptionListState(prevState => ({
+                    ...prevState,
+                    country: [...prevState.country, { countryId: optionListState.country.length + 1, ...val }]
+                }));
                 break;
             case 'states':
-                states[states.length] = { stateId: states.length + 1, ...val };
+                setOptionListState(prevState => ({
+                    ...prevState,
+                    states: [...prevState.states, { stateId: optionListState.states.length + 1, ...val }]
+                }));
                 break;
             case 'district':
-                district[district.length] = { districtId: district.length + 1, ...val };
+                setOptionListState(prevState => ({
+                    ...prevState,
+                    district: [...prevState.district, { districtId: optionListState.district.length + 1, ...val }]
+                }));
                 break;
             default:
                 break;
@@ -179,12 +263,6 @@ const Index = () => {
         console.log('handleSubmit from Applicant');
     };
 
-    // console.log('getModelForm');
-    // console.log(getModelForm);
-    console.log('district');
-    console.log(district);
-    console.log('states');
-    console.log(states);
     return (
         <React.Fragment>
             {wizard ? (
@@ -206,6 +284,8 @@ const Index = () => {
                         StateValue={StateValue}
                         toggleModal={toggleModal}
                         showSelectmodel={showSelectmodel}
+                        optionListState={optionListState}
+                        showMultiAdd={showMultiAdd}
                     />
                     <ModelViewBox
                         modal={modal}
@@ -226,7 +306,7 @@ const Index = () => {
                                     className="react-select react-select-container mb-2"
                                     classNamePrefix="react-select"
                                     isSearchable
-                                    options={getModelForm?.name === 'states' ? country : states}
+                                    options={getModelForm?.name === 'states' ? optionListState.country : optionListState.states}
                                 />
                             </React.Fragment>
                         ) : null}

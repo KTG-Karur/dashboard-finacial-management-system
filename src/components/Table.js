@@ -66,7 +66,7 @@ const Table = (props) => {
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageList = props['sizePerPageList'] || [];
-    const { toggle, Title } = props;
+    const { toggle = null, Title } = props;
 
     let otherProps = {};
 
@@ -171,13 +171,15 @@ const Table = (props) => {
                                                         )}
                                                     </Col>
                                                     <Col xs={4}>
-                                                        <Button
-                                                            variant="success"
-                                                            className="waves-effect waves-light"
-                                                            onClick={toggle}>
-                                                            <i className="mdi mdi-plus-circle "></i>
-                                                            Add
-                                                        </Button>
+                                                        {
+                                                            toggle && <Button
+                                                                variant="success"
+                                                                className="waves-effect waves-light"
+                                                                onClick={toggle}>
+                                                                <i className="mdi mdi-plus-circle "></i>
+                                                                Add
+                                                            </Button>
+                                                        }
                                                     </Col>
                                                 </Row>
                                             </Col>

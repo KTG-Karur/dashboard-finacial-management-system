@@ -4,20 +4,20 @@ import { NotificationManager, } from "react-notifications";
 
 
 const showMessage = (type, msg, title = null) => {
-  switch (type) {
-    case 'info':
-      NotificationManager.info(msg, title);
-      break;
-    case 'success':
-      NotificationManager.success(msg, title);
-      break;
-    case 'warning':
-      NotificationManager.warning(msg, title);
-      break;
-    case 'error':
-      NotificationManager.error(msg, title);
-      break;
-  }
+    switch (type) {
+        case 'info':
+            NotificationManager.info(msg, title);
+            break;
+        case 'success':
+            NotificationManager.success(msg, title);
+            break;
+        case 'warning':
+            NotificationManager.warning(msg, title);
+            break;
+        case 'error':
+            NotificationManager.error(msg, title);
+            break;
+    }
 }
 
 
@@ -46,23 +46,10 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
-// const updateData = (arr, state, id, setTblList) => {
-//     //    const result=  arr.filter((ar)=>{
-//     //          return ar.id!==id
-//     //     })
-//     let arr2 = [...arr];
-//     for (let i = 0; i < arr.length; i++) {
-//         if (id == arr.id) {
-//             arr2[i] = state;
-//         }
-//     }
-//     console.log(arr2);
-//     console.log('state : ', state);
-//     setTblList(arr2);
-// };
-
 function updateData(arr, id, newState) {
-    return arr.map((item) => (item.id === id ? newState : item));
+    arr[id-1] = newState
+    return arr;
+    // return arr.map((item) => (item.id === id ? newState : item));
 }
 
 function deleteData(arr, id) {
@@ -110,6 +97,7 @@ const showConfirmationDialog = (
         }
     });
 };
-;
+
+
 
 export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj };

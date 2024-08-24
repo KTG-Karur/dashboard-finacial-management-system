@@ -5,7 +5,7 @@ import { Button, Form } from 'react-bootstrap';
 import { formatDate, findObj } from './AllFunction';
 
 function FormComponent(props) {
-    const { formField, setState, errors, removeHanldeErrors, state, toggleModal = null, showSelectmodel = [] } = props;
+    const { formField, setState, errors, removeHanldeErrors, state, toggleModal = null, showSelectmodel = [], optionListState } = props;
 
     // let formBox = []; for Checkbox
 
@@ -29,7 +29,7 @@ function FormComponent(props) {
             case 'select':
                 setState((prev) => ({
                     ...prev,
-                    [formName]: e?.value,
+                    [formName]: e.value,
                 }));
                 break;
             case 'radio':
@@ -176,6 +176,7 @@ function FormComponent(props) {
                                         <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
                                     ) : null}
                                     {
+                                        //Add Option Modal Btn
                                         (showSelectmodel || []).includes(form?.name)
                                         && (<Button
                                             variant="success"
@@ -186,7 +187,6 @@ function FormComponent(props) {
                                             <i className="mdi mdi-plus-circle "></i>
                                         </Button>)
 
-
                                     }
                                 </span></Form.Label>
                                 <Select
@@ -196,14 +196,21 @@ function FormComponent(props) {
                                     onChange={(e) => {
                                         handleChange(e, 'select', form?.name);
                                     }}
-                                    getOptionLabel={(option) => `${option?.label}`}
-                                    getOptionValue={(option) => `${option?.value}`}
-                                    value={findObj(form?.optionList, state[form?.name])}
+                                    getOptionLabel={(option) => option?.label}
+                                    getOptionValue={(option) => option}
+                                    value={findObj(optionListState?.[form?.optionList], state[form?.name])}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    options={form?.optionList}></Select>
+                                    options={optionListState?.[form?.optionList] || []}
+                                // options={form?.optionList}
+                                ></Select>
+                                {errors?.includes(form?.name) && (
+                                    <p
+                                        className="text-danger"
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                )}
                             </div>
                         );
                     case 'checkbox':
