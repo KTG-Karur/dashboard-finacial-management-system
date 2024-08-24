@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react';
 
-import { WizardWithProgressbar } from "../../components/Atom/WizardViewBox";
+import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
 import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
-import { applicantTabs as tabList, addressType, country, district, states } from "./formFieldData";
+import { applicantTabs as tabList, addressType, country, district, states } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Button, Form } from 'react-bootstrap';
+import Select from 'react-select';
 
 const Index = () => {
     //Table column
@@ -55,8 +56,8 @@ const Index = () => {
                     </span>
                     <span
                         className="text-danger cursor-pointer"
-                        onClick={() =>
-                            console.log(row?.original)
+                        onClick={
+                            () => console.log(row?.original)
                             // showConfirmationDialog(
                             //     "You won't be able to revert this!",
                             //     () => handleDelete(row?.original?.id),
@@ -95,7 +96,6 @@ const Index = () => {
         // // }
     });
 
-
     const [StateValue, setStateValue] = useState([]);
     const [errors, setErrors] = useState([]);
     const [tblList, setTblList] = useState([
@@ -124,7 +124,7 @@ const Index = () => {
     const [tab, setTab] = useState('personalInfo');
 
     const [getModelForm, setModelForm] = useState({});
-    const showSelectmodel = ["addressType", "district", "states", "country", "applicantType", "idProof"]
+    const showSelectmodel = ['addressType', 'district', 'states', 'country', 'applicantType', 'idProof'];
     const errorHandle = useRef();
     // Functions
     const toggle = () => {
@@ -137,75 +137,113 @@ const Index = () => {
 
     const handleValidation = () => {
         errorHandle.current.WizardRef();
-    }
+    };
 
     let val = { value: '', label: '' };
     const handleChangeSelectOption = (value) => {
-
         val.value = value;
         val.label = value;
-    }
+    };
 
     const handleSubmitSelectOption = () => {
-        if (val?.value === '')
-            return false;
+        if (val?.value === '') return false;
 
+        switch (getModelForm?.name || '') {
+            case 'addressType':
+                addressType[addressType.length] = val;
+                break;
+            case 'country':
+                country[country.length] = { countryId: country.length + 1, ...val };
+                break;
 
-        addressType[addressType.length] = val;
+            default:
+                break;
+        }
         toggleModal();
-    }
+    };
 
     // handleSubmit
     const handleSubmit = async () => {
-        console.log("handleSubmit from Applicant")
+        console.log('handleSubmit from Applicant');
     };
 
-    console.log("getModelForm")
-    console.log(getModelForm?.optionList)
-    console.log("country")
-    console.log(country)
+    console.log('getModelForm');
+    console.log(getModelForm);
+    console.log('country');
+    console.log(country);
     return (
         <React.Fragment>
-            {
-                wizard ?
-                    <React.Fragment>
-                        <WizardWithProgressbar toggle={toggle} isEdit={isEdit} Title={"Applicant Details"} setTab={setTab} tab={tab} tabList={tabList} setState={setState} state={state} setErrors={setErrors} errors={errors} handleSubmit={handleValidation} ref={errorHandle} setStateValue={setStateValue} StateValue={StateValue} toggleModal={toggleModal} showSelectmodel={showSelectmodel} />
-                        <ModelViewBox
-                            modal={modal}
-                            toggle={toggleModal}
-                            modelHeader={getModelForm?.name || ""}
-                            modelSize={'md'}
-                            handleSubmit={handleSubmitSelectOption}>
-
-                            <Form.Label>
-                                {getModelForm?.name}</Form.Label>
-                            <Form.Control
-                                type="text"
-                                name={'selectmodel'}
-                                className="mb-1"
-                                placeholder={`Enter ${getModelForm?.name || ""}`}
-                                onChange={(e) => {
-                                    handleChangeSelectOption(e.target.value)
-                                }}
-                            />
-
-                        </ModelViewBox>
-                    </React.Fragment>
-                    :
-                    <Table
-                        columns={columns}
-                        Title={'Applicant List'}
-                        data={tblList || []}
-                        pageSize={5}
-                        sizePerPageList={sizePerPageList}
-                        isSortable={true}
-                        pagination={true}
-                        isSearchable={true}
+            {wizard ? (
+                <React.Fragment>
+                    <WizardWithProgressbar
                         toggle={toggle}
+                        isEdit={isEdit}
+                        Title={'Applicant Details'}
+                        setTab={setTab}
+                        tab={tab}
+                        tabList={tabList}
+                        setState={setState}
+                        state={state}
+                        setErrors={setErrors}
+                        errors={errors}
+                        handleSubmit={handleValidation}
+                        ref={errorHandle}
+                        setStateValue={setStateValue}
+                        StateValue={StateValue}
+                        toggleModal={toggleModal}
+                        showSelectmodel={showSelectmodel}
                     />
-            }
+                    <ModelViewBox
+                        modal={modal}
+                        toggle={toggleModal}
+                        modelHeader={getModelForm?.name || ''}
+                        modelSize={'md'}
+                        handleSubmit={handleSubmitSelectOption}>
+                        {/* Render the Select dropdown based on the getModelForm?.name */}
+                        {getModelForm?.name === 'states' || getModelForm?.name === 'district' ? (
+                            <React.Fragment>
+                                <Form.Label>{getModelForm?.name === 'states' ? 'country' : 'states'}</Form.Label>
+                                <Select
+                                    onChange={(selectedOption) => {
+                                        handleChangeSelectOption(selectedOption);
+                                    }}
+                                    getOptionLabel={(option) => `${option?.label}`}
+                                    getOptionValue={(option) => `${option?.value}`}
+                                    className="react-select react-select-container mb-2"
+                                    classNamePrefix="react-select"
+                                    isSearchable
+                                    options={getModelForm?.name === 'states' ? country : states}
+                                />
+                            </React.Fragment>
+                        ) : null}
+
+                        <Form.Label>{getModelForm?.name}</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name={getModelForm?.name}
+                            className="mb-1"
+                            placeholder={`Enter ${getModelForm?.name || ''}`}
+                            onChange={(e) => {
+                                handleChangeSelectOption(e.target.value, e.target.name);
+                            }}
+                        />
+                    </ModelViewBox>
+                </React.Fragment>
+            ) : (
+                <Table
+                    columns={columns}
+                    Title={'Applicant List'}
+                    data={tblList || []}
+                    pageSize={5}
+                    sizePerPageList={sizePerPageList}
+                    isSortable={true}
+                    pagination={true}
+                    isSearchable={true}
+                    toggle={toggle}
+                />
+            )}
         </React.Fragment>
-    )
-}
+    );
+};
 
 export default Index;
