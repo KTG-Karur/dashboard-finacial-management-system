@@ -1,1 +1,5 @@
-export const employee="/todos";
+const apiContainer = {
+    department: "/department",
+  };
+  
+  export default apiContainer;

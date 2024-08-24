@@ -2,7 +2,7 @@ import { Col, Row } from 'react-bootstrap';
 
 // hooks
 import { usePageTitle } from '../../../hooks';
-
+import { useDispatch, useSelector } from "react-redux";
 // component
 import Statistics from './Statistics';
 import SalesChart from './SalesChart';
@@ -14,8 +14,16 @@ import Projects from './Projects';
 
 // dummy data
 import { messages, projectDetails } from './data';
+import { useEffect } from 'react';
+import { useViewport, useRedux } from '../../../hooks';
+import { getDepartment } from '../../../api/DepartmentApi';
+import { getDepartmentRequest } from '../../../redux/actions';
 
 const DashBoard1 = () => {
+
+    const { dispatch, appSelector } = useRedux();
+    // const dispatch = useDispatch();
+
     // set pagetitle
     usePageTitle({
         title: 'DashBoard',
@@ -27,6 +35,12 @@ const DashBoard1 = () => {
             },
         ],
     });
+
+    useEffect(() => {
+        // dispatch(getDepartment())
+        dispatch(getDepartmentRequest());
+        // getDepartment()
+    }, []);
 
     return (
         <>

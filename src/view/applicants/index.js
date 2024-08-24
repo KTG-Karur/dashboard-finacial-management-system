@@ -5,7 +5,7 @@ import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
 import { applicantTabs as tabList, addressType, country, district, states } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import Select from 'react-select';
 
 const Index = () => {
@@ -140,7 +140,14 @@ const Index = () => {
     };
 
     let val = { value: '', label: '' };
-    const handleChangeSelectOption = (value) => {
+    const handleChangeSelectOption = (value, name = "") => {
+        if (name === "states") {
+            val = { ...val, countryId: value?.countryId }
+        }else if(name === "district"){
+            // console.log(first)
+            val = { ...val, statesId: value?.statesId }
+        }
+
         val.value = value;
         val.label = value;
     };
@@ -155,7 +162,12 @@ const Index = () => {
             case 'country':
                 country[country.length] = { countryId: country.length + 1, ...val };
                 break;
-
+            case 'states':
+                states[states.length] = { stateId: states.length + 1, ...val };
+                break;
+            case 'district':
+                district[district.length] = { districtId: district.length + 1, ...val };
+                break;
             default:
                 break;
         }
@@ -167,10 +179,12 @@ const Index = () => {
         console.log('handleSubmit from Applicant');
     };
 
-    console.log('getModelForm');
-    console.log(getModelForm);
-    console.log('country');
-    console.log(country);
+    // console.log('getModelForm');
+    // console.log(getModelForm);
+    console.log('district');
+    console.log(district);
+    console.log('states');
+    console.log(states);
     return (
         <React.Fragment>
             {wizard ? (
@@ -199,13 +213,13 @@ const Index = () => {
                         modelHeader={getModelForm?.name || ''}
                         modelSize={'md'}
                         handleSubmit={handleSubmitSelectOption}>
-                        {/* Render the Select dropdown based on the getModelForm?.name */}
+
                         {getModelForm?.name === 'states' || getModelForm?.name === 'district' ? (
                             <React.Fragment>
                                 <Form.Label>{getModelForm?.name === 'states' ? 'country' : 'states'}</Form.Label>
                                 <Select
                                     onChange={(selectedOption) => {
-                                        handleChangeSelectOption(selectedOption);
+                                        handleChangeSelectOption(selectedOption, getModelForm?.name);
                                     }}
                                     getOptionLabel={(option) => `${option?.label}`}
                                     getOptionValue={(option) => `${option?.value}`}
@@ -224,9 +238,10 @@ const Index = () => {
                             className="mb-1"
                             placeholder={`Enter ${getModelForm?.name || ''}`}
                             onChange={(e) => {
-                                handleChangeSelectOption(e.target.value, e.target.name);
+                                handleChangeSelectOption(e.target.value);
                             }}
                         />
+
                     </ModelViewBox>
                 </React.Fragment>
             ) : (
