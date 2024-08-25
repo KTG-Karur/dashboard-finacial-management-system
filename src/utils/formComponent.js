@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormInput } from '../components/form';
 import Select from 'react-select';
 import { Button, Form } from 'react-bootstrap';
 import { formatDate, findObj } from './AllFunction';
 
 function FormComponent(props) {
-    const { formField, setState, errors, removeHanldeErrors, state, toggleModal = null, showSelectmodel = [], optionListState } = props;
-
-    // let formBox = []; for Checkbox
+    const {
+        formField,
+        setState,
+        errors,
+        removeHanldeErrors,
+        state,
+        toggleModal = null,
+        showSelectmodel = [],
+        optionListState,
+    } = props;
 
     const handleChange = async (e, formType, formName) => {
         switch (formType) {
@@ -20,7 +27,7 @@ function FormComponent(props) {
                 }));
                 break;
             case 'date':
-                const formate = await formatDate(e?.target?.value)
+                const formate = await formatDate(e?.target?.value);
                 setState((prev) => ({
                     ...prev,
                     [formName]: formate,
@@ -39,11 +46,9 @@ function FormComponent(props) {
                 }));
                 break;
             default:
-                console.log("formName ", formName);
-
+                console.log('formName ', formName);
         }
     };
-
 
     return (
         <div>
@@ -52,12 +57,14 @@ function FormComponent(props) {
                     case 'textarea':
                         return (
                             <div key={index} className="mb-2">
-                                <Form.Label><span>
-                                    {form?.label}
-                                    {form?.require ? (
-                                        <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                    ) : null}
-                                </span></Form.Label>
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                    </span>
+                                </Form.Label>
                                 <Form.Control
                                     type="textarea"
                                     name={form?.name}
@@ -82,19 +89,21 @@ function FormComponent(props) {
                     case 'text':
                         return (
                             <div key={index} className="mb-2">
-                                <Form.Label><span>
-                                    {form?.label}{' '}
-                                    {form?.require ? (
-                                        <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                    ) : null}
-                                </span></Form.Label>
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}{' '}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                    </span>
+                                </Form.Label>
                                 <Form.Control
                                     type="text"
                                     name={form?.name}
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={state[form?.name] || ""}
+                                    value={state[form?.name] || ''}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -111,12 +120,14 @@ function FormComponent(props) {
                     case 'number':
                         return (
                             <div key={index} className="mb-2">
-                                <Form.Label><span>
-                                    {form?.label}{' '}
-                                    {form?.require ? (
-                                        <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                    ) : null}
-                                </span></Form.Label>
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}{' '}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                    </span>
+                                </Form.Label>
                                 <Form.Control
                                     type="number"
                                     name={form?.name}
@@ -140,12 +151,14 @@ function FormComponent(props) {
                     case 'date':
                         return (
                             <div key={index} className="mb-2">
-                                <Form.Label><span>
-                                    {form?.label}{' '}
-                                    {form?.require ? (
-                                        <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                    ) : null}
-                                </span></Form.Label>
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}{' '}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                    </span>
+                                </Form.Label>
                                 <Form.Control
                                     type="date"
                                     name={form?.name}
@@ -170,25 +183,28 @@ function FormComponent(props) {
                     case 'select':
                         return (
                             <div className={'mb-3'} key={index}>
-                                <Form.Label><span>
-                                    {form?.label}{' '}
-                                    {form?.require ? (
-                                        <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                    ) : null}
-                                    {
-                                        //Add Option Modal Btn
-                                        (showSelectmodel || []).includes(form?.name)
-                                        && (<Button
-                                            variant="success"
-                                            className="waves-effect waves-light mx-1"
-                                            style={{ padding: "3px", lineHeight: "1.0" }}
-                                            onClick={() => { toggleModal(form) }}
-                                        >
-                                            <i className="mdi mdi-plus-circle "></i>
-                                        </Button>)
-
-                                    }
-                                </span></Form.Label>
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}{' '}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                        {
+                                            //Add Option Modal Btn
+                                            (showSelectmodel || []).includes(form?.name) && (
+                                                <Button
+                                                    variant="success"
+                                                    className="waves-effect waves-light mx-1"
+                                                    style={{ padding: '3px', lineHeight: '1.0' }}
+                                                    onClick={() => {
+                                                        toggleModal(form);
+                                                    }}>
+                                                    <i className="mdi mdi-plus-circle "></i>
+                                                </Button>
+                                            )
+                                        }
+                                    </span>
+                                </Form.Label>
                                 <Select
                                     isMulti={form?.isMultiple}
                                     required={form?.require}
@@ -204,13 +220,14 @@ function FormComponent(props) {
                                     isSearchable
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     options={optionListState?.[form?.optionList] || []}
-                                // options={form?.optionList}
+                                    // options={form?.optionList}
                                 ></Select>
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
                                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
                                 )}
+                                
                             </div>
                         );
                     case 'checkbox':
@@ -288,7 +305,7 @@ function FormComponent(props) {
                             </div>
                         );
                     default:
-                        console.log("form?.inputType : ", form?.inputType)
+                        console.log('form?.inputType : ', form?.inputType);
                 }
             })}
         </div>

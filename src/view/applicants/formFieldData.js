@@ -1,6 +1,3 @@
-
-
-
 const applicantTabs = [
     {
         label: 'Personal Info',
@@ -16,7 +13,7 @@ const applicantTabs = [
                         name: 'firstName',
                         inputType: 'text',
                         placeholder: 'Enter First Name',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Last Name',
@@ -36,7 +33,7 @@ const applicantTabs = [
                         name: 'contactNo',
                         placeholder: 'Enter Contact No',
                         inputType: 'text',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Alternative Contact No',
@@ -56,10 +53,10 @@ const applicantTabs = [
                         label: 'Select Gender',
                         name: 'gender',
                         inputType: 'select',
-                        optionList: "gender",
+                        optionList: 'gender',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Qualification',
@@ -70,15 +67,15 @@ const applicantTabs = [
                     },
                     {
                         label: 'Select Married status',
-                        name: 'designation',
+                        name: 'marriedStatus',
                         inputType: 'select',
-                        optionList: "marriedStatus",
+                        optionList: 'marriedStatus',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
-                    }
+                    },
                 ],
-            }
+            },
         ],
     },
     {
@@ -159,10 +156,10 @@ const applicantTabs = [
                         label: 'Select Address type',
                         name: 'addressType',
                         inputType: 'select',
-                        optionList: "addressType",
+                        optionList: 'addressType',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Address',
@@ -182,7 +179,7 @@ const applicantTabs = [
                         label: 'Select Country',
                         name: 'country',
                         inputType: 'select',
-                        optionList: "country",
+                        optionList: 'country',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -191,7 +188,7 @@ const applicantTabs = [
                         label: 'Select State',
                         name: 'states',
                         inputType: 'select',
-                        optionList: "states",
+                        optionList: 'states',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -200,7 +197,7 @@ const applicantTabs = [
                         label: 'Select District',
                         name: 'district',
                         inputType: 'select',
-                        optionList: "district",
+                        optionList: 'district',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -211,7 +208,7 @@ const applicantTabs = [
                         name: 'pincode',
                         inputType: 'text',
                         placeholder: 'Enter Pincode',
-                        require: true,
+                        require: false,
                     },
                     {
                         label: 'Latitude',
@@ -242,10 +239,8 @@ const applicantTabs = [
                         label: 'Select Applicant type',
                         name: 'applicantType',
                         inputType: 'select',
-                        optionList: "applicantType",
-                        displayKey: 'roleName',
-                        uniqueKey: 'roleId',
-                        require: false,
+                        optionList: 'applicantType',
+                        require: true,
                     },
                     // {
                     //     salary: [
@@ -254,7 +249,7 @@ const applicantTabs = [
                     //             name: 'companyname',
                     //             inputType: 'text',
                     //             placeholder: 'Enter Company Name',
-                    //             require: false,
+                    //             require: true,
                     //         },
                     //         {
                     //             label: 'Company Address',
@@ -281,7 +276,7 @@ const applicantTabs = [
                     //             name: 'companycontact',
                     //             inputType: 'text',
                     //             placeholder: 'Enter Company Contact',
-                    //             require: false,
+                    //             require: true,
                     //         },
                     //     ],
                     //     bussiness: [
@@ -304,7 +299,7 @@ const applicantTabs = [
                     //             name: 'bussinessaddress',
                     //             inputType: 'textarea',
                     //             placeholder: 'Enter Bussiness Description',
-                    //             require: false,
+                    //             require: true,
                     //         },
                     //         {
                     //             label: 'Bussiness Start Date',
@@ -328,6 +323,83 @@ const applicantTabs = [
                     //         },
                     //     ],
                     // },
+                    //salary
+                    {
+                        label: 'Company / Business Name',
+                        name: 'companyname',
+                        inputType: 'text',
+                        placeholder: 'Enter Company/Business Name',
+                        require: true,
+                    },
+                    {
+                        label: 'Company / Business Address',
+                        name: 'companyaddress',
+                        inputType: 'text',
+                        placeholder: 'Enter Company/Business Address',
+                        require: false,
+                    },
+                    {
+                        label: 'Date Of Joining / Starting Date',
+                        name: 'dateofjoining',
+                        inputType: 'date',
+                        require: false,
+                    },
+                    {
+                        label: 'Monthly Income',
+                        name: 'monthlyincome',
+                        inputType: 'number',
+                        placeholder: 'Enter Monthly Income',
+                        require: false,
+                    },
+                    {
+                        label: 'Office No',
+                        name: 'officeno',
+                        inputType: 'text',
+                        placeholder: 'Enter Office No',
+                        require: false,
+                    },
+                    //bussiness
+                    // {
+                    //     label: 'Bussiness Name',
+                    //     name: 'bussinessname',
+                    //     inputType: 'text',
+                    //     placeholder: 'Enter Bussiness Name',
+                    //     require: false,
+                    // },
+                    // {
+                    //     label: 'Bussiness Description',
+                    //     name: 'bussinessdescription',
+                    //     inputType: 'textarea',
+                    //     placeholder: 'Enter Bussiness Description',
+                    //     require: false,
+                    // },
+                    // {
+                    //     label: 'Bussiness Address',
+                    //     name: 'bussinessaddress',
+                    //     inputType: 'textarea',
+                    //     placeholder: 'Enter Bussiness Description',
+                    //     require: false,
+                    // },
+                    // {
+                    //     label: 'Bussiness Start Date',
+                    //     name: 'bussinessstartdate',
+                    //     inputType: 'date',
+                    //     require: false,
+                    // },
+                    // {
+                    //     label: 'Monthly Income',
+                    //     name: 'monthlyincome',
+                    //     inputType: 'number',
+                    //     placeholder: 'Enter Monthly Income',
+                    //     require: false,
+                    // },
+                    // {
+                    //     label: 'Office No',
+                    //     name: 'officeno',
+                    //     inputType: 'text',
+                    //     placeholder: 'Enter Office No',
+                    //     require: false,
+                    // },
                 ],
             },
         ],
@@ -343,11 +415,7 @@ const applicantTabs = [
                         label: 'Select Id Proof',
                         name: 'idProof',
                         inputType: 'select',
-                        optionList: [
-                            { applicantType: '1', value: 'addharcard', label: 'Addhar Card' },
-                            { applicantType: '2', value: 'pancard', label: 'Pan Card' },
-                            { applicantType: '2', value: 'voteid', label: 'voteid' },
-                        ],
+                        optionList: 'idProof',
                         displayKey: 'roleName',
                         uniqueKey: 'roleId',
                         require: false,
@@ -357,7 +425,7 @@ const applicantTabs = [
                         name: 'proofIdNo',
                         inputType: 'text',
                         placeholder: 'Enter Proof Id No',
-                        require: false,
+                        require: true,
                     },
                     // {
                     //     label: 'Image Proof',
@@ -368,7 +436,7 @@ const applicantTabs = [
                 ],
             },
         ],
-    }
+    },
 ];
 
-export { applicantTabs};
+export { applicantTabs };

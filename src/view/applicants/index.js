@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
 import Table from '../../components/Table';
@@ -7,6 +7,7 @@ import { applicantTabs as tabList } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
+import { deleteData, formatDate, showConfirmationDialog } from '../../utils/AllFunction';
 
 const Index = () => {
     //Table column
@@ -37,8 +38,13 @@ const Index = () => {
             sort: false,
         },
         {
-            Header: 'Applicant Address',
-            accessor: 'applicantAddress',
+            Header: 'Gender',
+            accessor: 'gender',
+            sort: false,
+        },
+        {
+            Header: 'Company Name',
+            accessor: 'companyName',
             sort: false,
         },
         {
@@ -56,13 +62,12 @@ const Index = () => {
                     </span>
                     <span
                         className="text-danger cursor-pointer"
-                        onClick={
-                            () => console.log(row?.original)
-                            // showConfirmationDialog(
-                            //     "You won't be able to revert this!",
-                            //     () => handleDelete(row?.original?.id),
-                            //     'Yes, Delete it!'
-                            // )
+                        onClick={() =>
+                            showConfirmationDialog(
+                                "You won't be able to revert this!",
+                                () => handleDelete(row?.original?.id),
+                                'Yes, Delete it!'
+                            )
                         }>
                         <i className={'fe-trash-2'}></i> Delete
                     </span>
@@ -71,30 +76,7 @@ const Index = () => {
         },
     ];
     // useStates
-    const [state, setState] = useState({
-        // // personalInfo: {
-        // //     firstname: '',
-        // //     lastname: '',
-        // //     dob: '',
-        // //     contactno: '',
-        // //     alternativecontactno: '',
-        // //     email: '',
-        // //     gender: '',
-        // //     qualification: '',
-        // //     designation: '',
-        // // },
-        // // //addtional
-        // // additionalInfo: {
-        // //     fathername: '',
-        // //     mothername: '',
-        // //     fatherjob: '',
-        // //     fatherincome: '',
-        // //     motherjob: '',
-        // //     motherincome: '',
-        // //     fathercontact: '',
-        // //     mothercontact: ''
-        // // }
-    });
+    const [state, setState] = useState({});
 
     const [optionListState, setOptionListState] = useState({
         addressType: [
@@ -129,7 +111,12 @@ const Index = () => {
         applicantType: [
             { applicantType: '1', value: 'salary', label: 'Salary' },
             { applicantType: '2', value: 'bussiness', label: 'Bussiness' },
-        ]
+        ],
+        idProof: [
+            { value: 'addharcard', label: 'Addhar Card' },
+            { value: 'pancard', label: 'Pan Card' },
+            { value: 'voteid', label: 'voteid' },
+        ],
     });
 
     const [StateValue, setStateValue] = useState([]);
@@ -141,7 +128,8 @@ const Index = () => {
             createdAt: '2022-11-14',
             applicantName: 'Surya',
             applicantContact: '9876543221',
-            applicantAddress: '53,vaiyapurinagar,karur,tamilnadu,india',
+            gender: 'Male',
+            companyName: 'knock the globe techonology',
             applicantType: 'salary',
         },
         {
@@ -150,11 +138,12 @@ const Index = () => {
             createdAt: '2021-11-14',
             applicantName: 'Raja',
             applicantContact: '9876543221',
-            applicantAddress: '53,vaiyapurinagar,karur,tamilnadu,india',
+            gender: 'Male',
+            companyName: 'Time Tea',
             applicantType: 'bussiness',
         },
     ]);
-    const [wizard, setWizard] = useState(true);
+    const [wizard, setWizard] = useState(false);
     const [modal, setModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [tab, setTab] = useState('personalInfo');
@@ -169,32 +158,30 @@ const Index = () => {
             { districtId: '1', value: '1', label: 'Karur', statesId: '3' },
             { districtId: '2', value: '2', label: 'Chennai', statesId: '3' },
             { districtId: '3', value: '3', label: 'bangalore', statesId: '1' },
-        ]
+        ],
     };
     const showSelectmodel = ['addressType', 'district', 'states', 'country', 'idProof'];
-    const showMultiAdd = ["idProof", "addressInfo"];
-    const errorHandle = useRef();
+    const showMultiAdd = ['idProof', 'addressInfo'];
 
     useEffect(() => {
         fetchDistrict();
         fetchState();
-    }, [state?.country, state?.states])
-
+    }, [state?.country, state?.states]);
 
     // Fetch District and State
     const fetchDistrict = async () => {
-        const result = copyStateDistrict.district.filter(item => item.statesId === state?.states)
+        const result = copyStateDistrict.district.filter((item) => item.statesId === state?.states);
 
-        setOptionListState(prevState => ({
+        setOptionListState((prevState) => ({
             ...prevState,
-            district: result
+            district: result,
         }));
     };
     const fetchState = async () => {
-        const result = copyStateDistrict.states.filter(item => item.countryId === state?.country)
-        setOptionListState(prevState => ({
+        const result = copyStateDistrict.states.filter((item) => item.countryId === state?.country);
+        setOptionListState((prevState) => ({
             ...prevState,
-            states: result
+            states: result,
         }));
     };
 
@@ -207,20 +194,15 @@ const Index = () => {
         setModelForm(form);
     };
 
-    // Validation
-    const handleValidation = () => {
-        errorHandle.current.WizardRef();
-    };
-
     // Select Option Create Operation
     let val = { value: '', label: '' };
-    const handleChangeSelectOption = (value, name = "") => {
-        if (name === "states") {
-            val = { ...val, countryId: value?.countryId }
-        } else if (name === "district") {
-            val = { ...val, stateId: value?.stateId }
+    const handleChangeSelectOption = (value, name = '') => {
+        if (name === 'states') {
+            val = { ...val, countryId: value?.countryId };
+        } else if (name === 'district') {
+            val = { ...val, stateId: value?.stateId };
         }
-        val.value = value
+        val.value = value;
         val.label = value;
     };
 
@@ -229,27 +211,33 @@ const Index = () => {
 
         switch (getModelForm?.name || '') {
             case 'addressType':
-                setOptionListState(prevState => ({
+                setOptionListState((prevState) => ({
                     ...prevState,
-                    addressType: [...prevState.addressType, val ]
+                    addressType: [...prevState.addressType, val],
+                }));
+                break;
+            case 'idProof':
+                setOptionListState((prevState) => ({
+                    ...prevState,
+                    idProof: [...prevState.idProof, val],
                 }));
                 break;
             case 'country':
-                setOptionListState(prevState => ({
+                setOptionListState((prevState) => ({
                     ...prevState,
-                    country: [...prevState.country, { countryId: optionListState.country.length + 1, ...val }]
+                    country: [...prevState.country, { countryId: optionListState.country.length + 1, ...val }],
                 }));
                 break;
             case 'states':
-                setOptionListState(prevState => ({
+                setOptionListState((prevState) => ({
                     ...prevState,
-                    states: [...prevState.states, { stateId: optionListState.states.length + 1, ...val }]
+                    states: [...prevState.states, { stateId: optionListState.states.length + 1, ...val }],
                 }));
                 break;
             case 'district':
-                setOptionListState(prevState => ({
+                setOptionListState((prevState) => ({
                     ...prevState,
-                    district: [...prevState.district, { districtId: optionListState.district.length + 1, ...val }]
+                    district: [...prevState.district, { districtId: optionListState.district.length + 1, ...val }],
                 }));
                 break;
             default:
@@ -260,7 +248,25 @@ const Index = () => {
 
     // handleSubmit
     const handleSubmit = async () => {
-        console.log('handleSubmit from Applicant');
+        setTab('personalInfo');
+        const tempState = {
+            id: tblList.length + 1,
+            applicantId: `HF0${tblList.length + 1}`,
+            createdAt: formatDate(new Date()),
+            applicantName: StateValue.personalInfo.firstName,
+            applicantContact: StateValue.personalInfo.contactNo,
+            gender: StateValue.personalInfo.gender,
+            companyName: StateValue.incomeInfo.companyname,
+            applicantType: StateValue.incomeInfo.applicantType,
+        };
+        setTblList((prev) => [...prev, tempState]);
+        toggle();
+    };
+
+    //handleDelete
+    const handleDelete = (id) => {
+        const delData = deleteData(tblList, id);
+        setTblList(delData);
     };
 
     return (
@@ -278,8 +284,7 @@ const Index = () => {
                         state={state}
                         setErrors={setErrors}
                         errors={errors}
-                        handleSubmit={handleValidation}
-                        ref={errorHandle}
+                        handleSubmit={handleSubmit}
                         setStateValue={setStateValue}
                         StateValue={StateValue}
                         toggleModal={toggleModal}
@@ -293,7 +298,6 @@ const Index = () => {
                         modelHeader={getModelForm?.name || ''}
                         modelSize={'md'}
                         handleSubmit={handleSubmitSelectOption}>
-
                         {getModelForm?.name === 'states' || getModelForm?.name === 'district' ? (
                             <React.Fragment>
                                 <Form.Label>{getModelForm?.name === 'states' ? 'country' : 'states'}</Form.Label>
@@ -306,7 +310,11 @@ const Index = () => {
                                     className="react-select react-select-container mb-2"
                                     classNamePrefix="react-select"
                                     isSearchable
-                                    options={getModelForm?.name === 'states' ? optionListState.country : optionListState.states}
+                                    options={
+                                        getModelForm?.name === 'states'
+                                            ? optionListState.country
+                                            : optionListState.states
+                                    }
                                 />
                             </React.Fragment>
                         ) : null}
@@ -321,7 +329,6 @@ const Index = () => {
                                 handleChangeSelectOption(e.target.value);
                             }}
                         />
-
                     </ModelViewBox>
                 </React.Fragment>
             ) : (

@@ -1,7 +1,5 @@
-
 import Swal from 'sweetalert2';
-import { NotificationManager, } from "react-notifications";
-
+import { NotificationManager } from 'react-notifications';
 
 const showMessage = (type, msg, title = null) => {
     switch (type) {
@@ -18,8 +16,7 @@ const showMessage = (type, msg, title = null) => {
             NotificationManager.error(msg, title);
             break;
     }
-}
-
+};
 
 const getFormFieldName = (dynamicForm) => {
     let arr = [];
@@ -47,7 +44,7 @@ function formatDate(date) {
 }
 
 function updateData(arr, id, newState) {
-    arr[id-1] = newState
+    arr[id - 1] = newState;
     return arr;
     // return arr.map((item) => (item.id === id ? newState : item));
 }
@@ -58,8 +55,8 @@ function deleteData(arr, id) {
     });
 }
 
-function findObj(optionList, designation) {
-    return optionList.filter((item) => (item.value === designation))
+function findObj(optionList, designation = 0) {
+    return optionList.filter((item) => item.value === designation);
 }
 
 const showConfirmationDialog = (
@@ -90,14 +87,12 @@ const showConfirmationDialog = (
                 text: 'Permission denied.',
                 icon: 'error',
                 customClass: {
-                    icon: "swal-icon-custom"
+                    icon: 'swal-icon-custom',
                 },
                 timer: 1500,
             });
         }
     });
 };
-
-
 
 export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj };
