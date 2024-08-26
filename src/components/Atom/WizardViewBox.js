@@ -304,7 +304,7 @@ const WizardWithProgressbar = (props) => {
                                                             setState={setState}
                                                             state={state}
                                                             ref={errorHandle}
-                                                            noOfColumns={1}
+                                                            noOfColumns={3}
                                                             errors={errors}
                                                             setErrors={setErrors}
                                                             toggleModal={toggleModal}
