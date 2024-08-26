@@ -9,8 +9,13 @@ import { deleteData, showConfirmationDialog, updateData } from '../../utils/AllF
 
 const WizardWithProgressbar = (props) => {
     const {
-        toggle,
+        arrVal,
+        setArrVal,
+        tabIndex,
+        setTabIndex,
+        setStored,
         isEdit,
+        toggle,
         Title,
         tab,
         setTab,
@@ -20,12 +25,14 @@ const WizardWithProgressbar = (props) => {
         setErrors,
         errors,
         handleSubmit,
-        StateValue,
+        stateValue,
         setStateValue,
         toggleModal,
         showSelectmodel,
         optionListState,
         showMultiAdd,
+        multiStateValue,
+        setMultiStateValue
     } = props;
 
     const columns = {
@@ -147,11 +154,43 @@ const WizardWithProgressbar = (props) => {
     };
 
     const errorHandle = useRef();
-    const [tabIndex, setTabIndex] = useState(0);
     const [checkValidationforAddorNext, setCheckValidationforAddorNext] = useState(false);
-    const [arrVal, setArrVal] = useState([]);
     const [IsEditArrVal, setIsEditArrVal] = useState(false);
 
+
+    useEffect(() => {
+
+        if (tabIndex === tabList.length - 1) {
+            setMultiStateValue((prev) => [...prev, stateValue]);
+        }
+
+    }, [state])
+
+    const ReinsertData = (updatedStateValue) => {
+        if (tabIndex === tabList.length - 1) {
+            console.log("---->")
+            console.log(updatedStateValue)
+            setMultiStateValue((prev) => [...prev, updatedStateValue]);
+            console.log(multiStateValue)
+            setStored((prev) => [...prev, updatedStateValue])
+            setTab('personalInfo');
+            setTabIndex(0);
+            setArrVal([]);
+        }
+    }
+
+    useEffect(() => {
+        if (isEdit) {
+            setState(stateValue[tabList?.[tabIndex]?.name] || {})
+            if (Array.isArray(stateValue[tabList?.[tabIndex]?.name])) {
+                console.log("check it is state or not")
+                setArrVal(stateValue[tabList?.[tabIndex]?.name])
+            }
+        }
+    }, [tabIndex])
+
+
+    // Validation
     const checkValidation = (next, condition) => {
         setCheckValidationforAddorNext(condition);
         if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length !== 0 && next != null) {
@@ -162,6 +201,7 @@ const WizardWithProgressbar = (props) => {
         }, 0);
     };
 
+    // Add
     const handleAdd = async () => {
         if (IsEditArrVal) {
             const updata = await updateData(arrVal, state?.id + 1, state);
@@ -175,13 +215,15 @@ const WizardWithProgressbar = (props) => {
         }
     };
 
-    const handleNext = (next) => {
+    // Next
+    const handleNext = async (next) => {
         if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length === 0) {
             console.log('arrVal is empty, cannot move to the next tab');
             return;
         }
+        let updatedStateValue;
         setStateValue((prev) => {
-            const updatedStateValue = { ...prev };
+            updatedStateValue = { ...prev };
             if (showMultiAdd.includes(tabList?.[tabIndex]?.name)) {
                 updatedStateValue[tabList?.[tabIndex]?.name] = [];
             }
@@ -190,25 +232,27 @@ const WizardWithProgressbar = (props) => {
                 : state;
             return updatedStateValue;
         });
+
         if (tabIndex === tabList.length - 1) {
-            setTabIndex(0);
-            setArrVal([]);
+            await ReinsertData(updatedStateValue)
             return handleSubmit();
         }
         setTab(tabList?.[tabIndex + 1]?.name);
         setTabIndex((prev) => prev + 1);
-        setState(StateValue[tabList?.[tabIndex + 1]?.name] || {});
+        setState(stateValue[tabList?.[tabIndex + 1]?.name] || {});
         if (showMultiAdd.includes(tabList[tabIndex].name)) {
             setArrVal([]);
         }
         next();
     };
+
+    // Previous
     const handlePrevious = (previous) => {
         setTab(tabList?.[tabIndex - 1]?.name);
         setTabIndex((prev) => prev - 1);
-        setState(StateValue[tabList?.[tabIndex - 1]?.name] || {});
+        setState(stateValue[tabList?.[tabIndex - 1]?.name] || {});
         if (showMultiAdd.includes(tabList[tabIndex - 1].name)) {
-            setArrVal(StateValue[tabList?.[tabIndex - 1]?.name] || []);
+            setArrVal(stateValue[tabList?.[tabIndex - 1]?.name] || []);
         }
         previous();
     };
@@ -225,6 +269,33 @@ const WizardWithProgressbar = (props) => {
         const delData = await deleteData(arrVal, id);
         setArrVal(delData);
     };
+
+    // handleReinsert
+    const handleReinsert = async () => {
+        if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length === 0) {
+            console.log('arrVal is empty, cannot move to the next tab');
+            return;
+        }
+        let updatedStateValue;
+        setStateValue((prev) => {
+            updatedStateValue = { ...prev };
+            if (showMultiAdd.includes(tabList?.[tabIndex]?.name)) {
+                updatedStateValue[tabList?.[tabIndex]?.name] = [];
+            }
+            updatedStateValue[tabList?.[tabIndex]?.name] = showMultiAdd.includes(tabList?.[tabIndex]?.name)
+                ? arrVal
+                : state;
+            return updatedStateValue;
+        });
+
+        await ReinsertData(updatedStateValue)
+
+    }
+
+    // console.log("multiStateValue in wizard view")
+    // console.log(multiStateValue)
+    // console.log("StateValue")
+    // console.log(stateValue)
 
     return (
         <Card>
@@ -341,9 +412,22 @@ const WizardWithProgressbar = (props) => {
                                                                         checkValidation(next, false);
                                                                     }}
                                                                     variant="primary">
-                                                                    {tabIndex != tabList.length - 1 ? 'Next' : 'Submit'}
+                                                                    {tabIndex != tabList.length - 1 ? 'Next' : isEdit ? 'Update' : 'Submit'}
                                                                 </Button>
                                                             </li>
+
+                                                            {
+                                                                tabIndex === tabList.length - 1 && !isEdit &&
+                                                                <li className="next list-inline-item float-end mx-3">
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            handleReinsert()
+                                                                        }}
+                                                                        variant="info">
+                                                                        Reinsert
+                                                                    </Button>
+                                                                </li>
+                                                            }
                                                         </ul>
                                                     </Form>
                                                 );

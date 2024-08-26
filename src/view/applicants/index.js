@@ -7,7 +7,7 @@ import { applicantTabs as tabList } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
-import { deleteData, formatDate, showConfirmationDialog } from '../../utils/AllFunction';
+import { deleteData, findObj, formatDate, showConfirmationDialog, updateData } from '../../utils/AllFunction';
 
 const Index = () => {
     //Table column
@@ -57,7 +57,7 @@ const Index = () => {
             accessor: 'actions',
             Cell: ({ row }) => (
                 <div>
-                    <span className="text-success  me-2 cursor-pointer" onClick={() => console.log(row?.original)}>
+                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.index)}>
                         <i className={'fe-edit-1'}></i> Edit
                     </span>
                     <span
@@ -119,7 +119,9 @@ const Index = () => {
         ],
     });
 
-    const [StateValue, setStateValue] = useState([]);
+    const [stateValue, setStateValue] = useState([]);
+    const [multiStateValue, setMultiStateValue] = useState([]);
+    const [stored, setStored] = useState([{}, {}]);
     const [errors, setErrors] = useState([]);
     const [tblList, setTblList] = useState([
         {
@@ -162,6 +164,8 @@ const Index = () => {
     };
     const showSelectmodel = ['addressType', 'district', 'states', 'country', 'idProof'];
     const showMultiAdd = ['idProof', 'addressInfo'];
+    const [tabIndex, setTabIndex] = useState(0);
+    const [arrVal, setArrVal] = useState([]);
 
     useEffect(() => {
         fetchDistrict();
@@ -187,6 +191,13 @@ const Index = () => {
 
     // Toggle
     const toggle = () => {
+        if (isEdit) {
+            setTab('personalInfo');
+            setTabIndex(0);
+            setArrVal([]);
+            setState({})
+            setIsEdit(false);
+        }
         setWizard(!wizard);
     };
     const toggleModal = (form) => {
@@ -247,21 +258,77 @@ const Index = () => {
     };
 
     // handleSubmit
+
+
     const handleSubmit = async () => {
+        // console.log("stored  in index page")
+        // console.log(stored)
+        // console.log("multiStateValue  in index page")
+        // console.log(multiStateValue)
         setTab('personalInfo');
-        const tempState = {
-            id: tblList.length + 1,
-            applicantId: `HF0${tblList.length + 1}`,
-            createdAt: formatDate(new Date()),
-            applicantName: StateValue.personalInfo.firstName,
-            applicantContact: StateValue.personalInfo.contactNo,
-            gender: StateValue.personalInfo.gender,
-            companyName: StateValue.incomeInfo.companyname,
-            applicantType: StateValue.incomeInfo.applicantType,
-        };
-        setTblList((prev) => [...prev, tempState]);
+        setTabIndex(0);
+        setArrVal([]);
+        if (isEdit) {
+            const res = {
+                applicantId: `HF0${stateValue?.id + 1}`,
+                createdAt: formatDate(new Date()),
+                applicantName: stateValue.personalInfo.firstName,
+                applicantContact: stateValue.personalInfo.contactNo,
+                gender: stateValue.personalInfo.gender,
+                companyName: stateValue.incomeInfo.companyname,
+                applicantType: stateValue.incomeInfo.applicantType
+            }
+            const updata = await updateData(tblList, stateValue?.id + 1, res);
+            const updataStore = await updateData(stored, stateValue?.id + 1, stateValue);
+            setTblList(updata);
+            setStored(updataStore);
+            setIsEdit(false);
+        } else {
+            const newEntries = [];
+            multiStateValue.map((item, index) => {
+                const res = {
+                    id: tblList.length + index + 1,
+                    applicantId: `HF0${tblList.length + index + 1}`,
+                    createdAt: formatDate(new Date()),
+                    applicantName: item.personalInfo.firstName,
+                    applicantContact: item.personalInfo.contactNo,
+                    gender: item.personalInfo.gender,
+                    companyName: item.incomeInfo.companyname,
+                    applicantType: item.incomeInfo.applicantType
+                }
+                newEntries.push(res)
+            });
+            setTblList((prev) => [...prev, ...newEntries]);
+
+            // const res = {
+            //     id: tblList.length + 1,
+            //     applicantId: `HF0${tblList.length + 1}`,
+            //     createdAt: formatDate(new Date()),
+            //     applicantName: stateValue.personalInfo.firstName,
+            //     applicantContact: stateValue.personalInfo.contactNo,
+            //     gender: stateValue.personalInfo.gender,
+            //     companyName: stateValue.incomeInfo.companyname,
+            //     applicantType: stateValue.incomeInfo.applicantType
+            // }
+        }
         toggle();
     };
+
+
+    // handleEdit
+    const handleEdit = async (id) => {
+        setIsEdit(true);
+        setTab('personalInfo');
+        setTabIndex(0);
+        setArrVal([]);
+        const data = stored[id];
+        setStateValue({ id: id, ...data })
+        toggle();
+    }
+
+
+    // console.log("stored  in index page")
+    // console.log(stored)
 
     //handleDelete
     const handleDelete = (id) => {
@@ -274,6 +341,10 @@ const Index = () => {
             {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
+                        arrVal={arrVal}
+                        setArrVal={setArrVal}
+                        tabIndex={tabIndex}
+                        setTabIndex={setTabIndex}
                         toggle={toggle}
                         isEdit={isEdit}
                         Title={'Applicant Details'}
@@ -282,15 +353,19 @@ const Index = () => {
                         tabList={tabList}
                         setState={setState}
                         state={state}
+                        setIsEdit={setIsEdit}
                         setErrors={setErrors}
                         errors={errors}
                         handleSubmit={handleSubmit}
                         setStateValue={setStateValue}
-                        StateValue={StateValue}
+                        stateValue={stateValue}
                         toggleModal={toggleModal}
                         showSelectmodel={showSelectmodel}
                         optionListState={optionListState}
                         showMultiAdd={showMultiAdd}
+                        multiStateValue={multiStateValue}
+                        setMultiStateValue={setMultiStateValue}
+                        setStored={setStored}
                     />
                     <ModelViewBox
                         modal={modal}
@@ -340,6 +415,7 @@ const Index = () => {
                     sizePerPageList={sizePerPageList}
                     isSortable={true}
                     pagination={true}
+
                     isSearchable={true}
                     toggle={toggle}
                 />
