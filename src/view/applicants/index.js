@@ -9,6 +9,8 @@ import { Form } from 'react-bootstrap';
 import Select from 'react-select';
 import { deleteData, findObj, formatDate, showConfirmationDialog, updateData } from '../../utils/AllFunction';
 
+let handleEditId = null;
+let handleEditData = null;
 const Index = () => {
     //Table column
     const columns = [
@@ -75,9 +77,126 @@ const Index = () => {
             ),
         },
     ];
+
+    const columnsWizard = {
+        addressInfo: [
+            {
+                Header: 'ID',
+                accessor: 'id',
+                Cell: (row) => <div>{row?.row?.index + 1}</div>,
+            },
+            {
+                Header: 'Address Type',
+                accessor: 'addressType',
+                sort: true,
+            },
+            {
+                Header: 'Address',
+                accessor: 'address',
+                sort: true,
+            },
+            {
+                Header: 'Country',
+                accessor: 'country',
+                sort: false,
+            },
+            {
+                Header: 'State',
+                accessor: 'states',
+                sort: true,
+            },
+            {
+                Header: 'District',
+                accessor: 'district',
+                sort: true,
+            },
+            {
+                Header: 'Pincode',
+                accessor: 'pincode',
+                sort: true,
+            },
+            {
+                Header: 'Latitude',
+                accessor: 'latitude',
+                sort: true,
+            },
+            {
+                Header: 'Logitude',
+                accessor: 'longitude',
+                sort: true,
+            },
+            {
+                Header: 'Actions',
+                accessor: 'actions',
+                Cell: ({ row }) => (
+                    <div>
+                        <span
+                            className="text-success  me-2 cursor-pointer"
+                            onClick={() => { handleEditTabTable(row?.original, row?.index) }}>
+                            <i className={'fe-edit-1'}></i> Edit
+                        </span>
+                        <span
+                            className="text-danger cursor-pointer"
+                            onClick={() => {
+                                showConfirmationDialog(
+                                    "You won't be able to revert this!",
+                                    () => handleDeleteTabTable(row?.original?.id),
+                                    'Yes, Delete it!'
+                                );
+                            }}>
+                            <i className={'fe-trash-2'}></i> Delete
+                        </span>
+                    </div>
+                ),
+            },
+        ],
+
+        idProof: [
+            {
+                Header: 'ID',
+                accessor: 'id',
+                Cell: (row) => <div>{row?.row?.index + 1}</div>,
+            },
+            {
+                Header: 'Id Proof',
+                accessor: 'idProof',
+                sort: true,
+            },
+            {
+                Header: 'Proof No',
+                accessor: 'proofIdNo',
+                sort: true,
+            },
+            {
+                Header: 'Actions',
+                accessor: 'actions',
+                Cell: ({ row }) => (
+                    <div>
+                        <span
+                            className="text-success  me-2 cursor-pointer"
+                            onClick={() => handleEditTabTable(row?.original, row?.index)}>
+                            <i className={'fe-edit-1'}></i> Edit
+                        </span>
+                        <span
+                            className="text-danger cursor-pointer"
+                            onClick={() => {
+                                console.log('Called delete func');
+                                showConfirmationDialog(
+                                    "You won't be able to revert this!",
+                                    () => handleDeleteTabTable(row?.original?.id),
+                                    'Yes, Delete it!'
+                                );
+                            }}>
+                            <i className={'fe-trash-2'}></i> Delete
+                        </span>
+                    </div>
+                ),
+            },
+        ],
+    };
+
     // useStates
     const [state, setState] = useState({});
-
     const [optionListState, setOptionListState] = useState({
         addressType: [
             { value: 'personal', label: 'Personal' },
@@ -118,7 +237,6 @@ const Index = () => {
             { value: 'voteid', label: 'voteid' },
         ],
     });
-
     const [stateValue, setStateValue] = useState([]);
     const [multiStateValue, setMultiStateValue] = useState([{}]);
     const [stored, setStored] = useState([{}, {}]);
@@ -166,6 +284,7 @@ const Index = () => {
     const showMultiAdd = ['idProof', 'addressInfo'];
     const [tabIndex, setTabIndex] = useState(0);
     const [arrVal, setArrVal] = useState([]);
+    const [IsEditArrVal, setIsEditArrVal] = useState(false);
 
     useEffect(() => {
         fetchDistrict();
@@ -217,6 +336,7 @@ const Index = () => {
         val.label = value;
     };
 
+    // handleSubmit for Add Option
     const handleSubmitSelectOption = () => {
         if (val?.value === '') return false;
 
@@ -258,16 +378,11 @@ const Index = () => {
     };
 
     // handleSubmit
-
-
     const handleSubmit = async () => {
         // console.log("stored  in index page")
         // console.log(stored)
         // console.log("multiStateValue  in index page")
         // console.log(multiStateValue)
-        setTab('personalInfo');
-        setTabIndex(0);
-        setArrVal([]);
         if (isEdit) {
             const res = {
                 applicantId: `HF0${stateValue?.id + 1}`,
@@ -318,9 +433,6 @@ const Index = () => {
     // handleEdit
     const handleEdit = async (id) => {
         setIsEdit(true);
-        setTab('personalInfo');
-        setTabIndex(0);
-        setArrVal([]);
         const data = stored[id];
         setStateValue({ id: id, ...data })
         toggle();
@@ -336,36 +448,60 @@ const Index = () => {
         setTblList(delData);
     };
 
+    //Tab table handleEdit and handleDelete
+    const handleEditTabTable = async (data, id) => {
+        setIsEditArrVal(true);
+        const updatedState = { ...data, id: id };
+        setState(updatedState);
+    };
+    //handleDelete
+    const handleDeleteTabTable = async (id) => {
+
+        console.log("ha arrVal")
+        console.log(arrVal)
+        console.log("handleDeleteTabTable : id")
+        console.log(id)
+        // return;
+        const delData = await deleteData(arrVal, id);
+        setArrVal(delData);
+    };
+
     return (
         <React.Fragment>
             {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
+                        //state
                         arrVal={arrVal}
                         setArrVal={setArrVal}
                         tabIndex={tabIndex}
                         setTabIndex={setTabIndex}
-                        toggle={toggle}
                         isEdit={isEdit}
-                        Title={'Applicant Details'}
                         setTab={setTab}
                         tab={tab}
-                        tabList={tabList}
-                        setState={setState}
-                        state={state}
-                        setIsEdit={setIsEdit}
-                        setErrors={setErrors}
-                        errors={errors}
-                        handleSubmit={handleSubmit}
-                        setStateValue={setStateValue}
                         stateValue={stateValue}
-                        toggleModal={toggleModal}
-                        showSelectmodel={showSelectmodel}
-                        optionListState={optionListState}
-                        showMultiAdd={showMultiAdd}
+                        setStateValue={setStateValue}
+                        state={state}
+                        setState={setState}
                         multiStateValue={multiStateValue}
                         setMultiStateValue={setMultiStateValue}
+                        errors={errors}
+                        setErrors={setErrors}
                         setStored={setStored}
+                        IsEditArrVal={IsEditArrVal}
+                        setIsEditArrVal={setIsEditArrVal}
+                        //const value
+                        Title={'Applicant Details'}
+                        showSelectmodel={showSelectmodel}
+                        showMultiAdd={showMultiAdd}
+                        optionListState={optionListState}
+                        columnsWizard={columnsWizard}
+                        //function
+                        toggleModal={toggleModal}
+                        toggle={toggle}
+                        handleSubmit={handleSubmit}
+                        //formFieldData.js
+                        tabList={tabList}
                     />
                     <ModelViewBox
                         modal={modal}

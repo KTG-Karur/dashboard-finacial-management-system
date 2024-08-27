@@ -11,153 +11,41 @@ let submitWizardCall = false
 let reinsertIndex = 0
 
 const WizardWithProgressbar = (props) => {
-    const { arrVal,
+    const {
+        //state
+        arrVal,
         setArrVal,
         tabIndex,
         setTabIndex,
-        setStored,
         isEdit,
-        toggle,
-        Title,
-        tab,
         setTab,
-        tabList,
+        tab,
+        stateValue,
         state,
         setState,
-        setErrors,
-        errors,
-        handleSubmit,
-        stateValue,
-        setStateValue,
-        toggleModal,
-        showSelectmodel,
-        optionListState,
-        showMultiAdd,
         multiStateValue,
-        setMultiStateValue
+        setMultiStateValue,
+        errors,
+        setErrors,
+        setStored,
+        IsEditArrVal,
+        setIsEditArrVal,
+        //const value
+        Title,
+        showSelectmodel,
+        showMultiAdd,
+        optionListState,
+        columnsWizard,
+        //function
+        toggleModal,
+        toggle,
+        handleSubmit,
+        //formFieldData.js
+        tabList,
     } = props;
-
-    const columns = {
-        addressInfo: [
-            {
-                Header: 'ID',
-                accessor: 'id',
-                Cell: (row) => <div>{row?.row?.index + 1}</div>,
-            },
-            {
-                Header: 'Address Type',
-                accessor: 'addressType',
-                sort: true,
-            },
-            {
-                Header: 'Address',
-                accessor: 'address',
-                sort: true,
-            },
-            {
-                Header: 'Country',
-                accessor: 'country',
-                sort: false,
-            },
-            {
-                Header: 'State',
-                accessor: 'states',
-                sort: true,
-            },
-            {
-                Header: 'District',
-                accessor: 'district',
-                sort: true,
-            },
-            {
-                Header: 'Pincode',
-                accessor: 'pincode',
-                sort: true,
-            },
-            {
-                Header: 'Latitude',
-                accessor: 'latitude',
-                sort: true,
-            },
-            {
-                Header: 'Logitude',
-                accessor: 'longitude',
-                sort: true,
-            },
-            {
-                Header: 'Actions',
-                accessor: 'actions',
-                Cell: ({ row }) => (
-                    <div>
-                        <span
-                            className="text-success  me-2 cursor-pointer"
-                            onClick={() => handleEdit(row?.original, row?.index)}>
-                            <i className={'fe-edit-1'}></i> Edit
-                        </span>
-                        <span
-                            className="text-danger cursor-pointer"
-                            onClick={() => {
-                                console.log('Called delete func');
-                                showConfirmationDialog(
-                                    "You won't be able to revert this!",
-                                    () => handleDelete(row?.original?.id),
-                                    'Yes, Delete it!'
-                                );
-                            }}>
-                            <i className={'fe-trash-2'}></i> Delete
-                        </span>
-                    </div>
-                ),
-            },
-        ],
-
-        idProof: [
-            {
-                Header: 'ID',
-                accessor: 'id',
-                Cell: (row) => <div>{row?.row?.index + 1}</div>,
-            },
-            {
-                Header: 'Id Proof',
-                accessor: 'idProof',
-                sort: true,
-            },
-            {
-                Header: 'Proof No',
-                accessor: 'proofIdNo',
-                sort: true,
-            },
-            {
-                Header: 'Actions',
-                accessor: 'actions',
-                Cell: ({ row }) => (
-                    <div>
-                        <span
-                            className="text-success  me-2 cursor-pointer"
-                            onClick={() => handleEdit(row?.original, row?.index)}>
-                            <i className={'fe-edit-1'}></i> Edit
-                        </span>
-                        <span
-                            className="text-danger cursor-pointer"
-                            onClick={() => {
-                                console.log('Called delete func');
-                                showConfirmationDialog(
-                                    "You won't be able to revert this!",
-                                    () => handleDelete(row?.original?.id),
-                                    'Yes, Delete it!'
-                                );
-                            }}>
-                            <i className={'fe-trash-2'}></i> Delete
-                        </span>
-                    </div>
-                ),
-            },
-        ],
-    };
 
     const errorHandle = useRef();
     const [checkValidationforAddorNext, setCheckValidationforAddorNext] = useState(false);
-    const [IsEditArrVal, setIsEditArrVal] = useState(false);
 
 
     useEffect(() => {
@@ -212,10 +100,13 @@ const WizardWithProgressbar = (props) => {
         }
     };
 
+    console.log("multiStateValue");
+    console.log(multiStateValue);
+
     // Next
     const handleNext = async (next) => {
         const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name)
-        if (checkMultiAdd && arrVal.length === 0) { 
+        if (checkMultiAdd && arrVal.length === 0) {
             console.log('arrVal is empty, cannot move to the next tab');
             return;
         }
@@ -227,7 +118,7 @@ const WizardWithProgressbar = (props) => {
 
         if (tabIndex === tabList.length - 1) {
             submitWizardCall = true;
-        }else{
+        } else {
             setTab(tabList?.[tabIndex + 1]?.name);
             setTabIndex((prev) => prev + 1);
             setState(multiStateValue[tabList?.[tabIndex + 1]?.name] || {});
@@ -242,29 +133,19 @@ const WizardWithProgressbar = (props) => {
     const handlePrevious = (previous) => {
         setTab(tabList?.[tabIndex - 1]?.name);
         setTabIndex((prev) => prev - 1);
-        setState(multiStateValue[tabList?.[tabIndex - 1]?.name] || {});
+        setState(multiStateValue[reinsertIndex][tabList?.[tabIndex - 1]?.name] || {});
         if (showMultiAdd.includes(tabList[tabIndex - 1].name)) {
-            setArrVal(multiStateValue[tabList?.[tabIndex - 1]?.name] || []);
+            setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex - 1]?.name] || []);
         }
         previous();
     };
-
-    //handleEdit
-    const handleEdit = async (data, id) => {
-        setIsEditArrVal(true);
-        const updatedState = { ...data, id: id };
-        setState(updatedState);
-    };
-
-    //handleDelete
-    const handleDelete = async (id) => {
-        const delData = await deleteData(arrVal, id);
-        setArrVal(delData);
-    };
+    console.log("showMultiAdd true");
+    console.log(reinsertIndex);
+    console.log(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name])
 
     // handleReinsert
     const handleReinsert = async () => {
-        const checkMultiAdd= showMultiAdd.includes(tabList[tabIndex].name)
+        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name)
         if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length === 0) {
             console.log('arrVal is empty, cannot move to the next tab');
             return;
@@ -274,7 +155,7 @@ const WizardWithProgressbar = (props) => {
         const temp_state = [...multiStateValue];
         temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue
         reinsertIndex = 1 + parseInt(reinsertIndex)
-        temp_state[reinsertIndex]= {}
+        temp_state[reinsertIndex] = {}
         setMultiStateValue(temp_state)
         await ReinsertData(updatedStateValue)
     }
@@ -423,7 +304,7 @@ const WizardWithProgressbar = (props) => {
 
                 {showMultiAdd.includes(tabList[tabIndex].name) && (
                     <Table
-                        columns={columns?.[tabList[tabIndex].name] || []}
+                        columns={columnsWizard?.[tabList[tabIndex].name] || []}
                         Title={`${tabList[tabIndex].name} List`}
                         data={arrVal || []}
                         pageSize={5}
