@@ -132,7 +132,9 @@ const Index = () => {
                     <div>
                         <span
                             className="text-success  me-2 cursor-pointer"
-                            onClick={() => { handleEditTabTable(row?.original, row?.index) }}>
+                            onClick={() => {
+                                handleEditTabTable(row?.original, row?.index);
+                            }}>
                             <i className={'fe-edit-1'}></i> Edit
                         </span>
                         <span
@@ -237,9 +239,8 @@ const Index = () => {
             { value: 'voteid', label: 'voteid' },
         ],
     });
-    const [stateValue, setStateValue] = useState([]);
     const [multiStateValue, setMultiStateValue] = useState([{}]);
-    const [stored, setStored] = useState([{}, {}]);
+    const [stored, setStored] = useState([{ id: 1 }, { id: 2 }]);
     const [errors, setErrors] = useState([]);
     const [tblList, setTblList] = useState([
         {
@@ -314,7 +315,7 @@ const Index = () => {
             setTab('personalInfo');
             setTabIndex(0);
             setArrVal([]);
-            setState({})
+            setState({});
             setIsEdit(false);
         }
         setWizard(!wizard);
@@ -379,22 +380,23 @@ const Index = () => {
 
     // handleSubmit
     const handleSubmit = async () => {
-        // console.log("stored  in index page")
-        // console.log(stored)
-        // console.log("multiStateValue  in index page")
-        // console.log(multiStateValue)
+        setTab('personalInfo');
+        setTabIndex(0);
+        setArrVal([]);
+        setState({});
         if (isEdit) {
             const res = {
-                applicantId: `HF0${stateValue?.id + 1}`,
+                id:multiStateValue[0]?.id,
+                applicantId: `HF0${multiStateValue[0]?.id}`,
                 createdAt: formatDate(new Date()),
-                applicantName: stateValue.personalInfo.firstName,
-                applicantContact: stateValue.personalInfo.contactNo,
-                gender: stateValue.personalInfo.gender,
-                companyName: stateValue.incomeInfo.companyname,
-                applicantType: stateValue.incomeInfo.applicantType
-            }
-            const updata = await updateData(tblList, stateValue?.id + 1, res);
-            const updataStore = await updateData(stored, stateValue?.id + 1, stateValue);
+                applicantName: multiStateValue[0].personalInfo.firstName,
+                applicantContact: multiStateValue[0].personalInfo.contactNo,
+                gender: multiStateValue[0].personalInfo.gender,
+                companyName: multiStateValue[0].incomeInfo.companyname,
+                applicantType: multiStateValue[0].incomeInfo.applicantType,
+            };
+            const updata = await updateData(tblList, multiStateValue[0]?.id, res);
+            const updataStore = await updateData(stored, multiStateValue[0]?.id, multiStateValue[0]);
             setTblList(updata);
             setStored(updataStore);
             setIsEdit(false);
@@ -409,43 +411,35 @@ const Index = () => {
                     applicantContact: item.personalInfo.contactNo,
                     gender: item.personalInfo.gender,
                     companyName: item.incomeInfo.companyname,
-                    applicantType: item.incomeInfo.applicantType
-                }
-                newEntries.push(res)
+                    applicantType: item.incomeInfo.applicantType,
+                };
+                const setId = [{ id: tblList.length + index + 1, ...item }];
+                setStored((prev) => [...prev, setId]);
+                newEntries.push(res);
             });
             setTblList((prev) => [...prev, ...newEntries]);
-
-            // const res = {
-            //     id: tblList.length + 1,
-            //     applicantId: `HF0${tblList.length + 1}`,
-            //     createdAt: formatDate(new Date()),
-            //     applicantName: stateValue.personalInfo.firstName,
-            //     applicantContact: stateValue.personalInfo.contactNo,
-            //     gender: stateValue.personalInfo.gender,
-            //     companyName: stateValue.incomeInfo.companyname,
-            //     applicantType: stateValue.incomeInfo.applicantType
-            // }
         }
         toggle();
     };
 
-
     // handleEdit
     const handleEdit = async (id) => {
         setIsEdit(true);
-        const data = stored[id];
-        setStateValue({ id: id, ...data })
+        setMultiStateValue([stored[id][0]]);
         toggle();
-    }
+    };
 
-
-    // console.log("stored  in index page")
-    // console.log(stored)
+    console.log('stored  in index page');
+    console.log(stored);
+    // console.log("multiStateValue  in index page")
+    // console.log(multiStateValue)
 
     //handleDelete
     const handleDelete = (id) => {
-        const delData = deleteData(tblList, id);
-        setTblList(delData);
+        const delDataforTable = deleteData(tblList, id);
+        const delDataforStored = deleteData(stored, id);
+        setTblList(delDataforTable);
+        setStored(delDataforStored);
     };
 
     //Tab table handleEdit and handleDelete
@@ -456,12 +450,6 @@ const Index = () => {
     };
     //handleDelete
     const handleDeleteTabTable = async (id) => {
-
-        console.log("ha arrVal")
-        console.log(arrVal)
-        console.log("handleDeleteTabTable : id")
-        console.log(id)
-        // return;
         const delData = await deleteData(arrVal, id);
         setArrVal(delData);
     };
@@ -479,8 +467,6 @@ const Index = () => {
                         isEdit={isEdit}
                         setTab={setTab}
                         tab={tab}
-                        stateValue={stateValue}
-                        setStateValue={setStateValue}
                         state={state}
                         setState={setState}
                         multiStateValue={multiStateValue}
@@ -490,6 +476,7 @@ const Index = () => {
                         setStored={setStored}
                         IsEditArrVal={IsEditArrVal}
                         setIsEditArrVal={setIsEditArrVal}
+                        tblList={tblList}
                         //const value
                         Title={'Applicant Details'}
                         showSelectmodel={showSelectmodel}
@@ -551,7 +538,6 @@ const Index = () => {
                     sizePerPageList={sizePerPageList}
                     isSortable={true}
                     pagination={true}
-
                     isSearchable={true}
                     toggle={toggle}
                 />

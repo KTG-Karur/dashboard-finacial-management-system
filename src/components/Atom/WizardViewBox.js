@@ -7,8 +7,8 @@ import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
 import { deleteData, showConfirmationDialog, updateData } from '../../utils/AllFunction';
 
-let submitWizardCall = false
-let reinsertIndex = 0
+let submitWizardCall = false;
+let reinsertIndex = 0;
 
 const WizardWithProgressbar = (props) => {
     const {
@@ -20,14 +20,12 @@ const WizardWithProgressbar = (props) => {
         isEdit,
         setTab,
         tab,
-        stateValue,
         state,
         setState,
         multiStateValue,
         setMultiStateValue,
         errors,
         setErrors,
-        setStored,
         IsEditArrVal,
         setIsEditArrVal,
         //const value
@@ -47,33 +45,29 @@ const WizardWithProgressbar = (props) => {
     const errorHandle = useRef();
     const [checkValidationforAddorNext, setCheckValidationforAddorNext] = useState(false);
 
-
     useEffect(() => {
         if (submitWizardCall) {
             handleSubmit();
             submitWizardCall = false;
         }
-    }, [multiStateValue])
+    }, [multiStateValue]);
 
-    const ReinsertData = (updatedStateValue) => {
+    const ReinsertData = () => {
         if (tabIndex === tabList.length - 1) {
-            // setMultiStateValue((prev) => [...prev, updatedStateValue]);
-            setStored((prev) => [...prev, updatedStateValue])
             setTab('personalInfo');
             setTabIndex(0);
             setArrVal([]);
         }
-    }
+    };
 
     useEffect(() => {
         if (isEdit) {
-            setState(stateValue[tabList?.[tabIndex]?.name] || {})
-            if (Array.isArray(stateValue[tabList?.[tabIndex]?.name])) {
-                console.log("check it is state or not")
-                setArrVal(stateValue[tabList?.[tabIndex]?.name])
+            setState(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name] || {});
+            if (Array.isArray(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name])) {
+                setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name]);
             }
         }
-    }, [tabIndex])
+    }, [tabIndex]);
 
     // Validation
     const checkValidation = (next, condition) => {
@@ -100,28 +94,24 @@ const WizardWithProgressbar = (props) => {
         }
     };
 
-    console.log("multiStateValue");
-    console.log(multiStateValue);
-
     // Next
     const handleNext = async (next) => {
-        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name)
+        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name);
         if (checkMultiAdd && arrVal.length === 0) {
-            console.log('arrVal is empty, cannot move to the next tab');
             return;
         }
         let updatedStateValue;
         updatedStateValue = checkMultiAdd ? arrVal : state;
         const temp_state = [...multiStateValue];
-        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue
-        setMultiStateValue(temp_state)
+        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue;
+        setMultiStateValue(temp_state);
 
         if (tabIndex === tabList.length - 1) {
             submitWizardCall = true;
         } else {
             setTab(tabList?.[tabIndex + 1]?.name);
             setTabIndex((prev) => prev + 1);
-            setState(multiStateValue[tabList?.[tabIndex + 1]?.name] || {});
+            setState(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || {});
             if (showMultiAdd.includes(tabList[tabIndex].name)) {
                 setArrVal([]);
             }
@@ -139,26 +129,22 @@ const WizardWithProgressbar = (props) => {
         }
         previous();
     };
-    console.log("showMultiAdd true");
-    console.log(reinsertIndex);
-    console.log(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name])
 
     // handleReinsert
     const handleReinsert = async () => {
-        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name)
+        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name);
         if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length === 0) {
-            console.log('arrVal is empty, cannot move to the next tab');
             return;
         }
         let updatedStateValue;
         updatedStateValue = checkMultiAdd ? arrVal : state;
         const temp_state = [...multiStateValue];
-        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue
-        reinsertIndex = 1 + parseInt(reinsertIndex)
-        temp_state[reinsertIndex] = {}
-        setMultiStateValue(temp_state)
-        await ReinsertData(updatedStateValue)
-    }
+        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue;
+        reinsertIndex = 1 + parseInt(reinsertIndex);
+        temp_state[reinsertIndex] = {};
+        setMultiStateValue(temp_state);
+        await ReinsertData();
+    };
 
     return (
         <Card>
@@ -193,8 +179,8 @@ const WizardWithProgressbar = (props) => {
                         <Steps>
                             <Tab.Container
                                 id="left-tabs-example"
-                                defaultActiveKey={tabList?.[0]?.defaultActiveKey || ""}
-                                activeKey={tab ? tab : tabList?.[0]?.defaultActiveKey || ""}
+                                defaultActiveKey={tabList?.[0]?.defaultActiveKey || ''}
+                                activeKey={tab ? tab : tabList?.[0]?.defaultActiveKey || ''}
                                 onSelect={(k) => setTab(k)}>
                                 <Nav variant="pills" as="ul" className="nav-justified bg-light form-wizard-header mb-3">
                                     {tabList.map((item, i) => (
@@ -203,10 +189,10 @@ const WizardWithProgressbar = (props) => {
                                                 as={Link}
                                                 disabled
                                                 to="#"
-                                                eventKey={item?.name || ""}
+                                                eventKey={item?.name || ''}
                                                 className="rounded-0 pt-2 pb-2">
-                                                <i className={`${item?.icon || ""} me-1`}></i>
-                                                <span className="d-none d-sm-inline">{item?.label || ""}</span>
+                                                <i className={`${item?.icon || ''} me-1`}></i>
+                                                <span className="d-none d-sm-inline">{item?.label || ''}</span>
                                             </Nav.Link>
                                         </Nav.Item>
                                     ))}
@@ -222,13 +208,13 @@ const WizardWithProgressbar = (props) => {
                                 <Tab.Content className="pb-0 mb-0 pt-0">
                                     <Tab.Pane eventKey={tabList[tabIndex].name}>
                                         <Step
-                                            id={tabList[tabIndex]?.name || ""}
+                                            id={tabList[tabIndex]?.name || ''}
                                             render={({ next, previous }) => {
                                                 return (
                                                     <Form>
                                                         <FormLayout
                                                             optionListState={optionListState}
-                                                            dynamicForm={tabList[tabIndex]?.children || ""}
+                                                            dynamicForm={tabList[tabIndex]?.children || ''}
                                                             handleSubmit={
                                                                 checkValidationforAddorNext
                                                                     ? () => handleAdd()
@@ -274,22 +260,25 @@ const WizardWithProgressbar = (props) => {
                                                                         checkValidation(next, false);
                                                                     }}
                                                                     variant="primary">
-                                                                    {tabIndex != tabList.length - 1 ? 'Next' : isEdit ? 'Update' : 'Submit'}
+                                                                    {tabIndex != tabList.length - 1
+                                                                        ? 'Next'
+                                                                        : isEdit
+                                                                        ? 'Update'
+                                                                        : 'Submit'}
                                                                 </Button>
                                                             </li>
 
-                                                            {
-                                                                tabIndex === tabList.length - 1 && !isEdit &&
+                                                            {tabIndex === tabList.length - 1 && !isEdit && (
                                                                 <li className="next list-inline-item float-end mx-3">
                                                                     <Button
                                                                         onClick={() => {
-                                                                            handleReinsert()
+                                                                            handleReinsert();
                                                                         }}
                                                                         variant="info">
                                                                         Reinsert
                                                                     </Button>
                                                                 </li>
-                                                            }
+                                                            )}
                                                         </ul>
                                                     </Form>
                                                 );
