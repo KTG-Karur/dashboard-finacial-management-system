@@ -120,7 +120,7 @@ const Index = () => {
     });
 
     const [stateValue, setStateValue] = useState([]);
-    const [multiStateValue, setMultiStateValue] = useState([]);
+    const [multiStateValue, setMultiStateValue] = useState([{}]);
     const [stored, setStored] = useState([{}, {}]);
     const [errors, setErrors] = useState([]);
     const [tblList, setTblList] = useState([

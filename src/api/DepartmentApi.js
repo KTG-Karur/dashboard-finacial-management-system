@@ -1,5 +1,5 @@
 import { apiReturnCallBack } from './ApiConfig';
-import apiContainer from './ApiContainer';
+import apiContainer from './apiContainer';
 const department = apiContainer.department
 //GET
 /* export function getDepartment(request) {
