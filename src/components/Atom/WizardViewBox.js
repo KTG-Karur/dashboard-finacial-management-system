@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Row, Col, Card, Form, Button, ProgressBar, Tab, Nav } from 'react-bootstrap';
+import { Row, Col, Card, Form, Button, Tab, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Wizard, Steps, Step } from 'react-albus';
 import FormLayout from '../../utils/formLayout';
@@ -9,6 +9,7 @@ import { deleteData, showConfirmationDialog, updateData } from '../../utils/AllF
 
 let submitWizardCall = false;
 let reinsertIndex = 0;
+let checkIsNotlastPrevious = '';
 
 const WizardWithProgressbar = (props) => {
     const {
@@ -48,23 +49,16 @@ const WizardWithProgressbar = (props) => {
     useEffect(() => {
         if (submitWizardCall) {
             handleSubmit();
+            reinsertIndex = 0;
             submitWizardCall = false;
         }
     }, [multiStateValue]);
 
-    const ReinsertData = () => {
-        if (tabIndex === tabList.length - 1) {
-            setTab('personalInfo');
-            setTabIndex(0);
-            setArrVal([]);
-        }
-    };
-
     useEffect(() => {
         if (isEdit) {
-            setState(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name] || {});
-            if (Array.isArray(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name])) {
-                setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex]?.name]);
+            setState(multiStateValue[0][tabList?.[tabIndex]?.name] || {});
+            if (Array.isArray(multiStateValue[0][tabList?.[tabIndex]?.name])) {
+                setArrVal(multiStateValue[0][tabList?.[tabIndex]?.name]);
             }
         }
     }, [tabIndex]);
@@ -83,12 +77,12 @@ const WizardWithProgressbar = (props) => {
     // Add
     const handleAdd = async () => {
         if (IsEditArrVal) {
-            const updata = await updateData(arrVal, state?.id + 1, state);
+            const updata = await updateData(arrVal, state?.id, state);
             setArrVal(updata);
             setIsEditArrVal(false);
             setState({});
         } else {
-            const data = { id: arrVal.length + 1, ...state };
+            const data = { id: arrVal.length, ...state };
             setArrVal((prevValues) => [...prevValues, data]);
             setState({});
         }
@@ -112,8 +106,8 @@ const WizardWithProgressbar = (props) => {
             setTab(tabList?.[tabIndex + 1]?.name);
             setTabIndex((prev) => prev + 1);
             setState(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || {});
-            if (showMultiAdd.includes(tabList[tabIndex].name)) {
-                setArrVal([]);
+            if (showMultiAdd.includes(tabList[tabIndex + 1].name)) {
+                setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || []);
             }
             next();
         }
@@ -121,7 +115,7 @@ const WizardWithProgressbar = (props) => {
 
     // Previous
     const handlePrevious = (previous) => {
-        setTab(tabList?.[tabIndex - 1]?.name);
+        setTab(tabList[tabIndex - 1]?.name || '');
         setTabIndex((prev) => prev - 1);
         setState(multiStateValue[reinsertIndex][tabList?.[tabIndex - 1]?.name] || {});
         if (showMultiAdd.includes(tabList[tabIndex - 1].name)) {
@@ -131,8 +125,9 @@ const WizardWithProgressbar = (props) => {
     };
 
     // handleReinsert
-    const handleReinsert = async () => {
+    const handleReinsert = async (val) => {
         const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name);
+        checkIsNotlastPrevious = val != 'isPrevious';
         if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length === 0) {
             return;
         }
@@ -140,11 +135,20 @@ const WizardWithProgressbar = (props) => {
         updatedStateValue = checkMultiAdd ? arrVal : state;
         const temp_state = [...multiStateValue];
         temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue;
-        reinsertIndex = 1 + parseInt(reinsertIndex);
-        temp_state[reinsertIndex] = {};
+        if (checkIsNotlastPrevious) {
+            reinsertIndex = 1 + parseInt(reinsertIndex);
+            temp_state[reinsertIndex] = {};
+        }
         setMultiStateValue(temp_state);
-        await ReinsertData();
+        if (checkIsNotlastPrevious) {
+            if (tabIndex === tabList.length - 1) {
+                setTab('personalInfo');
+                setTabIndex(0);
+                setArrVal([]);
+            }
+        }
     };
+
 
     return (
         <Card>
@@ -162,7 +166,11 @@ const WizardWithProgressbar = (props) => {
                                             <Button
                                                 variant="secondary"
                                                 className="waves-effect waves-light"
-                                                onClick={toggle}>
+                                                onClick={() => {
+                                                    setMultiStateValue([{}]);
+                                                    setState({});
+                                                    toggle();
+                                                }}>
                                                 <i className="mdi mdi-arrow-left"></i>
                                                 Back
                                             </Button>
@@ -197,14 +205,6 @@ const WizardWithProgressbar = (props) => {
                                         </Nav.Item>
                                     ))}
                                 </Nav>
-                                <ProgressBar
-                                    animated
-                                    striped
-                                    variant="success"
-                                    now={((tabList.findIndex((item) => item?.name === tab) + 1) / tabList.length) * 100}
-                                    className="mb-3"
-                                    style={{ height: 7 }}
-                                />
                                 <Tab.Content className="pb-0 mb-0 pt-0">
                                     <Tab.Pane eventKey={tabList[tabIndex].name}>
                                         <Step
@@ -245,8 +245,11 @@ const WizardWithProgressbar = (props) => {
                                                             {tabIndex != 0 && (
                                                                 <li className="previous list-inline-item">
                                                                     <Button
-                                                                        onClick={() => {
-                                                                            handlePrevious(previous);
+                                                                        onClick={async () => {
+                                                                            if (!isEdit) {
+                                                                                await handleReinsert('isPrevious');
+                                                                            }
+                                                                            await handlePrevious(previous);
                                                                         }}
                                                                         variant="secondary">
                                                                         Previous
@@ -263,8 +266,8 @@ const WizardWithProgressbar = (props) => {
                                                                     {tabIndex != tabList.length - 1
                                                                         ? 'Next'
                                                                         : isEdit
-                                                                        ? 'Update'
-                                                                        : 'Submit'}
+                                                                            ? 'Update'
+                                                                            : 'Submit'}
                                                                 </Button>
                                                             </li>
 
@@ -272,7 +275,7 @@ const WizardWithProgressbar = (props) => {
                                                                 <li className="next list-inline-item float-end mx-3">
                                                                     <Button
                                                                         onClick={() => {
-                                                                            handleReinsert();
+                                                                            handleReinsert('');
                                                                         }}
                                                                         variant="info">
                                                                         Reinsert
@@ -294,7 +297,7 @@ const WizardWithProgressbar = (props) => {
                 {showMultiAdd.includes(tabList[tabIndex].name) && (
                     <Table
                         columns={columnsWizard?.[tabList[tabIndex].name] || []}
-                        Title={`${tabList[tabIndex].name} List`}
+                        Title={`${tabList[tabIndex].label} List`}
                         data={arrVal || []}
                         pageSize={5}
                         sizePerPageList={sizePerPageList}

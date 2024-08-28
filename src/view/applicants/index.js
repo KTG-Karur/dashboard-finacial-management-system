@@ -3,30 +3,24 @@ import React, { useState, useEffect } from 'react';
 import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
 import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
-import { applicantTabs as tabList } from './formFieldData';
+import { applicantTabs } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
-import { deleteData, findObj, formatDate, showConfirmationDialog, updateData } from '../../utils/AllFunction';
+import { deleteData, findArrObj, formatDate, showConfirmationDialog, showMessage, updateData } from '../../utils/AllFunction';
+import { NotificationContainer } from 'react-notifications';
 
-let handleEditId = null;
-let handleEditData = null;
 const Index = () => {
     //Table column
     const columns = [
         {
-            Header: 'ID',
+            Header: 'S.no',
             accessor: 'id',
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
             Header: 'Applicant Id',
             accessor: 'applicantId',
-            sort: true,
-        },
-        {
-            Header: 'Created At',
-            accessor: 'createdAt',
             sort: true,
         },
         {
@@ -45,11 +39,6 @@ const Index = () => {
             sort: false,
         },
         {
-            Header: 'Company Name',
-            accessor: 'companyName',
-            sort: false,
-        },
-        {
             Header: 'Applicant Type',
             accessor: 'applicantType',
             sort: true,
@@ -59,7 +48,7 @@ const Index = () => {
             accessor: 'actions',
             Cell: ({ row }) => (
                 <div>
-                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.index)}>
+                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original?.id)}>
                         <i className={'fe-edit-1'}></i> Edit
                     </span>
                     <span
@@ -81,7 +70,7 @@ const Index = () => {
     const columnsWizard = {
         addressInfo: [
             {
-                Header: 'ID',
+                Header: 'S.no',
                 accessor: 'id',
                 Cell: (row) => <div>{row?.row?.index + 1}</div>,
             },
@@ -116,16 +105,6 @@ const Index = () => {
                 sort: true,
             },
             {
-                Header: 'Latitude',
-                accessor: 'latitude',
-                sort: true,
-            },
-            {
-                Header: 'Logitude',
-                accessor: 'longitude',
-                sort: true,
-            },
-            {
                 Header: 'Actions',
                 accessor: 'actions',
                 Cell: ({ row }) => (
@@ -155,7 +134,7 @@ const Index = () => {
 
         idProof: [
             {
-                Header: 'ID',
+                Header: 'S.no',
                 accessor: 'id',
                 Cell: (row) => <div>{row?.row?.index + 1}</div>,
             },
@@ -182,7 +161,6 @@ const Index = () => {
                         <span
                             className="text-danger cursor-pointer"
                             onClick={() => {
-                                console.log('Called delete func');
                                 showConfirmationDialog(
                                     "You won't be able to revert this!",
                                     () => handleDeleteTabTable(row?.original?.id),
@@ -238,6 +216,10 @@ const Index = () => {
             { value: 'pancard', label: 'Pan Card' },
             { value: 'voteid', label: 'voteid' },
         ],
+        salaryType: [
+            { value: 'cashonhand', label: 'Cash on hand' },
+            { value: 'banktransfor', label: 'Bank Transfor' },
+        ],
     });
     const [multiStateValue, setMultiStateValue] = useState([{}]);
     const [stored, setStored] = useState([{ id: 1 }, { id: 2 }]);
@@ -246,21 +228,17 @@ const Index = () => {
         {
             id: '1',
             applicantId: 'HF01',
-            createdAt: '2022-11-14',
             applicantName: 'Surya',
             applicantContact: '9876543221',
             gender: 'Male',
-            companyName: 'knock the globe techonology',
             applicantType: 'salary',
         },
         {
             id: '2',
             applicantId: 'HF21',
-            createdAt: '2021-11-14',
             applicantName: 'Raja',
             applicantContact: '9876543221',
             gender: 'Male',
-            companyName: 'Time Tea',
             applicantType: 'bussiness',
         },
     ]);
@@ -286,6 +264,160 @@ const Index = () => {
     const [tabIndex, setTabIndex] = useState(0);
     const [arrVal, setArrVal] = useState([]);
     const [IsEditArrVal, setIsEditArrVal] = useState(false);
+    const [tabList, setTabList] = useState(applicantTabs);
+
+    useEffect(() => {
+        if (state?.applicantType !== '') {
+            let updatedTabList = [...tabList]; // Create a copy of the current tab list
+
+            const formList = state?.applicantType === 'salary'
+                ? {
+                    label: 'Income Info',
+                    name: 'incomeInfo',
+                    icon: 'mdi mdi-cash',
+                    children: [
+                        {
+                            formFields: [
+                                {
+                                    label: 'Select Applicant type',
+                                    name: 'applicantType',
+                                    inputType: 'select',
+                                    optionList: 'applicantType',
+                                    require: false,
+                                },
+                            ],
+                        },
+                        {
+                            formFields: [
+                                {
+                                    label: 'Company Name',
+                                    name: 'companyName',
+                                    inputType: 'text',
+                                    placeholder: 'Enter Company Name',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Company Address',
+                                    name: 'companyAddress',
+                                    inputType: 'text',
+                                    placeholder: 'Enter Company Address',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Office Contact No',
+                                    name: 'officeContactNo',
+                                    inputType: 'number',
+                                    maxlength: 10,
+                                    placeholder: 'Enter Office No',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Date Of Joining',
+                                    name: 'dateofjoining',
+                                    inputType: 'date',
+                                    require: false,
+                                },
+                            ],
+                        },
+                        {
+                            formFields: [
+                                {
+                                    label: 'Salary Date',
+                                    name: 'salaryDate',
+                                    inputType: 'date',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Salary Type',
+                                    name: 'salaryType',
+                                    inputType: 'select',
+                                    optionList: 'salaryType',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Monthly Income',
+                                    name: 'monthlyIncome',
+                                    inputType: 'number',
+                                    placeholder: 'Enter Monthly Income',
+                                    require: false,
+                                },
+                            ],
+                        },
+                    ],
+                }
+                : {
+                    label: 'Income Info',
+                    name: 'incomeInfo',
+                    icon: 'mdi mdi-cash',
+                    children: [
+                        {
+                            formFields: [
+                                {
+                                    label: 'Select Applicant type',
+                                    name: 'applicantType',
+                                    inputType: 'select',
+                                    optionList: 'applicantType',
+                                    require: false,
+                                },
+                            ],
+                        },
+                        {
+                            formFields: [
+                                {
+                                    label: 'Business Name',
+                                    name: 'businessName',
+                                    inputType: 'text',
+                                    placeholder: 'Enter Business Name',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Business Address',
+                                    name: 'businessAddress',
+                                    inputType: 'text',
+                                    placeholder: 'Enter Business Address',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Office Contact No',
+                                    name: 'officeContactNo',
+                                    inputType: 'number',
+                                    maxlength: 10,
+                                    placeholder: 'Enter Office No',
+                                    require: false,
+                                },
+                                {
+                                    label: 'Starting Date',
+                                    name: 'startingDate',
+                                    inputType: 'date',
+                                    require: false,
+                                },
+                            ],
+                        },
+                        {
+                            formFields: [
+                                {
+                                    label: 'Monthly Income',
+                                    name: 'monthlyIncome',
+                                    inputType: 'number',
+                                    placeholder: 'Enter Monthly Income',
+                                    require: false,
+                                },
+                            ],
+                        },
+                    ],
+                };
+
+            // Find the index of the incomeInfo tab
+            const incomeInfoIndex = updatedTabList.findIndex(tab => tab.name === 'incomeInfo');
+
+            if (incomeInfoIndex !== -1) {
+                // Replace the existing incomeInfo tab with the new formList
+                updatedTabList[incomeInfoIndex] = formList;
+                setTabList(updatedTabList); // Update the state with the modified tab list
+            }
+        }
+    }, [state?.applicantType]);
+
 
     useEffect(() => {
         fetchDistrict();
@@ -311,11 +443,9 @@ const Index = () => {
 
     // Toggle
     const toggle = () => {
+        setTab('personalInfo');
+        setTabIndex(0);
         if (isEdit) {
-            setTab('personalInfo');
-            setTabIndex(0);
-            setArrVal([]);
-            setState({});
             setIsEdit(false);
         }
         setWizard(!wizard);
@@ -386,13 +516,11 @@ const Index = () => {
         setState({});
         if (isEdit) {
             const res = {
-                id:multiStateValue[0]?.id,
+                id: multiStateValue[0]?.id,
                 applicantId: `HF0${multiStateValue[0]?.id}`,
-                createdAt: formatDate(new Date()),
                 applicantName: multiStateValue[0].personalInfo.firstName,
                 applicantContact: multiStateValue[0].personalInfo.contactNo,
                 gender: multiStateValue[0].personalInfo.gender,
-                companyName: multiStateValue[0].incomeInfo.companyname,
                 applicantType: multiStateValue[0].incomeInfo.applicantType,
             };
             const updata = await updateData(tblList, multiStateValue[0]?.id, res);
@@ -400,24 +528,27 @@ const Index = () => {
             setTblList(updata);
             setStored(updataStore);
             setIsEdit(false);
+            setMultiStateValue([{}]);
+            showMessage('success', 'Updated Successfully');
         } else {
             const newEntries = [];
             multiStateValue.map((item, index) => {
                 const res = {
-                    id: tblList.length + index + 1,
-                    applicantId: `HF0${tblList.length + index + 1}`,
-                    createdAt: formatDate(new Date()),
+                    id: stored.length + index + 1,
+                    applicantId: `HF0${stored.length + index + 1}`,
                     applicantName: item.personalInfo.firstName,
                     applicantContact: item.personalInfo.contactNo,
                     gender: item.personalInfo.gender,
-                    companyName: item.incomeInfo.companyname,
                     applicantType: item.incomeInfo.applicantType,
                 };
-                const setId = [{ id: tblList.length + index + 1, ...item }];
+                const setId = { id: stored.length + index + 1, ...item };
                 setStored((prev) => [...prev, setId]);
                 newEntries.push(res);
             });
             setTblList((prev) => [...prev, ...newEntries]);
+            setMultiStateValue([{}]);
+            setState({});
+            showMessage('success', 'Created Successfully');
         }
         toggle();
     };
@@ -425,21 +556,17 @@ const Index = () => {
     // handleEdit
     const handleEdit = async (id) => {
         setIsEdit(true);
-        setMultiStateValue([stored[id][0]]);
+        const result = await findArrObj(stored, parseInt(id));
+        setMultiStateValue(result);
         toggle();
     };
 
-    console.log('stored  in index page');
-    console.log(stored);
-    // console.log("multiStateValue  in index page")
-    // console.log(multiStateValue)
-
     //handleDelete
-    const handleDelete = (id) => {
-        const delDataforTable = deleteData(tblList, id);
-        const delDataforStored = deleteData(stored, id);
-        setTblList(delDataforTable);
+    const handleDelete = async (id) => {
+        const delDataforStored = await deleteData(stored, id);
         setStored(delDataforStored);
+        const delDataforTable = await deleteData(tblList, id);
+        setTblList(delDataforTable);
     };
 
     //Tab table handleEdit and handleDelete
@@ -456,6 +583,7 @@ const Index = () => {
 
     return (
         <React.Fragment>
+            <NotificationContainer />
             {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
@@ -493,12 +621,12 @@ const Index = () => {
                     <ModelViewBox
                         modal={modal}
                         toggle={toggleModal}
-                        modelHeader={getModelForm?.name || ''}
+                        modelHeader={getModelForm?.label || ''}
                         modelSize={'md'}
                         handleSubmit={handleSubmitSelectOption}>
                         {getModelForm?.name === 'states' || getModelForm?.name === 'district' ? (
                             <React.Fragment>
-                                <Form.Label>{getModelForm?.name === 'states' ? 'country' : 'states'}</Form.Label>
+                                <Form.Label>{getModelForm?.label === 'states' ? 'country' : 'states'}</Form.Label>
                                 <Select
                                     onChange={(selectedOption) => {
                                         handleChangeSelectOption(selectedOption, getModelForm?.name);
@@ -517,12 +645,12 @@ const Index = () => {
                             </React.Fragment>
                         ) : null}
 
-                        <Form.Label>{getModelForm?.name}</Form.Label>
+                        <Form.Label>{getModelForm?.label}</Form.Label>
                         <Form.Control
                             type="text"
                             name={getModelForm?.name}
                             className="mb-1"
-                            placeholder={`Enter ${getModelForm?.name || ''}`}
+                            placeholder={`Enter ${getModelForm?.label || ''}`}
                             onChange={(e) => {
                                 handleChangeSelectOption(e.target.value);
                             }}

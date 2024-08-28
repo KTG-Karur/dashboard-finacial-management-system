@@ -45,6 +45,16 @@ function FormComponent(props) {
                     [formName]: e,
                 }));
                 break;
+            case 'file':
+                console.log("[formName]")
+                console.log(formName)
+                console.log("e.target.files[0]")
+                console.log(e.target.files[0])
+                setState((prev) => ({
+                    ...prev,
+                    [formName]: [e.target.files[0]],
+                }));
+                break;
             default:
                 console.log('formName ', formName);
         }
@@ -117,6 +127,36 @@ function FormComponent(props) {
                                 )}
                             </div>
                         );
+                    case 'file':
+                        return (
+                            <div key={index} className="mb-2">
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}{' '}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                    </span>
+                                </Form.Label>
+                                <Form.Control
+                                    type="file"
+                                    name={form?.name}
+                                    className="mb-1"
+                                    placeholder={form?.placeholder}
+                                    required={form?.require}
+                                    disabled={form?.isDisabled}
+                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                    onChange={(e) => {
+                                        handleChange(e, 'file', form?.name);
+                                    }}
+                                />
+                                {errors?.includes(form?.name) && (
+                                    <p
+                                        className="text-danger"
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                )}
+                            </div>
+                        );
                     case 'number':
                         return (
                             <div key={index} className="mb-2">
@@ -138,7 +178,11 @@ function FormComponent(props) {
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
-                                        handleChange(e, 'number', form?.name);
+                                        const value = e.target.value;
+                                        // Check if the value exceeds the maxlength
+                                        if (!form?.maxlength || value.length <= form?.maxlength) {
+                                            handleChange(e, 'number', form?.name);
+                                        }
                                     }}
                                 />
                                 {errors?.includes(form?.name) && (
@@ -220,14 +264,14 @@ function FormComponent(props) {
                                     isSearchable
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     options={optionListState?.[form?.optionList] || []}
-                                    // options={form?.optionList}
+                                // options={form?.optionList}
                                 ></Select>
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
                                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
                                 )}
-                                
+
                             </div>
                         );
                     case 'checkbox':
