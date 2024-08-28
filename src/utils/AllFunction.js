@@ -44,9 +44,9 @@ function formatDate(date) {
 }
 
 function updateData(arr, id, newState) {
-    arr[id - 1] = newState;
-    return arr;
-    // return arr.map((item) => (item.id === id ? newState : item));
+    // arr[id - 1] = newState;
+    // return arr;
+    return arr.map((item) => (item.id === id ? newState : item));
 }
 
 function deleteData(arr, id) {
@@ -57,6 +57,11 @@ function deleteData(arr, id) {
 
 function findObj(optionList, designation = 0) {
     return optionList.filter((item) => item.value === designation);
+}
+
+function findArrObj(arr, id) {
+    return arr.filter((item) => (item.id === id));
+   
 }
 
 const showConfirmationDialog = (
@@ -95,4 +100,4 @@ const showConfirmationDialog = (
     });
 };
 
-export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj };
+export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj, findArrObj };

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Row, Col, Card, Form, Button, ProgressBar, Tab, Nav } from 'react-bootstrap';
+import { Row, Col, Card, Form, Button, Tab, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { Wizard, Steps, Step } from 'react-albus';
 import FormLayout from '../../utils/formLayout';
@@ -7,185 +7,61 @@ import Table from '../../components/Table';
 import { sizePerPageList } from '../../utils/constData';
 import { deleteData, showConfirmationDialog, updateData } from '../../utils/AllFunction';
 
-let submitWizardCall = false
-let reinsertIndex = 0
+let submitWizardCall = false;
+let reinsertIndex = 0;
+let checkIsNotlastPrevious = '';
 
 const WizardWithProgressbar = (props) => {
-    const { arrVal,
+    const {
+        //state
+        arrVal,
         setArrVal,
         tabIndex,
         setTabIndex,
-        setStored,
         isEdit,
-        toggle,
-        Title,
-        tab,
         setTab,
-        tabList,
+        tab,
         state,
         setState,
-        setErrors,
-        errors,
-        handleSubmit,
-        stateValue,
-        setStateValue,
-        toggleModal,
-        showSelectmodel,
-        optionListState,
-        showMultiAdd,
         multiStateValue,
-        setMultiStateValue
+        setMultiStateValue,
+        errors,
+        setErrors,
+        IsEditArrVal,
+        setIsEditArrVal,
+        //const value
+        Title,
+        showSelectmodel,
+        showMultiAdd,
+        optionListState,
+        columnsWizard,
+        //function
+        toggleModal,
+        toggle,
+        handleSubmit,
+        //formFieldData.js
+        tabList,
     } = props;
-
-    const columns = {
-        addressInfo: [
-            {
-                Header: 'ID',
-                accessor: 'id',
-                Cell: (row) => <div>{row?.row?.index + 1}</div>,
-            },
-            {
-                Header: 'Address Type',
-                accessor: 'addressType',
-                sort: true,
-            },
-            {
-                Header: 'Address',
-                accessor: 'address',
-                sort: true,
-            },
-            {
-                Header: 'Country',
-                accessor: 'country',
-                sort: false,
-            },
-            {
-                Header: 'State',
-                accessor: 'states',
-                sort: true,
-            },
-            {
-                Header: 'District',
-                accessor: 'district',
-                sort: true,
-            },
-            {
-                Header: 'Pincode',
-                accessor: 'pincode',
-                sort: true,
-            },
-            {
-                Header: 'Latitude',
-                accessor: 'latitude',
-                sort: true,
-            },
-            {
-                Header: 'Logitude',
-                accessor: 'longitude',
-                sort: true,
-            },
-            {
-                Header: 'Actions',
-                accessor: 'actions',
-                Cell: ({ row }) => (
-                    <div>
-                        <span
-                            className="text-success  me-2 cursor-pointer"
-                            onClick={() => handleEdit(row?.original, row?.index)}>
-                            <i className={'fe-edit-1'}></i> Edit
-                        </span>
-                        <span
-                            className="text-danger cursor-pointer"
-                            onClick={() => {
-                                console.log('Called delete func');
-                                showConfirmationDialog(
-                                    "You won't be able to revert this!",
-                                    () => handleDelete(row?.original?.id),
-                                    'Yes, Delete it!'
-                                );
-                            }}>
-                            <i className={'fe-trash-2'}></i> Delete
-                        </span>
-                    </div>
-                ),
-            },
-        ],
-
-        idProof: [
-            {
-                Header: 'ID',
-                accessor: 'id',
-                Cell: (row) => <div>{row?.row?.index + 1}</div>,
-            },
-            {
-                Header: 'Id Proof',
-                accessor: 'idProof',
-                sort: true,
-            },
-            {
-                Header: 'Proof No',
-                accessor: 'proofIdNo',
-                sort: true,
-            },
-            {
-                Header: 'Actions',
-                accessor: 'actions',
-                Cell: ({ row }) => (
-                    <div>
-                        <span
-                            className="text-success  me-2 cursor-pointer"
-                            onClick={() => handleEdit(row?.original, row?.index)}>
-                            <i className={'fe-edit-1'}></i> Edit
-                        </span>
-                        <span
-                            className="text-danger cursor-pointer"
-                            onClick={() => {
-                                console.log('Called delete func');
-                                showConfirmationDialog(
-                                    "You won't be able to revert this!",
-                                    () => handleDelete(row?.original?.id),
-                                    'Yes, Delete it!'
-                                );
-                            }}>
-                            <i className={'fe-trash-2'}></i> Delete
-                        </span>
-                    </div>
-                ),
-            },
-        ],
-    };
 
     const errorHandle = useRef();
     const [checkValidationforAddorNext, setCheckValidationforAddorNext] = useState(false);
-    const [IsEditArrVal, setIsEditArrVal] = useState(false);
-
 
     useEffect(() => {
         if (submitWizardCall) {
             handleSubmit();
+            reinsertIndex = 0;
             submitWizardCall = false;
         }
-    }, [multiStateValue])
-
-    const ReinsertData = (updatedStateValue) => {
-        if (tabIndex === tabList.length - 1) {
-            // setMultiStateValue((prev) => [...prev, updatedStateValue]);
-            setStored((prev) => [...prev, updatedStateValue])
-            setTab('personalInfo');
-            setTabIndex(0);
-            setArrVal([]);
-        }
-    }
+    }, [multiStateValue]);
 
     useEffect(() => {
         if (isEdit) {
-            setState(stateValue[tabList?.[tabIndex]?.name] || {})
-            if (Array.isArray(stateValue[tabList?.[tabIndex]?.name])) {
-                console.log("check it is state or not")
-                setArrVal(stateValue[tabList?.[tabIndex]?.name])
+            setState(multiStateValue[0][tabList?.[tabIndex]?.name] || {});
+            if (Array.isArray(multiStateValue[0][tabList?.[tabIndex]?.name])) {
+                setArrVal(multiStateValue[0][tabList?.[tabIndex]?.name]);
             }
         }
-    }, [tabIndex])
+    }, [tabIndex]);
 
     // Validation
     const checkValidation = (next, condition) => {
@@ -201,12 +77,12 @@ const WizardWithProgressbar = (props) => {
     // Add
     const handleAdd = async () => {
         if (IsEditArrVal) {
-            const updata = await updateData(arrVal, state?.id + 1, state);
+            const updata = await updateData(arrVal, state?.id, state);
             setArrVal(updata);
             setIsEditArrVal(false);
             setState({});
         } else {
-            const data = { id: arrVal.length + 1, ...state };
+            const data = { id: arrVal.length, ...state };
             setArrVal((prevValues) => [...prevValues, data]);
             setState({});
         }
@@ -214,25 +90,24 @@ const WizardWithProgressbar = (props) => {
 
     // Next
     const handleNext = async (next) => {
-        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name)
-        if (checkMultiAdd && arrVal.length === 0) { 
-            console.log('arrVal is empty, cannot move to the next tab');
+        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name);
+        if (checkMultiAdd && arrVal.length === 0) {
             return;
         }
         let updatedStateValue;
         updatedStateValue = checkMultiAdd ? arrVal : state;
         const temp_state = [...multiStateValue];
-        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue
-        setMultiStateValue(temp_state)
+        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue;
+        setMultiStateValue(temp_state);
 
         if (tabIndex === tabList.length - 1) {
             submitWizardCall = true;
-        }else{
+        } else {
             setTab(tabList?.[tabIndex + 1]?.name);
             setTabIndex((prev) => prev + 1);
-            setState(multiStateValue[tabList?.[tabIndex + 1]?.name] || {});
-            if (showMultiAdd.includes(tabList[tabIndex].name)) {
-                setArrVal([]);
+            setState(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || {});
+            if (showMultiAdd.includes(tabList[tabIndex + 1].name)) {
+                setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || []);
             }
             next();
         }
@@ -240,44 +115,40 @@ const WizardWithProgressbar = (props) => {
 
     // Previous
     const handlePrevious = (previous) => {
-        setTab(tabList?.[tabIndex - 1]?.name);
+        setTab(tabList[tabIndex - 1]?.name || '');
         setTabIndex((prev) => prev - 1);
-        setState(multiStateValue[tabList?.[tabIndex - 1]?.name] || {});
+        setState(multiStateValue[reinsertIndex][tabList?.[tabIndex - 1]?.name] || {});
         if (showMultiAdd.includes(tabList[tabIndex - 1].name)) {
-            setArrVal(multiStateValue[tabList?.[tabIndex - 1]?.name] || []);
+            setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex - 1]?.name] || []);
         }
         previous();
     };
 
-    //handleEdit
-    const handleEdit = async (data, id) => {
-        setIsEditArrVal(true);
-        const updatedState = { ...data, id: id };
-        setState(updatedState);
-    };
-
-    //handleDelete
-    const handleDelete = async (id) => {
-        const delData = await deleteData(arrVal, id);
-        setArrVal(delData);
-    };
-
     // handleReinsert
-    const handleReinsert = async () => {
-        const checkMultiAdd= showMultiAdd.includes(tabList[tabIndex].name)
+    const handleReinsert = async (val) => {
+        const checkMultiAdd = showMultiAdd.includes(tabList[tabIndex].name);
+        checkIsNotlastPrevious = val != 'isPrevious';
         if (showMultiAdd.includes(tabList[tabIndex].name) && arrVal.length === 0) {
-            console.log('arrVal is empty, cannot move to the next tab');
             return;
         }
         let updatedStateValue;
         updatedStateValue = checkMultiAdd ? arrVal : state;
         const temp_state = [...multiStateValue];
-        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue
-        reinsertIndex = 1 + parseInt(reinsertIndex)
-        temp_state[reinsertIndex]= {}
-        setMultiStateValue(temp_state)
-        await ReinsertData(updatedStateValue)
-    }
+        temp_state[reinsertIndex][tabList?.[tabIndex]?.name] = updatedStateValue;
+        if (checkIsNotlastPrevious) {
+            reinsertIndex = 1 + parseInt(reinsertIndex);
+            temp_state[reinsertIndex] = {};
+        }
+        setMultiStateValue(temp_state);
+        if (checkIsNotlastPrevious) {
+            if (tabIndex === tabList.length - 1) {
+                setTab('personalInfo');
+                setTabIndex(0);
+                setArrVal([]);
+            }
+        }
+    };
+
 
     return (
         <Card>
@@ -295,7 +166,11 @@ const WizardWithProgressbar = (props) => {
                                             <Button
                                                 variant="secondary"
                                                 className="waves-effect waves-light"
-                                                onClick={toggle}>
+                                                onClick={() => {
+                                                    setMultiStateValue([{}]);
+                                                    setState({});
+                                                    toggle();
+                                                }}>
                                                 <i className="mdi mdi-arrow-left"></i>
                                                 Back
                                             </Button>
@@ -312,8 +187,8 @@ const WizardWithProgressbar = (props) => {
                         <Steps>
                             <Tab.Container
                                 id="left-tabs-example"
-                                defaultActiveKey={tabList?.[0]?.defaultActiveKey || ""}
-                                activeKey={tab ? tab : tabList?.[0]?.defaultActiveKey || ""}
+                                defaultActiveKey={tabList?.[0]?.defaultActiveKey || ''}
+                                activeKey={tab ? tab : tabList?.[0]?.defaultActiveKey || ''}
                                 onSelect={(k) => setTab(k)}>
                                 <Nav variant="pills" as="ul" className="nav-justified bg-light form-wizard-header mb-3">
                                     {tabList.map((item, i) => (
@@ -322,32 +197,24 @@ const WizardWithProgressbar = (props) => {
                                                 as={Link}
                                                 disabled
                                                 to="#"
-                                                eventKey={item?.name || ""}
+                                                eventKey={item?.name || ''}
                                                 className="rounded-0 pt-2 pb-2">
-                                                <i className={`${item?.icon || ""} me-1`}></i>
-                                                <span className="d-none d-sm-inline">{item?.label || ""}</span>
+                                                <i className={`${item?.icon || ''} me-1`}></i>
+                                                <span className="d-none d-sm-inline">{item?.label || ''}</span>
                                             </Nav.Link>
                                         </Nav.Item>
                                     ))}
                                 </Nav>
-                                <ProgressBar
-                                    animated
-                                    striped
-                                    variant="success"
-                                    now={((tabList.findIndex((item) => item?.name === tab) + 1) / tabList.length) * 100}
-                                    className="mb-3"
-                                    style={{ height: 7 }}
-                                />
                                 <Tab.Content className="pb-0 mb-0 pt-0">
                                     <Tab.Pane eventKey={tabList[tabIndex].name}>
                                         <Step
-                                            id={tabList[tabIndex]?.name || ""}
+                                            id={tabList[tabIndex]?.name || ''}
                                             render={({ next, previous }) => {
                                                 return (
                                                     <Form>
                                                         <FormLayout
                                                             optionListState={optionListState}
-                                                            dynamicForm={tabList[tabIndex]?.children || ""}
+                                                            dynamicForm={tabList[tabIndex]?.children || ''}
                                                             handleSubmit={
                                                                 checkValidationforAddorNext
                                                                     ? () => handleAdd()
@@ -378,8 +245,11 @@ const WizardWithProgressbar = (props) => {
                                                             {tabIndex != 0 && (
                                                                 <li className="previous list-inline-item">
                                                                     <Button
-                                                                        onClick={() => {
-                                                                            handlePrevious(previous);
+                                                                        onClick={async () => {
+                                                                            if (!isEdit) {
+                                                                                await handleReinsert('isPrevious');
+                                                                            }
+                                                                            await handlePrevious(previous);
                                                                         }}
                                                                         variant="secondary">
                                                                         Previous
@@ -393,22 +263,25 @@ const WizardWithProgressbar = (props) => {
                                                                         checkValidation(next, false);
                                                                     }}
                                                                     variant="primary">
-                                                                    {tabIndex != tabList.length - 1 ? 'Next' : isEdit ? 'Update' : 'Submit'}
+                                                                    {tabIndex != tabList.length - 1
+                                                                        ? 'Next'
+                                                                        : isEdit
+                                                                            ? 'Update'
+                                                                            : 'Submit'}
                                                                 </Button>
                                                             </li>
 
-                                                            {
-                                                                tabIndex === tabList.length - 1 && !isEdit &&
+                                                            {tabIndex === tabList.length - 1 && !isEdit && (
                                                                 <li className="next list-inline-item float-end mx-3">
                                                                     <Button
                                                                         onClick={() => {
-                                                                            handleReinsert()
+                                                                            handleReinsert('');
                                                                         }}
                                                                         variant="info">
                                                                         Reinsert
                                                                     </Button>
                                                                 </li>
-                                                            }
+                                                            )}
                                                         </ul>
                                                     </Form>
                                                 );
@@ -423,8 +296,8 @@ const WizardWithProgressbar = (props) => {
 
                 {showMultiAdd.includes(tabList[tabIndex].name) && (
                     <Table
-                        columns={columns?.[tabList[tabIndex].name] || []}
-                        Title={`${tabList[tabIndex].name} List`}
+                        columns={columnsWizard?.[tabList[tabIndex].name] || []}
+                        Title={`${tabList[tabIndex].label} List`}
                         data={arrVal || []}
                         pageSize={5}
                         sizePerPageList={sizePerPageList}

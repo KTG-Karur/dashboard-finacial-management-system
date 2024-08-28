@@ -205,7 +205,9 @@ const Table = (props) => {
                                                             sorting_desc: column.isSortedDesc === true,
                                                             sorting_asc: column.isSortedDesc === false,
                                                             sortable: column.sort === true,
-                                                        })}>
+                                                        })}
+                                                        style={{whiteSpace:"nowrap"}}
+                                                        >
                                                         {column.render('Header')}
                                                     </th>
                                                 ))}
@@ -225,7 +227,7 @@ const Table = (props) => {
                                                                         className: cell.column.className,
                                                                     },
                                                                 ])}
-                                                                className="cursor-pointer">
+                                                                className="cursor-pointer text-nowrap">
                                                                 {cell.render('Cell')}
                                                             </td>
                                                         );

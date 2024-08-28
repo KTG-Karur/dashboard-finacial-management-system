@@ -168,8 +168,6 @@ function Index() {
 
     //handleEdit
     const handleEdit = async (data) => {
-        console.log(" from handle Edit")
-        console.log(data)
         setIsEdit(true);
         setState({
             ...state,
