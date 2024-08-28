@@ -259,7 +259,7 @@ const Index = () => {
             { districtId: '3', value: '3', label: 'bangalore', statesId: '1' },
         ],
     };
-    const showSelectmodel = ['addressType', 'district', 'states', 'country', 'idProof'];
+    const showSelectmodel = ['addressType', 'district', 'states', 'idProof'];
     const showMultiAdd = ['idProof', 'addressInfo'];
     const [tabIndex, setTabIndex] = useState(0);
     const [arrVal, setArrVal] = useState([]);
