@@ -1,22 +1,40 @@
-// react
 import React, { useEffect, useRef, useState } from 'react';
-// react-boostrap
-import { Badge, Button, Card, Col, Row } from 'react-bootstrap';
-// component
+import { Badge, Spinner } from 'react-bootstrap';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { employeeFormContainer } from './formFieldData';
-// import HoverableTable from '../../pages/tables/BasicTable/HoverableTable';
 import Table from '../../components/Table';
-//dummy data
-import { showConfirmationDialog, updateData, deleteData } from '../../utils/AllFunction';
-import { sizePerPageList } from '../../utils/constData';
+import { showConfirmationDialog } from '../../utils/AllFunction';
+import { createDepartmentRequest, getDepartmentRequest, resetCreateDepartment, resetGetDepartment, resetUpdateDepartment, updateDepartmentRequest } from '../../redux/actions';
+import { useRedux } from '../../hooks'
+
+let isEdit = false;
 
 function Index() {
-    //Table column
+
+    const { dispatch, appSelector } = useRedux();
+
+    const { getDepartmentSuccess, getDepartmentList, getDepartmentFailure,
+        createDepartmentSuccess, createDepartmentData, createDepartmentFailure,
+        updateDepartmentSuccess, updateDepartmentData, updateDepartmentFailure,
+
+    } = appSelector((state) => ({
+        getDepartmentSuccess: state.departmentReducer.getDepartmentSuccess,
+        getDepartmentList: state.departmentReducer.getDepartmentList,
+        getDepartmentFailure: state.departmentReducer.getDepartmentFailure,
+
+        createDepartmentSuccess: state.departmentReducer.createDepartmentSuccess,
+        createDepartmentData: state.departmentReducer.createDepartmentData,
+        createDepartmentFailure: state.departmentReducer.createDepartmentFailure,
+
+        updateDepartmentSuccess: state.departmentReducer.updateDepartmentSuccess,
+        updateDepartmentData: state.departmentReducer.updateDepartmentData,
+        updateDepartmentFailure: state.departmentReducer.updateDepartmentFailure,
+    }));
+
     const columns = [
         {
-            Header: 'ID',
+            Header: 'S.No',
             accessor: 'id',
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
@@ -41,143 +59,165 @@ function Index() {
         {
             Header: 'Actions',
             accessor: 'actions',
-            Cell: ({ row }) => (
-                <div>
-                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original)}>
-                        <i className={'fe-edit-1'}></i> Edit
-                    </span>
-                    <span
-                        className="text-danger cursor-pointer"
-                        onClick={() =>
-                            showConfirmationDialog(
-                                "You won't be able to revert this!",
-                                () => handleDelete(row?.original?.id),
-                                'Yes, Delete it!'
-                            )
-                        }>
-                        <i className={'fe-trash-2'}></i> Delete
-                    </span>
-                </div>
-            ),
+            Cell: ({ row }) => {
+                const activeChecker = row.original.isActive
+                const iconColor = activeChecker ? "text-danger" : "text-warning";
+                const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
+                return (
+                    <div>
+                        <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+                            <i className={'fe-edit-1'}></i>
+                        </span>
+                        <span
+                            className={`${iconColor} cursor-pointer`}
+                            onClick={() =>
+                                showConfirmationDialog(
+                                    deleteMessage,
+                                    () => onDeleteForm(row.original, row.index, activeChecker),
+                                    'Yes'
+                                )
+                            }>
+                            {
+                                row?.original?.isActive ? <i className={'fe-trash-2'}></i> : <i className={'fas fa-recycle'}></i>
+                            }
+                        </span>
+                    </div>
+                )
+            },
         },
     ];
 
-    // useStates
     const [state, setState] = useState({});
-    const [tblList, setTblList] = useState([
-        {
-            id: '1',
-            departmentName: 'Human Resource',
-            isActive: 1,
-        },
-        {
-            id: '2',
-            departmentName: 'Developer',
-            isActive: 1,
-        },
-        {
-            id: '9',
-            departmentName: 'HR',
-            isActive: 1,
-        },
-    ]);
+    const [parentList, setParentList] = useState([]);
+    const [selectedItem, setSelectedItem] = useState({});
+    const [selectedIndex, setSelectedIndex] = useState(false);
     const [modal, setModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState([]);
-    const [isEdit, setIsEdit] = useState(false);
 
     const errorHandle = useRef();
 
     useEffect(() => {
-        if (!isEdit)
-            setState((prevState) => ({
-                ...prevState,
-                id: tblList?.length + 1,
-            }));
-    }, [modal]);
+        setIsLoading(true)
+        dispatch(getDepartmentRequest());
+    }, []);
 
-    // Functions
-    // Show/hide the modal
-    const toggle = () => {
-        if (isEdit) {
-            handleClear();
-            setIsEdit(false);
+    useEffect(() => {
+        if (getDepartmentSuccess) {
+            setIsLoading(false)
+            setParentList(getDepartmentList)
+            dispatch(resetGetDepartment())
+        } else if (getDepartmentFailure) {
+            setIsLoading(false)
+            setParentList([])
+            dispatch(resetGetDepartment())
         }
-        setModal(!modal);
-    };
+    }, [getDepartmentSuccess, getDepartmentFailure]);
 
-    const handleValidation = () => {
-        errorHandle.current.validateFormFields();
+    useEffect(() => {
+        if (createDepartmentSuccess) {
+            const temp_state = [createDepartmentData[0], ...parentList];
+            setParentList(temp_state)
+            closeModel()
+            dispatch(resetCreateDepartment())
+        } else if (createDepartmentFailure) {
+            dispatch(resetCreateDepartment())
+        }
+    }, [createDepartmentSuccess, createDepartmentFailure]);
+
+    useEffect(() => {
+        if (updateDepartmentSuccess) {
+            const temp_state = [...parentList];
+            temp_state[selectedIndex] = updateDepartmentData[0];
+            setParentList(temp_state)
+            closeModel()
+            dispatch(resetUpdateDepartment())
+        } else if (updateDepartmentFailure) {
+            dispatch(resetUpdateDepartment())
+        }
+    }, [updateDepartmentSuccess, updateDepartmentFailure]);
+
+    const closeModel = () => {
+        isEdit = false;
+        onFormClear()
+        setModal(false)
     }
 
-    //handleClear
-    const handleClear = () => {
+    const onFormClear = () => {
         setState({
             ...state,
             departmentName: '',
         });
     };
 
-    // handleSubmit
-    const handleSubmit = async () => {
-        setModal(false);
-        if (isEdit) {
-            const updata = await updateData(tblList, state?.id, state);
-            setTblList(updata);
-        } else {
-            setTblList((prev) => [...prev, state]);
-        }
-        handleClear();
+    const createModel = () => {
+        onFormClear()
+        isEdit = false;
+        setModal(true)
     };
 
-    //handleEdit
-    const handleEdit = (data) => {
-        setIsEdit(true);
+    const onEditForm = (data, index) => {
         setState({
             ...state,
-            id: data.id,
-            departmentName: data.departmentName,
+            departmentName: data?.departmentName || "",
         });
-        toggle();
+        isEdit = true;
+        setSelectedItem(data)
+        setSelectedIndex(index)
+        setModal(true)
     };
 
-    //handleDelete
-    const handleDelete = (id) => {
-        const delData = deleteData(tblList, id);
-        setTblList(delData);
+    const handleValidation = () => {
+        errorHandle.current.validateFormFields();
+    }
+
+    const onFormSubmit = async () => {
+        const submitRequest = {
+            departmentName: state?.departmentName || ""
+        }
+        if (isEdit) {
+            dispatch(updateDepartmentRequest(submitRequest, selectedItem.departmentId))
+        } else {
+            dispatch(createDepartmentRequest(submitRequest))
+        }
+    };
+
+    const onDeleteForm = (data, index, activeChecker) => {
+        const submitRequest = {
+            isActive: activeChecker == 0 ? 1 : 0
+        }
+        setSelectedIndex(index)
+        dispatch(updateDepartmentRequest(submitRequest, data.departmentId))
     };
 
     return (
         <React.Fragment>
-            {/* Table */}
-
+           { isLoading ? <div className='bg-light opacity-0.25'>
+            <div className="d-flex justify-content-center m-5">
+                <Spinner className='mt-5 mb-5' animation="border" />
+            </div>
+            </div> :
             <Table
                 columns={columns}
                 Title={'Department List'}
-                data={tblList || []}
+                data={parentList || []}
                 pageSize={5}
-                sizePerPageList={sizePerPageList}
-                isSortable={true}
-                pagination={true}
-                isSearchable={true}
-                toggle={toggle}
-                setIsEdit={setIsEdit}
-            />
+                toggle={createModel}
+            />}
 
-            {/* FormModal */}
             <ModelViewBox
                 modal={modal}
-                toggle={toggle}
+                setModel={setModal}
                 modelHeader={'Department'}
                 modelSize={'md'}
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>
                 <FormLayout
                     dynamicForm={employeeFormContainer}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={onFormSubmit}
                     setState={setState}
                     state={state}
                     ref={errorHandle}
-                    editData={state}
                     noOfColumns={1}
                     errors={errors}
                     setErrors={setErrors}

@@ -123,7 +123,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{form.errorMsg ? form.errorMsg :  `* Please Enter ${form?.label || "Given Field"}`}</p>
                                 )}
                             </div>
                         );

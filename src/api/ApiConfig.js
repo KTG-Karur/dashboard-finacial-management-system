@@ -30,7 +30,10 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
       });
       fetchConfig.body = formData;
       fetchConfig.headers['Content-Type'] = 'multipart/form-data';
-    } else {
+    }  else if (method === 'GET') {
+      const queryParams = new URLSearchParams(object).toString();
+      url += `?${queryParams}`;
+    }else {
       fetchConfig.body = JSON.stringify(object);
     }
   }
