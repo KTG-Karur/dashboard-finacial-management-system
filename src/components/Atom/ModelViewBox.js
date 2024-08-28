@@ -3,11 +3,15 @@ import { VerticalForm } from '../form';
 import { Modal, Button } from 'react-bootstrap';
 
 function ModelViewBox(props) {
-    const { modal, toggle, children, modelHeader, modelSize, handleSubmit, isEdit } = props;
+    const { modal, setModel, children, modelHeader, modelSize, handleSubmit, isEdit } = props;
+
+    const handleClose = () => {
+        setModel(false);
+    };
 
     return (
         <React.Fragment>
-            <Modal show={modal} onHide={toggle} centered size={modelSize}>
+            <Modal show={modal} onHide={handleClose} centered size={modelSize}>
                 <Modal.Header closeButton>
                     <Modal.Title as="h4">{`${isEdit ? 'Edit ' : 'Add'} ${modelHeader}`}</Modal.Title>
                 </Modal.Header>
@@ -23,7 +27,7 @@ function ModelViewBox(props) {
                                 onClick={handleSubmit}>
                                 {`${isEdit ? 'Update' : 'Save'}`}
                             </Button>
-                            <Button variant="danger" className="waves-effect waves-light" onClick={toggle}>
+                            <Button variant="danger" className="waves-effect waves-light" onClick={handleClose}>
                                 Cancel
                             </Button>
                         </div>

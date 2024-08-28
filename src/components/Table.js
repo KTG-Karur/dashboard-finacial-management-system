@@ -13,6 +13,7 @@ import classNames from 'classnames';
 
 // components
 import Pagination from './Pagination';
+import { sizePerPageList } from '../utils/constData';
 
 // Define a default UI for filtering
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
@@ -60,12 +61,12 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 });
 
 const Table = (props) => {
-    const isSearchable = props['isSearchable'] || false;
-    const isSortable = props['isSortable'] || false;
-    const pagination = props['pagination'] || false;
+    const isSearchable = props['isSearchable'] || true;
+    const isSortable = props['isSortable'] || true;
+    const pagination = props['pagination'] || true;
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
-    const sizePerPageList = props['sizePerPageList'] || [];
+    const sizePerPageListData = sizePerPageList
     const { toggle = null, Title } = props;
 
     let otherProps = {};
@@ -236,7 +237,7 @@ const Table = (props) => {
                                 </table>
                             </div>
 
-                            {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageList} />}
+                            {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageListData} />}
                         </Card.Body>
                     </Card>
                 </Col>

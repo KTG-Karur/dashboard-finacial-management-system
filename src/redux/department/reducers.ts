@@ -11,8 +11,10 @@ const initialState = {
   createDepartmentFailure: false,
   updateDepartmentSuccess: false,
   updateDepartmentFailure: false,
+  deleteDepartmentSuccess: false,
+  deleteDepartmentFailure: false,
 };
-  
+
 export default function departmentReducer(state = initialState, action: any) {
   switch (action.type) {
     case "GET_DEPARTMENT_SUCCESS": {
@@ -40,12 +42,12 @@ export default function departmentReducer(state = initialState, action: any) {
         errorMessage: null,
       };
     }
-    
+
     case "CREATE_DEPARTMENT_SUCCESS": {
       return {
         ...state,
         createDepartmentSuccess: true,
-        createDepartmentData: action.payload.data,
+        createDepartmentData: action.payload.data.data,
         createDepartmentFailure: false,
       };
     }
@@ -66,12 +68,12 @@ export default function departmentReducer(state = initialState, action: any) {
         errorMessage: null,
       };
     }
-    
+
     case "UPDATE_DEPARTMENT_SUCCESS": {
       return {
         ...state,
         updateDepartmentSuccess: true,
-        updateDepartmentData: action.payload.data,
+        updateDepartmentData: action.payload.data.data,
         updateDepartmentFailure: false,
       };
     }
@@ -92,7 +94,31 @@ export default function departmentReducer(state = initialState, action: any) {
         errorMessage: null,
       };
     }
-    
+
+    // case "DELETE_DEPARTMENT_SUCCESS": {
+    //   return {
+    //     ...state,
+    //     deleteDepartmentSuccess: true,
+    //     deleteDepartmentFailure: false,
+    //   };
+    // }
+    // case "DELETE_DEPARTMENT_FAILURE": {
+    //   return {
+    //     ...state,
+    //     deleteDepartmentFailure: true,
+    //     errorMessage: action.errorMessage,
+    //     deleteDepartmentSuccess: false,
+    //   };
+    // }
+    // case "RESET_DELETE_DEPARTMENT": {
+    //   return {
+    //     ...state,
+    //     deleteDepartmentSuccess: false,
+    //     deleteDepartmentFailure: false,
+    //     errorMessage: null,
+    //   };
+    // }
+
     default: {
       return state;
     }
