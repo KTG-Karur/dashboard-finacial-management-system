@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { employeeFormContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createDepartmentRequest, getDepartmentRequest, resetCreateDepartment, resetGetDepartment, resetUpdateDepartment, updateDepartmentRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false;
 
@@ -118,6 +119,7 @@ function Index() {
         if (createDepartmentSuccess) {
             const temp_state = [createDepartmentData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateDepartment())
         } else if (createDepartmentFailure) {
@@ -130,6 +132,7 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateDepartmentData[0];
             setParentList(temp_state)
+            showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateDepartment())
         } else if (updateDepartmentFailure) {
@@ -192,6 +195,7 @@ function Index() {
 
     return (
         <React.Fragment>
+        <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

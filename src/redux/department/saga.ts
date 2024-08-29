@@ -15,7 +15,13 @@ function* fetchDepartmentSaga(action: any): Generator<any, any, any> {
     const data = yield call(getDepartment, action.payload);
     yield put(getDepartmentSuccess(data));
   } catch (error: any) {
-    yield put(getDepartmentFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(getDepartmentFailure(errorMessage));
   }
 }
 
@@ -25,7 +31,13 @@ function* createDepartmentSaga(action: any): Generator<any, any, any> {
     const data = yield call(createDepartment, action.payload);
     yield put(createDepartmentSuccess(data));
   } catch (error: any) {
-    yield put(createDepartmentFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(createDepartmentFailure(errorMessage));
   }
 }
 
@@ -35,7 +47,13 @@ function* updateDepartmentSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateDepartment, action.payload.data, action.payload.id);
     yield put(updateDepartmentSuccess(data));
   } catch (error: any) {
-    yield put(updateDepartmentFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(updateDepartmentFailure(errorMessage));
   }
 }
 

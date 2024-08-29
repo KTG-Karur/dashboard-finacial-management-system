@@ -4,10 +4,36 @@ import Auth from './auth/reducers';
 import Layout from './layout/reducers';
 import PageTitle from './pageTitle/reducers';
 import departmentReducer from './department/reducers';
+import designationReducer from './designation/reducers';
+import districtReducer from './district/reducers';
+import stateReducer from './state/reducers';
+import countryReducer from './country/reducers';
+import categoryReducer from './category/reducers';
+import subCategoryReducer from './sub-category/reducers';
+import disbursedMethodReducer from './disbursed-method/reducers';
+import expensiveTypeReducer from './expensive-type/reducers';
+import incomeTypeReducer from './income-type/reducers';
+import applicantTypeReducer from './applicant-type/reducers';
+import addressTypeReducer from './address-type/reducers';
+import proofTypeReducer from './proof-type/reducers';
+import bankAccountReducer from './bank-account/reducers';
 
 export default combineReducers({
     Auth,
     Layout,
     PageTitle,
-    departmentReducer
+    departmentReducer,
+    designationReducer,
+    districtReducer,
+    stateReducer,
+    countryReducer,
+    categoryReducer,
+    subCategoryReducer,
+    disbursedMethodReducer,
+    applicantTypeReducer,
+    expensiveTypeReducer,
+    incomeTypeReducer,
+    addressTypeReducer,
+    proofTypeReducer,
+    bankAccountReducer,
 });

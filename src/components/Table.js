@@ -67,6 +67,7 @@ const Table = (props) => {
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageListData = sizePerPageList
+    const columnData = props['columns']
     const { toggle = null, Title } = props;
 
     let otherProps = {};
@@ -215,7 +216,10 @@ const Table = (props) => {
                                         ))}
                                     </thead>
                                     <tbody {...dataTable.getTableBodyProps()}>
-                                        {(rows || []).map((row, i) => {
+                                        { rows.length <= 0 ? (
+                                            <tr style={{ height: '100%' }}><td colSpan={4} className='text-center text-muted'  style={{ letterSpacing: '0.2em' }}><b>Empty...!</b></td></tr>
+                                        )
+                                        : (rows || []).map((row, i) => {
                                             dataTable.prepareRow(row);
                                             return (
                                                 <tr {...row.getRowProps()}>
