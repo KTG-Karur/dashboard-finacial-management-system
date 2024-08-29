@@ -9,6 +9,7 @@ function FormComponent(props) {
         formField,
         setState,
         errors,
+        onChangeCallBack,
         removeHanldeErrors,
         state,
         toggleModal = null,
@@ -36,7 +37,7 @@ function FormComponent(props) {
             case 'select':
                 setState((prev) => ({
                     ...prev,
-                    [formName]: e.value,
+                    [formName]: e,
                 }));
                 break;
             case 'radio':
@@ -253,12 +254,14 @@ function FormComponent(props) {
                                     isMulti={form?.isMultiple}
                                     required={form?.require}
                                     disabled={form?.isDisabled}
-                                    onChange={(e) => {
-                                        handleChange(e, 'select', form?.name);
+                                    onChange={(option) => {
+                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name) :
+                                        handleChange(option, 'select', form?.name);
                                     }}
-                                    getOptionLabel={(option) => option?.label}
-                                    getOptionValue={(option) => option}
-                                    value={findObj(optionListState?.[form?.optionList], state[form?.name])}
+                                    // getOptionLabel={(option) => option?.label}
+                                    getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
+                                    getOptionValue={(option) => form.uniqueKey ? option[form.uniqueKey] : option}
+                                    value={form.name ? state[form.name] : ""}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable

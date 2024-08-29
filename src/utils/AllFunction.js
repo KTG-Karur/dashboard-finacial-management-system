@@ -56,7 +56,14 @@ function deleteData(arr, id) {
 }
 
 function findObj(optionList, designation = 0) {
-    return optionList.filter((item) => item.value === designation);
+    console.log(optionList)
+    optionList.filter((item) => {
+        console.log(item[designation])
+        console.log(designation)
+        console.log(item[designation] === designation)
+        console.log(item[designation] == designation)
+    })
+    return optionList.filter((item) => item[designation] === designation);
 }
 
 function findArrObj(arr, id) {

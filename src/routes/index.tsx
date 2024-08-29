@@ -20,6 +20,7 @@ import {
     Applicant,
     Department,
     Login,
+    ApplicantType,
     Buttons,
     Register,
     Confirm,
@@ -81,12 +82,23 @@ import {
     FileUpload,
     Editors,
     BasicTable,
+    State,
     AdvancedTable,
     ApexChart,
     ChartJs,
     GoogleMaps,
     VectorMaps,
     Landing,
+    Category,
+    SubCategory,
+    District,
+    Country,
+    Designation,
+    ExpensiveType,
+    IncomeType,
+    AddressType,
+    ProofType,
+    BankAccount,
     AddLoan,
 } from './Route_Menu';
 
@@ -183,6 +195,54 @@ const AllRoutes = () => {
                         {
                             path: 'department',
                             element: <LoadComponent component={Department} />,
+                        },
+                        {
+                            path: 'designation',
+                            element: <LoadComponent component={Designation} />,
+                        },
+                        {
+                            path: 'applicant-type',
+                            element: <LoadComponent component={ApplicantType} />,
+                        },
+                        {
+                            path: 'category',
+                            element: <LoadComponent component={Category} />,
+                        },
+                        {
+                            path: 'sub-category',
+                            element: <LoadComponent component={SubCategory} />,
+                        },
+                        {
+                            path: 'state',
+                            element: <LoadComponent component={State} />,
+                        },
+                        {
+                            path: 'district',
+                            element: <LoadComponent component={District} />,
+                        },
+                        {
+                            path: 'country',
+                            element: <LoadComponent component={Country} />,
+                        },
+                        {
+                            path: 'expensive-type',
+                            element: <LoadComponent component={ExpensiveType} />,
+                        },
+                        {
+                            path: 'income-type',
+                            element: <LoadComponent component={IncomeType} />,
+                        },
+                        {
+                            path: 'address-type',
+                            element: <LoadComponent component={AddressType} />,
+                        },
+                        {
+                            path: 'proof-type',
+                            element: <LoadComponent component={ProofType} />,
+                        },
+                        {
+                            path: 'bank-account',
+                            element: <LoadComponent component={BankAccount} />,
                         },
                         {
                             path: 'applicant',

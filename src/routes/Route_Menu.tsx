@@ -13,7 +13,19 @@ export const DashBoard1 = React.lazy(() => import('../pages/dashboards/DashBoard
 // master
 export const Employee = React.lazy(() => import('../view/employee'));
 export const Department = React.lazy(() => import('../view/department'));
+export const ApplicantType = React.lazy(() => import('../view/applicant-type'));
+export const Category = React.lazy(() => import('../view/category'));
+export const SubCategory = React.lazy(() => import('../view/sub-category'));
 export const Applicant = React.lazy(() => import('../view/applicants'));
+export const State = React.lazy(() => import('../view/state'));
+export const District = React.lazy(() => import('../view/district'));
+export const Country = React.lazy(() => import('../view/country'));
+export const Designation = React.lazy(() => import('../view/designation'));
+export const ExpensiveType = React.lazy(() => import('../view/expensive-type'));
+export const IncomeType = React.lazy(() => import('../view/income-type'));
+export const AddressType = React.lazy(() => import('../view/address-type'));
+export const ProofType = React.lazy(() => import('../view/proof-type'));
+export const BankAccount = React.lazy(() => import('../view/bank-account'));
 
 // Loan
 export const AddLoan=React.lazy(()=> import('../view/AddLoan'));
