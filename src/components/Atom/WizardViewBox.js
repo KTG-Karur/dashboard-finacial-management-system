@@ -1,3 +1,4 @@
+import React from 'react';
 import { useEffect, useRef, useState } from 'react';
 import { Row, Col, Card, Form, Button, Tab, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -29,6 +30,8 @@ const WizardWithProgressbar = (props) => {
         setErrors,
         IsEditArrVal,
         setIsEditArrVal,
+        perVal = 0,
+        setPerVal,
         //const value
         Title,
         showSelectmodel,
@@ -77,12 +80,25 @@ const WizardWithProgressbar = (props) => {
     // Add
     const handleAdd = async () => {
         if (IsEditArrVal) {
-            const updata = await updateData(arrVal, state?.id, state);
+            const data = { ...state };
+            if (perVal != 0) {
+                if (data?.chargesAmount) {
+                    data.chargesAmount = perVal;
+                    setPerVal(0);
+                }
+            }
+            const updata = await updateData(arrVal, state?.id, data);
             setArrVal(updata);
             setIsEditArrVal(false);
             setState({});
         } else {
             const data = { id: arrVal.length, ...state };
+            if (perVal != 0) {
+                if (data?.chargesAmount) {
+                    data.chargesAmount = perVal;
+                    setPerVal(0);
+                }
+            }
             setArrVal((prevValues) => [...prevValues, data]);
             setState({});
         }
@@ -149,7 +165,6 @@ const WizardWithProgressbar = (props) => {
         }
     };
 
-
     return (
         <Card>
             <Card.Body>
@@ -212,6 +227,21 @@ const WizardWithProgressbar = (props) => {
                                             render={({ next, previous }) => {
                                                 return (
                                                     <Form>
+                                                        {tabList[tabIndex].name == "applicantInfo" &&
+                                                            (
+                                                                <React.Fragment>
+                                                                    <Row>
+                                                                        <Col md={6} className='mb-3'>
+                                                                            <p>If a new applicant, simply click to add the applicant details.</p>
+                                                                            <Link to={"/view/applicant"}>
+                                                                                <Button variant='success'>New Applicant</Button>
+                                                                            </Link>
+                                                                        </Col>
+                                                                    </Row>
+
+                                                                </React.Fragment>
+                                                            )}
+
                                                         <FormLayout
                                                             optionListState={optionListState}
                                                             dynamicForm={tabList[tabIndex]?.children || ''}

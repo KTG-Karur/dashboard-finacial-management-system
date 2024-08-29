@@ -40,6 +40,13 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-calendar-blank-outline',
         url: '/view/applicant',
     },
+    { label: 'Loan', isTitle: true },
+    {
+        label: 'Add Loan',
+        isTitle: false,
+        icon: 'mdi mdi-calendar-blank-outline',
+        url: '/loan/addloan',
+    },
     { label: 'Apps', isTitle: true },
     {
         label: 'Calendar',

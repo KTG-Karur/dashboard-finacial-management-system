@@ -15,6 +15,9 @@ export const Employee = React.lazy(() => import('../view/employee'));
 export const Department = React.lazy(() => import('../view/department'));
 export const Applicant = React.lazy(() => import('../view/applicants'));
 
+// Loan
+export const AddLoan=React.lazy(()=> import('../view/AddLoan'));
+
 // apps
 export const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));
 export const ChatApp = React.lazy(() => import('../pages/apps/Chat'));

@@ -87,6 +87,7 @@ import {
     GoogleMaps,
     VectorMaps,
     Landing,
+    AddLoan,
 } from './Route_Menu';
 
 const loading = () => <div className=""></div>;
@@ -186,6 +187,15 @@ const AllRoutes = () => {
                         {
                             path: 'applicant',
                             element: <LoadComponent component={Applicant} />,
+                        },
+                    ],
+                },
+                {
+                    path: 'loan',
+                    children: [
+                        {
+                            path: 'addloan',
+                            element: <LoadComponent component={AddLoan} />,
                         },
                     ],
                 },

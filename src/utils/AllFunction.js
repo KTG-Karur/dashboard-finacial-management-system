@@ -61,7 +61,10 @@ function findObj(optionList, designation = 0) {
 
 function findArrObj(arr, id) {
     return arr.filter((item) => (item.id === id));
-   
+}
+
+function percentageVal(amount, percentage) {
+    return ((parseInt(amount) * parseInt(percentage)) / 100)
 }
 
 const showConfirmationDialog = (
@@ -100,4 +103,4 @@ const showConfirmationDialog = (
     });
 };
 
-export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj, findArrObj };
+export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj, findArrObj, percentageVal };

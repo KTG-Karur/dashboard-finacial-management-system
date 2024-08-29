@@ -92,7 +92,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.label}`}</p>
                                 )}
                             </div>
                         );
@@ -123,7 +123,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{form.errorMsg ? form.errorMsg :  `* Please Enter ${form?.label || "Given Field"}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{form.errorMsg ? form.errorMsg : `* Please Enter ${form?.label || "Given Field"}`}</p>
                                 )}
                             </div>
                         );
@@ -153,7 +153,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.label}`}</p>
                                 )}
                             </div>
                         );
@@ -188,7 +188,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.label}`}</p>
                                 )}
                             </div>
                         );
@@ -220,7 +220,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.label}`}</p>
                                 )}
                             </div>
                         );
@@ -269,7 +269,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.label}`}</p>
                                 )}
 
                             </div>
@@ -314,38 +314,46 @@ function FormComponent(props) {
                     case 'radio':
                         return (
                             <div className={'mb-3'} key={index}>
-                                <p className="mb-1 fw-bold text-muted">
-                                    {' '}
-                                    {
-                                        <span>
-                                            {form?.label}{' '}
-                                            {form?.require ? (
-                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                            ) : null}
-                                        </span>
-                                    }
-                                </p>
-                                {[
-                                    { label: 'a', value: 'a' },
-                                    { label: 'b', value: 'b' },
-                                    { label: 'c', value: 'c' },
-                                ].map((item, i) => {
-                                    return (
-                                        <Form.Check
-                                            key={i}
-                                            label={form?.label}
-                                            type="radio"
-                                            id={`basic-radio-${i}`}
-                                            name={form?.name}
-                                            className={'mb-2 form-check-Primary'}
-                                            defaultChecked={form?.defaultChecked}
-                                            value={state[form?.name]}
-                                            onChange={(e) => {
-                                                handleChange(item, 'radio', form?.name);
-                                            }}
-                                        />
-                                    );
-                                })}
+                                <Form.Label>
+                                    <span>
+                                        {form?.label}{' '}
+                                        {form?.require ? (
+                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                        ) : null}
+                                        {
+                                            //Add Option Modal Btn
+                                            (showSelectmodel || []).includes(form?.name) && (
+                                                <Button
+                                                    variant="success"
+                                                    className="waves-effect waves-light mx-1"
+                                                    style={{ padding: '3px', lineHeight: '1.0' }}
+                                                    onClick={() => {
+                                                        toggleModal(form);
+                                                    }}>
+                                                    <i className="mdi mdi-plus-circle "></i>
+                                                </Button>
+                                            )
+                                        }
+                                    </span>
+                                </Form.Label>
+
+                                {
+                                    (optionListState?.[form?.optionList] || []).map((item, i) => {
+                                        return (
+                                            <Form.Check
+                                                key={i}
+                                                label={item?.label}
+                                                type="radio"
+                                                id={`basic-radio-${i}`}
+                                                name={form?.name}
+                                                defaultChecked={form?.defaultChecked}
+                                                value={state[form?.name]}
+                                                onChange={(e) => {
+                                                    handleChange(item, 'radio', form?.name);
+                                                }}
+                                            />
+                                        );
+                                    })}
                             </div>
                         );
                     default:
