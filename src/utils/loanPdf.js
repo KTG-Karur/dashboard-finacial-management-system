@@ -1,9 +1,41 @@
 import { Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-// data
+import { useEffect, useState } from 'react';
+import {
+    emiCalculation,
+    interestForMonth,
+    principalRemaining,
+    principalRepayment,
+    annualToMonthlyInterestRate
+} from './AllFunction';
 import { invoiceDetails } from '../pages/other/data';
 
-const LoanPdf = () => {
+
+const LoanPdf = ({ principal = 1300000, annualInterest = 14.65, tenurePeriod = 17 }) => {
+    const [loanState, setLoanState] = useState([]);
+    let remainingPrincipal = principal;
+
+    useEffect(() => {
+        (async () => {
+            for (let month = 1; month <= tenurePeriod * 12; month++) {
+                const emi = emiCalculation(principal, annualInterest, tenurePeriod);
+                const monthlyInterestRate = annualToMonthlyInterestRate(annualInterest);
+                const monthInterestAmount = interestForMonth(remainingPrincipal, monthlyInterestRate);
+                const principalRepay = principalRepayment(emi, monthInterestAmount);
+                remainingPrincipal = principalRemaining(remainingPrincipal, principalRepay);
+                if (remainingPrincipal < 0) remainingPrincipal = 0;
+
+                const data = {
+                    month,
+                    principalRepayment: principalRepay.toFixed(2),
+                    interestForMonth: monthInterestAmount.toFixed(2),
+                    principalRepaymentAndInterest: (emi).toFixed(2),
+                    principalRemain: remainingPrincipal.toFixed(2),
+                };
+                setLoanState((prev) => [...prev, data]);
+            }
+        })();
+    }, []);
 
     return (
         <Row>
@@ -13,7 +45,7 @@ const LoanPdf = () => {
                         <div className="panel-body">
                             <div className="clearfix">
                                 <div className="float-start">
-                                    <h3>Harshini Fincop</h3>
+                                    <h3>Harshini Fincorp</h3>
                                 </div>
                                 <div className="float-end">
                                     <h4>
@@ -59,52 +91,44 @@ const LoanPdf = () => {
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Item</th>
-                                                    <th>Description</th>
-                                                    <th>Quantity</th>
-                                                    <th>Unit Cost</th>
-                                                    <th>Total</th>
+                                                    <th>Principal Repayment</th>
+                                                    <th>Interest for Year</th>
+                                                    <th>Principal Repayment + Interest</th>
+                                                    <th>Principal Remaining</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {(invoiceDetails.items || []).map((item, idx) => {
-                                                    return (
-                                                        <tr key={idx}>
-                                                            <td>{idx + 1}</td>
-                                                            <td>{item.name}</td>
-                                                            <td>{item.description}</td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>{item.unit_cost}</td>
-                                                            <td>{item.total}</td>
-                                                        </tr>
-                                                    );
-                                                })}
+                                                {loanState.map((item, idx) => (
+                                                    <tr key={idx}>
+                                                        <td>{idx + 1}</td>
+                                                        <td>{item.principalRepayment}</td>
+                                                        <td>{item.interestForMonth}</td>
+                                                        <td>{item.principalRepaymentAndInterest}</td>
+                                                        <td>{item.principalRemain}</td>
+                                                    </tr>
+                                                ))}
                                             </tbody>
                                         </table>
                                     </div>
                                 </Col>
                             </Row>
                             <Row>
-                                <Col xl={6} xs={6} className="col-xl-6 col-6">
+                                <Col xl={6} xs={6}>
                                     <div className="clearfix mt-4">
                                         <h5 className="small text-dark fw-normal">PAYMENT TERMS AND POLICIES</h5>
-
                                         <small>
                                             All accounts are to be paid within 7 days from receipt of invoice. To be
-                                            paid by cheque or credit card or direct payment online. If account is not
+                                            paid by cheque or credit card or direct payment online. If the account is not
                                             paid within 7 days the credits details supplied as confirmation of work
                                             undertaken will be charged the agreed quoted fee noted above.
                                         </small>
                                     </div>
                                 </Col>
-                                <Col xs={6} xl={{ offset: 3, span: 3 }} className="col-xl-3 col-6 offset-xl-3">
-                                    <p className="text-end">
-                                        <b>Sub-total:</b> {invoiceDetails.sub_total}
-                                    </p>
-                                    <p className="text-end">Discout: {invoiceDetails.discount}%</p>
-                                    <p className="text-end">VAT: {invoiceDetails.vat}%</p>
+                                <Col xs={6} xl={{ offset: 3, span: 3 }}>
+                                    <p className="text-end">Tenure Period: {tenurePeriod}</p>
+                                    <p className="text-end">Interest: {annualInterest}%</p>
                                     <hr />
-                                    <h3 className="text-end">USD {invoiceDetails.total}</h3>
+                                    <h3 className="text-end">Rs. {principal}</h3>
                                 </Col>
                             </Row>
                             <hr />
@@ -118,9 +142,6 @@ const LoanPdf = () => {
                                         }}
                                     >
                                         <i className="fa fa-print"></i>
-                                    </Link>
-                                    <Link to="#" className="btn btn-primary waves-effect waves-light">
-                                        Submit
                                     </Link>
                                 </div>
                                 <div className="clearfix"></div>

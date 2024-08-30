@@ -109,40 +109,41 @@ const showConfirmationDialog = (
         }
     });
 };
+//emi
 
-const annualtoMonthlyInterestRate = (annualInterest) => {
+const annualToMonthlyInterestRate = (annualInterest) => {
     const r = annualInterest / (12 * 100);
     return r;
 };
 
-const emiCalculation = async (principal, annualInterest, tenurePeriod) => {
-    const p = await parseFloat(principal);
-    const r = await parseFloat(annualtoMonthlyInterestRate(annualInterest));
-    const t = (await parseInt(tenurePeriod)) * 12;
-
-    console.log('p,r,t');
-    console.log(p, r, t);
+const emiCalculation = (principal, annualInterest, tenurePeriod) => {
+    const p = parseFloat(principal);
+    const r = annualToMonthlyInterestRate(annualInterest);
+    const t = parseInt(tenurePeriod) * 12;
 
     const emi = (p * r * Math.pow(1 + r, t)) / (Math.pow(1 + r, t) - 1);
 
-    console.log('emi');
-    console.log(emi.toFixed(2));
+    return emi;
 };
 
-const interestForMonth = (remainingPrincipal, interest) => {
-    const monthInterest = (remainingPrincipal * interest) / (12 * 100);
-    return parseInt(monthInterest.toFixed(2));
+
+const interestForMonth = (remainingPrincipal, monthlyInterestRate) => {
+    const monthInterest = parseFloat(remainingPrincipal * monthlyInterestRate);
+    return monthInterest;
 };
+
 
 const principalRepayment = (emi, monthInterest) => {
-    const principalRepay = emi - monthInterest;
-    return parseInt(principalRepay.toFixed(2));
+    const principalRepay = parseFloat(emi - monthInterest);
+    return principalRepay;
 };
 
+
 const principalRemaining = (remainingPrincipal, principalRepayment) => {
-    const principalRemain = remainingPrincipal - principalRepayment;
-    return parseInt(principalRemain.toFixed(2));
+    const principalRemain = parseFloat(remainingPrincipal - principalRepayment);
+    return principalRemain;
 };
+
 
 export {
     showMessage,
@@ -154,5 +155,10 @@ export {
     findObj,
     findArrObj,
     percentageVal,
+
     emiCalculation,
+    interestForMonth,
+    principalRepayment,
+    principalRemaining,
+    annualToMonthlyInterestRate,
 };

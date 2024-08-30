@@ -9,7 +9,6 @@ import { Button, Form } from 'react-bootstrap';
 import Select from 'react-select';
 import {
     deleteData,
-    emiCalculation,
     findArrObj,
     formatDate,
     percentageVal,
@@ -227,94 +226,94 @@ const Index = () => {
             const formList =
                 state?.category?.value === 'emi'
                     ? {
-                          label: 'Lending Process',
-                          name: 'lendingProcess',
-                          icon: 'mdi mdi-account-box-multiple',
-                          children: [
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Category',
-                                          name: 'category',
-                                          inputType: 'select',
-                                          optionList: 'category',
-                                          displayKey: 'label',
-                                          uniqueKey: 'roleId',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Sub-category',
-                                          name: 'subCategory',
-                                          inputType: 'select',
-                                          optionList: 'subCategory',
-                                          displayKey: 'label',
-                                          uniqueKey: 'roleId',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Interest %',
-                                          name: 'interest',
-                                          inputType: 'number',
-                                          placeholder: 'Enter Interest %',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Loan amount',
-                                          name: 'loanAmount',
-                                          inputType: 'number',
-                                          placeholder: 'Enter Loan amount',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                          ],
-                      }
+                        label: 'Lending Process',
+                        name: 'lendingProcess',
+                        icon: 'mdi mdi-account-box-multiple',
+                        children: [
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Category',
+                                        name: 'category',
+                                        inputType: 'select',
+                                        optionList: 'category',
+                                        displayKey: 'label',
+                                        uniqueKey: 'roleId',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Sub-category',
+                                        name: 'subCategory',
+                                        inputType: 'select',
+                                        optionList: 'subCategory',
+                                        displayKey: 'label',
+                                        uniqueKey: 'roleId',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Interest %',
+                                        name: 'interest',
+                                        inputType: 'number',
+                                        placeholder: 'Enter Interest %',
+                                        require: true,
+                                    },
+                                    {
+                                        label: 'Loan amount',
+                                        name: 'loanAmount',
+                                        inputType: 'number',
+                                        placeholder: 'Enter Loan amount',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                        ],
+                    }
                     : {
-                          label: 'Lending Process',
-                          name: 'lendingProcess',
-                          icon: 'mdi mdi-account-box-multiple',
-                          children: [
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Category',
-                                          name: 'category',
-                                          inputType: 'select',
-                                          optionList: 'category',
-                                          displayKey: 'label',
-                                          uniqueKey: 'roleId',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Interest %',
-                                          name: 'interest',
-                                          inputType: 'number',
-                                          placeholder: 'Enter Interest %',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Loan amount',
-                                          name: 'loanAmount',
-                                          inputType: 'number',
-                                          placeholder: 'Enter Loan amount',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                          ],
-                      };
+                        label: 'Lending Process',
+                        name: 'lendingProcess',
+                        icon: 'mdi mdi-account-box-multiple',
+                        children: [
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Category',
+                                        name: 'category',
+                                        inputType: 'select',
+                                        optionList: 'category',
+                                        displayKey: 'label',
+                                        uniqueKey: 'roleId',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Interest %',
+                                        name: 'interest',
+                                        inputType: 'number',
+                                        placeholder: 'Enter Interest %',
+                                        require: true,
+                                    },
+                                    {
+                                        label: 'Loan amount',
+                                        name: 'loanAmount',
+                                        inputType: 'number',
+                                        placeholder: 'Enter Loan amount',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                        ],
+                    };
 
             // Find the index of the incomeInfo tab
             const incomeInfoIndex = updatedTabList.findIndex((tab) => tab.name === 'lendingProcess');
@@ -528,13 +527,6 @@ const Index = () => {
         setArrVal(delData);
     };
 
-    const loanData={
-        principal:1300000,
-        annualInterest:14.65,
-        tenurePeriod:17, // annual Period
-    }
-
-     emiCalculation(loanData.principal,loanData.annualInterest,loanData.tenurePeriod)
 
     // console.log("multiStateValue")
     // console.log(multiStateValue)
@@ -542,8 +534,8 @@ const Index = () => {
     return (
         <React.Fragment>
             <NotificationContainer />
-            <LoanPdf />
-            {/* {wizard ? (
+            {/* <LoanPdf /> */}
+            {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
                         //state
@@ -609,7 +601,7 @@ const Index = () => {
                     isSearchable={true}
                     toggle={toggle}
                 />
-            )} */}
+            )}
         </React.Fragment>
     );
 };

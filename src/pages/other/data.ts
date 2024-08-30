@@ -1,6 +1,8 @@
 // types
 import { PricingPlan, Invoice } from './types';
 
+const d = new Date();
+
 const pricingPlans: PricingPlan[] = [
     {
         id: 1,
@@ -60,6 +62,16 @@ const pricingPlans2: PricingPlan[] = [
         duration: 'Month',
         features: ['5 Projects', '1 GB Storage', 'No Domain', '1 User', '24x7 Support'],
         isPopular: false,
+    },
+];
+
+const EmiTabl = [
+    {
+        year: d.getFullYear(),
+        principalRepayment: '',
+        Interest: '',
+        principalRepaymentandInterest: '',
+        principalRemaining: '',
     },
 ];
 
@@ -126,4 +138,4 @@ const invoiceDetails: Invoice = {
     total: 2930.0,
 };
 
-export { pricingPlans, pricingPlans2, invoiceDetails };
+export { pricingPlans, pricingPlans2, invoiceDetails, EmiTabl };
