@@ -15,7 +15,12 @@ function* fetchDistrictSaga(action: any): Generator<any, any, any> {
     const data = yield call(getDistrict, action.payload);
     yield put(getDistrictSuccess(data));
   } catch (error: any) {
-    yield put(getDistrictFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getDistrictFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createDistrictSaga(action: any): Generator<any, any, any> {
     const data = yield call(createDistrict, action.payload);
     yield put(createDistrictSuccess(data));
   } catch (error: any) {
-    yield put(createDistrictFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createDistrictFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateDistrictSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateDistrict, action.payload.data, action.payload.id);
     yield put(updateDistrictSuccess(data));
   } catch (error: any) {
-    yield put(updateDistrictFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateDistrictFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateDistrictSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteDistrict, action.payload.id);
 //     yield put(deleteDistrictSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteDistrictFailure(error.message));
+//     yield put(deleteDistrictFailure(errorMessage));
 //   }
 // }
 

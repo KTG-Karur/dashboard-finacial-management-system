@@ -5,10 +5,10 @@ const bankAccount = apiContainer.bankAccount
 export async function getBankAccount(request) {
   try {
     const response = await apiReturnCallBack("GET", bankAccount, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getBankAccount(request) {
 export async function createBankAccount(request) {
   try {
     const response = await apiReturnCallBack("POST", bankAccount, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createBankAccount(request) {
 export async function updateBankAccount(request, bankAccountId) {
   try {
     const response = await apiReturnCallBack("PUT", bankAccount+`/${bankAccountId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateBankAccount(request, bankAccountId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", bankAccount+`/${bankAccountId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

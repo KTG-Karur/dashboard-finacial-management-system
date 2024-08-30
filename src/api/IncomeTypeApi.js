@@ -5,10 +5,10 @@ const incomeType = apiContainer.incomeType
 export async function getIncomeType(request) {
   try {
     const response = await apiReturnCallBack("GET", incomeType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getIncomeType(request) {
 export async function createIncomeType(request) {
   try {
     const response = await apiReturnCallBack("POST", incomeType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createIncomeType(request) {
 export async function updateIncomeType(request, incomeTypeId) {
   try {
     const response = await apiReturnCallBack("PUT", incomeType+`/${incomeTypeId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateIncomeType(request, incomeTypeId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", incomeType+`/${incomeTypeId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

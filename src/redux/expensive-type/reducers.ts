@@ -4,7 +4,7 @@ const initialState = {
   createExpensiveTypeData: null,
   updateExpensiveTypeData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getExpensiveTypeSuccess: false,
   getExpensiveTypeFailure: false,
   createExpensiveTypeSuccess: false,
@@ -29,7 +29,7 @@ export default function expensiveTypeReducer(state = initialState, action: any) 
       return {
         ...state,
         getExpensiveTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getExpensiveTypeSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function expensiveTypeReducer(state = initialState, action: any) 
       return {
         ...state,
         createExpensiveTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createExpensiveTypeSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function expensiveTypeReducer(state = initialState, action: any) 
       return {
         ...state,
         updateExpensiveTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateExpensiveTypeSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function expensiveTypeReducer(state = initialState, action: any) 
     //   return {
     //     ...state,
     //     deleteExpensiveTypeFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteExpensiveTypeSuccess: false,
     //   };
     // }

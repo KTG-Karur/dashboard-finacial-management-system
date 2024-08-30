@@ -30,7 +30,7 @@ export default function designationReducer(state = initialState, action: any) {
       return {
         ...state,
         getDesignationFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getDesignationSuccess: false,
       };
     }
@@ -82,7 +82,7 @@ export default function designationReducer(state = initialState, action: any) {
       return {
         ...state,
         updateDesignationFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateDesignationSuccess: false,
       };
     }
@@ -107,7 +107,7 @@ export default function designationReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteDesignationFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteDesignationSuccess: false,
     //   };
     // }

@@ -15,7 +15,12 @@ function* fetchDisbursedMethodSaga(action: any): Generator<any, any, any> {
     const data = yield call(getDisbursedMethod, action.payload);
     yield put(getDisbursedMethodSuccess(data));
   } catch (error: any) {
-    yield put(getDisbursedMethodFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getDisbursedMethodFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createDisbursedMethodSaga(action: any): Generator<any, any, any> {
     const data = yield call(createDisbursedMethod, action.payload);
     yield put(createDisbursedMethodSuccess(data));
   } catch (error: any) {
-    yield put(createDisbursedMethodFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createDisbursedMethodFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateDisbursedMethodSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateDisbursedMethod, action.payload.data, action.payload.id);
     yield put(updateDisbursedMethodSuccess(data));
   } catch (error: any) {
-    yield put(updateDisbursedMethodFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateDisbursedMethodFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateDisbursedMethodSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteDisbursedMethod, action.payload.id);
 //     yield put(deleteDisbursedMethodSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteDisbursedMethodFailure(error.message));
+//     yield put(deleteDisbursedMethodFailure(errorMessage));
 //   }
 // }
 

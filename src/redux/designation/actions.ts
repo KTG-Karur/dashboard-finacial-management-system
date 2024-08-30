@@ -11,7 +11,7 @@ export const getDesignationSuccess = (data: any) => ({
 
 export const getDesignationFailure = (errorMessage: string) => ({
   type: 'GET_DESIGNATION_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetDesignation = () => ({
@@ -51,7 +51,7 @@ export const updateDesignationSuccess = (data: any) => ({
 
 export const updateDesignationFailure = (errorMessage: string) => ({
   type: 'UPDATE_DESIGNATION_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateDesignation = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateDesignation = () => ({
 
 // export const deleteDesignationFailure = (errorMessage: string) => ({
 //   type: 'DELETE_DESIGNATION_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateDesignation = () => ({

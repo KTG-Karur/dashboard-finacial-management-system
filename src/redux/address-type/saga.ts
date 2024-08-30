@@ -15,7 +15,13 @@ function* fetchAddressTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(getAddressType, action.payload);
     yield put(getAddressTypeSuccess(data));
   } catch (error: any) {
-    yield put(getAddressTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(getAddressTypeFailure(errorMessage));
   }
 }
 
@@ -25,7 +31,13 @@ function* createAddressTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(createAddressType, action.payload);
     yield put(createAddressTypeSuccess(data));
   } catch (error: any) {
-    yield put(createAddressTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+      ? error.response.data.message
+      : error.message
+        ? error.message
+        : 'An unexpected error occurred';
+
+    yield put(createAddressTypeFailure(errorMessage));
   }
 }
 
@@ -35,7 +47,13 @@ function* updateAddressTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateAddressType, action.payload.data, action.payload.id);
     yield put(updateAddressTypeSuccess(data));
   } catch (error: any) {
-    yield put(updateAddressTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+      ? error.response.data.message
+      : error.message
+        ? error.message
+        : 'An unexpected error occurred';
+        
+    yield put(updateAddressTypeFailure(errorMessage));
   }
 }
 

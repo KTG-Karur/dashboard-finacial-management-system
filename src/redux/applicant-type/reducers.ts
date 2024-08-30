@@ -4,7 +4,7 @@ const initialState = {
   createApplicantTypeData: null,
   updateApplicantTypeData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getApplicantTypeSuccess: false,
   getApplicantTypeFailure: false,
   createApplicantTypeSuccess: false,
@@ -29,7 +29,7 @@ export default function applicantTypeReducer(state = initialState, action: any) 
       return {
         ...state,
         getApplicantTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getApplicantTypeSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function applicantTypeReducer(state = initialState, action: any) 
       return {
         ...state,
         createApplicantTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createApplicantTypeSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function applicantTypeReducer(state = initialState, action: any) 
       return {
         ...state,
         updateApplicantTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateApplicantTypeSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function applicantTypeReducer(state = initialState, action: any) 
     //   return {
     //     ...state,
     //     deleteApplicantTypeFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteApplicantTypeSuccess: false,
     //   };
     // }

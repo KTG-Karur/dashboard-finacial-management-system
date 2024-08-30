@@ -11,7 +11,7 @@ export const getBankAccountSuccess = (data: any) => ({
 
 export const getBankAccountFailure = (errorMessage: string) => ({
   type: 'GET_BANK_ACCOUNT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetBankAccount = () => ({
@@ -31,7 +31,7 @@ export const createBankAccountSuccess = (data: any) => ({
 
 export const createBankAccountFailure = (errorMessage: string) => ({
   type: 'CREATE_BANK_ACCOUNT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateBankAccount = () => ({
@@ -51,7 +51,7 @@ export const updateBankAccountSuccess = (data: any) => ({
 
 export const updateBankAccountFailure = (errorMessage: string) => ({
   type: 'UPDATE_BANK_ACCOUNT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateBankAccount = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateBankAccount = () => ({
 
 // export const deleteBankAccountFailure = (errorMessage: string) => ({
 //   type: 'DELETE_BANK_ACCOUNT_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateBankAccount = () => ({

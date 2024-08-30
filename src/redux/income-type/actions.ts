@@ -11,7 +11,7 @@ export const getIncomeTypeSuccess = (data: any) => ({
 
 export const getIncomeTypeFailure = (errorMessage: string) => ({
   type: 'GET_INCOME_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetIncomeType = () => ({
@@ -31,7 +31,7 @@ export const createIncomeTypeSuccess = (data: any) => ({
 
 export const createIncomeTypeFailure = (errorMessage: string) => ({
   type: 'CREATE_INCOME_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateIncomeType = () => ({
@@ -51,7 +51,7 @@ export const updateIncomeTypeSuccess = (data: any) => ({
 
 export const updateIncomeTypeFailure = (errorMessage: string) => ({
   type: 'UPDATE_INCOME_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateIncomeType = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateIncomeType = () => ({
 
 // export const deleteIncomeTypeFailure = (errorMessage: string) => ({
 //   type: 'DELETE_INCOME_TYPE_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateIncomeType = () => ({

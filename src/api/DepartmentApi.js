@@ -5,13 +5,13 @@ const department = apiContainer.department
 export async function getDepartment(request) {
   try {
     const response = await apiReturnCallBack("GET", department, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }    
     return data;
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error(error);
     throw error;
   }
 }
@@ -19,13 +19,13 @@ export async function getDepartment(request) {
 export async function createDepartment(request) {
   try {
     const response = await apiReturnCallBack("POST", department, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error(error);
     throw error;
   }
 }
@@ -33,13 +33,13 @@ export async function createDepartment(request) {
 export async function updateDepartment(request, departmentId) {
   try {
     const response = await apiReturnCallBack("PUT", department+`/${departmentId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
-    console.error('Fetch error:', error);
+    console.error(error);
     throw error;
   }
 }
@@ -48,7 +48,7 @@ export async function updateDepartment(request, departmentId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", department+`/${departmentId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

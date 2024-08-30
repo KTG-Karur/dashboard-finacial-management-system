@@ -15,7 +15,12 @@ function* fetchCategorySaga(action: any): Generator<any, any, any> {
     const data = yield call(getCategory, action.payload);
     yield put(getCategorySuccess(data));
   } catch (error: any) {
-    yield put(getCategoryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getCategoryFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createCategorySaga(action: any): Generator<any, any, any> {
     const data = yield call(createCategory, action.payload);
     yield put(createCategorySuccess(data));
   } catch (error: any) {
-    yield put(createCategoryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createCategoryFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateCategorySaga(action: any): Generator<any, any, any> {
     const data = yield call(updateCategory, action.payload.data, action.payload.id);
     yield put(updateCategorySuccess(data));
   } catch (error: any) {
-    yield put(updateCategoryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateCategoryFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateCategorySaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteCategory, action.payload.id);
 //     yield put(deleteCategorySuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteCategoryFailure(error.message));
+//     yield put(deleteCategoryFailure(errorMessage));
 //   }
 // }
 

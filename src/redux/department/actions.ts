@@ -11,7 +11,7 @@ export const getDepartmentSuccess = (data: any) => ({
 
 export const getDepartmentFailure = (errorMessage: string) => ({
   type: 'GET_DEPARTMENT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetDepartment = () => ({
@@ -31,7 +31,7 @@ export const createDepartmentSuccess = (data: any) => ({
 
 export const createDepartmentFailure = (errorMessage: string) => ({
   type: 'CREATE_DEPARTMENT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateDepartment = () => ({
@@ -51,7 +51,7 @@ export const updateDepartmentSuccess = (data: any) => ({
 
 export const updateDepartmentFailure = (errorMessage: string) => ({
   type: 'UPDATE_DEPARTMENT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateDepartment = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateDepartment = () => ({
 
 // export const deleteDepartmentFailure = (errorMessage: string) => ({
 //   type: 'DELETE_DEPARTMENT_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateDepartment = () => ({

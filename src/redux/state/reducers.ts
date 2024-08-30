@@ -4,7 +4,7 @@ const initialState = {
   createStateData: null,
   updateStateData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getStateSuccess: false,
   getStateFailure: false,
   createStateSuccess: false,
@@ -29,7 +29,7 @@ export default function stateReducer(state = initialState, action: any) {
       return {
         ...state,
         getStateFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getStateSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function stateReducer(state = initialState, action: any) {
       return {
         ...state,
         createStateFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createStateSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function stateReducer(state = initialState, action: any) {
       return {
         ...state,
         updateStateFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateStateSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function stateReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteStateFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteStateSuccess: false,
     //   };
     // }

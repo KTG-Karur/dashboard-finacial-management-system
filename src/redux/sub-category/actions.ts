@@ -11,7 +11,7 @@ export const getSubCategorySuccess = (data: any) => ({
 
 export const getSubCategoryFailure = (errorMessage: string) => ({
   type: 'GET_SUB_CATEGORY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetSubCategory = () => ({
@@ -31,7 +31,7 @@ export const createSubCategorySuccess = (data: any) => ({
 
 export const createSubCategoryFailure = (errorMessage: string) => ({
   type: 'CREATE_SUB_CATEGORY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateSubCategory = () => ({
@@ -51,7 +51,7 @@ export const updateSubCategorySuccess = (data: any) => ({
 
 export const updateSubCategoryFailure = (errorMessage: string) => ({
   type: 'UPDATE_SUB_CATEGORY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateSubCategory = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateSubCategory = () => ({
 
 // export const deleteSubCategoryFailure = (errorMessage: string) => ({
 //   type: 'DELETE_SUB_CATEGORY_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateSubCategory = () => ({

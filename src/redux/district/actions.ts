@@ -11,7 +11,7 @@ export const getDistrictSuccess = (data: any) => ({
 
 export const getDistrictFailure = (errorMessage: string) => ({
   type: 'GET_DISTRICT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetDistrict = () => ({
@@ -31,7 +31,7 @@ export const createDistrictSuccess = (data: any) => ({
 
 export const createDistrictFailure = (errorMessage: string) => ({
   type: 'CREATE_DISTRICT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateDistrict = () => ({
@@ -51,7 +51,7 @@ export const updateDistrictSuccess = (data: any) => ({
 
 export const updateDistrictFailure = (errorMessage: string) => ({
   type: 'UPDATE_DISTRICT_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateDistrict = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateDistrict = () => ({
 
 // export const deleteDistrictFailure = (errorMessage: string) => ({
 //   type: 'DELETE_DISTRICT_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateDistrict = () => ({

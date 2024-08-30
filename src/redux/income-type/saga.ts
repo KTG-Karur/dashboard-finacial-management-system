@@ -15,7 +15,12 @@ function* fetchIncomeTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(getIncomeType, action.payload);
     yield put(getIncomeTypeSuccess(data));
   } catch (error: any) {
-    yield put(getIncomeTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getIncomeTypeFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createIncomeTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(createIncomeType, action.payload);
     yield put(createIncomeTypeSuccess(data));
   } catch (error: any) {
-    yield put(createIncomeTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createIncomeTypeFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateIncomeTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateIncomeType, action.payload.data, action.payload.id);
     yield put(updateIncomeTypeSuccess(data));
   } catch (error: any) {
-    yield put(updateIncomeTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateIncomeTypeFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateIncomeTypeSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteIncomeType, action.payload.id);
 //     yield put(deleteIncomeTypeSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteIncomeTypeFailure(error.message));
+//     yield put(deleteIncomeTypeFailure(errorMessage));
 //   }
 // }
 

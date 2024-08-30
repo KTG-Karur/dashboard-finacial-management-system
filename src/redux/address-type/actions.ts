@@ -11,7 +11,7 @@ export const getAddressTypeSuccess = (data: any) => ({
 
 export const getAddressTypeFailure = (errorMessage: string) => ({
   type: 'GET_ADDRESS_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetAddressType = () => ({
@@ -31,7 +31,7 @@ export const createAddressTypeSuccess = (data: any) => ({
 
 export const createAddressTypeFailure = (errorMessage: string) => ({
   type: 'CREATE_ADDRESS_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateAddressType = () => ({
@@ -51,7 +51,7 @@ export const updateAddressTypeSuccess = (data: any) => ({
 
 export const updateAddressTypeFailure = (errorMessage: string) => ({
   type: 'UPDATE_ADDRESS_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateAddressType = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateAddressType = () => ({
 
 // export const deleteAddressTypeFailure = (errorMessage: string) => ({
 //   type: 'DELETE_ADDRESS_TYPE_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateAddressType = () => ({

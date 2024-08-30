@@ -11,7 +11,7 @@ export const getCategorySuccess = (data: any) => ({
 
 export const getCategoryFailure = (errorMessage: string) => ({
   type: 'GET_CATEGORY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetCategory = () => ({
@@ -31,7 +31,7 @@ export const createCategorySuccess = (data: any) => ({
 
 export const createCategoryFailure = (errorMessage: string) => ({
   type: 'CREATE_CATEGORY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateCategory = () => ({
@@ -51,7 +51,7 @@ export const updateCategorySuccess = (data: any) => ({
 
 export const updateCategoryFailure = (errorMessage: string) => ({
   type: 'UPDATE_CATEGORY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateCategory = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateCategory = () => ({
 
 // export const deleteCategoryFailure = (errorMessage: string) => ({
 //   type: 'DELETE_CATEGORY_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateCategory = () => ({

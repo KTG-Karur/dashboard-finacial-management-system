@@ -31,13 +31,13 @@ const Navigate: NavigateTypes[] = [
     {
         label: 'Department',
         isTitle: false,
-        icon: 'mdi mdi-calendar-blank-outline',
+        icon: 'mdi mdi-chemical-weapon',
         url: '/view/department',
     },
     {
         label: 'Designation',
         isTitle: false,
-        icon: 'mdi mdi-calendar-blank-outline',
+        icon: 'mdi mdi-bag-checked',
         url: '/view/designation',
     },
     {

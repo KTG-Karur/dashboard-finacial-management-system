@@ -15,7 +15,13 @@ function* fetchApplicantTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(getApplicantType, action.payload);
     yield put(getApplicantTypeSuccess(data));
   } catch (error: any) {
-    yield put(getApplicantTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(getApplicantTypeFailure(errorMessage));
   }
 }
 
@@ -25,7 +31,12 @@ function* createApplicantTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(createApplicantType, action.payload);
     yield put(createApplicantTypeSuccess(data));
   } catch (error: any) {
-    yield put(createApplicantTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createApplicantTypeFailure(errorMessage));
   }
 }
 
@@ -35,7 +46,12 @@ function* updateApplicantTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateApplicantType, action.payload.data, action.payload.id);
     yield put(updateApplicantTypeSuccess(data));
   } catch (error: any) {
-    yield put(updateApplicantTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateApplicantTypeFailure(errorMessage));
   }
 }
 
@@ -45,7 +61,12 @@ function* updateApplicantTypeSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteApplicantType, action.payload.id);
 //     yield put(deleteApplicantTypeSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteApplicantTypeFailure(error.message));
+  // const errorMessage = error.response && error.response.data && error.response.data.message
+  // ? error.response.data.message
+  // : error.message
+  //   ? error.message
+  //   : 'An unexpected error occurred';
+//     yield put(deleteApplicantTypeFailure(errorMessage));
 //   }
 // }
 

@@ -15,7 +15,12 @@ function* fetchProofTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(getProofType, action.payload);
     yield put(getProofTypeSuccess(data));
   } catch (error: any) {
-    yield put(getProofTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getProofTypeFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createProofTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(createProofType, action.payload);
     yield put(createProofTypeSuccess(data));
   } catch (error: any) {
-    yield put(createProofTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createProofTypeFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateProofTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateProofType, action.payload.data, action.payload.id);
     yield put(updateProofTypeSuccess(data));
   } catch (error: any) {
-    yield put(updateProofTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateProofTypeFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateProofTypeSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteProofType, action.payload.id);
 //     yield put(deleteProofTypeSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteProofTypeFailure(error.message));
+//     yield put(deleteProofTypeFailure(errorMessage));
 //   }
 // }
 

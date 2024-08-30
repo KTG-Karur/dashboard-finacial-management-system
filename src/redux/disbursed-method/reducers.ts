@@ -4,7 +4,7 @@ const initialState = {
   createDisbursedMethodData: null,
   updateDisbursedMethodData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getDisbursedMethodSuccess: false,
   getDisbursedMethodFailure: false,
   createDisbursedMethodSuccess: false,
@@ -29,7 +29,7 @@ export default function disbursedMethodReducer(state = initialState, action: any
       return {
         ...state,
         getDisbursedMethodFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getDisbursedMethodSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function disbursedMethodReducer(state = initialState, action: any
       return {
         ...state,
         createDisbursedMethodFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createDisbursedMethodSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function disbursedMethodReducer(state = initialState, action: any
       return {
         ...state,
         updateDisbursedMethodFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateDisbursedMethodSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function disbursedMethodReducer(state = initialState, action: any
     //   return {
     //     ...state,
     //     deleteDisbursedMethodFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteDisbursedMethodSuccess: false,
     //   };
     // }

@@ -11,7 +11,7 @@ export const getStateSuccess = (data: any) => ({
 
 export const getStateFailure = (errorMessage: string) => ({
   type: 'GET_STATE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetState = () => ({
@@ -31,7 +31,7 @@ export const createStateSuccess = (data: any) => ({
 
 export const createStateFailure = (errorMessage: string) => ({
   type: 'CREATE_STATE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateState = () => ({
@@ -51,7 +51,7 @@ export const updateStateSuccess = (data: any) => ({
 
 export const updateStateFailure = (errorMessage: string) => ({
   type: 'UPDATE_STATE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateState = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateState = () => ({
 
 // export const deleteStateFailure = (errorMessage: string) => ({
 //   type: 'DELETE_STATE_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateState = () => ({

@@ -11,7 +11,7 @@ export const getApplicantTypeSuccess = (data: any) => ({
 
 export const getApplicantTypeFailure = (errorMessage: string) => ({
   type: 'GET_APPLICANT_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetApplicantType = () => ({
@@ -31,7 +31,7 @@ export const createApplicantTypeSuccess = (data: any) => ({
 
 export const createApplicantTypeFailure = (errorMessage: string) => ({
   type: 'CREATE_APPLICANT_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateApplicantType = () => ({
@@ -51,7 +51,7 @@ export const updateApplicantTypeSuccess = (data: any) => ({
 
 export const updateApplicantTypeFailure = (errorMessage: string) => ({
   type: 'UPDATE_APPLICANT_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateApplicantType = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateApplicantType = () => ({
 
 // export const deleteApplicantTypeFailure = (errorMessage: string) => ({
 //   type: 'DELETE_APPLICANT_TYPE_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateApplicantType = () => ({

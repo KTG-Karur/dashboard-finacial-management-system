@@ -4,7 +4,7 @@ const initialState = {
   createAddressTypeData: null,
   updateAddressTypeData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getAddressTypeSuccess: false,
   getAddressTypeFailure: false,
   createAddressTypeSuccess: false,
@@ -29,7 +29,7 @@ export default function addressTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         getAddressTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getAddressTypeSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function addressTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         createAddressTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createAddressTypeSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function addressTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         updateAddressTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateAddressTypeSuccess: false,
       };
     }
