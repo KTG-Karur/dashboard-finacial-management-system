@@ -5,10 +5,10 @@ const loanCharges = apiContainer.loanCharges
 export async function getLoanCharges(request) {
   try {
     const response = await apiReturnCallBack("GET", loanCharges, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getLoanCharges(request) {
 export async function createLoanCharges(request) {
   try {
     const response = await apiReturnCallBack("POST", loanCharges, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createLoanCharges(request) {
 export async function updateLoanCharges(request, loanChargesId) {
   try {
     const response = await apiReturnCallBack("PUT", loanCharges+`/${loanChargesId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -47,10 +47,10 @@ export async function updateLoanCharges(request, loanChargesId) {
 // export async function deleteLoanCharges(loanChargesId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", loanCharges+`/${loanChargesId}`);
+// const data = await response.json();
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
-//     const data = await response.json();
 //     return data;
 //   } catch (error) {
 //     console.error('Fetch error:', error);

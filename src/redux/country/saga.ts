@@ -15,7 +15,12 @@ function* fetchCountrySaga(action: any): Generator<any, any, any> {
     const data = yield call(getCountry, action.payload);
     yield put(getCountrySuccess(data));
   } catch (error: any) {
-    yield put(getCountryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getCountryFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createCountrySaga(action: any): Generator<any, any, any> {
     const data = yield call(createCountry, action.payload);
     yield put(createCountrySuccess(data));
   } catch (error: any) {
-    yield put(createCountryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createCountryFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateCountrySaga(action: any): Generator<any, any, any> {
     const data = yield call(updateCountry, action.payload.data, action.payload.id);
     yield put(updateCountrySuccess(data));
   } catch (error: any) {
-    yield put(updateCountryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateCountryFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateCountrySaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteCountry, action.payload.id);
 //     yield put(deleteCountrySuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteCountryFailure(error.message));
+//     yield put(deleteCountryFailure(errorMessage));
 //   }
 // }
 

@@ -15,7 +15,12 @@ function* fetchBankAccountSaga(action: any): Generator<any, any, any> {
     const data = yield call(getBankAccount, action.payload);
     yield put(getBankAccountSuccess(data));
   } catch (error: any) {
-    yield put(getBankAccountFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getBankAccountFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createBankAccountSaga(action: any): Generator<any, any, any> {
     const data = yield call(createBankAccount, action.payload);
     yield put(createBankAccountSuccess(data));
   } catch (error: any) {
-    yield put(createBankAccountFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createBankAccountFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateBankAccountSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateBankAccount, action.payload.data, action.payload.id);
     yield put(updateBankAccountSuccess(data));
   } catch (error: any) {
-    yield put(updateBankAccountFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateBankAccountFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateBankAccountSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteBankAccount, action.payload.id);
 //     yield put(deleteBankAccountSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteBankAccountFailure(error.message));
+//     yield put(deleteBankAccountFailure(errorMessage));
 //   }
 // }
 

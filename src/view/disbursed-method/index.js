@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createDisbursedMethodRequest, getDisbursedMethodRequest, resetCreateDisbursedMethod, resetGetDisbursedMethod, resetUpdateDisbursedMethod, updateDisbursedMethodRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -16,7 +17,7 @@ function Index() {
 
     const { getDisbursedMethodSuccess, getDisbursedMethodList, getDisbursedMethodFailure,
         createDisbursedMethodSuccess, createDisbursedMethodData, createDisbursedMethodFailure,
-        updateDisbursedMethodSuccess, updateDisbursedMethodData, updateDisbursedMethodFailure,
+        updateDisbursedMethodSuccess, updateDisbursedMethodData, updateDisbursedMethodFailure,errorMessage
 
     } = appSelector((state) => ({
         getDisbursedMethodSuccess: state.disbursedMethodReducer.getDisbursedMethodSuccess,
@@ -30,6 +31,8 @@ function Index() {
         updateDisbursedMethodSuccess: state.disbursedMethodReducer.updateDisbursedMethodSuccess,
         updateDisbursedMethodData: state.disbursedMethodReducer.updateDisbursedMethodData,
         updateDisbursedMethodFailure: state.disbursedMethodReducer.updateDisbursedMethodFailure,
+
+        errorMessage: state.disbursedMethodReducer.errorMessage,
     }));
 
     const columns = [
@@ -118,9 +121,11 @@ function Index() {
         if (createDisbursedMethodSuccess) {
             const temp_state = [createDisbursedMethodData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateDisbursedMethod())
         } else if (createDisbursedMethodFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateDisbursedMethod())
         }
     }, [createDisbursedMethodSuccess, createDisbursedMethodFailure]);
@@ -130,9 +135,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateDisbursedMethodData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateDisbursedMethod())
         } else if (updateDisbursedMethodFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateDisbursedMethod())
         }
     }, [updateDisbursedMethodSuccess, updateDisbursedMethodFailure]);
@@ -192,6 +199,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

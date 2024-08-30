@@ -5,10 +5,10 @@ const category = apiContainer.category
 export async function getCategory(request) {
   try {
     const response = await apiReturnCallBack("GET", category, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getCategory(request) {
 export async function createCategory(request) {
   try {
     const response = await apiReturnCallBack("POST", category, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createCategory(request) {
 export async function updateCategory(request, categoryId) {
   try {
     const response = await apiReturnCallBack("PUT", category+`/${categoryId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateCategory(request, categoryId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", category+`/${categoryId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

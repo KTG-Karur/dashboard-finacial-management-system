@@ -4,7 +4,7 @@ const initialState = {
   createCountryData: null,
   updateCountryData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getCountrySuccess: false,
   getCountryFailure: false,
   createCountrySuccess: false,
@@ -29,7 +29,7 @@ export default function countryReducer(state = initialState, action: any) {
       return {
         ...state,
         getCountryFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getCountrySuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function countryReducer(state = initialState, action: any) {
       return {
         ...state,
         createCountryFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createCountrySuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function countryReducer(state = initialState, action: any) {
       return {
         ...state,
         updateCountryFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateCountrySuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function countryReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteCountryFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteCountrySuccess: false,
     //   };
     // }

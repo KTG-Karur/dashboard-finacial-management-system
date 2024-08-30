@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createBankAccountRequest, getBankAccountRequest, resetCreateBankAccount, resetGetBankAccount, resetUpdateBankAccount, updateBankAccountRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false;
 
@@ -16,7 +17,7 @@ function Index() {
 
     const { getBankAccountSuccess, getBankAccountList, getBankAccountFailure,
         createBankAccountSuccess, createBankAccountData, createBankAccountFailure,
-        updateBankAccountSuccess, updateBankAccountData, updateBankAccountFailure,
+        updateBankAccountSuccess, updateBankAccountData, updateBankAccountFailure,errorMessage
 
     } = appSelector((state) => ({
         getBankAccountSuccess: state.bankAccountReducer.getBankAccountSuccess,
@@ -30,6 +31,8 @@ function Index() {
         updateBankAccountSuccess: state.bankAccountReducer.updateBankAccountSuccess,
         updateBankAccountData: state.bankAccountReducer.updateBankAccountData,
         updateBankAccountFailure: state.bankAccountReducer.updateBankAccountFailure,
+
+        errorMessage: state.bankAccountReducer.errorMessage,
     }));
 
     const columns = [
@@ -138,9 +141,11 @@ function Index() {
         if (createBankAccountSuccess) {
             const temp_state = [createBankAccountData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateBankAccount())
         } else if (createBankAccountFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateBankAccount())
         }
     }, [createBankAccountSuccess, createBankAccountFailure]);
@@ -150,9 +155,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateBankAccountData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateBankAccount())
         } else if (updateBankAccountFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateBankAccount())
         }
     }, [updateBankAccountSuccess, updateBankAccountFailure]);
@@ -227,6 +234,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

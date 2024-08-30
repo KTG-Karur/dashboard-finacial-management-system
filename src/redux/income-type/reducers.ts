@@ -4,7 +4,7 @@ const initialState = {
   createIncomeTypeData: null,
   updateIncomeTypeData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getIncomeTypeSuccess: false,
   getIncomeTypeFailure: false,
   createIncomeTypeSuccess: false,
@@ -29,7 +29,7 @@ export default function incomeTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         getIncomeTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getIncomeTypeSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function incomeTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         createIncomeTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createIncomeTypeSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function incomeTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         updateIncomeTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateIncomeTypeSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function incomeTypeReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteIncomeTypeFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteIncomeTypeSuccess: false,
     //   };
     // }

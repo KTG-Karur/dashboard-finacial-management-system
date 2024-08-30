@@ -4,7 +4,7 @@ const initialState = {
   createProofTypeData: null,
   updateProofTypeData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getProofTypeSuccess: false,
   getProofTypeFailure: false,
   createProofTypeSuccess: false,
@@ -29,7 +29,7 @@ export default function proofTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         getProofTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getProofTypeSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function proofTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         createProofTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createProofTypeSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function proofTypeReducer(state = initialState, action: any) {
       return {
         ...state,
         updateProofTypeFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateProofTypeSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function proofTypeReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteProofTypeFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteProofTypeSuccess: false,
     //   };
     // }

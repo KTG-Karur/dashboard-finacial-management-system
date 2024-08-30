@@ -4,7 +4,7 @@ const initialState = {
   createCategoryData: null,
   updateCategoryData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getCategorySuccess: false,
   getCategoryFailure: false,
   createCategorySuccess: false,
@@ -29,7 +29,7 @@ export default function categoryReducer(state = initialState, action: any) {
       return {
         ...state,
         getCategoryFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getCategorySuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function categoryReducer(state = initialState, action: any) {
       return {
         ...state,
         createCategoryFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createCategorySuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function categoryReducer(state = initialState, action: any) {
       return {
         ...state,
         updateCategoryFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateCategorySuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function categoryReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteCategoryFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteCategorySuccess: false,
     //   };
     // }

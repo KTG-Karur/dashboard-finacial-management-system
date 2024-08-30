@@ -5,10 +5,10 @@ const state = apiContainer.state
 export async function getState(request) {
   try {
     const response = await apiReturnCallBack("GET", state, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getState(request) {
 export async function createState(request) {
   try {
     const response = await apiReturnCallBack("POST", state, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createState(request) {
 export async function updateState(request, stateId) {
   try {
     const response = await apiReturnCallBack("PUT", state+`/${stateId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateState(request, stateId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", state+`/${stateId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

@@ -4,7 +4,7 @@ const initialState = {
   createBankAccountData: null,
   updateBankAccountData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getBankAccountSuccess: false,
   getBankAccountFailure: false,
   createBankAccountSuccess: false,
@@ -29,7 +29,7 @@ export default function bankAccountReducer(state = initialState, action: any) {
       return {
         ...state,
         getBankAccountFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getBankAccountSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function bankAccountReducer(state = initialState, action: any) {
       return {
         ...state,
         createBankAccountFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createBankAccountSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function bankAccountReducer(state = initialState, action: any) {
       return {
         ...state,
         updateBankAccountFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateBankAccountSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function bankAccountReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteBankAccountFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteBankAccountSuccess: false,
     //   };
     // }

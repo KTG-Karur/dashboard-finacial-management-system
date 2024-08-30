@@ -11,7 +11,7 @@ export const getExpensiveTypeSuccess = (data: any) => ({
 
 export const getExpensiveTypeFailure = (errorMessage: string) => ({
   type: 'GET_EXPENSIVE_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetExpensiveType = () => ({
@@ -31,7 +31,7 @@ export const createExpensiveTypeSuccess = (data: any) => ({
 
 export const createExpensiveTypeFailure = (errorMessage: string) => ({
   type: 'CREATE_EXPENSIVE_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateExpensiveType = () => ({
@@ -51,7 +51,7 @@ export const updateExpensiveTypeSuccess = (data: any) => ({
 
 export const updateExpensiveTypeFailure = (errorMessage: string) => ({
   type: 'UPDATE_EXPENSIVE_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateExpensiveType = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateExpensiveType = () => ({
 
 // export const deleteExpensiveTypeFailure = (errorMessage: string) => ({
 //   type: 'DELETE_EXPENSIVE_TYPE_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateExpensiveType = () => ({

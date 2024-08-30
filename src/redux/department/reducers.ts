@@ -4,7 +4,7 @@ const initialState = {
   createDepartmentData: null,
   updateDepartmentData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getDepartmentSuccess: false,
   getDepartmentFailure: false,
   createDepartmentSuccess: false,
@@ -29,7 +29,7 @@ export default function departmentReducer(state = initialState, action: any) {
       return {
         ...state,
         getDepartmentFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getDepartmentSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function departmentReducer(state = initialState, action: any) {
       return {
         ...state,
         createDepartmentFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createDepartmentSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function departmentReducer(state = initialState, action: any) {
       return {
         ...state,
         updateDepartmentFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateDepartmentSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function departmentReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteDepartmentFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteDepartmentSuccess: false,
     //   };
     // }

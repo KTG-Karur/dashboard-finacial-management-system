@@ -11,7 +11,7 @@ export const getCountrySuccess = (data: any) => ({
 
 export const getCountryFailure = (errorMessage: string) => ({
   type: 'GET_COUNTRY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetCountry = () => ({
@@ -31,7 +31,7 @@ export const createCountrySuccess = (data: any) => ({
 
 export const createCountryFailure = (errorMessage: string) => ({
   type: 'CREATE_COUNTRY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateCountry = () => ({
@@ -51,7 +51,7 @@ export const updateCountrySuccess = (data: any) => ({
 
 export const updateCountryFailure = (errorMessage: string) => ({
   type: 'UPDATE_COUNTRY_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateCountry = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateCountry = () => ({
 
 // export const deleteCountryFailure = (errorMessage: string) => ({
 //   type: 'DELETE_COUNTRY_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateCountry = () => ({

@@ -11,7 +11,7 @@ export const getDisbursedMethodSuccess = (data: any) => ({
 
 export const getDisbursedMethodFailure = (errorMessage: string) => ({
   type: 'GET_DISBURSED_METHOD_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetDisbursedMethod = () => ({
@@ -31,7 +31,7 @@ export const createDisbursedMethodSuccess = (data: any) => ({
 
 export const createDisbursedMethodFailure = (errorMessage: string) => ({
   type: 'CREATE_DISBURSED_METHOD_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateDisbursedMethod = () => ({
@@ -51,7 +51,7 @@ export const updateDisbursedMethodSuccess = (data: any) => ({
 
 export const updateDisbursedMethodFailure = (errorMessage: string) => ({
   type: 'UPDATE_DISBURSED_METHOD_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateDisbursedMethod = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateDisbursedMethod = () => ({
 
 // export const deleteDisbursedMethodFailure = (errorMessage: string) => ({
 //   type: 'DELETE_DISBURSED_METHOD_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateDisbursedMethod = () => ({

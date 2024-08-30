@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createIncomeTypeRequest, getIncomeTypeRequest, resetCreateIncomeType, resetGetIncomeType, resetUpdateIncomeType, updateIncomeTypeRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -16,7 +17,7 @@ function Index() {
 
     const { getIncomeTypeSuccess, getIncomeTypeList, getIncomeTypeFailure,
         createIncomeTypeSuccess, createIncomeTypeData, createIncomeTypeFailure,
-        updateIncomeTypeSuccess, updateIncomeTypeData, updateIncomeTypeFailure,
+        updateIncomeTypeSuccess, updateIncomeTypeData, updateIncomeTypeFailure,errorMessage
 
     } = appSelector((state) => ({
         getIncomeTypeSuccess: state.incomeTypeReducer.getIncomeTypeSuccess,
@@ -30,6 +31,8 @@ function Index() {
         updateIncomeTypeSuccess: state.incomeTypeReducer.updateIncomeTypeSuccess,
         updateIncomeTypeData: state.incomeTypeReducer.updateIncomeTypeData,
         updateIncomeTypeFailure: state.incomeTypeReducer.updateIncomeTypeFailure,
+
+        errorMessage: state.incomeTypeReducer.errorMessage,
     }));
 
     const columns = [
@@ -118,9 +121,11 @@ function Index() {
         if (createIncomeTypeSuccess) {
             const temp_state = [createIncomeTypeData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateIncomeType())
         } else if (createIncomeTypeFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateIncomeType())
         }
     }, [createIncomeTypeSuccess, createIncomeTypeFailure]);
@@ -130,9 +135,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateIncomeTypeData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateIncomeType())
         } else if (updateIncomeTypeFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateIncomeType())
         }
     }, [updateIncomeTypeSuccess, updateIncomeTypeFailure]);
@@ -192,6 +199,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { stateContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createStateRequest, getCountryRequest, getStateRequest, resetCreateState, resetGetCountry, resetGetState, resetUpdateState, updateStateRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -18,7 +19,7 @@ function Index() {
         getStateSuccess, getStateList, getStateFailure,
         getCountrySuccess, getCountryList, getCountryFailure,
         createStateSuccess, createStateData, createStateFailure,
-        updateStateSuccess, updateStateData, updateStateFailure,
+        updateStateSuccess, updateStateData, updateStateFailure,errorMessage
 
     } = appSelector((state) => ({
         getStateSuccess: state.stateReducer.getStateSuccess,
@@ -36,6 +37,8 @@ function Index() {
         updateStateSuccess: state.stateReducer.updateStateSuccess,
         updateStateData: state.stateReducer.updateStateData,
         updateStateFailure: state.stateReducer.updateStateFailure,
+
+        errorMessage: state.stateReducer.errorMessage,
     }));
 
     const columns = [
@@ -150,9 +153,11 @@ function Index() {
         if (createStateSuccess) {
             const temp_state = [createStateData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateState())
         } else if (createStateFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateState())
         }
     }, [createStateSuccess, createStateFailure]);
@@ -162,9 +167,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateStateData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateState())
         } else if (updateStateFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateState())
         }
     }, [updateStateSuccess, updateStateFailure]);
@@ -224,6 +231,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

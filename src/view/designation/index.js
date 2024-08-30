@@ -136,7 +136,7 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateDesignationData[0];
             setParentList(temp_state)
-            showMessage('success', 'Updated Successfully');
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateDesignation())
         } else if (updateDesignationFailure) {

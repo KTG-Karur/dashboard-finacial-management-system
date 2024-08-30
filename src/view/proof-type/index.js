@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createProofTypeRequest, getProofTypeRequest, resetCreateProofType, resetGetProofType, resetUpdateProofType, updateProofTypeRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -16,7 +17,7 @@ function Index() {
 
     const { getProofTypeSuccess, getProofTypeList, getProofTypeFailure,
         createProofTypeSuccess, createProofTypeData, createProofTypeFailure,
-        updateProofTypeSuccess, updateProofTypeData, updateProofTypeFailure,
+        updateProofTypeSuccess, updateProofTypeData, updateProofTypeFailure,errorMessage
 
     } = appSelector((state) => ({
         getProofTypeSuccess: state.proofTypeReducer.getProofTypeSuccess,
@@ -30,6 +31,8 @@ function Index() {
         updateProofTypeSuccess: state.proofTypeReducer.updateProofTypeSuccess,
         updateProofTypeData: state.proofTypeReducer.updateProofTypeData,
         updateProofTypeFailure: state.proofTypeReducer.updateProofTypeFailure,
+
+        errorMessage: state.proofTypeReducer.errorMessage,
     }));
 
     const columns = [
@@ -118,9 +121,11 @@ function Index() {
         if (createProofTypeSuccess) {
             const temp_state = [createProofTypeData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateProofType())
         } else if (createProofTypeFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateProofType())
         }
     }, [createProofTypeSuccess, createProofTypeFailure]);
@@ -130,9 +135,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateProofTypeData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateProofType())
         } else if (updateProofTypeFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateProofType())
         }
     }, [updateProofTypeSuccess, updateProofTypeFailure]);
@@ -192,6 +199,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

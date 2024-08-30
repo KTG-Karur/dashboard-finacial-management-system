@@ -11,7 +11,7 @@ export const getProofTypeSuccess = (data: any) => ({
 
 export const getProofTypeFailure = (errorMessage: string) => ({
   type: 'GET_PROOF_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetGetProofType = () => ({
@@ -31,7 +31,7 @@ export const createProofTypeSuccess = (data: any) => ({
 
 export const createProofTypeFailure = (errorMessage: string) => ({
   type: 'CREATE_PROOF_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetCreateProofType = () => ({
@@ -51,7 +51,7 @@ export const updateProofTypeSuccess = (data: any) => ({
 
 export const updateProofTypeFailure = (errorMessage: string) => ({
   type: 'UPDATE_PROOF_TYPE_FAILURE',
-  errorMessage,
+  errorMessage: { errorMessage },
 });
 
 export const resetUpdateProofType = () => ({
@@ -70,7 +70,7 @@ export const resetUpdateProofType = () => ({
 
 // export const deleteProofTypeFailure = (errorMessage: string) => ({
 //   type: 'DELETE_PROOF_TYPE_FAILURE',
-//   errorMessage,
+//   errorMessage: { errorMessage },
 // });
 
 // export const deleteUpdateProofType = () => ({

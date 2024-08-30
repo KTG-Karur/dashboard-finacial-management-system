@@ -5,10 +5,10 @@ const proofType = apiContainer.proofType
 export async function getProofType(request) {
   try {
     const response = await apiReturnCallBack("GET", proofType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getProofType(request) {
 export async function createProofType(request) {
   try {
     const response = await apiReturnCallBack("POST", proofType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createProofType(request) {
 export async function updateProofType(request, proofTypeId) {
   try {
     const response = await apiReturnCallBack("PUT", proofType+`/${proofTypeId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateProofType(request, proofTypeId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", proofType+`/${proofTypeId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

@@ -5,10 +5,10 @@ const applicantType = apiContainer.applicantType
 export async function getApplicantType(request) {
   try {
     const response = await apiReturnCallBack("GET", applicantType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getApplicantType(request) {
 export async function createApplicantType(request) {
   try {
     const response = await apiReturnCallBack("POST", applicantType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createApplicantType(request) {
 export async function updateApplicantType(request, applicantTypeId) {
   try {
     const response = await apiReturnCallBack("PUT", applicantType+`/${applicantTypeId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateApplicantType(request, applicantTypeId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", applicantType+`/${applicantTypeId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

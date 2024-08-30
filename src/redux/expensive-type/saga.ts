@@ -15,7 +15,12 @@ function* fetchExpensiveTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(getExpensiveType, action.payload);
     yield put(getExpensiveTypeSuccess(data));
   } catch (error: any) {
-    yield put(getExpensiveTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getExpensiveTypeFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createExpensiveTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(createExpensiveType, action.payload);
     yield put(createExpensiveTypeSuccess(data));
   } catch (error: any) {
-    yield put(createExpensiveTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createExpensiveTypeFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateExpensiveTypeSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateExpensiveType, action.payload.data, action.payload.id);
     yield put(updateExpensiveTypeSuccess(data));
   } catch (error: any) {
-    yield put(updateExpensiveTypeFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateExpensiveTypeFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateExpensiveTypeSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteExpensiveType, action.payload.id);
 //     yield put(deleteExpensiveTypeSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteExpensiveTypeFailure(error.message));
+//     yield put(deleteExpensiveTypeFailure(errorMessage));
 //   }
 // }
 

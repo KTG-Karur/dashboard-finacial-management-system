@@ -4,7 +4,7 @@ const initialState = {
   createDistrictData: null,
   updateDistrictData: null,
   isLoading: false,
-  error: null,
+  errorMessage: null,
   getDistrictSuccess: false,
   getDistrictFailure: false,
   createDistrictSuccess: false,
@@ -29,7 +29,7 @@ export default function districtReducer(state = initialState, action: any) {
       return {
         ...state,
         getDistrictFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         getDistrictSuccess: false,
       };
     }
@@ -55,7 +55,7 @@ export default function districtReducer(state = initialState, action: any) {
       return {
         ...state,
         createDistrictFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         createDistrictSuccess: false,
       };
     }
@@ -81,7 +81,7 @@ export default function districtReducer(state = initialState, action: any) {
       return {
         ...state,
         updateDistrictFailure: true,
-        errorMessage: action.errorMessage,
+        errorMessage: action.errorMessage.errorMessage,
         updateDistrictSuccess: false,
       };
     }
@@ -106,7 +106,7 @@ export default function districtReducer(state = initialState, action: any) {
     //   return {
     //     ...state,
     //     deleteDistrictFailure: true,
-    //     errorMessage: action.errorMessage,
+    //     errorMessage: action.errorMessage.errorMessage,
     //     deleteDistrictSuccess: false,
     //   };
     // }

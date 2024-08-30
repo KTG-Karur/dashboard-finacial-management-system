@@ -2,7 +2,7 @@ const applicantTypeContainer = [
     {
         formFields: [
             {
-                'label': "ApplicantType Name",
+                'label': "Applicant Type Name",
                 'name': "applicantTypeName",
                 'inputType': "text",
                 'placeholder': "Enter Applicant Type Name",

@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { subCategoryContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createSubCategoryRequest, getCategoryRequest, getSubCategoryRequest, resetCreateSubCategory, resetGetCategory, resetGetSubCategory, resetUpdateSubCategory, updateSubCategoryRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -18,7 +19,7 @@ function Index() {
         getSubCategorySuccess, getSubCategoryList, getSubCategoryFailure,
         getCategorySuccess, getCategoryList, getCategoryFailure,
         createSubCategorySuccess, createSubCategoryData, createSubCategoryFailure,
-        updateSubCategorySuccess, updateSubCategoryData, updateSubCategoryFailure,
+        updateSubCategorySuccess, updateSubCategoryData, updateSubCategoryFailure,errorMessage
 
     } = appSelector((state) => ({
         getSubCategorySuccess: state.subCategoryReducer.getSubCategorySuccess,
@@ -36,6 +37,8 @@ function Index() {
         updateSubCategorySuccess: state.subCategoryReducer.updateSubCategorySuccess,
         updateSubCategoryData: state.subCategoryReducer.updateSubCategoryData,
         updateSubCategoryFailure: state.subCategoryReducer.updateSubCategoryFailure,
+
+        errorMessage: state.subCategoryReducer.errorMessage,
     }));
 
     const columns = [
@@ -149,9 +152,11 @@ function Index() {
         if (createSubCategorySuccess) {
             const temp_state = [createSubCategoryData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateSubCategory())
         } else if (createSubCategoryFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateSubCategory())
         }
     }, [createSubCategorySuccess, createSubCategoryFailure]);
@@ -161,9 +166,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateSubCategoryData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateSubCategory())
         } else if (updateSubCategoryFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateSubCategory())
         }
     }, [updateSubCategorySuccess, updateSubCategoryFailure]);
@@ -223,6 +230,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />

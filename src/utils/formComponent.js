@@ -3,6 +3,7 @@ import { FormInput } from '../components/form';
 import Select from 'react-select';
 import { Button, Form } from 'react-bootstrap';
 import { formatDate, findObj } from './AllFunction';
+import _ from 'lodash';
 
 function FormComponent(props) {
     const {
@@ -252,12 +253,12 @@ function FormComponent(props) {
                                     disabled={form?.isDisabled}
                                     onChange={(option) => {
                                         form.onChange ? onChangeCallBack[form.onChange](option, form.name) :
-                                        handleChange(option, 'select', form?.name);
+                                        handleChange(option[form.uniqueKey], 'select', form?.name);
                                     }}
                                     // getOptionLabel={(option) => option?.label}
                                     getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
                                     getOptionValue={(option) => form.uniqueKey ? option[form.uniqueKey] : option}
-                                    value={form.name ? state[form.name] : ""}
+                                    value={_.find(optionListState?.[form?.optionList], option => _.isEqual(option[form.uniqueKey], state[form.name]))}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable

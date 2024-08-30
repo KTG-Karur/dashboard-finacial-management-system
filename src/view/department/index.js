@@ -17,7 +17,7 @@ function Index() {
 
     const { getDepartmentSuccess, getDepartmentList, getDepartmentFailure,
         createDepartmentSuccess, createDepartmentData, createDepartmentFailure,
-        updateDepartmentSuccess, updateDepartmentData, updateDepartmentFailure,
+        updateDepartmentSuccess, updateDepartmentData, updateDepartmentFailure,errorMessage
 
     } = appSelector((state) => ({
         getDepartmentSuccess: state.departmentReducer.getDepartmentSuccess,
@@ -31,6 +31,8 @@ function Index() {
         updateDepartmentSuccess: state.departmentReducer.updateDepartmentSuccess,
         updateDepartmentData: state.departmentReducer.updateDepartmentData,
         updateDepartmentFailure: state.departmentReducer.updateDepartmentFailure,
+
+        errorMessage: state.departmentReducer.errorMessage,
     }));
 
     const columns = [
@@ -123,6 +125,7 @@ function Index() {
             closeModel()
             dispatch(resetCreateDepartment())
         } else if (createDepartmentFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateDepartment())
         }
     }, [createDepartmentSuccess, createDepartmentFailure]);
@@ -132,10 +135,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateDepartmentData[0];
             setParentList(temp_state)
-            showMessage('success', 'Updated Successfully');
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateDepartment())
         } else if (updateDepartmentFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateDepartment())
         }
     }, [updateDepartmentSuccess, updateDepartmentFailure]);

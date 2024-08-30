@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { applicantTypeContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createApplicantTypeRequest, getApplicantTypeRequest, resetCreateApplicantType, resetGetApplicantType, resetUpdateApplicantType, updateApplicantTypeRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -16,7 +17,7 @@ function Index() {
 
     const { getApplicantTypeSuccess, getApplicantTypeList, getApplicantTypeFailure,
         createApplicantTypeSuccess, createApplicantTypeData, createApplicantTypeFailure,
-        updateApplicantTypeSuccess, updateApplicantTypeData, updateApplicantTypeFailure,
+        updateApplicantTypeSuccess, updateApplicantTypeData, updateApplicantTypeFailure,errorMessage
 
     } = appSelector((state) => ({
         getApplicantTypeSuccess: state.applicantTypeReducer.getApplicantTypeSuccess,
@@ -30,6 +31,8 @@ function Index() {
         updateApplicantTypeSuccess: state.applicantTypeReducer.updateApplicantTypeSuccess,
         updateApplicantTypeData: state.applicantTypeReducer.updateApplicantTypeData,
         updateApplicantTypeFailure: state.applicantTypeReducer.updateApplicantTypeFailure,
+
+        errorMessage: state.applicantTypeReducer.errorMessage,
     }));
 
     const columns = [
@@ -39,7 +42,7 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'ApplicantType Name',
+            Header: 'Applicant Type Name',
             accessor: 'applicantTypeName',
             sort: true,
         },
@@ -118,9 +121,11 @@ function Index() {
         if (createApplicantTypeSuccess) {
             const temp_state = [createApplicantTypeData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateApplicantType())
         } else if (createApplicantTypeFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateApplicantType())
         }
     }, [createApplicantTypeSuccess, createApplicantTypeFailure]);
@@ -130,9 +135,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateApplicantTypeData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateApplicantType())
         } else if (updateApplicantTypeFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateApplicantType())
         }
     }, [updateApplicantTypeSuccess, updateApplicantTypeFailure]);
@@ -192,6 +199,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />
@@ -199,7 +207,7 @@ function Index() {
             </div> :
             <Table
                 columns={columns}
-                Title={'ApplicantType List'}
+                Title={'Applicant Type List'}
                 data={parentList || []}
                 pageSize={5}
                 toggle={createModel}
@@ -208,7 +216,7 @@ function Index() {
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={'ApplicantType'}
+                modelHeader={'Applicant Type'}
                 modelSize={'md'}
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>

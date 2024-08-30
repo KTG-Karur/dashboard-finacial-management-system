@@ -15,7 +15,12 @@ function* fetchSubCategorySaga(action: any): Generator<any, any, any> {
     const data = yield call(getSubCategory, action.payload);
     yield put(getSubCategorySuccess(data));
   } catch (error: any) {
-    yield put(getSubCategoryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getSubCategoryFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createSubCategorySaga(action: any): Generator<any, any, any> {
     const data = yield call(createSubCategory, action.payload);
     yield put(createSubCategorySuccess(data));
   } catch (error: any) {
-    yield put(createSubCategoryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createSubCategoryFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateSubCategorySaga(action: any): Generator<any, any, any> {
     const data = yield call(updateSubCategory, action.payload.data, action.payload.id);
     yield put(updateSubCategorySuccess(data));
   } catch (error: any) {
-    yield put(updateSubCategoryFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateSubCategoryFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateSubCategorySaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteSubCategory, action.payload.id);
 //     yield put(deleteSubCategorySuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteSubCategoryFailure(error.message));
+//     yield put(deleteSubCategoryFailure(errorMessage));
 //   }
 // }
 

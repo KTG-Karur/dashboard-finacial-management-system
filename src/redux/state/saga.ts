@@ -15,7 +15,12 @@ function* fetchStateSaga(action: any): Generator<any, any, any> {
     const data = yield call(getState, action.payload);
     yield put(getStateSuccess(data));
   } catch (error: any) {
-    yield put(getStateFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(getStateFailure(errorMessage));
   }
 }
 
@@ -25,7 +30,12 @@ function* createStateSaga(action: any): Generator<any, any, any> {
     const data = yield call(createState, action.payload);
     yield put(createStateSuccess(data));
   } catch (error: any) {
-    yield put(createStateFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(createStateFailure(errorMessage));
   }
 }
 
@@ -35,7 +45,12 @@ function* updateStateSaga(action: any): Generator<any, any, any> {
     const data = yield call(updateState, action.payload.data, action.payload.id);
     yield put(updateStateSuccess(data));
   } catch (error: any) {
-    yield put(updateStateFailure(error.message));
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+    yield put(updateStateFailure(errorMessage));
   }
 }
 
@@ -45,7 +60,7 @@ function* updateStateSaga(action: any): Generator<any, any, any> {
 //     const data = yield call(deleteState, action.payload.id);
 //     yield put(deleteStateSuccess(data));
 //   } catch (error: any) {
-//     yield put(deleteStateFailure(error.message));
+//     yield put(deleteStateFailure(errorMessage));
 //   }
 // }
 

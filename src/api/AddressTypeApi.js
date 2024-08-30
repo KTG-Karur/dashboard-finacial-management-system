@@ -5,10 +5,10 @@ const addressType = apiContainer.addressType
 export async function getAddressType(request) {
   try {
     const response = await apiReturnCallBack("GET", addressType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getAddressType(request) {
 export async function createAddressType(request) {
   try {
     const response = await apiReturnCallBack("POST", addressType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createAddressType(request) {
 export async function updateAddressType(request, addressTypeId) {
   try {
     const response = await apiReturnCallBack("PUT", addressType+`/${addressTypeId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateAddressType(request, addressTypeId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", addressType+`/${addressTypeId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

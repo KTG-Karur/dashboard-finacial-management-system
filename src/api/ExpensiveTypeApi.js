@@ -5,10 +5,10 @@ const expensiveType = apiContainer.expensiveType
 export async function getExpensiveType(request) {
   try {
     const response = await apiReturnCallBack("GET", expensiveType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -19,10 +19,10 @@ export async function getExpensiveType(request) {
 export async function createExpensiveType(request) {
   try {
     const response = await apiReturnCallBack("POST", expensiveType, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -33,10 +33,10 @@ export async function createExpensiveType(request) {
 export async function updateExpensiveType(request, expensiveTypeId) {
   try {
     const response = await apiReturnCallBack("PUT", expensiveType+`/${expensiveTypeId}`, request);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
     const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error('Fetch error:', error);
@@ -48,7 +48,7 @@ export async function updateExpensiveType(request, expensiveTypeId) {
 //   try {
 //     const response = await apiReturnCallBack("DELETE", expensiveType+`/${expensiveTypeId}`);
 //     if (!response.ok) {
-//       throw new Error(`HTTP error! Status: ${response.status}`);
+//       throw new Error(data.message || JSON.stringify(data));
 //     }
 //     const data = await response.json();
 //     return data;

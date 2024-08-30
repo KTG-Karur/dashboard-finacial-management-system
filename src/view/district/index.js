@@ -4,9 +4,10 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { districtFormContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog } from '../../utils/AllFunction';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createDistrictRequest, getCountryRequest, getDistrictRequest, getStateRequest, resetCreateDistrict, resetGetCountry, resetGetDistrict, resetUpdateDistrict, updateDistrictRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
+import { NotificationContainer } from 'react-notifications';
 
 let isEdit = false; 
 
@@ -19,7 +20,7 @@ function Index() {
         getStateSuccess, getStateList, getStateFailure,
         getCountrySuccess, getCountryList, getCountryFailure,
         createDistrictSuccess, createDistrictData, createDistrictFailure,
-        updateDistrictSuccess, updateDistrictData, updateDistrictFailure,
+        updateDistrictSuccess, updateDistrictData, updateDistrictFailure,errorMessage
 
     } = appSelector((state) => ({
         getDistrictSuccess: state.districtReducer.getDistrictSuccess,
@@ -41,6 +42,8 @@ function Index() {
         updateDistrictSuccess: state.districtReducer.updateDistrictSuccess,
         updateDistrictData: state.districtReducer.updateDistrictData,
         updateDistrictFailure: state.districtReducer.updateDistrictFailure,
+
+        errorMessage: state.districtReducer.errorMessage,
     }));
 
     const columns = [
@@ -168,9 +171,11 @@ function Index() {
         if (createDistrictSuccess) {
             const temp_state = [createDistrictData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateDistrict())
         } else if (createDistrictFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetCreateDistrict())
         }
     }, [createDistrictSuccess, createDistrictFailure]);
@@ -180,9 +185,11 @@ function Index() {
             const temp_state = [...parentList];
             temp_state[selectedIndex] = updateDistrictData[0];
             setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateDistrict())
         } else if (updateDistrictFailure) {
+            showMessage('warning', errorMessage);
             dispatch(resetUpdateDistrict())
         }
     }, [updateDistrictSuccess, updateDistrictFailure]);
@@ -253,6 +260,7 @@ function Index() {
 
     return (
         <React.Fragment>
+             <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />
