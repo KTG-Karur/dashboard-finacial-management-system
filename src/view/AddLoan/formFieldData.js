@@ -16,7 +16,7 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'applicant',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
+                        uniqueKey: 'value',
                         require: true,
                     },
                 ],
@@ -29,7 +29,7 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'coApplicant',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
+                        uniqueKey: 'value',
                         require: true,
                     },
                 ],
@@ -37,12 +37,12 @@ const loanTabs = [
             {
                 formFields: [
                     {
-                        label: 'Select Guardiance',
+                        label: 'Select Guardian',
                         name: 'guardiance',
                         inputType: 'select',
                         optionList: 'guardiance',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
+                        uniqueKey: 'value',
                         require: true,
                     },
                 ],
@@ -63,43 +63,8 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'category',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
+                        uniqueKey: 'value',
                         require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Sub-category',
-                        name: 'subCategory',
-                        inputType: 'select',
-                        optionList: 'subCategory',
-                        displayKey: 'label',
-                        uniqueKey: 'roleId',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Interest %',
-                        name: 'interest',
-                        inputType: 'number',
-                        placeholder: 'Enter Interest %',
-                        require: false,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Loan amount',
-                        name: 'loanAmount',
-                        inputType: 'number',
-                        placeholder: 'Enter Loan amount',
-                        require: false,
                     },
                 ],
             },
@@ -119,7 +84,7 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'ChargesType',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
+                        uniqueKey: 'value',
                         require: true,
                     }
                 ]
@@ -132,7 +97,7 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'percentOrAmount',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
+                        uniqueKey: 'value',
                         require: true,
                     }
                 ]
@@ -162,7 +127,7 @@ const loanTabs = [
                         label: 'Disbursed Date',
                         name: 'disbursedDate',
                         inputType: 'date',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -172,7 +137,7 @@ const loanTabs = [
                         label: 'Due Date',
                         name: 'dueDate',
                         inputType: 'date',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -184,8 +149,8 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'disbursedMethod',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
-                        require: false,
+                        uniqueKey: 'value',
+                        require: true,
                     },
                 ],
             },
@@ -197,18 +162,18 @@ const loanTabs = [
                         inputType: 'select',
                         optionList: 'tenurePeriod',
                         displayKey: 'label',
-                        uniqueKey: 'roleId',
-                        require: false,
+                        uniqueKey: 'value',
+                        require: true,
                     },
                 ],
             },
             {
                 formFields: [
                     {
-                        label: 'DeadLine Date',
+                        label: 'Dead Line Date',
                         name: 'deadLineDate',
                         inputType: 'date',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -219,33 +184,6 @@ const loanTabs = [
         label: 'Over View',
         name: 'overView',
         icon: 'mdi mdi-checkbox-marked-circle-outline',
-        children: [
-            {
-                formFields: [
-                    {
-                        label: 'Applicant Name',
-                        name: 'applicantName',
-                        inputType: 'text',
-                        placeholder: 'Enter Applicant Name',
-                        require: true,
-                    },
-                    {
-                        label: 'Co-Applicant Name',
-                        name: 'coApplicantName',
-                        inputType: 'text',
-                        placeholder: 'Enter Co-Applicant Name',
-                        require: true,
-                    },
-                    {
-                        label: 'Guardiance',
-                        name: 'guardiance',
-                        inputType: 'text',
-                        placeholder: 'Enter guardiance Applicant Name',
-                        require: true,
-                    },
-                ],
-            },
-        ],
     }
 
 ];

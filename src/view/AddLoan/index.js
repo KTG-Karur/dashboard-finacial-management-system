@@ -158,8 +158,8 @@ const Index = () => {
             { value: '2', label: 'Amount' },
         ],
         disbursedMethod: [
-            { value: '1', label: 'Cash' },
-            { value: '2', label: 'Bank' },
+            { value: 'cash', label: 'Cash' },
+            { value: 'bank', label: 'Bank' },
         ],
         tenurePeriod: [
             { value: '1', label: '6 Months' },
@@ -206,6 +206,7 @@ const Index = () => {
     const [arrVal, setArrVal] = useState([]);
     const [IsEditArrVal, setIsEditArrVal] = useState(false);
     const [tabList, setTabList] = useState(loanTabs);
+    const [checkIsLoan, setCheckIsLoan] = useState(true);
 
     const [perVal, setPerVal] = useState(0);
 
@@ -224,7 +225,7 @@ const Index = () => {
             let updatedTabList = [...tabList]; // Create a copy of the current tab list
 
             const formList =
-                state?.category?.value === 'emi'
+                state?.category === 'emi'
                     ? {
                         label: 'Lending Process',
                         name: 'lendingProcess',
@@ -238,7 +239,7 @@ const Index = () => {
                                         inputType: 'select',
                                         optionList: 'category',
                                         displayKey: 'label',
-                                        uniqueKey: 'roleId',
+                                        uniqueKey: 'value',
                                         require: true,
                                     },
                                 ],
@@ -251,7 +252,7 @@ const Index = () => {
                                         inputType: 'select',
                                         optionList: 'subCategory',
                                         displayKey: 'label',
-                                        uniqueKey: 'roleId',
+                                        uniqueKey: 'value',
                                         require: true,
                                     },
                                 ],
@@ -289,7 +290,7 @@ const Index = () => {
                                         inputType: 'select',
                                         optionList: 'category',
                                         displayKey: 'label',
-                                        uniqueKey: 'roleId',
+                                        uniqueKey: 'value',
                                         require: true,
                                     },
                                 ],
@@ -330,7 +331,7 @@ const Index = () => {
         let datafromCoApplicant;
         let datafromGuardiance;
         if (state?.applicant != '') {
-            datafromCoApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant?.value);
+            datafromCoApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant);
             setOptionListState({
                 ...optionListState,
                 coApplicant: datafromCoApplicant,
@@ -338,7 +339,7 @@ const Index = () => {
             });
         }
         if (state?.coApplicant != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.coApplicant?.value);
+            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.coApplicant);
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
@@ -346,7 +347,7 @@ const Index = () => {
             });
         }
         if (state?.guardiance != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.guardiance?.value);
+            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.guardiance);
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
@@ -356,7 +357,7 @@ const Index = () => {
 
         if (state?.applicant != '' && state?.coApplicant != '') {
             datafromGuardiance = copyApplicantList.applicant.filter(
-                (item) => item.value !== state?.applicant?.value && item.value !== state?.coApplicant?.value
+                (item) => item.value !== state?.applicant && item.value !== state?.coApplicant
             );
             setOptionListState({
                 ...optionListState,
@@ -367,7 +368,7 @@ const Index = () => {
         }
         if (state?.applicant != '' && state?.guardiance != '') {
             datafromCoApplicant = copyApplicantList.applicant.filter(
-                (item) => item.value !== state?.applicant?.value && item.value !== state?.guardiance?.value
+                (item) => item.value !== state?.applicant && item.value !== state?.guardiance
             );
             setOptionListState({
                 ...optionListState,
@@ -378,7 +379,7 @@ const Index = () => {
         }
         if (state?.coApplicant != '' && state?.guardiance != '') {
             datafromApplicant = copyApplicantList.applicant.filter(
-                (item) => item.value !== state?.coApplicant?.value && item.value !== state?.guardiance?.value
+                (item) => item.value !== state?.coApplicant && item.value !== state?.guardiance
             );
             setOptionListState({
                 ...optionListState,
@@ -406,6 +407,191 @@ const Index = () => {
             }
         }
     }, [state?.percentOrAmount, state?.chargesAmount, state?.loanAmount]);
+
+    useEffect(() => {
+        if (state?.disbursedMethod !== '') {
+            let updatedTabList = [...tabList]; // Create a copy of the current tab list
+
+            const formList =
+                state?.disbursedMethod === 'bank'
+                    ? {
+                        label: 'Disbursed Details',
+                        name: 'disbursedDetails',
+                        icon: 'mdi mdi-cash',
+                        children: [
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Disbursed Date',
+                                        name: 'disbursedDate',
+                                        inputType: 'date',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Due Date',
+                                        name: 'dueDate',
+                                        inputType: 'date',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Tenure Period',
+                                        name: 'tenurePeriod',
+                                        inputType: 'select',
+                                        optionList: 'tenurePeriod',
+                                        displayKey: 'label',
+                                        uniqueKey: 'value',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'DeadLine Date',
+                                        name: 'deadLineDate',
+                                        inputType: 'date',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Disbursed Method',
+                                        name: 'disbursedMethod',
+                                        inputType: 'select',
+                                        optionList: 'disbursedMethod',
+                                        displayKey: 'label',
+                                        uniqueKey: 'value',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Account Holder Name',
+                                        name: 'accountHolderName',
+                                        inputType: 'text',
+                                        placeholder: 'Enter Account Holder Name',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Branch',
+                                        name: 'branch',
+                                        inputType: 'text',
+                                        placeholder: 'Enter Branch',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Account No',
+                                        name: 'accountNo',
+                                        inputType: 'number',
+                                        placeholder: 'Enter Account No',
+                                        require: true,
+                                    }
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Ifsc',
+                                        name: 'ifcs',
+                                        inputType: 'text',
+                                        placeholder: 'Enter Ifsc',
+                                        require: true,
+                                    },
+                                ],
+                            },
+
+                        ],
+                    }
+                    : {
+                        label: 'Disbursed Details',
+                        name: 'disbursedDetails',
+                        icon: 'mdi mdi-cash',
+                        children: [
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Disbursed Date',
+                                        name: 'disbursedDate',
+                                        inputType: 'date',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Due Date',
+                                        name: 'dueDate',
+                                        inputType: 'date',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Tenure Period',
+                                        name: 'tenurePeriod',
+                                        inputType: 'select',
+                                        optionList: 'tenurePeriod',
+                                        displayKey: 'label',
+                                        uniqueKey: 'value',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Dead Line Date',
+                                        name: 'deadLineDate',
+                                        inputType: 'date',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                            {
+                                formFields: [
+                                    {
+                                        label: 'Disbursed Method',
+                                        name: 'disbursedMethod',
+                                        inputType: 'select',
+                                        optionList: 'disbursedMethod',
+                                        displayKey: 'label',
+                                        uniqueKey: 'value',
+                                        require: true,
+                                    },
+                                ],
+                            },
+                        ],
+                    };
+            const incomeInfoIndex = updatedTabList.findIndex((tab) => tab.name === 'disbursedDetails');
+            if (incomeInfoIndex !== -1) {
+                updatedTabList[incomeInfoIndex] = formList;
+                setTabList(updatedTabList);
+            }
+        }
+    }, [state?.disbursedMethod])
 
     const toggle = () => {
         setTab('applicantInfo');
@@ -445,6 +631,8 @@ const Index = () => {
         toggleModal();
     };
 
+    console.log("multiStateValue")
+    console.log(multiStateValue)
     // handleSubmit
     const handleSubmit = async () => {
         setTab('applicantInfo');
@@ -527,15 +715,11 @@ const Index = () => {
         setArrVal(delData);
     };
 
-
-    // console.log("multiStateValue")
-    // console.log(multiStateValue)
-
     return (
         <React.Fragment>
             <NotificationContainer />
-            {/* <LoanPdf /> */}
-            {wizard ? (
+            <LoanPdf />
+            {/* {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
                         //state
@@ -564,6 +748,7 @@ const Index = () => {
                         showMultiAdd={showMultiAdd}
                         optionListState={optionListState}
                         columnsWizard={columnsWizard}
+                        checkIsLoan={checkIsLoan}
                         //function
                         toggleModal={toggleModal}
                         toggle={toggle}
@@ -601,7 +786,7 @@ const Index = () => {
                     isSearchable={true}
                     toggle={toggle}
                 />
-            )}
+            )} */}
         </React.Fragment>
     );
 };

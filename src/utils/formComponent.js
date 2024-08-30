@@ -253,7 +253,7 @@ function FormComponent(props) {
                                     disabled={form?.isDisabled}
                                     onChange={(option) => {
                                         form.onChange ? onChangeCallBack[form.onChange](option, form.name) :
-                                        handleChange(option[form.uniqueKey], 'select', form?.name);
+                                            handleChange(option[form.uniqueKey], 'select', form?.name);
                                     }}
                                     // getOptionLabel={(option) => option?.label}
                                     getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}

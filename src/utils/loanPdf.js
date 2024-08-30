@@ -8,10 +8,17 @@ import {
     principalRepayment,
     annualToMonthlyInterestRate
 } from './AllFunction';
-import { invoiceDetails } from '../pages/other/data';
+import { invoiceDetails, WelcomeDetails } from '../pages/other/data';
 
 
-const LoanPdf = ({ principal = 1300000, annualInterest = 14.65, tenurePeriod = 17 }) => {
+const LoanPdf = (props) => {
+
+    const { principal = 1100000, annualInterest = 12, tenurePeriod = 13, multiStateValue } = props
+
+    // console.log("multiStateValue in loan pdf")
+    // console.log(multiStateValue[0])
+    console.log("WelcomeDetails");
+    console.log(WelcomeDetails);
     const [loanState, setLoanState] = useState([]);
     let remainingPrincipal = principal;
 
@@ -59,12 +66,14 @@ const LoanPdf = ({ principal = 1300000, annualInterest = 14.65, tenurePeriod = 1
                                 <Col md={12}>
                                     <div className="float-start mt-3">
                                         <address>
-                                            <strong>{invoiceDetails.address.owner}</strong>
+                                            To
                                             <br />
-                                            {invoiceDetails.address.line_1}
+                                            {/* <strong>{multiStateValue[0]?.applicantInfo?.applicant}</strong> */}
+                                            {invoiceDetails.customer}
                                             <br />
-                                            {invoiceDetails.address.city}, {invoiceDetails.address.state}{' '}
-                                            {invoiceDetails.address.zip}
+                                            {invoiceDetails.address.location}
+                                            <br />
+                                            {invoiceDetails.address.city}-{invoiceDetails.address.citypincode}, {invoiceDetails.address.state},{invoiceDetails.address.country}
                                             <br />
                                             <abbr title="Phone">P:</abbr> {invoiceDetails.address.phone}
                                         </address>
@@ -91,10 +100,10 @@ const LoanPdf = ({ principal = 1300000, annualInterest = 14.65, tenurePeriod = 1
                                             <thead>
                                                 <tr>
                                                     <th>#</th>
-                                                    <th>Principal Repayment</th>
-                                                    <th>Interest for Year</th>
-                                                    <th>Principal Repayment + Interest</th>
-                                                    <th>Principal Remaining</th>
+                                                    <th>Principal</th>
+                                                    <th>Interest</th>
+                                                    <th>Total Payment</th>
+                                                    <th>Balance</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
