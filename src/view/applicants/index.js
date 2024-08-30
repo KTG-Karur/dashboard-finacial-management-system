@@ -7,7 +7,14 @@ import { applicantTabs } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
-import { deleteData, findArrObj, formatDate, showConfirmationDialog, showMessage, updateData } from '../../utils/AllFunction';
+import {
+    deleteData,
+    findArrObj,
+    formatDate,
+    showConfirmationDialog,
+    showMessage,
+    updateData,
+} from '../../utils/AllFunction';
 import { NotificationContainer } from 'react-notifications';
 
 const Index = () => {
@@ -177,6 +184,7 @@ const Index = () => {
 
     // useStates
     const [state, setState] = useState({});
+    console.log(state);
     const [optionListState, setOptionListState] = useState({
         addressType: [
             { value: 'personal', label: 'Personal' },
@@ -243,7 +251,7 @@ const Index = () => {
         },
     ]);
     const [wizard, setWizard] = useState(false);
-    const [modal, setModal] = useState(false);
+    const [modal, setModel] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [tab, setTab] = useState('personalInfo');
     const [getModelForm, setModelForm] = useState({});
@@ -270,145 +278,146 @@ const Index = () => {
         if (state?.applicantType !== '') {
             let updatedTabList = [...tabList]; // Create a copy of the current tab list
 
-            const formList = state?.applicantType === 'salary'
-                ? {
-                    label: 'Income Info',
-                    name: 'incomeInfo',
-                    icon: 'mdi mdi-cash',
-                    children: [
-                        {
-                            formFields: [
-                                {
-                                    label: 'Select Applicant type',
-                                    name: 'applicantType',
-                                    inputType: 'select',
-                                    optionList: 'applicantType',
-                                    require: false,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Company Name',
-                                    name: 'companyName',
-                                    inputType: 'text',
-                                    placeholder: 'Enter Company Name',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Company Address',
-                                    name: 'companyAddress',
-                                    inputType: 'text',
-                                    placeholder: 'Enter Company Address',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Office Contact No',
-                                    name: 'officeContactNo',
-                                    inputType: 'number',
-                                    maxlength: 10,
-                                    placeholder: 'Enter Office No',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Date Of Joining',
-                                    name: 'dateofjoining',
-                                    inputType: 'date',
-                                    require: false,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Salary Date',
-                                    name: 'salaryDate',
-                                    inputType: 'date',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Salary Type',
-                                    name: 'salaryType',
-                                    inputType: 'select',
-                                    optionList: 'salaryType',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Monthly Income',
-                                    name: 'monthlyIncome',
-                                    inputType: 'number',
-                                    placeholder: 'Enter Monthly Income',
-                                    require: false,
-                                },
-                            ],
-                        },
-                    ],
-                }
-                : {
-                    label: 'Income Info',
-                    name: 'incomeInfo',
-                    icon: 'mdi mdi-cash',
-                    children: [
-                        {
-                            formFields: [
-                                {
-                                    label: 'Select Applicant type',
-                                    name: 'applicantType',
-                                    inputType: 'select',
-                                    optionList: 'applicantType',
-                                    require: false,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Business Name',
-                                    name: 'businessName',
-                                    inputType: 'text',
-                                    placeholder: 'Enter Business Name',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Business Address',
-                                    name: 'businessAddress',
-                                    inputType: 'text',
-                                    placeholder: 'Enter Business Address',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Office Contact No',
-                                    name: 'officeContactNo',
-                                    inputType: 'number',
-                                    maxlength: 10,
-                                    placeholder: 'Enter Office No',
-                                    require: false,
-                                },
-                                {
-                                    label: 'Starting Date',
-                                    name: 'startingDate',
-                                    inputType: 'date',
-                                    require: false,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Monthly Income',
-                                    name: 'monthlyIncome',
-                                    inputType: 'number',
-                                    placeholder: 'Enter Monthly Income',
-                                    require: false,
-                                },
-                            ],
-                        },
-                    ],
-                };
+            const formList =
+                state?.applicantType === 'salary'
+                    ? {
+                          label: 'Income Info',
+                          name: 'incomeInfo',
+                          icon: 'mdi mdi-cash',
+                          children: [
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Select Applicant type',
+                                          name: 'applicantType',
+                                          inputType: 'select',
+                                          optionList: 'applicantType',
+                                          require: false,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Company Name',
+                                          name: 'companyName',
+                                          inputType: 'text',
+                                          placeholder: 'Enter Company Name',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Company Address',
+                                          name: 'companyAddress',
+                                          inputType: 'text',
+                                          placeholder: 'Enter Company Address',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Office Contact No',
+                                          name: 'officeContactNo',
+                                          inputType: 'number',
+                                          maxlength: 10,
+                                          placeholder: 'Enter Office No',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Date Of Joining',
+                                          name: 'dateofjoining',
+                                          inputType: 'date',
+                                          require: false,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Salary Date',
+                                          name: 'salaryDate',
+                                          inputType: 'date',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Salary Type',
+                                          name: 'salaryType',
+                                          inputType: 'select',
+                                          optionList: 'salaryType',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Monthly Income',
+                                          name: 'monthlyIncome',
+                                          inputType: 'number',
+                                          placeholder: 'Enter Monthly Income',
+                                          require: false,
+                                      },
+                                  ],
+                              },
+                          ],
+                      }
+                    : {
+                          label: 'Income Info',
+                          name: 'incomeInfo',
+                          icon: 'mdi mdi-cash',
+                          children: [
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Select Applicant type',
+                                          name: 'applicantType',
+                                          inputType: 'select',
+                                          optionList: 'applicantType',
+                                          require: false,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Business Name',
+                                          name: 'businessName',
+                                          inputType: 'text',
+                                          placeholder: 'Enter Business Name',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Business Address',
+                                          name: 'businessAddress',
+                                          inputType: 'text',
+                                          placeholder: 'Enter Business Address',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Office Contact No',
+                                          name: 'officeContactNo',
+                                          inputType: 'number',
+                                          maxlength: 10,
+                                          placeholder: 'Enter Office No',
+                                          require: false,
+                                      },
+                                      {
+                                          label: 'Starting Date',
+                                          name: 'startingDate',
+                                          inputType: 'date',
+                                          require: false,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Monthly Income',
+                                          name: 'monthlyIncome',
+                                          inputType: 'number',
+                                          placeholder: 'Enter Monthly Income',
+                                          require: false,
+                                      },
+                                  ],
+                              },
+                          ],
+                      };
 
             // Find the index of the incomeInfo tab
-            const incomeInfoIndex = updatedTabList.findIndex(tab => tab.name === 'incomeInfo');
+            const incomeInfoIndex = updatedTabList.findIndex((tab) => tab.name === 'incomeInfo');
 
             if (incomeInfoIndex !== -1) {
                 // Replace the existing incomeInfo tab with the new formList
@@ -418,7 +427,6 @@ const Index = () => {
         }
     }, [state?.applicantType]);
 
-
     useEffect(() => {
         fetchDistrict();
         fetchState();
@@ -426,7 +434,7 @@ const Index = () => {
 
     // Fetch District and State
     const fetchDistrict = async () => {
-        const result = copyStateDistrict.district.filter((item) => item.statesId === state?.states);
+        const result = copyStateDistrict.district.filter((item) => item.statesId === state?.states?.value);
 
         setOptionListState((prevState) => ({
             ...prevState,
@@ -434,7 +442,7 @@ const Index = () => {
         }));
     };
     const fetchState = async () => {
-        const result = copyStateDistrict.states.filter((item) => item.countryId === state?.country);
+        const result = copyStateDistrict.states.filter((item) => item.countryId === state?.country?.value);
         setOptionListState((prevState) => ({
             ...prevState,
             states: result,
@@ -451,7 +459,7 @@ const Index = () => {
         setWizard(!wizard);
     };
     const toggleModal = (form) => {
-        setModal(!modal);
+        setModel(!modal);
         setModelForm(form);
     };
 
@@ -581,6 +589,12 @@ const Index = () => {
         setArrVal(delData);
     };
 
+    const handleCountry = (selectedObj, name) => {
+        // setState({
+        //     ...state,
+        //     [name]: selectedObj,
+        // });
+    };
     return (
         <React.Fragment>
             <NotificationContainer />
@@ -612,6 +626,7 @@ const Index = () => {
                         optionListState={optionListState}
                         columnsWizard={columnsWizard}
                         //function
+                        onChangeCallBack={{ handleSelect: handleCountry }}
                         toggleModal={toggleModal}
                         toggle={toggle}
                         handleSubmit={handleSubmit}
@@ -620,7 +635,7 @@ const Index = () => {
                     />
                     <ModelViewBox
                         modal={modal}
-                        toggle={toggleModal}
+                        setModel={setModel}
                         modelHeader={getModelForm?.label || ''}
                         modelSize={'md'}
                         handleSubmit={handleSubmitSelectOption}>

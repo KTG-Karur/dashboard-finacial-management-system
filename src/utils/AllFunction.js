@@ -56,22 +56,22 @@ function deleteData(arr, id) {
 }
 
 function findObj(optionList, designation = 0) {
-    console.log(optionList)
+    console.log(optionList);
     optionList.filter((item) => {
-        console.log(item[designation])
-        console.log(designation)
-        console.log(item[designation] === designation)
-        console.log(item[designation] == designation)
-    })
+        console.log(item[designation]);
+        console.log(designation);
+        console.log(item[designation] === designation);
+        console.log(item[designation] == designation);
+    });
     return optionList.filter((item) => item[designation] === designation);
 }
 
 function findArrObj(arr, id) {
-    return arr.filter((item) => (item.id === id));
+    return arr.filter((item) => item.id === id);
 }
 
 function percentageVal(amount, percentage) {
-    return ((parseInt(amount) * parseInt(percentage)) / 100)
+    return (parseInt(amount) * parseInt(percentage)) / 100;
 }
 
 const showConfirmationDialog = (
@@ -110,4 +110,49 @@ const showConfirmationDialog = (
     });
 };
 
-export { showMessage, getFormFieldName, formatDate, showConfirmationDialog, updateData, deleteData, findObj, findArrObj, percentageVal };
+const annualtoMonthlyInterestRate = (annualInterest) => {
+    const r = annualInterest / (12 * 100);
+    return r;
+};
+
+const emiCalculation = async (principal, annualInterest, tenurePeriod) => {
+    const p = await parseFloat(principal);
+    const r = await parseFloat(annualtoMonthlyInterestRate(annualInterest));
+    const t = (await parseInt(tenurePeriod)) * 12;
+
+    console.log('p,r,t');
+    console.log(p, r, t);
+
+    const emi = (p * r * Math.pow(1 + r, t)) / (Math.pow(1 + r, t) - 1);
+
+    console.log('emi');
+    console.log(emi.toFixed(2));
+};
+
+const interestForMonth = (remainingPrincipal, interest) => {
+    const monthInterest = (remainingPrincipal * interest) / (12 * 100);
+    return parseInt(monthInterest.toFixed(2));
+};
+
+const principalRepayment = (emi, monthInterest) => {
+    const principalRepay = emi - monthInterest;
+    return parseInt(principalRepay.toFixed(2));
+};
+
+const principalRemaining = (remainingPrincipal, principalRepayment) => {
+    const principalRemain = remainingPrincipal - principalRepayment;
+    return parseInt(principalRemain.toFixed(2));
+};
+
+export {
+    showMessage,
+    getFormFieldName,
+    formatDate,
+    showConfirmationDialog,
+    updateData,
+    deleteData,
+    findObj,
+    findArrObj,
+    percentageVal,
+    emiCalculation,
+};

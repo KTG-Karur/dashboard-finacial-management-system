@@ -47,10 +47,6 @@ function FormComponent(props) {
                 }));
                 break;
             case 'file':
-                console.log("[formName]")
-                console.log(formName)
-                console.log("e.target.files[0]")
-                console.log(e.target.files[0])
                 setState((prev) => ({
                     ...prev,
                     [formName]: [e.target.files[0]],

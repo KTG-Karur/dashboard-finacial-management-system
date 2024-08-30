@@ -7,8 +7,18 @@ import { loanTabs } from './formFieldData';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { Button, Form } from 'react-bootstrap';
 import Select from 'react-select';
-import { deleteData, findArrObj, formatDate, percentageVal, showConfirmationDialog, showMessage, updateData } from '../../utils/AllFunction';
+import {
+    deleteData,
+    emiCalculation,
+    findArrObj,
+    formatDate,
+    percentageVal,
+    showConfirmationDialog,
+    showMessage,
+    updateData,
+} from '../../utils/AllFunction';
 import { NotificationContainer } from 'react-notifications';
+import LoanPdf from '../../utils/loanPdf';
 
 let per = 0;
 const Index = () => {
@@ -121,7 +131,7 @@ const Index = () => {
                     </div>
                 ),
             },
-        ]
+        ],
     };
 
     // useStates
@@ -159,7 +169,7 @@ const Index = () => {
             { value: '4', label: '24 Months' },
             { value: '5', label: '30 Months' },
             { value: '6', label: '36 Months' },
-        ]
+        ],
     });
     const [multiStateValue, setMultiStateValue] = useState([{}]);
     const [stored, setStored] = useState([{ id: 1 }, { id: 2 }]);
@@ -207,106 +217,107 @@ const Index = () => {
             { value: 'Velu', label: 'Velu-HF03' },
             { value: 'Deena', label: 'Deena-HF04' },
             { value: 'Syed', label: 'Syed-HF05' },
-        ]
-    }
+        ],
+    };
 
     useEffect(() => {
         if (state?.category !== '') {
             let updatedTabList = [...tabList]; // Create a copy of the current tab list
 
-            const formList = state?.category === 'emi'
-                ? {
-                    label: 'Lending Process',
-                    name: 'lendingProcess',
-                    icon: 'mdi mdi-account-box-multiple',
-                    children: [
-                        {
-                            formFields: [
-                                {
-                                    label: 'Category',
-                                    name: 'category',
-                                    inputType: 'select',
-                                    optionList: 'category',
-                                    displayKey: 'roleName',
-                                    uniqueKey: 'roleId',
-                                    require: true,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Sub-category',
-                                    name: 'subCategory',
-                                    inputType: 'select',
-                                    optionList: 'subCategory',
-                                    displayKey: 'roleName',
-                                    uniqueKey: 'roleId',
-                                    require: true,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Interest %',
-                                    name: 'interest',
-                                    inputType: 'number',
-                                    placeholder: 'Enter Interest %',
-                                    require: true,
-                                },
-                                {
-                                    label: 'Loan amount',
-                                    name: 'loanAmount',
-                                    inputType: 'number',
-                                    placeholder: 'Enter Loan amount',
-                                    require: true,
-                                },
-                            ],
-                        },
-                    ],
-                }
-                : {
-                    label: 'Lending Process',
-                    name: 'lendingProcess',
-                    icon: 'mdi mdi-account-box-multiple',
-                    children: [
-                        {
-                            formFields: [
-                                {
-                                    label: 'Category',
-                                    name: 'category',
-                                    inputType: 'select',
-                                    optionList: 'category',
-                                    displayKey: 'roleName',
-                                    uniqueKey: 'roleId',
-                                    require: true,
-                                },
-                            ],
-                        },
-                        {
-                            formFields: [
-                                {
-                                    label: 'Interest %',
-                                    name: 'interest',
-                                    inputType: 'number',
-                                    placeholder: 'Enter Interest %',
-                                    require: true,
-                                },
-                                {
-                                    label: 'Loan amount',
-                                    name: 'loanAmount',
-                                    inputType: 'number',
-                                    placeholder: 'Enter Loan amount',
-                                    require: true,
-                                },
-                            ],
-                        },
-                    ],
-                };
+            const formList =
+                state?.category?.value === 'emi'
+                    ? {
+                          label: 'Lending Process',
+                          name: 'lendingProcess',
+                          icon: 'mdi mdi-account-box-multiple',
+                          children: [
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Category',
+                                          name: 'category',
+                                          inputType: 'select',
+                                          optionList: 'category',
+                                          displayKey: 'label',
+                                          uniqueKey: 'roleId',
+                                          require: true,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Sub-category',
+                                          name: 'subCategory',
+                                          inputType: 'select',
+                                          optionList: 'subCategory',
+                                          displayKey: 'label',
+                                          uniqueKey: 'roleId',
+                                          require: true,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Interest %',
+                                          name: 'interest',
+                                          inputType: 'number',
+                                          placeholder: 'Enter Interest %',
+                                          require: true,
+                                      },
+                                      {
+                                          label: 'Loan amount',
+                                          name: 'loanAmount',
+                                          inputType: 'number',
+                                          placeholder: 'Enter Loan amount',
+                                          require: true,
+                                      },
+                                  ],
+                              },
+                          ],
+                      }
+                    : {
+                          label: 'Lending Process',
+                          name: 'lendingProcess',
+                          icon: 'mdi mdi-account-box-multiple',
+                          children: [
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Category',
+                                          name: 'category',
+                                          inputType: 'select',
+                                          optionList: 'category',
+                                          displayKey: 'label',
+                                          uniqueKey: 'roleId',
+                                          require: true,
+                                      },
+                                  ],
+                              },
+                              {
+                                  formFields: [
+                                      {
+                                          label: 'Interest %',
+                                          name: 'interest',
+                                          inputType: 'number',
+                                          placeholder: 'Enter Interest %',
+                                          require: true,
+                                      },
+                                      {
+                                          label: 'Loan amount',
+                                          name: 'loanAmount',
+                                          inputType: 'number',
+                                          placeholder: 'Enter Loan amount',
+                                          require: true,
+                                      },
+                                  ],
+                              },
+                          ],
+                      };
 
             // Find the index of the incomeInfo tab
-            const incomeInfoIndex = updatedTabList.findIndex(tab => tab.name === 'lendingProcess');
+            const incomeInfoIndex = updatedTabList.findIndex((tab) => tab.name === 'lendingProcess');
             if (incomeInfoIndex !== -1) {
                 // Replace the existing incomeInfo tab with the new formList
                 updatedTabList[incomeInfoIndex] = formList;
@@ -320,64 +331,77 @@ const Index = () => {
         let datafromCoApplicant;
         let datafromGuardiance;
         if (state?.applicant != '') {
-            datafromCoApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant);
+            datafromCoApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant?.value);
             setOptionListState({
                 ...optionListState,
                 coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance
+                guardiance: datafromGuardiance,
             });
         }
         if (state?.coApplicant != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.coApplicant);
+            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.coApplicant?.value);
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
-                guardiance: datafromGuardiance
+                guardiance: datafromGuardiance,
             });
         }
         if (state?.guardiance != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.guardiance);
+            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.guardiance?.value);
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
-                coApplicant: datafromCoApplicant
+                coApplicant: datafromCoApplicant,
             });
         }
 
         if (state?.applicant != '' && state?.coApplicant != '') {
-            datafromGuardiance = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant && item.value !== state?.coApplicant);
+            datafromGuardiance = copyApplicantList.applicant.filter(
+                (item) => item.value !== state?.applicant?.value && item.value !== state?.coApplicant?.value
+            );
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
                 coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance
+                guardiance: datafromGuardiance,
             });
         }
         if (state?.applicant != '' && state?.guardiance != '') {
-            datafromCoApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant && item.value !== state?.guardiance);
+            datafromCoApplicant = copyApplicantList.applicant.filter(
+                (item) => item.value !== state?.applicant?.value && item.value !== state?.guardiance?.value
+            );
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
                 coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance
+                guardiance: datafromGuardiance,
             });
         }
         if (state?.coApplicant != '' && state?.guardiance != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.coApplicant && item.value !== state?.guardiance);
+            datafromApplicant = copyApplicantList.applicant.filter(
+                (item) => item.value !== state?.coApplicant?.value && item.value !== state?.guardiance?.value
+            );
             setOptionListState({
                 ...optionListState,
                 applicant: datafromApplicant,
                 coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance
+                guardiance: datafromGuardiance,
             });
         }
-    }, [state?.applicant, state?.coApplicant, state?.guardiance])
-
+    }, [state?.applicant, state?.coApplicant, state?.guardiance]);
 
     useEffect(() => {
-        if (state?.percentOrAmount != '' && state?.chargesAmount != '' && state?.chargesAmount != undefined && state?.chargesAmount != null) {
-            if (state?.percentOrAmount === "1") {
-                const percentageValues = percentageVal(multiStateValue[0]?.lendingProcess?.loanAmount, state?.chargesAmount);
+        if (
+            state?.percentOrAmount != '' &&
+            state?.chargesAmount != '' &&
+            state?.chargesAmount != undefined &&
+            state?.chargesAmount != null
+        ) {
+            if (state?.percentOrAmount === '1') {
+                const percentageValues = percentageVal(
+                    multiStateValue[0]?.lendingProcess?.loanAmount,
+                    state?.chargesAmount
+                );
                 setPerVal(percentageValues);
                 per = state?.chargesAmount;
             }
@@ -434,7 +458,7 @@ const Index = () => {
                 LoanId: `LN0${multiStateValue[0]?.id}`,
                 applicantId: `HF0${multiStateValue[0]?.id}`,
                 applicantName: multiStateValue[0].applicantInfo.applicant,
-                applicantContact: "9787654323",
+                applicantContact: '9787654323',
                 category: multiStateValue[0].lendingProcess.category,
                 disbursedDate: multiStateValue[0].disbursedDetails.disbursedDate,
                 dueDate: multiStateValue[0].disbursedDetails.dueDate,
@@ -454,7 +478,7 @@ const Index = () => {
                     LoanId: `LN0${stored.length + index + 1}`,
                     applicantId: `HF0${stored.length + index + 1}`,
                     applicantName: item.applicantInfo.applicant,
-                    applicantContact: "9787654323",
+                    applicantContact: '9787654323',
                     category: item.lendingProcess.category,
                     disbursedDate: item.disbursedDetails.disbursedDate,
                     dueDate: item.disbursedDetails.dueDate,
@@ -504,6 +528,13 @@ const Index = () => {
         setArrVal(delData);
     };
 
+    const loanData={
+        principal:1300000,
+        annualInterest:14.65,
+        tenurePeriod:17, // annual Period
+    }
+
+     emiCalculation(loanData.principal,loanData.annualInterest,loanData.tenurePeriod)
 
     // console.log("multiStateValue")
     // console.log(multiStateValue)
@@ -511,7 +542,8 @@ const Index = () => {
     return (
         <React.Fragment>
             <NotificationContainer />
-            {wizard ? (
+            <LoanPdf />
+            {/* {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
                         //state
@@ -577,7 +609,7 @@ const Index = () => {
                     isSearchable={true}
                     toggle={toggle}
                 />
-            )}
+            )} */}
         </React.Fragment>
     );
 };

@@ -42,6 +42,7 @@ const WizardWithProgressbar = (props) => {
         toggleModal,
         toggle,
         handleSubmit,
+        onChangeCallBack,
         //formFieldData.js
         tabList,
     } = props;
@@ -227,20 +228,23 @@ const WizardWithProgressbar = (props) => {
                                             render={({ next, previous }) => {
                                                 return (
                                                     <Form>
-                                                        {tabList[tabIndex].name == "applicantInfo" &&
-                                                            (
-                                                                <React.Fragment>
-                                                                    <Row>
-                                                                        <Col md={6} className='mb-3'>
-                                                                            <p>If a new applicant, simply click to add the applicant details.</p>
-                                                                            <Link to={"/view/applicant"}>
-                                                                                <Button variant='success'>New Applicant</Button>
-                                                                            </Link>
-                                                                        </Col>
-                                                                    </Row>
-
-                                                                </React.Fragment>
-                                                            )}
+                                                        {tabList[tabIndex].name == 'applicantInfo' && (
+                                                            <React.Fragment>
+                                                                <Row>
+                                                                    <Col md={6} className="mb-3">
+                                                                        <p>
+                                                                            If a new applicant, simply click to add the
+                                                                            applicant details.
+                                                                        </p>
+                                                                        <Link to={'/view/applicant'}>
+                                                                            <Button variant="success">
+                                                                                New Applicant
+                                                                            </Button>
+                                                                        </Link>
+                                                                    </Col>
+                                                                </Row>
+                                                            </React.Fragment>
+                                                        )}
 
                                                         <FormLayout
                                                             optionListState={optionListState}
@@ -253,6 +257,7 @@ const WizardWithProgressbar = (props) => {
                                                             setState={setState}
                                                             state={state}
                                                             ref={errorHandle}
+                                                            onChangeCallBack={onChangeCallBack}
                                                             noOfColumns={3}
                                                             errors={errors}
                                                             setErrors={setErrors}
@@ -296,8 +301,8 @@ const WizardWithProgressbar = (props) => {
                                                                     {tabIndex != tabList.length - 1
                                                                         ? 'Next'
                                                                         : isEdit
-                                                                            ? 'Update'
-                                                                            : 'Submit'}
+                                                                        ? 'Update'
+                                                                        : 'Submit'}
                                                                 </Button>
                                                             </li>
 
