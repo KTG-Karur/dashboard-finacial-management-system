@@ -210,7 +210,7 @@ function Index() {
                 modal={modal}
                 toggle={toggle}
                 modelHeader={'Employee'}
-                modelSize={'md'}
+                modelSize={'lg'}
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>
                 <FormLayout

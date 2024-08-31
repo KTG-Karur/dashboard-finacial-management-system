@@ -63,12 +63,12 @@ function FormComponent(props) {
     };
 
     return (
-        <div>
+        <div className='row'>
             {formField.map((form, index) => {
                 switch (form?.inputType) {
                     case 'textarea':
                         return (
-                            <div key={index} className="mb-2">
+                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}
@@ -78,10 +78,10 @@ function FormComponent(props) {
                                     </span>
                                 </Form.Label>
                                 <Form.Control
-                                    type="textarea"
+                                    as="textarea"
                                     name={form?.name}
                                     className="mb-1"
-                                    rows={5}
+                                    rows={4}
                                     placeholder={form?.placeholder}
                                     required={form?.require}
                                     value={state[form?.name]}
@@ -100,7 +100,7 @@ function FormComponent(props) {
                         );
                     case 'text':
                         return (
-                            <div key={index} className="mb-2">
+                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -111,11 +111,11 @@ function FormComponent(props) {
                                 </Form.Label>
                                 <Form.Control
                                     type={form?.type || "text"}
-                                    name={form?.name}
+                                    name={form?.name || ""}
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={state[form?.name] || ''}
+                                    value={state[form.name] ? state[form.name] : ''}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -131,7 +131,7 @@ function FormComponent(props) {
                         );
                     case 'file':
                         return (
-                            <div key={index} className="mb-2">
+                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -161,7 +161,7 @@ function FormComponent(props) {
                         );
                     case 'number':
                         return (
-                            <div key={index} className="mb-2">
+                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -196,7 +196,7 @@ function FormComponent(props) {
                         );
                     case 'date':
                         return (
-                            <div key={index} className="mb-2">
+                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -228,7 +228,7 @@ function FormComponent(props) {
                         );
                     case 'select':
                         return (
-                            <div className={'mb-3'} key={index}>
+                            <div className={`${form?.classStyle || "" } mb-2`} key={index}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -280,7 +280,7 @@ function FormComponent(props) {
                         );
                     case 'checkbox':
                         return (
-                            <div className={'mb-3'} key={index}>
+                            <div className={`${form?.classStyle || "" } mb-2`} key={index}>
                                 <p className="mb-1 fw-bold text-muted">
                                     {' '}
                                     {
@@ -317,7 +317,7 @@ function FormComponent(props) {
                         );
                     case 'radio':
                         return (
-                            <div className={'mb-3'} key={index}>
+                            <div className={`${form?.classStyle || "" } mb-3`} key={index}>
                                 <p className="mb-1 fw-bold text-muted">
                                     {' '}
                                     {
