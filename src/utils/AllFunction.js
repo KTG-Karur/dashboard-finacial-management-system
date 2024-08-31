@@ -182,6 +182,7 @@ export {
     findObj,
     findArrObj,
     percentageVal,
+    dateConversion,
 
     emiCalculation,
     interestForMonth,
