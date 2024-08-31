@@ -796,9 +796,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { loanTabs } from './formFieldData';
 import { Row, Col, Card, Button } from 'react-bootstrap';
-
 // component
 import FormLayout from '../../utils/formLayout';
+import { showConfirmationDialog } from '../../utils/AllFunction';
+import { useNavigate } from 'react-router-dom';
+import LoanPdf from '../../utils/loanPdf';
 
 function Index() {
     // useStates
@@ -841,6 +843,7 @@ function Index() {
         ],
     });
     const [tabList, setTabList] = useState(loanTabs);
+    const navigate = useNavigate();
 
     const copyApplicantList = {
         applicant: [
@@ -851,9 +854,9 @@ function Index() {
             { value: 'Syed', label: 'Syed-HF05' },
         ],
     };
-
-    console.log('state');
-    console.log(state);
+ 
+    // console.log('state');
+    // console.log(state);
     // console.log(tabList);
 
     useEffect(() => {
@@ -950,19 +953,12 @@ function Index() {
 
     // handleSubmit
     const handleSubmit = async () => {
-        // setModal(false);
-        // if (isEdit) {
-        //     const updata = await updateData(tblList, state?.id, state);
-        //     setTblList(updata);
-        //     showMessage('success', 'Updated Successfully');
-        // } else {
-        //     setTblList((prev) => [...prev, state]);
-        //     showMessage('success', 'Created Successfully');
-        // }
-        // handleClear();
+        navigate('/dashboard', { state: { state } });
+        console.log("handleSubmitted")
     };
     return (
         <React.Fragment>
+            {/* <LoanPdf /> */}
             <Card>
                 <Card.Body>
                     <Row>
@@ -970,7 +966,11 @@ function Index() {
                             <FormLayout
                                 optionListState={optionListState}
                                 dynamicForm={loanTabs}
-                                handleSubmit={handleSubmit}
+                                handleSubmit={() => showConfirmationDialog(
+                                    "Do you want to create it?",
+                                    handleSubmit,
+                                    'Yes, Create it!'
+                                )}
                                 setState={setState}
                                 state={state}
                                 ref={errorHandle}

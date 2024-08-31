@@ -144,6 +144,27 @@ const principalRemaining = (remainingPrincipal, principalRepayment) => {
     return principalRemain;
 };
 
+const calculateTotalInterestPayable = (principal, annualInterest, tenurePeriod) => {
+    let totalInterestPayable = 0;
+    let remainingPrincipal = principal;
+    const monthlyInterestRate = annualToMonthlyInterestRate(annualInterest);
+    const emi = emiCalculation(principal, annualInterest, tenurePeriod);
+
+    for (let month = 1; month <= tenurePeriod * 12; month++) {
+        const monthInterestAmount = interestForMonth(remainingPrincipal, monthlyInterestRate);
+        const principalRepay = principalRepayment(emi, monthInterestAmount);
+        remainingPrincipal = principalRemaining(remainingPrincipal, principalRepay);
+
+        // Accumulate the interest for the current month
+        totalInterestPayable += monthInterestAmount;
+    }
+
+    return totalInterestPayable;
+};
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 export {
     showMessage,
@@ -161,4 +182,6 @@ export {
     principalRepayment,
     principalRemaining,
     annualToMonthlyInterestRate,
+    calculateTotalInterestPayable,
+    numberWithCommas,
 };

@@ -20,6 +20,12 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-view-dashboard-outline',
         url: '/dashboard',
     },
+    {
+        label: 'Dashboard',
+        isTitle: false,
+        icon: 'mdi mdi-view-dashboard-outline',
+        url: '/loan/dashboard',
+    },
 
     { label: 'Master', isTitle: true },
     {

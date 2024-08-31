@@ -9,6 +9,7 @@ export const Logout = React.lazy(() => import('../pages/auth/Logout'));
 
 // dashboards
 export const DashBoard1 = React.lazy(() => import('../pages/dashboards/DashBoard1/'));
+export const LoanDashBoard = React.lazy(() => import('../view/dashboard'));
 
 // master
 export const Employee = React.lazy(() => import('../view/employee'));
@@ -28,7 +29,7 @@ export const ProofType = React.lazy(() => import('../view/proof-type'));
 export const BankAccount = React.lazy(() => import('../view/bank-account'));
 
 // Loan
-export const AddLoan=React.lazy(()=> import('../view/AddLoan'));
+export const AddLoan=React.lazy(()=> import('../view/addLoan'));
 
 // apps
 export const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));

@@ -24,8 +24,8 @@ import { notifications, profileMenus, searchOptions } from './data';
 // images
 import logoSm from '../../assets/images/logo-sm.png';
 import avatar1 from '../../assets/images/users/user-1.jpg';
-import logoDark from '../../assets/images/logo-dark.png';
-import logoLight from '../../assets/images/logo-light.png';
+import logoDark from '../../assets/images/Harsini Fincorp.png';
+import logoLight from '../../assets/images/Harsini Fincorp.png';
 
 type TopbarProps = {
     openLeftMenuCallBack: () => void;
@@ -86,7 +86,7 @@ const Topbar = ({ openLeftMenuCallBack, containerClass }: TopbarProps) => {
                             <img src={logoSm} alt="logo-sm" height="22" />
                         </span>
                         <span className="logo-lg">
-                            <img src={logoDark} alt="logo-dark" height="16" />
+                            <img src={logoDark} alt="logo-dark" width="150" />
                         </span>
                     </Link>
 
@@ -95,7 +95,7 @@ const Topbar = ({ openLeftMenuCallBack, containerClass }: TopbarProps) => {
                             <img src={logoSm} alt="logo-sm" height="22" />
                         </span>
                         <span className="logo-lg">
-                            <img src={logoLight} alt="logo-light" height="16" />
+                            <img src={logoLight} alt="logo-light" />
                         </span>
                     </Link>
                 </div>

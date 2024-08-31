@@ -13,8 +13,8 @@ import { logoutUser, resetAuth } from '../../redux/actions';
 import AuthLayout from './AuthLayout';
 
 // images
-import LogoDark from '../../assets/images/logo-dark.png';
-import LogoLight from '../../assets/images/logo-light.png';
+import LogoDark from '../../assets/images/Harsini Fincorp.png';
+import LogoLight from '../../assets/images/Harsini Fincorp.png';
 
 const LogoutIcon = () => {
     return (
@@ -77,13 +77,13 @@ const Logout = () => {
                 <div className="auth-logo">
                     <Link to="/" className="logo logo-dark text-center">
                         <span className="logo-lg">
-                            <img src={LogoDark} alt="" height="22" />
+                            <img src={LogoDark} alt="" width="150" />
                         </span>
                     </Link>
 
                     <Link to="/" className="logo logo-light text-center">
                         <span className="logo-lg">
-                            <img src={LogoLight} alt="" height="22" />
+                            <img src={LogoLight} alt="" width="150" />
                         </span>
                     </Link>
                 </div>

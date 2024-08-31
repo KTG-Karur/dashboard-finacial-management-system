@@ -28,6 +28,7 @@ import {
     LockScreen,
     Logout,
     DashBoard1,
+    LoanDashBoard,
     Employee,
     CalendarApp,
     ChatApp,
@@ -184,6 +185,10 @@ const AllRoutes = () => {
                 {
                     path: 'dashboard',
                     element: <LoadComponent component={DashBoard1} />,
+                },
+                {
+                    path: '/loan/dashboard',
+                    element: <LoadComponent component={LoanDashBoard} />,
                 },
                 {
                     path: 'view',

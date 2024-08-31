@@ -23,6 +23,13 @@ const MENU_ITEMS: MenuItemTypes[] = [
         badge: { variant: 'success', text: '9+' },
         url: '/dashboard',
     },
+    {
+        key: 'dashboard',
+        label: 'Dashboard',
+        isTitle: false,
+        icon: 'mdi mdi-view-dashboard-outline',
+        url: '/loan/dashboard',
+    },
 
     { key: 'master', label: 'Master', isTitle: true },
     {

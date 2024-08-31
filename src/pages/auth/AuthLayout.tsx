@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 // images
-import LogoDark from '../../assets/images/logo-dark.png';
-import LogoLight from '../../assets/images/logo-light.png';
+import LogoDark from '../../assets/images/Harsini Fincorp.png';
+import LogoLight from '../../assets/images/Harsini Fincorp.png';
 
 type AccountLayoutProps = {
     hasLogo?: boolean;
@@ -37,17 +37,17 @@ const AuthLayout = ({ hasLogo, bottomLinks, children }: AccountLayoutProps) => {
                                 <div className="auth-logo">
                                     <Link to="/" className="logo logo-dark text-center">
                                         <span className="logo-lg">
-                                            <img src={LogoDark} alt="" height="22" />
+                                            <img src={LogoDark} alt="" width="150" />
                                         </span>
                                     </Link>
 
                                     <Link to="/" className="logo logo-light text-center">
                                         <span className="logo-lg">
-                                            <img src={LogoLight} alt="" height="22" />
+                                            <img src={LogoLight} alt="" width="150" />
                                         </span>
                                     </Link>
                                 </div>
-                                <p className="text-muted mt-2 mb-4">{t('Responsive Admin Dashboard')}</p>
+                                {/* <p className="text-muted mt-2 mb-4">{t('Responsive Admin Dashboard')}</p> */}
                             </div>
                         )}
                         <Card>
