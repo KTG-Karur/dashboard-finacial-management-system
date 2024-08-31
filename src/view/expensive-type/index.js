@@ -42,7 +42,7 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'ExpensiveType Name',
+            Header: 'Expensive Type Name',
             accessor: 'expensiveTypeName',
             sort: true,
         },

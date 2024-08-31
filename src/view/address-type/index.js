@@ -42,7 +42,7 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'AddressType Name',
+            Header: 'Address Type Name',
             accessor: 'addressTypeName',
             sort: true,
         },

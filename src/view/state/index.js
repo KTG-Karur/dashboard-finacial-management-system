@@ -186,6 +186,7 @@ function Index() {
         setState({
             ...state,
             stateName: '',
+            countryId: '',
         });
     };
 
@@ -199,6 +200,7 @@ function Index() {
         setState({
             ...state,
             stateName: data?.stateName || "",
+            countryId: data?.countryId || "",
         });
         isEdit = true;
         setSelectedItem(data)
@@ -212,7 +214,8 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
-            stateName: state?.stateName || ""
+            stateName: state?.stateName || "",
+            countryId: state.countryId ? parseInt(state.countryId) : "",
         }
         if (isEdit) {
             dispatch(updateStateRequest(submitRequest, selectedItem.stateId))

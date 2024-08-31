@@ -97,7 +97,8 @@ $logo-auth-light-display: none;
 // User authentication Background
 $auth-bg: var(--#{$variable-prefix}auth-bg);
 $auth-bg-alt: var(--#{$variable-prefix}auth-bg-alt);
-$auth-img-bg: url("../images/bg-auth3.png");
+$auth-img-bg: url("../../assets/images/loginBanner.jpg");
+// $auth-img-bg: url("../images/bg-auth3.png");
 $auth-img-bg-dark: url("../images/bg-auth-dark.jpg");
 $auth-img-pattern-bg: url("../images/bg-pattern.png");
 

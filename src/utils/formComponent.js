@@ -406,45 +406,38 @@ function FormComponent(props) {
                     case 'radio':
                         return (
                             <div className={'mb-3'} key={index}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                        {
-                                            //Add Option Modal Btn
-                                            (showSelectmodel || []).includes(form?.name) && (
-                                                <Button
-                                                    variant="success"
-                                                    className="waves-effect waves-light mx-1"
-                                                    style={{ padding: '3px', lineHeight: '1.0' }}
-                                                    onClick={() => {
-                                                        toggleModal(form);
-                                                    }}>
-                                                    <i className="mdi mdi-plus-circle "></i>
-                                                </Button>
-                                            )
-                                        }
-                                    </span>
-                                </Form.Label>
-
+                                <p className="mb-1 fw-bold text-muted">
+                                    {' '}
+                                    {
+                                        <span>
+                                            {form?.label || ""}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    }
+                                </p>
+                                <div className='d-flex'>
                                 {(optionListState?.[form?.optionList] || []).map((item, i) => {
                                     return (
                                         <Form.Check
                                             key={i}
-                                            label={item?.label}
+                                            label={item[form.displayKey] || ""}
                                             type="radio"
                                             id={`basic-radio-${i}`}
-                                            name={form?.name}
-                                            defaultChecked={form?.defaultChecked}
+                                            name={form?.name || ""}
+                                            className={'mb-2 form-check-Primary mx-2'}
+                                            defaultChecked={i === 0}
                                             value={state[form?.name]}
                                             onChange={(e) => {
-                                                handleChange(item, 'radio', form?.name);
+                                                form.onChange ? onChangeCallBack[form.onChange](item, form.name) :
+                                                    handleChange(item, 'radio', form?.name);
                                             }}
                                         />
                                     );
                                 })}
+                                </div>
+                                
                             </div>
                         );
                     default:

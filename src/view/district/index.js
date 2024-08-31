@@ -58,6 +58,11 @@ function Index() {
             sort: true,
         },
         {
+            Header: 'State Name',
+            accessor: 'stateName',
+            sort: true,
+        },
+        {
             Header: 'Status',
             accessor: 'isActive',
             Cell: ({ row }) => (
@@ -204,6 +209,8 @@ function Index() {
         setState({
             ...state,
             districtName: '',
+            countryId: '',
+            stateId: '',
         });
     };
 
@@ -216,6 +223,8 @@ function Index() {
     const onEditForm = (data, index) => {
         setState({
             ...state,
+            countryId: data?.countryId || "",
+            stateId: data?.stateId || "",
             districtName: data?.districtName || "",
         });
         isEdit = true;
@@ -230,7 +239,9 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
-            districtName: state?.districtName || ""
+            countryId: state.countryId ? parseInt(state.countryId) : "",
+            stateId: state.stateId ? parseInt(state.stateId) : "",
+            districtName: state?.districtName || "",
         }
         if (isEdit) {
             dispatch(updateDistrictRequest(submitRequest, selectedItem.districtId))

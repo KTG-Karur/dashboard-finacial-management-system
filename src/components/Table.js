@@ -14,6 +14,7 @@ import classNames from 'classnames';
 // components
 import Pagination from './Pagination';
 import { sizePerPageList } from '../utils/constData';
+import FormLayout from '../utils/formLayout';
 
 // Define a default UI for filtering
 const GlobalFilter = ({ preGlobalFilteredRows, globalFilter, setGlobalFilter, searchBoxClass }) => {
@@ -62,13 +63,15 @@ const IndeterminateCheckbox = forwardRef(({ indeterminate, ...rest }, ref) => {
 
 const Table = (props) => {
     const isSearchable = props['isSearchable'] || true;
+    const filterTbl = props['filterTbl'] || false;
     const isSortable = props['isSortable'] || true;
     const pagination = props['pagination'] || true;
     const isSelectable = props['isSelectable'] || false;
     const isExpandable = props['isExpandable'] || false;
     const sizePerPageListData = sizePerPageList
     const columnData = props['columns']
-    const { toggle = null, Title } = props;
+    const columnLength = columnData.length || 4
+    const { toggle = null, Title, filterFormContainer, optionListState, filterSubmitFunction, onChangeCallBack, state, setState, filterColNo } = props;
 
     let otherProps = {};
 
@@ -185,6 +188,19 @@ const Table = (props) => {
                                                     </Col>
                                                 </Row>
                                             </Col>
+                                            <Col className="mt-3">
+                                                {
+                                                    filterTbl && <FormLayout
+                                                        dynamicForm={filterFormContainer}
+                                                        optionListState ={optionListState}
+                                                        handleSubmit={filterSubmitFunction}
+                                                        onChangeCallBack={onChangeCallBack}
+                                                        setState={setState}
+                                                        state={state}
+                                                        noOfColumns={filterColNo}
+                                                    />
+                                                }
+                                            </Col>
                                         </Row>
                                     </Card>
                                 </Col>
@@ -207,8 +223,8 @@ const Table = (props) => {
                                                             sorting_asc: column.isSortedDesc === false,
                                                             sortable: column.sort === true,
                                                         })}
-                                                        style={{whiteSpace:"nowrap"}}
-                                                        >
+                                                        style={{ whiteSpace: "nowrap" }}
+                                                    >
                                                         {column.render('Header')}
                                                     </th>
                                                 ))}
@@ -216,29 +232,29 @@ const Table = (props) => {
                                         ))}
                                     </thead>
                                     <tbody {...dataTable.getTableBodyProps()}>
-                                        { rows.length <= 0 ? (
-                                            <tr style={{ height: '100%' }}><td colSpan={4} className='text-center text-muted'  style={{ letterSpacing: '0.2em' }}><b>Empty...!</b></td></tr>
+                                        {rows.length <= 0 ? (
+                                            <tr style={{ height: '100%' }}><td colSpan={columnLength} className='text-center text-muted' style={{ letterSpacing: '0.2em' }}><b>Empty...!</b></td></tr>
                                         )
-                                        : (rows || []).map((row, i) => {
-                                            dataTable.prepareRow(row);
-                                            return (
-                                                <tr {...row.getRowProps()}>
-                                                    {(row.cells || []).map((cell) => {
-                                                        return (
-                                                            <td
-                                                                {...cell.getCellProps([
-                                                                    {
-                                                                        className: cell.column.className,
-                                                                    },
-                                                                ])}
-                                                                className="cursor-pointer text-nowrap">
-                                                                {cell.render('Cell')}
-                                                            </td>
-                                                        );
-                                                    })}
-                                                </tr>
-                                            );
-                                        })}
+                                            : (rows || []).map((row, i) => {
+                                                dataTable.prepareRow(row);
+                                                return (
+                                                    <tr {...row.getRowProps()}>
+                                                        {(row.cells || []).map((cell) => {
+                                                            return (
+                                                                <td
+                                                                    {...cell.getCellProps([
+                                                                        {
+                                                                            className: cell.column.className,
+                                                                        },
+                                                                    ])}
+                                                                    className="cursor-pointer text-nowrap">
+                                                                    {cell.render('Cell')}
+                                                                </td>
+                                                            );
+                                                        })}
+                                                    </tr>
+                                                );
+                                            })}
                                     </tbody>
                                 </table>
                             </div>

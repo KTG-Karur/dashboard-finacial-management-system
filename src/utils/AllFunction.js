@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2';
 import { NotificationManager } from 'react-notifications';
+import moment from "moment";
 
 const showMessage = (type, msg, title = null) => {
     switch (type) {
@@ -73,6 +74,11 @@ function findArrObj(arr, id) {
 function percentageVal(amount, percentage) {
     return (parseInt(amount) * parseInt(percentage)) / 100;
 }
+
+const dateConversion = (date, format = "DD-MM-YYYY") => {
+    const result = date ? moment(date).format(format) : "";
+    return result
+  }
 
 const showConfirmationDialog = (
     message,

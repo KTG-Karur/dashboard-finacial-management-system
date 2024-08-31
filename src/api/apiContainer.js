@@ -14,6 +14,8 @@ const apiContainer = {
     proofType: "/proof-type",
     bankAccount: "/bank-account",
     loanCharges: "/loan-charges",
+    expenseEntry: "/expense-entry",
+    incomeEntry: "/income-entry",
   };
   
   export default apiContainer;

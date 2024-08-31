@@ -13,11 +13,11 @@ const districtFormContainer = [
             },
             {
                 label: 'State',
-                name: 'StateId',
+                name: 'stateId',
                 inputType: 'select',
                 optionList: 'stateList',
                 displayKey: 'stateName',
-                uniqueKey: 'StateId',
+                uniqueKey: 'stateId',
                 require: true,
             },
             {

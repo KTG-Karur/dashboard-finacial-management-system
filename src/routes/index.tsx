@@ -101,6 +101,9 @@ import {
     ProofType,
     BankAccount,
     AddLoan,
+    ExpenseEntry,
+    IncomeEntry,
+    LoanList,
 } from './Route_Menu';
 
 const loading = () => <div className=""></div>;
@@ -248,6 +251,18 @@ const AllRoutes = () => {
                         {
                             path: 'bank-account',
                             element: <LoadComponent component={BankAccount} />,
+                        },
+                        {
+                            path: 'expense-entry',
+                            element: <LoadComponent component={ExpenseEntry} />,
+                        },
+                        {
+                            path: 'income-entry',
+                            element: <LoadComponent component={IncomeEntry} />,
+                        },
+                        {
+                            path: 'loan',
+                            element: <LoadComponent component={LoanList} />,
                         },
                         {
                             path: 'applicant',

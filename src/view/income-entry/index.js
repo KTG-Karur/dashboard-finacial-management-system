@@ -4,35 +4,40 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
-import { createIncomeTypeRequest, getIncomeTypeRequest, resetCreateIncomeType, resetGetIncomeType, resetUpdateIncomeType, updateIncomeTypeRequest } from '../../redux/actions';
+import { dateConversion, showConfirmationDialog, showMessage } from '../../utils/AllFunction';
+import { createIncomeEntryRequest, getIncomeEntryRequest, getIncomeTypeRequest, resetCreateIncomeEntry, resetGetIncomeEntry, resetGetIncomeType, resetUpdateIncomeEntry, updateIncomeEntryRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
 
-let isEdit = false; 
+let isEdit = false;
 
 function Index() {
 
     const { dispatch, appSelector } = useRedux();
 
-    const { getIncomeTypeSuccess, getIncomeTypeList, getIncomeTypeFailure,
-        createIncomeTypeSuccess, createIncomeTypeData, createIncomeTypeFailure,
-        updateIncomeTypeSuccess, updateIncomeTypeData, updateIncomeTypeFailure,errorMessage
+    const { getIncomeEntrySuccess, getIncomeEntryList, getIncomeEntryFailure,
+        getIncomeTypeSuccess, getIncomeTypeList, getIncomeTypeFailure,
+        createIncomeEntrySuccess, createIncomeEntryData, createIncomeEntryFailure,
+        updateIncomeEntrySuccess, updateIncomeEntryData, updateIncomeEntryFailure,errorMessage
 
     } = appSelector((state) => ({
+        getIncomeEntrySuccess: state.incomeEntryReducer.getIncomeEntrySuccess,
+        getIncomeEntryList: state.incomeEntryReducer.getIncomeEntryList,
+        getIncomeEntryFailure: state.incomeEntryReducer.getIncomeEntryFailure,
+
         getIncomeTypeSuccess: state.incomeTypeReducer.getIncomeTypeSuccess,
         getIncomeTypeList: state.incomeTypeReducer.getIncomeTypeList,
         getIncomeTypeFailure: state.incomeTypeReducer.getIncomeTypeFailure,
 
-        createIncomeTypeSuccess: state.incomeTypeReducer.createIncomeTypeSuccess,
-        createIncomeTypeData: state.incomeTypeReducer.createIncomeTypeData,
-        createIncomeTypeFailure: state.incomeTypeReducer.createIncomeTypeFailure,
+        createIncomeEntrySuccess: state.incomeEntryReducer.createIncomeEntrySuccess,
+        createIncomeEntryData: state.incomeEntryReducer.createIncomeEntryData,
+        createIncomeEntryFailure: state.incomeEntryReducer.createIncomeEntryFailure,
 
-        updateIncomeTypeSuccess: state.incomeTypeReducer.updateIncomeTypeSuccess,
-        updateIncomeTypeData: state.incomeTypeReducer.updateIncomeTypeData,
-        updateIncomeTypeFailure: state.incomeTypeReducer.updateIncomeTypeFailure,
+        updateIncomeEntrySuccess: state.incomeEntryReducer.updateIncomeEntrySuccess,
+        updateIncomeEntryData: state.incomeEntryReducer.updateIncomeEntryData,
+        updateIncomeEntryFailure: state.incomeEntryReducer.updateIncomeEntryFailure,
 
-        errorMessage: state.incomeTypeReducer.errorMessage,
+        errorMessage: state.incomeEntryReducer.errorMessage,
     }));
 
     const columns = [
@@ -42,8 +47,23 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Income Type Name',
+            Header: 'Income Type',
             accessor: 'incomeTypeName',
+            sort: true,
+        },
+        {
+            Header: 'Income Amount',
+            accessor: 'incomeAmount',
+            sort: true,
+        },
+        {
+            Header: 'Description',
+            accessor: 'description',
+            sort: true,
+        },
+        {
+            Header: 'Created By',
+            accessor: 'employeeName',
             sort: true,
         },
         {
@@ -91,6 +111,23 @@ function Index() {
     ];
 
     const [state, setState] = useState({});
+    const [optionListState, setOptionListState] = useState({
+        incomeTypeList : [],
+        employeeList : [
+            {
+                employeeId : 1,
+                employeeName : "Mohan"
+            },
+            {
+                employeeId : 2,
+                employeeName : "Kathir"
+            },
+            {
+                employeeId : 3,
+                employeeName : "Naveen"
+            },
+        ]
+    });
     const [parentList, setParentList] = useState([]);
     const [selectedItem, setSelectedItem] = useState({});
     const [selectedIndex, setSelectedIndex] = useState(false);
@@ -102,47 +139,66 @@ function Index() {
 
     useEffect(() => {
         setIsLoading(true)
+        dispatch(getIncomeEntryRequest());
         dispatch(getIncomeTypeRequest());
     }, []);
 
     useEffect(() => {
+        if (getIncomeEntrySuccess) {
+            setIsLoading(false)
+            setParentList(getIncomeEntryList)
+            dispatch(resetGetIncomeEntry())
+        } else if (getIncomeEntryFailure) {
+            setIsLoading(false)
+            setParentList([])
+            dispatch(resetGetIncomeEntry())
+        }
+    }, [getIncomeEntrySuccess, getIncomeEntryFailure]);
+
+    useEffect(() => {
         if (getIncomeTypeSuccess) {
             setIsLoading(false)
-            setParentList(getIncomeTypeList)
+            setOptionListState({
+                ...optionListState,
+                incomeTypeList :getIncomeTypeList
+            })
             dispatch(resetGetIncomeType())
         } else if (getIncomeTypeFailure) {
             setIsLoading(false)
-            setParentList([])
+            setOptionListState({
+                ...optionListState,
+                incomeTypeList : []
+            })
             dispatch(resetGetIncomeType())
         }
     }, [getIncomeTypeSuccess, getIncomeTypeFailure]);
 
     useEffect(() => {
-        if (createIncomeTypeSuccess) {
-            const temp_state = [createIncomeTypeData[0], ...parentList];
+        if (createIncomeEntrySuccess) {
+            const temp_state = [createIncomeEntryData[0], ...parentList];
             setParentList(temp_state)
             showMessage('success', 'Created Successfully');
             closeModel()
-            dispatch(resetCreateIncomeType())
-        } else if (createIncomeTypeFailure) {
+            dispatch(resetCreateIncomeEntry())
+        } else if (createIncomeEntryFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetCreateIncomeType())
+            dispatch(resetCreateIncomeEntry())
         }
-    }, [createIncomeTypeSuccess, createIncomeTypeFailure]);
+    }, [createIncomeEntrySuccess, createIncomeEntryFailure]);
 
     useEffect(() => {
-        if (updateIncomeTypeSuccess) {
+        if (updateIncomeEntrySuccess) {
             const temp_state = [...parentList];
-            temp_state[selectedIndex] = updateIncomeTypeData[0];
+            temp_state[selectedIndex] = updateIncomeEntryData[0];
             setParentList(temp_state)
             isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
-            dispatch(resetUpdateIncomeType())
-        } else if (updateIncomeTypeFailure) {
+            dispatch(resetUpdateIncomeEntry())
+        } else if (updateIncomeEntryFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetUpdateIncomeType())
+            dispatch(resetUpdateIncomeEntry())
         }
-    }, [updateIncomeTypeSuccess, updateIncomeTypeFailure]);
+    }, [updateIncomeEntrySuccess, updateIncomeEntryFailure]);
 
     const closeModel = () => {
         isEdit = false;
@@ -153,7 +209,11 @@ function Index() {
     const onFormClear = () => {
         setState({
             ...state,
-            incomeTypeName: '',
+            incomeDate: '',
+            incomeTypeId: '',
+            description: '',
+            createdBy: '',
+            incomeAmount: '',
         });
     };
 
@@ -166,7 +226,11 @@ function Index() {
     const onEditForm = (data, index) => {
         setState({
             ...state,
-            incomeTypeName: data?.incomeTypeName || "",
+            incomeDate: data.incomeDate ? dateConversion(data.incomeDate, "YYYY-MM-DD") : "",
+            incomeTypeId: data?.incomeTypeId || "",
+            description: data?.description || "",
+            createdBy: data?.createdBy || "",
+            incomeAmount: data?.incomeAmount || "",
         });
         isEdit = true;
         setSelectedItem(data)
@@ -180,12 +244,16 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
-            incomeTypeName: state?.incomeTypeName || ""
+            incomeDate: state?.incomeDate || "",
+            incomeTypeId: state?.incomeTypeId || "",
+            description: state?.description || "",
+            createdBy: state?.createdBy || "",
+            incomeAmount: state?.incomeAmount || "",
         }
         if (isEdit) {
-            dispatch(updateIncomeTypeRequest(submitRequest, selectedItem.incomeTypeId))
+            dispatch(updateIncomeEntryRequest(submitRequest, selectedItem.incomeEntryId))
         } else {
-            dispatch(createIncomeTypeRequest(submitRequest))
+            dispatch(createIncomeEntryRequest(submitRequest))
         }
     };
 
@@ -194,12 +262,12 @@ function Index() {
             isActive: activeChecker == 0 ? 1 : 0
         }
         setSelectedIndex(index)
-        dispatch(updateIncomeTypeRequest(submitRequest, data.incomeTypeId))
+        dispatch(updateIncomeEntryRequest(submitRequest, data.incomeEntryId))
     };
 
     return (
         <React.Fragment>
-             <NotificationContainer />
+        <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />
@@ -207,7 +275,7 @@ function Index() {
             </div> :
             <Table
                 columns={columns}
-                Title={'Income Type List'}
+                Title={'Income Entry List'}
                 data={parentList || []}
                 pageSize={5}
                 toggle={createModel}
@@ -216,7 +284,7 @@ function Index() {
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={'Income Type'}
+                modelHeader={'Income Entry'}
                 modelSize={'md'}
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>
@@ -224,6 +292,7 @@ function Index() {
                     dynamicForm={formContainer}
                     handleSubmit={onFormSubmit}
                     setState={setState}
+                    optionListState={optionListState}
                     state={state}
                     ref={errorHandle}
                     noOfColumns={1}

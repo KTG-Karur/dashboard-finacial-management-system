@@ -15,3 +15,5 @@ export * from './income-type/actions';
 export * from './address-type/actions';
 export * from './proof-type/actions';
 export * from './bank-account/actions';
+export * from './expense-entry/actions';
+export * from './income-entry/actions';
