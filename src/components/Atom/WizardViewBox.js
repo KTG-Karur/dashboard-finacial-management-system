@@ -120,6 +120,7 @@ const WizardWithProgressbar = (props) => {
         setMultiStateValue(temp_state);
 
         if (tabIndex === tabList.length - 1) {
+            console.log("tabIndex working")
             submitWizardCall = true;
         } else {
             setTab(tabList?.[tabIndex + 1]?.name);
@@ -300,17 +301,30 @@ const WizardWithProgressbar = (props) => {
                                                             )}
 
                                                             <li className="next list-inline-item float-end">
-                                                                <Button
-                                                                    onClick={() => {
-                                                                        checkValidation(next, false);
-                                                                    }}
-                                                                    variant="primary">
-                                                                    {tabIndex != tabList.length - 1
-                                                                        ? 'Next'
-                                                                        : isEdit
-                                                                            ? 'Update'
-                                                                            : 'Submit'}
-                                                                </Button>
+                                                                {tabIndex === tabList.length - 1 && checkIsLoan ?
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            handleSubmit();
+                                                                        }}
+                                                                        variant="primary">
+                                                                        {tabIndex != tabList.length - 1
+                                                                            ? 'Next'
+                                                                            : isEdit
+                                                                                ? 'Update'
+                                                                                : 'Submit'}
+                                                                    </Button> :
+                                                                    <Button
+                                                                        onClick={() => {
+                                                                            checkValidation(next, false);
+                                                                        }}
+                                                                        variant="primary">
+                                                                        {tabIndex != tabList.length - 1
+                                                                            ? 'Next'
+                                                                            : isEdit
+                                                                                ? 'Update'
+                                                                                : 'Submit'}
+                                                                    </Button>
+                                                                }
                                                             </li>
 
                                                             {tabIndex === tabList.length - 1 && !isEdit && !checkIsLoan && (

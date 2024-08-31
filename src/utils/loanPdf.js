@@ -9,7 +9,6 @@ import {
     annualToMonthlyInterestRate,
     numberWithCommas
 } from './AllFunction';
-import { invoiceDetails } from '../pages/other/data';
 import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
 
 const LoanPdf = (props) => {
@@ -114,11 +113,11 @@ const LoanPdf = (props) => {
                         <div className="panel-body">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="">
-                                    <h3><img src={harshiniFincorpLogo} alt='harshiniFincorpLogo' style={{width:'200px'}} /></h3>
+                                    <h3><img src={harshiniFincorpLogo} alt='harshiniFincorpLogo' style={{ width: '200px' }} /></h3>
                                 </div>
                                 <div className="">
                                     <h4>
-                                        Loan No # 
+                                        Loan No #
                                         <strong>{WelcomeDetails.loanNo}</strong>
                                     </h4>
                                 </div>
@@ -280,10 +279,10 @@ const LoanPdf = (props) => {
                                                 <tr>
                                                     <th>#</th>
                                                     <th>Due Date</th>
+                                                    <th>Amount</th>
                                                     <th>Principal</th>
                                                     <th>Interest</th>
-                                                    <th>Total Payment</th>
-                                                    <th>Balance</th>
+                                                    <th>Future Principal</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -291,9 +290,9 @@ const LoanPdf = (props) => {
                                                     <tr key={idx}>
                                                         <td>{idx + 1}</td>
                                                         <td>{item.dueDate}</td>
+                                                        <td>{numberWithCommas(item.principalRepaymentAndInterest)}</td>
                                                         <td>{numberWithCommas(item.principalRepayment)}</td>
                                                         <td>{numberWithCommas(item.interestForMonth)}</td>
-                                                        <td>{numberWithCommas(item.principalRepaymentAndInterest)}</td>
                                                         <td>{numberWithCommas(item.principalRemain)}</td>
                                                     </tr>
                                                 ))}
@@ -317,7 +316,7 @@ const LoanPdf = (props) => {
                                 <Col xs={6} xl={{ offset: 3, span: 3 }}>
                                     <hr />
                                     <div className='d-flex justify-content-between'>
-                                        <h3>Total Principal : </h3>
+                                        <h3>Total : </h3>
                                         <h3 className="text-end">Rs. {numberWithCommas(principal)}</h3>
                                     </div>
                                 </Col>
