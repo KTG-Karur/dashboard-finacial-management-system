@@ -191,8 +191,6 @@ function Index() {
     return (
         <React.Fragment>
             <NotificationContainer />
-
-            {/* Table */}
             <Table
                 columns={columns}
                 Title={'Employee List'}

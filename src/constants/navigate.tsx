@@ -14,220 +14,18 @@ export type NavigateTypes = {
 
 const Navigate: NavigateTypes[] = [
     { label: 'Navigation', isTitle: true },
-    // {
-    //     label: 'Dashboard',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-view-dashboard-outline',
-    //     url: '/dashboard',
-    // },
     {
         label: 'Dashboard',
         isTitle: false,
         icon: 'mdi mdi-view-dashboard-outline',
+        url: '/dashboard',
+    },
+    {
+        label: 'Loan Calculator',
+        isTitle: false,
+        icon: 'mdi mdi-view-dashboard-outline',
         url: '/loan/dashboard',
     },
-
-    { label: 'Master', isTitle: true },
-    {
-        label: 'Master',
-        isTitle: false,
-        icon: 'mdi mdi-file-multiple-outline',
-        children: [
-            {
-                label: 'Employee',
-                isTitle: false,
-                url: '/view/employee',
-            },
-            {
-                label: 'Department',
-                isTitle: false,
-                url: '/view/department',
-            },
-            {
-                label: 'Designation',
-                isTitle: false,
-                url: '/view/designation',
-            },
-            {
-                label: 'Applicant Type',
-                isTitle: false,
-                url: '/view/applicant-type',
-            },
-            {
-                label: 'Category',
-                isTitle: false,
-                url: '/view/category',
-            },
-            {
-                label: 'Sub-Category',
-                isTitle: false,
-                url: '/view/sub-category',
-            },
-            {
-                label: 'District',
-                isTitle: false,
-                url: '/view/district',
-            },
-            {
-                label: 'State',
-                isTitle: false,
-                url: '/view/state',
-            },
-            {
-                label: 'Country',
-                isTitle: false,
-                url: '/view/country',
-            },
-            {
-                label: 'Income Type',
-                isTitle: false,
-                url: '/view/income-type',
-            },
-            {
-                label: 'Expense Type',
-                isTitle: false,
-                url: '/view/expensive-type',
-            },
-            {
-                label: 'Address Type',
-                isTitle: false,
-                url: '/view/address-type',
-            },
-            {
-                label: 'Proof Type',
-                isTitle: false,
-                url: '/view/proof-type',
-            },
-            {
-                label: 'Bank Account',
-                isTitle: false,
-                url: '/view/bank-account',
-            },
-            {
-                label: 'Income Entry',
-                isTitle: false,
-                url: '/view/income-entry',
-            },
-            {
-                label: 'Expense Entry',
-                isTitle: false,
-                url: '/view/expense-entry',
-            },
-            {
-                label: 'Applicant',
-                isTitle: false,
-                url: '/view/applicant',
-            }
-        ],
-    },
-    // {
-    //     label: 'Employee',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/employee',
-    // },
-    // {
-    //     label: 'Department',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-chemical-weapon',
-    //     url: '/view/department',
-    // },
-    // {
-    //     label: 'Designation',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-bag-checked',
-    //     url: '/view/designation',
-    // },
-    // {
-    //     label: 'Applicant Type',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/applicant-type',
-    // },
-    // {
-    //     label: 'Category',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/category',
-    // },
-    // {
-    //     label: 'Sub-Category',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/sub-category',
-    // },
-    // {
-    //     label: 'District',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/district',
-    // },
-    // {
-    //     label: 'State',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/state',
-    // },
-    // {
-    //     label: 'Country',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/country',
-    // },
-    // {
-    //     label: 'Income Type',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/income-type',
-    // },
-    // {
-    //     label: 'Expense Type',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/expensive-type',
-    // },
-    // {
-    //     label: 'Address Type',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/address-type',
-    // },
-    // {
-    //     label: 'Proof Type',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/proof-type',
-    // },
-    // {
-    //     label: 'Bank Account',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/bank-account',
-    // },
-    // {
-    //     label: 'Income Entry',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/income-entry',
-    // },
-    // {
-    //     label: 'Expense Entry',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/expense-entry',
-    // },
-    // {
-    //     label: 'Loan List',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/loan',
-    // },
-    // {
-    //     label: 'Applicant',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-calendar-blank-outline',
-    //     url: '/view/applicant',
-    // },
     { label: 'Loan', isTitle: true },
     {
         label: 'Add Loan',
@@ -241,6 +39,122 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-list-status',
         url: '/view/loan',
     },
+    { label: 'Entry', isTitle: true },
+    {
+        label: 'Income Entry',
+        isTitle: false,
+        icon: 'mdi mdi-book-arrow-left',
+        url: '/view/income-entry',
+    },
+    {
+        label: 'Expense Entry',
+        isTitle: false,
+        icon: 'mdi mdi-newspaper-variant',
+        url: '/view/expense-entry',
+    },
+    { label: 'Employee', isTitle: true },
+    {
+        label: 'Employee',
+        isTitle: false,
+        icon: 'mdi mdi-account-hard-hat',
+        url: '/view/employee',
+    },
+    { label: 'master', isTitle: true },
+    {
+        label: 'Master',
+        isTitle: false,
+        icon: 'mdi mdi-chart-donut-variant',
+        children: [
+            {
+                label: 'Address Type',
+                url: '/view/address-type',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Applicant Type',
+                url: '/view/applicant-type',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Bank Account',
+                url: '/view/bank-account',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Category',
+                url: '/view/category',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Country',
+                url: '/view/country',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Department',
+                url: '/view/department',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Designation',
+                url: '/view/designation',
+                parentKey: 'Master',
+            },
+            {
+                label: 'District',
+                url: '/view/district',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Expense Type',
+                url: '/view/expensive-type',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Income Type',
+                url: '/view/income-type',
+                parentKey: 'Master',
+            },
+            {
+                label: 'State',
+                url: '/view/state',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Sub-Category',
+                url: '/view/sub-category',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Proof Type',
+                url: '/view/proof-type',
+                parentKey: 'Master',
+            },
+
+
+            {
+                label: 'Employee',
+                url: '/view/employee',
+                parentKey: 'Master',
+            },
+            
+            
+            
+            {
+                label: 'Income Entry',
+                url: '/view/income-entry',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Expense Entry',
+                url: '/view/expense-entry',
+                parentKey: 'Master',
+            },
+        ],
+    },
+
+    
+    
     // { label: 'Apps', isTitle: true },
     // {
     //     label: 'Calendar',
