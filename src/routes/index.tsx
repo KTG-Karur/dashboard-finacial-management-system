@@ -104,6 +104,7 @@ import {
     ExpenseEntry,
     IncomeEntry,
     LoanList,
+    Role,
 } from './Route_Menu';
 
 const loading = () => <div className=""></div>;
@@ -267,6 +268,10 @@ const AllRoutes = () => {
                         {
                             path: 'applicant',
                             element: <LoadComponent component={Applicant} />,
+                        },
+                        {
+                            path: 'role',
+                            element: <LoadComponent component={Role} />,
                         },
                     ],
                 },

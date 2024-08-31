@@ -18,10 +18,11 @@ import proofTypeSaga from './proof-type/saga';
 import bankAccountSaga from './bank-account/saga';
 import expenseEntrySaga from './expense-entry/saga';
 import incomeEntrySaga from './income-entry/saga';
+import roleSaga from './role/saga';
 
 export default function* rootSaga() {
     yield all([
-        authSaga(), 
+        authSaga(),
         layoutSaga(),
         departmentSaga(),
         designationSaga(),
@@ -39,5 +40,6 @@ export default function* rootSaga() {
         bankAccountSaga(),
         expenseEntrySaga(),
         incomeEntrySaga(),
+        roleSaga(),
     ]);
 }

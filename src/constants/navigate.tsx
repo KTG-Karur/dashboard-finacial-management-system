@@ -23,10 +23,16 @@ const Navigate: NavigateTypes[] = [
     {
         label: 'Loan Calculator',
         isTitle: false,
-        icon: 'mdi mdi-view-dashboard-outline',
+        icon: 'mdi mdi-calculator',
         url: '/loan/dashboard',
     },
     { label: 'Loan', isTitle: true },
+    {
+        label: 'Applicant',
+        isTitle: false,
+        icon: 'mdi mdi-account-box',
+        url: '/view/applicant',
+    },
     {
         label: 'Add Loan',
         isTitle: false,
@@ -58,6 +64,13 @@ const Navigate: NavigateTypes[] = [
         isTitle: false,
         icon: 'mdi mdi-account-hard-hat',
         url: '/view/employee',
+    },
+    { label: 'Role Permission', isTitle: true },
+    {
+        label: 'Role',
+        isTitle: false,
+        icon: 'mdi mdi-account-check',
+        url: '/view/role',
     },
     { label: 'master', isTitle: true },
     {
@@ -131,30 +144,24 @@ const Navigate: NavigateTypes[] = [
                 parentKey: 'Master',
             },
 
-
-            {
-                label: 'Employee',
-                url: '/view/employee',
-                parentKey: 'Master',
-            },
-            
-            
-            
-            {
-                label: 'Income Entry',
-                url: '/view/income-entry',
-                parentKey: 'Master',
-            },
-            {
-                label: 'Expense Entry',
-                url: '/view/expense-entry',
-                parentKey: 'Master',
-            },
+            // {
+            //     label: 'Employee',
+            //     url: '/view/employee',
+            //     parentKey: 'Master',
+            // },
+            // {
+            //     label: 'Income Entry',
+            //     url: '/view/income-entry',
+            //     parentKey: 'Master',
+            // },
+            // {
+            //     label: 'Expense Entry',
+            //     url: '/view/expense-entry',
+            //     parentKey: 'Master',
+            // },
         ],
     },
 
-    
-    
     // { label: 'Apps', isTitle: true },
     // {
     //     label: 'Calendar',
