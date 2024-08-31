@@ -13,7 +13,7 @@ const applicantTabs = [
                         name: 'firstName',
                         inputType: 'text',
                         placeholder: 'Enter First Name',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -24,7 +24,7 @@ const applicantTabs = [
                         name: 'lastName',
                         inputType: 'text',
                         placeholder: 'Enter Last Name',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -34,7 +34,7 @@ const applicantTabs = [
                         label: 'DOB',
                         name: 'dob',
                         inputType: 'date',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -44,9 +44,9 @@ const applicantTabs = [
                         label: 'Contact No',
                         name: 'contactNo',
                         placeholder: 'Enter Contact No',
-                        maxlength: "10",
+                        maxlength: '10',
                         inputType: 'number',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -58,7 +58,7 @@ const applicantTabs = [
                         placeholder: 'Enter Alternative Contact No',
                         maxlength: 10,
                         inputType: 'number',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -68,8 +68,8 @@ const applicantTabs = [
                         label: 'Email',
                         name: 'email',
                         placeholder: 'Enter Email',
-                        inputType: 'number',
-                        require: false,
+                        inputType: 'text',
+                        require: true,
                     },
                 ],
             },
@@ -81,9 +81,9 @@ const applicantTabs = [
                         inputType: 'select',
                         optionList: 'gender',
                         displayKey: 'label',
-                        uniqueKey: 'label',
-                        onChange : 'handleSelect',
-                        require: false,
+                        uniqueKey: 'value',
+
+                        require: true,
                     },
                 ],
             },
@@ -94,7 +94,7 @@ const applicantTabs = [
                         name: 'qualification',
                         placeholder: 'Qualification',
                         inputType: 'text',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -107,8 +107,8 @@ const applicantTabs = [
                         optionList: 'marriedStatus',
                         displayKey: 'label',
                         uniqueKey: 'label',
-                        onChange : 'handleSelect',
-                        require: false,
+
+                        require: true,
                     },
                 ],
             },
@@ -126,7 +126,7 @@ const applicantTabs = [
                         name: 'fatherName',
                         inputType: 'text',
                         placeholder: 'Enter Father Name',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Father Contact',
@@ -134,21 +134,21 @@ const applicantTabs = [
                         inputType: 'number',
                         placeholder: 'Enter Father Contact',
                         maxlength: 10,
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Father Occupation',
                         name: 'fatherOccupation',
                         inputType: 'text',
                         placeholder: 'Enter Father Job',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Father Income',
                         name: 'fatherIncome',
                         inputType: 'number',
                         placeholder: 'Enter Father Income',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -159,7 +159,7 @@ const applicantTabs = [
                         name: 'motherName',
                         inputType: 'text',
                         placeholder: 'Enter Mother Name',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Mother Contact',
@@ -167,14 +167,14 @@ const applicantTabs = [
                         inputType: 'text',
                         placeholder: 'Enter Mother Contact',
                         maxlength: 10,
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Mother Occupation',
                         name: 'motherOccupation',
                         inputType: 'text',
                         placeholder: 'Enter Mother Job',
-                        require: false,
+                        require: true,
                     },
                     {
                         label: 'Mother Income',
@@ -182,7 +182,7 @@ const applicantTabs = [
                         inputType: 'text',
                         placeholder: 'Enter Mother Income',
                         maxlength: 10,
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -194,7 +194,6 @@ const applicantTabs = [
         name: 'addressInfo',
         icon: 'mdi mdi-home',
         children: [
-
             {
                 formFields: [
                     {
@@ -204,10 +203,10 @@ const applicantTabs = [
                         optionList: 'addressType',
                         displayKey: 'label',
                         uniqueKey: 'label',
-                        onChange : 'handleSelect',
-                        require: false,
-                    }
-                ]
+
+                        require: true,
+                    },
+                ],
             },
             {
                 formFields: [
@@ -216,9 +215,9 @@ const applicantTabs = [
                         name: 'address',
                         inputType: 'text',
                         placeholder: 'Enter Address',
-                        require: false,
-                    }
-                ]
+                        require: true,
+                    },
+                ],
             },
             {
                 formFields: [
@@ -227,9 +226,9 @@ const applicantTabs = [
                         name: 'landmark',
                         inputType: 'text',
                         placeholder: 'Enter Land Mark',
-                        require: false,
-                    }
-                ]
+                        require: true,
+                    },
+                ],
             },
             {
                 formFields: [
@@ -238,12 +237,11 @@ const applicantTabs = [
                         name: 'country',
                         inputType: 'select',
                         optionList: 'country',
-                        displayKey:'label',
+                        displayKey: 'label',
                         uniqueKey: 'countryId',
-                        onChange : 'handleSelect',
-                        require: false,
-                    }
-                ]
+                        require: true,
+                    },
+                ],
             },
             {
                 formFields: [
@@ -253,11 +251,10 @@ const applicantTabs = [
                         inputType: 'select',
                         optionList: 'states',
                         displayKey: 'label',
-                        uniqueKey: 'districtId',
-                        onChange : 'handleSelect',
-                        require: false,
-                    }
-                ]
+                        uniqueKey: 'stateId',
+                        require: true,
+                    },
+                ],
             },
             {
                 formFields: [
@@ -267,11 +264,10 @@ const applicantTabs = [
                         inputType: 'select',
                         optionList: 'district',
                         displayKey: 'label',
-                        uniqueKey: 'statesId',
-                        onChange : 'handleSelect',
-                        require: false,
+                        uniqueKey: 'districtId',
+                        require: true,
                     },
-                ]
+                ],
             },
             {
                 formFields: [
@@ -280,11 +276,11 @@ const applicantTabs = [
                         name: 'pincode',
                         inputType: 'number',
                         placeholder: 'Enter Pincode',
-                        require: false,
-                    }
-                ]
+                        require: true,
+                    },
+                ],
             },
-        ]
+        ],
     },
 
     {
@@ -299,7 +295,7 @@ const applicantTabs = [
                         name: 'applicantType',
                         inputType: 'select',
                         optionList: 'applicantType',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -310,7 +306,7 @@ const applicantTabs = [
                         name: 'companyname',
                         inputType: 'text',
                         placeholder: 'Enter Company/Business Name',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -321,7 +317,7 @@ const applicantTabs = [
                         name: 'companyaddress',
                         inputType: 'text',
                         placeholder: 'Enter Company/Business Address',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -331,7 +327,7 @@ const applicantTabs = [
                         label: 'Date Of Joining / Starting Date',
                         name: 'dateofjoining',
                         inputType: 'date',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -342,7 +338,7 @@ const applicantTabs = [
                         name: 'monthlyincome',
                         inputType: 'number',
                         placeholder: 'Enter Monthly Income',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -354,7 +350,7 @@ const applicantTabs = [
                         inputType: 'number',
                         placeholder: 'Enter Office No',
                         maxlength: 10,
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -375,8 +371,8 @@ const applicantTabs = [
                         optionList: 'idProof',
                         displayKey: 'label',
                         uniqueKey: 'label',
-                        onChange : 'handleSelect',
-                        require: false,
+
+                        require: true,
                     },
                 ],
             },
@@ -387,7 +383,7 @@ const applicantTabs = [
                         name: 'proofIdNo',
                         inputType: 'text',
                         placeholder: 'Enter Proof Id No',
-                        require: false,
+                        require: true,
                     },
                 ],
             },
@@ -397,14 +393,12 @@ const applicantTabs = [
                         label: 'Image Proof',
                         name: 'imageProof',
                         inputType: 'file',
-                        require: false,
-                    }
+                        require: true,
+                    },
                 ],
             },
-
         ],
-    }
-
+    },
 ];
 
 export { applicantTabs };

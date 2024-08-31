@@ -184,7 +184,6 @@ const Index = () => {
 
     // useStates
     const [state, setState] = useState({});
-    console.log(state);
     const [optionListState, setOptionListState] = useState({
         addressType: [
             { value: 'personal', label: 'Personal' },
@@ -292,7 +291,9 @@ const Index = () => {
                                           name: 'applicantType',
                                           inputType: 'select',
                                           optionList: 'applicantType',
-                                          require: false,
+                                          displayKey: 'label',
+                                          uniqueKey: 'value',
+                                          require: true,
                                       },
                                   ],
                               },
@@ -303,14 +304,14 @@ const Index = () => {
                                           name: 'companyName',
                                           inputType: 'text',
                                           placeholder: 'Enter Company Name',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Company Address',
                                           name: 'companyAddress',
                                           inputType: 'text',
                                           placeholder: 'Enter Company Address',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Office Contact No',
@@ -318,13 +319,13 @@ const Index = () => {
                                           inputType: 'number',
                                           maxlength: 10,
                                           placeholder: 'Enter Office No',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Date Of Joining',
                                           name: 'dateofjoining',
                                           inputType: 'date',
-                                          require: false,
+                                          require: true,
                                       },
                                   ],
                               },
@@ -334,21 +335,23 @@ const Index = () => {
                                           label: 'Salary Date',
                                           name: 'salaryDate',
                                           inputType: 'date',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Salary Type',
                                           name: 'salaryType',
                                           inputType: 'select',
                                           optionList: 'salaryType',
-                                          require: false,
+                                          displayKey: 'label',
+                                          uniqueKey: 'value',
+                                          require: true,
                                       },
                                       {
                                           label: 'Monthly Income',
                                           name: 'monthlyIncome',
                                           inputType: 'number',
                                           placeholder: 'Enter Monthly Income',
-                                          require: false,
+                                          require: true,
                                       },
                                   ],
                               },
@@ -366,7 +369,9 @@ const Index = () => {
                                           name: 'applicantType',
                                           inputType: 'select',
                                           optionList: 'applicantType',
-                                          require: false,
+                                          displayKey: 'label',
+                                          uniqueKey: 'value',
+                                          require: true,
                                       },
                                   ],
                               },
@@ -377,14 +382,14 @@ const Index = () => {
                                           name: 'businessName',
                                           inputType: 'text',
                                           placeholder: 'Enter Business Name',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Business Address',
                                           name: 'businessAddress',
                                           inputType: 'text',
                                           placeholder: 'Enter Business Address',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Office Contact No',
@@ -392,13 +397,13 @@ const Index = () => {
                                           inputType: 'number',
                                           maxlength: 10,
                                           placeholder: 'Enter Office No',
-                                          require: false,
+                                          require: true,
                                       },
                                       {
                                           label: 'Starting Date',
                                           name: 'startingDate',
                                           inputType: 'date',
-                                          require: false,
+                                          require: true,
                                       },
                                   ],
                               },
@@ -409,7 +414,7 @@ const Index = () => {
                                           name: 'monthlyIncome',
                                           inputType: 'number',
                                           placeholder: 'Enter Monthly Income',
-                                          require: false,
+                                          require: true,
                                       },
                                   ],
                               },
@@ -432,17 +437,17 @@ const Index = () => {
         fetchState();
     }, [state?.country, state?.states]);
 
+
     // Fetch District and State
     const fetchDistrict = async () => {
-        const result = copyStateDistrict.district.filter((item) => item.statesId === state?.states?.value);
-
+        const result = copyStateDistrict.district.filter((item) => item.statesId === state?.states);
         setOptionListState((prevState) => ({
             ...prevState,
             district: result,
         }));
     };
     const fetchState = async () => {
-        const result = copyStateDistrict.states.filter((item) => item.countryId === state?.country?.value);
+        const result = copyStateDistrict.states.filter((item) => item.countryId === state?.country);
         setOptionListState((prevState) => ({
             ...prevState,
             states: result,
@@ -588,13 +593,6 @@ const Index = () => {
         const delData = await deleteData(arrVal, id);
         setArrVal(delData);
     };
-
-    const handleCountry = (selectedObj, name) => {
-        // setState({
-        //     ...state,
-        //     [name]: selectedObj,
-        // });
-    };
     return (
         <React.Fragment>
             <NotificationContainer />
@@ -626,7 +624,7 @@ const Index = () => {
                         optionListState={optionListState}
                         columnsWizard={columnsWizard}
                         //function
-                        onChangeCallBack={{ handleSelect: handleCountry }}
+                        // onChangeCallBack={{ handleSelect: handleCountry }}
                         toggleModal={toggleModal}
                         toggle={toggle}
                         handleSubmit={handleSubmit}
