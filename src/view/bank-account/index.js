@@ -42,11 +42,6 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Applicant Name',
-            accessor: 'applicantName',
-            sort: true,
-        },
-        {
             Header: 'Holder Name',
             accessor: 'accountHolderName',
             sort: true,
@@ -111,6 +106,26 @@ function Index() {
     ];
 
     const [state, setState] = useState({});
+    const [optionListState, setOptionListState] = useState({
+        // applicantList : [
+        //     {
+        //         "applicantId" : 1,
+        //         "applicantName" : "HFC-2425-FL-0001/Aravinth",
+        //     },
+        //     {
+        //         "applicantId" : 2,
+        //         "applicantName" : "HFC-2425-FL-0001/Ragul",
+        //     },
+        //     {
+        //         "applicantId" : 3,
+        //         "applicantName" : "HFC-2425-FL-0001/Mohan",
+        //     },
+        //     {
+        //         "applicantId" : 4,
+        //         "applicantName" : "HFC-2425-FL-0001/Jeeva",
+        //     },
+        // ]
+    });
     const [parentList, setParentList] = useState([]);
     const [selectedItem, setSelectedItem] = useState({});
     const [selectedIndex, setSelectedIndex] = useState(false);
@@ -173,7 +188,7 @@ function Index() {
     const onFormClear = () => {
         setState({
             ...state,
-            // applicantId: '',
+            applicantId: '',
             accountHolderName: '',
             bankName: '',
             branchName: '',
@@ -191,7 +206,7 @@ function Index() {
     const onEditForm = (data, index) => {
         setState({
             ...state,
-            // applicantId: data?.applicantId || "",
+            applicantId: data?.applicantId || "",
             accountHolderName: data?.accountHolderName || "",
             bankName: data?.bankName || "",
             branchName: data?.branchName || "",
@@ -210,7 +225,7 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
-             // applicantId: state?.applicantId || "",
+             applicantId: state?.applicantId || "",
              accountHolderName: state?.accountHolderName || "",
              bankName: state?.bankName || "",
              branchName: state?.branchName || "",
@@ -260,6 +275,7 @@ function Index() {
                     handleSubmit={onFormSubmit}
                     setState={setState}
                     state={state}
+                    optionListState={optionListState}
                     ref={errorHandle}
                     noOfColumns={1}
                     errors={errors}

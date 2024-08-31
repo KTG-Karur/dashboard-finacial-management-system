@@ -4,35 +4,40 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
-import { createIncomeTypeRequest, getIncomeTypeRequest, resetCreateIncomeType, resetGetIncomeType, resetUpdateIncomeType, updateIncomeTypeRequest } from '../../redux/actions';
+import { dateConversion, showConfirmationDialog, showMessage } from '../../utils/AllFunction';
+import { createExpenseEntryRequest, getExpenseEntryRequest, getExpensiveTypeRequest, resetCreateExpenseEntry, resetGetExpenseEntry, resetGetExpensiveType, resetUpdateExpenseEntry, updateExpenseEntryRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
 
-let isEdit = false; 
+let isEdit = false;
 
 function Index() {
 
     const { dispatch, appSelector } = useRedux();
 
-    const { getIncomeTypeSuccess, getIncomeTypeList, getIncomeTypeFailure,
-        createIncomeTypeSuccess, createIncomeTypeData, createIncomeTypeFailure,
-        updateIncomeTypeSuccess, updateIncomeTypeData, updateIncomeTypeFailure,errorMessage
+    const { getExpenseEntrySuccess, getExpenseEntryList, getExpenseEntryFailure,
+        getExpensiveTypeSuccess, getExpensiveTypeList, getExpensiveTypeFailure,
+        createExpenseEntrySuccess, createExpenseEntryData, createExpenseEntryFailure,
+        updateExpenseEntrySuccess, updateExpenseEntryData, updateExpenseEntryFailure,errorMessage
 
     } = appSelector((state) => ({
-        getIncomeTypeSuccess: state.incomeTypeReducer.getIncomeTypeSuccess,
-        getIncomeTypeList: state.incomeTypeReducer.getIncomeTypeList,
-        getIncomeTypeFailure: state.incomeTypeReducer.getIncomeTypeFailure,
+        getExpenseEntrySuccess: state.expenseEntryReducer.getExpenseEntrySuccess,
+        getExpenseEntryList: state.expenseEntryReducer.getExpenseEntryList,
+        getExpenseEntryFailure: state.expenseEntryReducer.getExpenseEntryFailure,
 
-        createIncomeTypeSuccess: state.incomeTypeReducer.createIncomeTypeSuccess,
-        createIncomeTypeData: state.incomeTypeReducer.createIncomeTypeData,
-        createIncomeTypeFailure: state.incomeTypeReducer.createIncomeTypeFailure,
+        getExpensiveTypeSuccess: state.expensiveTypeReducer.getExpensiveTypeSuccess,
+        getExpensiveTypeList: state.expensiveTypeReducer.getExpensiveTypeList,
+        getExpensiveTypeFailure: state.expensiveTypeReducer.getExpensiveTypeFailure,
 
-        updateIncomeTypeSuccess: state.incomeTypeReducer.updateIncomeTypeSuccess,
-        updateIncomeTypeData: state.incomeTypeReducer.updateIncomeTypeData,
-        updateIncomeTypeFailure: state.incomeTypeReducer.updateIncomeTypeFailure,
+        createExpenseEntrySuccess: state.expenseEntryReducer.createExpenseEntrySuccess,
+        createExpenseEntryData: state.expenseEntryReducer.createExpenseEntryData,
+        createExpenseEntryFailure: state.expenseEntryReducer.createExpenseEntryFailure,
 
-        errorMessage: state.incomeTypeReducer.errorMessage,
+        updateExpenseEntrySuccess: state.expenseEntryReducer.updateExpenseEntrySuccess,
+        updateExpenseEntryData: state.expenseEntryReducer.updateExpenseEntryData,
+        updateExpenseEntryFailure: state.expenseEntryReducer.updateExpenseEntryFailure,
+
+        errorMessage: state.expenseEntryReducer.errorMessage,
     }));
 
     const columns = [
@@ -42,8 +47,23 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Income Type Name',
-            accessor: 'incomeTypeName',
+            Header: 'Expense Type',
+            accessor: 'expenseTypeName',
+            sort: true,
+        },
+        {
+            Header: 'Expense Amount',
+            accessor: 'expenseAmount',
+            sort: true,
+        },
+        {
+            Header: 'Description',
+            accessor: 'description',
+            sort: true,
+        },
+        {
+            Header: 'Created By',
+            accessor: 'employeeName',
             sort: true,
         },
         {
@@ -92,6 +112,23 @@ function Index() {
 
     const [state, setState] = useState({});
     const [parentList, setParentList] = useState([]);
+    const [optionListState, setOptionListState] = useState({
+        expenseTypeList : [],
+        employeeList : [
+            {
+                employeeId : 1,
+                employeeName : "Mohan"
+            },
+            {
+                employeeId : 2,
+                employeeName : "Kathir"
+            },
+            {
+                employeeId : 3,
+                employeeName : "Naveen"
+            },
+        ]
+    })
     const [selectedItem, setSelectedItem] = useState({});
     const [selectedIndex, setSelectedIndex] = useState(false);
     const [modal, setModal] = useState(false);
@@ -102,47 +139,66 @@ function Index() {
 
     useEffect(() => {
         setIsLoading(true)
-        dispatch(getIncomeTypeRequest());
+        dispatch(getExpenseEntryRequest());
+        dispatch(getExpensiveTypeRequest());
     }, []);
 
     useEffect(() => {
-        if (getIncomeTypeSuccess) {
+        if (getExpenseEntrySuccess) {
             setIsLoading(false)
-            setParentList(getIncomeTypeList)
-            dispatch(resetGetIncomeType())
-        } else if (getIncomeTypeFailure) {
+            setParentList(getExpenseEntryList)
+            dispatch(resetGetExpenseEntry())
+        } else if (getExpenseEntryFailure) {
             setIsLoading(false)
             setParentList([])
-            dispatch(resetGetIncomeType())
+            dispatch(resetGetExpenseEntry())
         }
-    }, [getIncomeTypeSuccess, getIncomeTypeFailure]);
+    }, [getExpenseEntrySuccess, getExpenseEntryFailure]);
 
     useEffect(() => {
-        if (createIncomeTypeSuccess) {
-            const temp_state = [createIncomeTypeData[0], ...parentList];
+        if (getExpensiveTypeSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                expenseTypeList :getExpensiveTypeList
+            })
+            dispatch(resetGetExpensiveType())
+        } else if (getExpensiveTypeFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                expenseTypeList : []
+            })
+            dispatch(resetGetExpensiveType())
+        }
+    }, [getExpensiveTypeSuccess, getExpensiveTypeFailure]);
+
+    useEffect(() => {
+        if (createExpenseEntrySuccess) {
+            const temp_state = [createExpenseEntryData[0], ...parentList];
             setParentList(temp_state)
             showMessage('success', 'Created Successfully');
             closeModel()
-            dispatch(resetCreateIncomeType())
-        } else if (createIncomeTypeFailure) {
+            dispatch(resetCreateExpenseEntry())
+        } else if (createExpenseEntryFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetCreateIncomeType())
+            dispatch(resetCreateExpenseEntry())
         }
-    }, [createIncomeTypeSuccess, createIncomeTypeFailure]);
+    }, [createExpenseEntrySuccess, createExpenseEntryFailure]);
 
     useEffect(() => {
-        if (updateIncomeTypeSuccess) {
+        if (updateExpenseEntrySuccess) {
             const temp_state = [...parentList];
-            temp_state[selectedIndex] = updateIncomeTypeData[0];
+            temp_state[selectedIndex] = updateExpenseEntryData[0];
             setParentList(temp_state)
             isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
-            dispatch(resetUpdateIncomeType())
-        } else if (updateIncomeTypeFailure) {
+            dispatch(resetUpdateExpenseEntry())
+        } else if (updateExpenseEntryFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetUpdateIncomeType())
+            dispatch(resetUpdateExpenseEntry())
         }
-    }, [updateIncomeTypeSuccess, updateIncomeTypeFailure]);
+    }, [updateExpenseEntrySuccess, updateExpenseEntryFailure]);
 
     const closeModel = () => {
         isEdit = false;
@@ -153,7 +209,11 @@ function Index() {
     const onFormClear = () => {
         setState({
             ...state,
-            incomeTypeName: '',
+            expenseDate: '',
+            expenseTypeId: '',
+            expenseAmount: '',
+            description: '',
+            createdBy: '',
         });
     };
 
@@ -166,7 +226,11 @@ function Index() {
     const onEditForm = (data, index) => {
         setState({
             ...state,
-            incomeTypeName: data?.incomeTypeName || "",
+            expenseDate: data.expenseDate ? dateConversion(data.expenseDate, "YYYY-MM-DD") : "",
+            expenseTypeId: data?.expenseTypeId || "",
+            description: data?.description || "",
+            createdBy: data?.createdBy || "",
+            expenseAmount: data?.expenseAmount || "",
         });
         isEdit = true;
         setSelectedItem(data)
@@ -180,12 +244,16 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
-            incomeTypeName: state?.incomeTypeName || ""
+            expenseDate: state?.expenseDate || "",
+            expenseTypeId: state?.expenseTypeId || "",
+            description: state?.description || "",
+            createdBy: state?.createdBy || "",
+            expenseAmount: state?.expenseAmount || "",
         }
         if (isEdit) {
-            dispatch(updateIncomeTypeRequest(submitRequest, selectedItem.incomeTypeId))
+            dispatch(updateExpenseEntryRequest(submitRequest, selectedItem.expenseEntryId))
         } else {
-            dispatch(createIncomeTypeRequest(submitRequest))
+            dispatch(createExpenseEntryRequest(submitRequest))
         }
     };
 
@@ -194,12 +262,12 @@ function Index() {
             isActive: activeChecker == 0 ? 1 : 0
         }
         setSelectedIndex(index)
-        dispatch(updateIncomeTypeRequest(submitRequest, data.incomeTypeId))
+        dispatch(updateExpenseEntryRequest(submitRequest, data.expenseEntryId))
     };
 
     return (
         <React.Fragment>
-             <NotificationContainer />
+        <NotificationContainer />
            { isLoading ? <div className='bg-light opacity-0.25'>
             <div className="d-flex justify-content-center m-5">
                 <Spinner className='mt-5 mb-5' animation="border" />
@@ -207,7 +275,7 @@ function Index() {
             </div> :
             <Table
                 columns={columns}
-                Title={'Income Type List'}
+                Title={'ExpenseEntry List'}
                 data={parentList || []}
                 pageSize={5}
                 toggle={createModel}
@@ -216,13 +284,14 @@ function Index() {
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={'Income Type'}
+                modelHeader={'ExpenseEntry'}
                 modelSize={'md'}
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>
                 <FormLayout
                     dynamicForm={formContainer}
                     handleSubmit={onFormSubmit}
+                    optionListState={optionListState}
                     setState={setState}
                     state={state}
                     ref={errorHandle}

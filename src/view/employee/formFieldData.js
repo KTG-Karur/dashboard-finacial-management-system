@@ -2,21 +2,36 @@ const employeeFormContainer = [
     {
         formFields: [
             {
-                'label': "Employee Name",
-                'name': "employeename",
+                'label': "First Name",
+                'name': "firstName",
                 'inputType': "text",
-                'placeholder': "Enter Employee Name",
+                'placeholder': "Enter First Name",
+                'require': true
+            },
+            {
+                'label': "Last Name",
+                'name': "lastName",
+                'inputType': "text",
+                'placeholder': "Enter Last Name",
                 'require': true
             },
             {
                 'label': "Contact Number",
-                'name': "contactnumber",
+                'name': "contactNo",
                 'inputType': "number",
                 'placeholder': "Enter Contact Number",
                 'require': true
             },
             {
-                'label': "Employee DOB",
+                'label': "Email Id",
+                'name': "emailId",
+                'inputType': "text",
+                'type' : 'email',
+                'placeholder': "Enter Email Id",
+                'require': true
+            },
+            {
+                'label': "DOB",
                 'name': "dob",
                 'inputType': "date",
                 'require': false

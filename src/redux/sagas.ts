@@ -16,6 +16,8 @@ import incomeTypeSaga from './income-type/saga';
 import addressTypeSaga from './address-type/saga';
 import proofTypeSaga from './proof-type/saga';
 import bankAccountSaga from './bank-account/saga';
+import expenseEntrySaga from './expense-entry/saga';
+import incomeEntrySaga from './income-entry/saga';
 
 export default function* rootSaga() {
     yield all([
@@ -35,5 +37,7 @@ export default function* rootSaga() {
         addressTypeSaga(),
         proofTypeSaga(),
         bankAccountSaga(),
+        expenseEntrySaga(),
+        incomeEntrySaga(),
     ]);
 }

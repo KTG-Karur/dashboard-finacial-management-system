@@ -42,7 +42,7 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'ProofType Name',
+            Header: 'Proof Type Name',
             accessor: 'proofTypeName',
             sort: true,
         },
@@ -183,7 +183,7 @@ function Index() {
             proofTypeName: state?.proofTypeName || ""
         }
         if (isEdit) {
-            dispatch(updateProofTypeRequest(submitRequest, selectedItem.proofTypeId))
+            dispatch(updateProofTypeRequest(submitRequest, selectedItem.applicantProofTypeId))
         } else {
             dispatch(createProofTypeRequest(submitRequest))
         }
@@ -194,7 +194,7 @@ function Index() {
             isActive: activeChecker == 0 ? 1 : 0
         }
         setSelectedIndex(index)
-        dispatch(updateProofTypeRequest(submitRequest, data.proofTypeId))
+        dispatch(updateProofTypeRequest(submitRequest, data.applicantProofTypeId))
     };
 
     return (
@@ -207,7 +207,7 @@ function Index() {
             </div> :
             <Table
                 columns={columns}
-                Title={'ProofType List'}
+                Title={'Proof Type List'}
                 data={parentList || []}
                 pageSize={5}
                 toggle={createModel}
@@ -216,7 +216,7 @@ function Index() {
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={'ProofType'}
+                modelHeader={'Proof Type'}
                 modelSize={'md'}
                 isEdit={isEdit}
                 handleSubmit={handleValidation}>

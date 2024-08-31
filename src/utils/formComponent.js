@@ -110,7 +110,7 @@ function FormComponent(props) {
                                     </span>
                                 </Form.Label>
                                 <Form.Control
-                                    type="text"
+                                    type={form?.type || "text"}
                                     name={form?.name}
                                     className="mb-1"
                                     placeholder={form?.placeholder}
@@ -125,7 +125,7 @@ function FormComponent(props) {
                                 {errors?.includes(form?.name) && (
                                     <p
                                         className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{form.errorMsg ? form.errorMsg :  `* Please Enter ${form?.label || "Given Field"}`}</p>
+                                        style={{ fontWeight: 'bold' }}>{form.errorMsg ? form.errorMsg : `* Please Enter ${form?.label || "Given Field"}`}</p>
                                 )}
                             </div>
                         );
@@ -257,7 +257,7 @@ function FormComponent(props) {
                                     disabled={form?.isDisabled}
                                     onChange={(option) => {
                                         form.onChange ? onChangeCallBack[form.onChange](option, form.name) :
-                                        handleChange(option[form.uniqueKey], 'select', form?.name);
+                                            handleChange(option[form.uniqueKey], 'select', form?.name);
                                     }}
                                     // getOptionLabel={(option) => option?.label}
                                     getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
@@ -322,34 +322,34 @@ function FormComponent(props) {
                                     {' '}
                                     {
                                         <span>
-                                            {form?.label}{' '}
+                                            {form?.label || ""}{' '}
                                             {form?.require ? (
                                                 <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
                                             ) : null}
                                         </span>
                                     }
                                 </p>
-                                {[
-                                    { label: 'a', value: 'a' },
-                                    { label: 'b', value: 'b' },
-                                    { label: 'c', value: 'c' },
-                                ].map((item, i) => {
+                                <div className='d-flex'>
+                                {(optionListState?.[form?.optionList] || []).map((item, i) => {
                                     return (
                                         <Form.Check
                                             key={i}
-                                            label={form?.label}
+                                            label={item[form.displayKey] || ""}
                                             type="radio"
                                             id={`basic-radio-${i}`}
-                                            name={form?.name}
-                                            className={'mb-2 form-check-Primary'}
-                                            defaultChecked={form?.defaultChecked}
+                                            name={form?.name || ""}
+                                            className={'mb-2 form-check-Primary mx-2'}
+                                            defaultChecked={i === 0}
                                             value={state[form?.name]}
                                             onChange={(e) => {
-                                                handleChange(item, 'radio', form?.name);
+                                                form.onChange ? onChangeCallBack[form.onChange](item, form.name) :
+                                                    handleChange(item, 'radio', form?.name);
                                             }}
                                         />
                                     );
                                 })}
+                                </div>
+                                
                             </div>
                         );
                     default:

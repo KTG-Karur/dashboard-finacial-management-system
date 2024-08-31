@@ -184,7 +184,9 @@ function Index() {
     const onFormClear = () => {
         setState({
             ...state,
-            subCategoryName: '',
+            subCategoryName: "",
+            interestRate: "",
+            categoryId : ""
         });
     };
 
@@ -197,6 +199,8 @@ function Index() {
     const onEditForm = (data, index) => {
         setState({
             ...state,
+            categoryId : data?.categoryId || "",
+            interestRate : data?.interestRate || "",
             subCategoryName: data?.subCategoryName || "",
         });
         isEdit = true;
@@ -211,6 +215,8 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
+            categoryId : state?.categoryId || "",
+            interestRate : state.interestRate ? parseInt(state.interestRate) : 0,
             subCategoryName: state?.subCategoryName || ""
         }
         if (isEdit) {

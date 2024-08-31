@@ -107,6 +107,24 @@ const Navigate: NavigateTypes[] = [
         url: '/view/bank-account',
     },
     {
+        label: 'Income Entry',
+        isTitle: false,
+        icon: 'mdi mdi-calendar-blank-outline',
+        url: '/view/income-entry',
+    },
+    {
+        label: 'Expense Entry',
+        isTitle: false,
+        icon: 'mdi mdi-calendar-blank-outline',
+        url: '/view/expense-entry',
+    },
+    {
+        label: 'Loan List',
+        isTitle: false,
+        icon: 'mdi mdi-calendar-blank-outline',
+        url: '/view/loan',
+    },
+    {
         label: 'Applicant',
         isTitle: false,
         icon: 'mdi mdi-calendar-blank-outline',

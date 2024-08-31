@@ -26,6 +26,9 @@ export const IncomeType = React.lazy(() => import('../view/income-type'));
 export const AddressType = React.lazy(() => import('../view/address-type'));
 export const ProofType = React.lazy(() => import('../view/proof-type'));
 export const BankAccount = React.lazy(() => import('../view/bank-account'));
+export const IncomeEntry = React.lazy(() => import('../view/income-entry'));
+export const ExpenseEntry = React.lazy(() => import('../view/expense-entry'));
+export const LoanList = React.lazy(() => import('../view/loan-list'));
 
 // apps
 export const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));

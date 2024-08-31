@@ -17,6 +17,13 @@ const subCategoryContainer = [
                 'placeholder': "Enter Sub-Category Name",
                 'require': true
             },
+            {
+                'label': "Interest Rate",
+                'name': "interestRate",
+                'inputType': "text",
+                'placeholder': "Enter Interest Rate",
+                'require': true
+            },
         ]
     },
 ]

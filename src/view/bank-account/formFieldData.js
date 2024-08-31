@@ -1,6 +1,15 @@
 const formContainer = [
     {
         formFields: [
+            // {
+            //     label: 'Applicant',
+            //     name: 'applicantId',
+            //     inputType: 'select',
+            //     optionList: 'applicantList',
+            //     displayKey: 'applicantName',
+            //     uniqueKey: 'applicantId',
+            //     // require: true,
+            // },
             {
                 'label': "Account Holder Name",
                 'name': "accountHolderName",
