@@ -33,7 +33,7 @@ export const LoanList = React.lazy(() => import('../view/loan-list'));
 export const Role = React.lazy(() => import('../view/role'));
 
 // Loan
-export const AddLoan=React.lazy(()=> import('../view/addLoan'));
+export const AddLoan=React.lazy(()=> import('../view/addLoan/newAddLoan'));
 
 // apps
 export const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));

@@ -11,11 +11,13 @@ function FormComponent(props) {
         setState,
         errors,
         onChangeCallBack,
+        onClickCallBack,
         removeHanldeErrors,
         state,
         toggleModal = null,
         showSelectmodel = [],
         optionListState,
+        IsEditArrVal = false,
     } = props;
 
     const handleChange = async (e, formType, formName) => {
@@ -62,13 +64,33 @@ function FormComponent(props) {
         }
     };
 
+
+
+    const shouldShowElement = (parentKey, childKey) => {
+        if (parentKey && childKey) {
+            return [childKey].includes(state[parentKey]);
+        }
+        return true;
+    };
+
     return (
         <div className='row'>
             {formField.map((form, index) => {
                 switch (form?.inputType) {
+                    case 'title':
+                        return (
+                            <h4 className='mb-3 mt-2' key={index} >{form?.title || ''}</h4>
+                        )
+                    case 'button':
+                        return (
+                            <div key={index}  style={{ height: "100px", display: "flex", justifyContent: "start", alignItems: "center" }}>
+                                <Button variant='success' onClick={() => { onClickCallBack[form?.onClick]() }}>{IsEditArrVal ? "Update" : form?.label || ''}</Button>
+                            </div>
+                        )
                     case 'textarea':
                         return (
-                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}
@@ -100,7 +122,8 @@ function FormComponent(props) {
                         );
                     case 'text':
                         return (
-                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -131,7 +154,8 @@ function FormComponent(props) {
                         );
                     case 'file':
                         return (
-                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -161,7 +185,8 @@ function FormComponent(props) {
                         );
                     case 'number':
                         return (
-                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -183,7 +208,8 @@ function FormComponent(props) {
                                         const value = e.target.value;
                                         // Check if the value exceeds the maxlength
                                         if (!form?.maxlength || value.length <= form?.maxlength) {
-                                            handleChange(e, 'number', form?.name);
+                                            form.onChange ? onChangeCallBack[form.onChange](e.target.value, form.name) :
+                                                handleChange(e, 'number', form.name);
                                         }
                                     }}
                                 />
@@ -196,7 +222,8 @@ function FormComponent(props) {
                         );
                     case 'date':
                         return (
-                            <div key={index} className={`${form?.classStyle || "" } mb-2`}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -228,7 +255,8 @@ function FormComponent(props) {
                         );
                     case 'select':
                         return (
-                            <div className={`${form?.classStyle || "" } mb-2`} key={index}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div className={`${form?.classStyle || ""} mb-2`} key={index}>
                                 <Form.Label>
                                     <span>
                                         {form?.label}{' '}
@@ -280,7 +308,8 @@ function FormComponent(props) {
                         );
                     case 'checkbox':
                         return (
-                            <div className={`${form?.classStyle || "" } mb-2`} key={index}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div className={`${form?.classStyle || ""} mb-2`} key={index}>
                                 <p className="mb-1 fw-bold text-muted">
                                     {' '}
                                     {
@@ -317,7 +346,8 @@ function FormComponent(props) {
                         );
                     case 'radio':
                         return (
-                            <div className={`${form?.classStyle || "" } mb-3`} key={index}>
+                            shouldShowElement(form?.parentKey, form?.childKey) &&
+                            <div className={`${form?.classStyle || ""} mb-3`} key={index}>
                                 <p className="mb-1 fw-bold text-muted">
                                     {' '}
                                     {
@@ -330,26 +360,26 @@ function FormComponent(props) {
                                     }
                                 </p>
                                 <div className='d-flex'>
-                                {(optionListState?.[form?.optionList] || []).map((item, i) => {
-                                    return (
-                                        <Form.Check
-                                            key={i}
-                                            label={item[form.displayKey] || ""}
-                                            type="radio"
-                                            id={`basic-radio-${i}`}
-                                            name={form?.name || ""}
-                                            className={'mb-2 form-check-Primary mx-2'}
-                                            defaultChecked={i === 0}
-                                            value={state[form?.name]}
-                                            onChange={(e) => {
-                                                form.onChange ? onChangeCallBack[form.onChange](item, form.name) :
-                                                    handleChange(item, 'radio', form?.name);
-                                            }}
-                                        />
-                                    );
-                                })}
+                                    {(optionListState?.[form?.optionList] || []).map((item, i) => {
+                                        return (
+                                            <Form.Check
+                                                key={i}
+                                                label={item[form.displayKey] || ""}
+                                                type="radio"
+                                                id={`basic-radio-${i}`}
+                                                name={form?.name || ""}
+                                                className={'mb-2 form-check-Primary mx-2'}
+                                                defaultChecked={i === 0}
+                                                value={state[form?.name]}
+                                                onChange={(e) => {
+                                                    form.onChange ? onChangeCallBack[form.onChange](item, form.name) :
+                                                        handleChange(item, 'radio', form?.name);
+                                                }}
+                                            />
+                                        );
+                                    })}
                                 </div>
-                                
+
                             </div>
                         );
                     default:

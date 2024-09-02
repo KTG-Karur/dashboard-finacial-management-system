@@ -622,7 +622,7 @@ const Index = () => {
                         showSelectmodel={showSelectmodel}
                         showMultiAdd={showMultiAdd}
                         optionListState={optionListState}
-                        columnsWizard={columnsWizard}
+                        columnsWizard={columnsWizard}  
                         //function
                         // onChangeCallBack={{ handleSelect: handleCountry }}
                         toggleModal={toggleModal}

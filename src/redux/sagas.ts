@@ -19,6 +19,7 @@ import bankAccountSaga from './bank-account/saga';
 import expenseEntrySaga from './expense-entry/saga';
 import incomeEntrySaga from './income-entry/saga';
 import roleSaga from './role/saga';
+import addLoanSaga from './add-loan/saga';
 
 export default function* rootSaga() {
     yield all([
@@ -41,5 +42,6 @@ export default function* rootSaga() {
         expenseEntrySaga(),
         incomeEntrySaga(),
         roleSaga(),
+        addLoanSaga(),
     ]);
 }

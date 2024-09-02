@@ -75,6 +75,10 @@ function percentageVal(amount, percentage) {
     return (parseInt(amount) * parseInt(percentage)) / 100;
 }
 
+function ValtoPercentage(amount, percentage) {
+    return (parseInt(amount) / parseInt(percentage)) * 100;
+}
+
 const dateConversion = (date, format = "DD-MM-YYYY") => {
     const result = date ? moment(date).format(format) : "";
     return result
@@ -182,6 +186,7 @@ export {
     findObj,
     findArrObj,
     percentageVal,
+    ValtoPercentage,
     dateConversion,
 
     emiCalculation,
@@ -191,4 +196,5 @@ export {
     annualToMonthlyInterestRate,
     calculateTotalInterestPayable,
     numberWithCommas,
+    
 };
