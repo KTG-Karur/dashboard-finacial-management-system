@@ -18,6 +18,26 @@ export const resetGetApplicant = () => ({
   type: 'RESET_GET_APPLICANT',
 });
 
+//Get-Details Reducer Call--->
+export const getApplicantInfoRequest = (params?: any) => ({
+  type: 'GET_APPLICANT_INFO_REQUEST',
+  payload: params,
+});
+
+export const getApplicantInfoSuccess = (data: any) => ({
+  type: 'GET_APPLICANT_INFO_SUCCESS',
+  payload: { data },
+});
+
+export const getApplicantInfoFailure = (errorMessage: string) => ({
+  type: 'GET_APPLICANT_INFO_FAILURE',
+  errorMessage: { errorMessage },
+});
+
+export const resetGetApplicantInfo = () => ({
+  type: 'RESET_GET_APPLICANT_INFO',
+});
+
 //Create Reducer Call--->
 export const createApplicantRequest = (data: any) => ({
   type: 'CREATE_APPLICANT_REQUEST',

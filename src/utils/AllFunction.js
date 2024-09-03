@@ -56,7 +56,7 @@ function deleteData(arr, id) {
     });
 }
 
-function findObj(optionList = [], accessKey , value = "") {
+function findObj(optionList = [], accessKey , value) {
     const filterData = optionList.filter((item) => item[accessKey] === value);
     return filterData.length > 0 ? filterData[0] : ""
 }

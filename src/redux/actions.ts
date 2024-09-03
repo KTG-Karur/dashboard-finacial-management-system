@@ -22,3 +22,5 @@ export * from './add-loan/actions';
 export * from './loan-charges/actions';
 
 export * from './applicant/actions';
+export * from './employee/actions';
+export * from './loan-charges-type/actions';

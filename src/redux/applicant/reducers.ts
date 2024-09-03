@@ -42,6 +42,31 @@ export default function applicantReducer(state = initialState, action: any) {
         errorMessage: null,
       };
     }
+    case "GET_APPLICANT_INFO_SUCCESS": {
+      return {
+        ...state,
+        getApplicantInfoSuccess: true,
+        getApplicantInfoList: action.payload.data.data,
+        getApplicantInfoFailure: false,
+      };
+    }
+    case "GET_APPLICANT_INFO_FAILURE": {
+      return {
+        ...state,
+        getApplicantInfoFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        getApplicantInfoSuccess: false,
+      };
+    }
+    case "RESET_GET_APPLICANT_INFO": {
+      return {
+        ...state,
+        getApplicantInfoSuccess: false,
+        getApplicantInfoFailure: false,
+        getApplicantInfoList: [],
+        errorMessage: null,
+      };
+    }
 
     case "CREATE_APPLICANT_SUCCESS": {
       return {
