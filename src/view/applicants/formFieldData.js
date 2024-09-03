@@ -34,7 +34,6 @@ const applicantTabs = [
                         label: 'DOB',
                         name: 'dob',
                         inputType: 'date',
-                        require: true,
                     },
                 ],
             },
@@ -58,7 +57,6 @@ const applicantTabs = [
                         placeholder: 'Enter Alternative Contact No',
                         maxlength: 10,
                         inputType: 'number',
-                        require: true,
                     },
                 ],
             },
@@ -69,7 +67,6 @@ const applicantTabs = [
                         name: 'email',
                         placeholder: 'Enter Email',
                         inputType: 'text',
-                        require: true,
                     },
                 ],
             },
@@ -77,13 +74,13 @@ const applicantTabs = [
                 formFields: [
                     {
                         label: 'Gender',
-                        name: 'gender',
+                        name: 'genderId',
                         inputType: 'select',
-                        optionList: 'gender',
-                        displayKey: 'label',
-                        uniqueKey: 'value',
-
+                        optionList: 'genderList',
+                        displayKey: 'genderName',
+                        uniqueKey: 'genderId',
                         require: true,
+                        selectedObj : "genderObj"
                     },
                 ],
             },
@@ -94,21 +91,209 @@ const applicantTabs = [
                         name: 'qualification',
                         placeholder: 'Qualification',
                         inputType: 'text',
-                        require: true,
                     },
                 ],
             },
             {
                 formFields: [
                     {
-                        label: 'Married status',
-                        name: 'marriedStatus',
+                        label: 'Marital Status',
+                        name: 'maritalStatusId',
                         inputType: 'select',
-                        optionList: 'marriedStatus',
-                        displayKey: 'label',
-                        uniqueKey: 'label',
-
-                        require: true,
+                        optionList: 'maritalStatusList',
+                        displayKey: 'maritalStatusName',
+                        uniqueKey: 'maritalStatusId',
+                        selectedObj : "maritalStatusObj"
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        label: 'Id Proof',
+        name: 'idProof',
+        icon: 'mdi mdi-checkbox-marked-circle-outline',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Proof Type',
+                        name: 'proofTypeId',
+                        inputType: 'select',
+                        optionList: 'proofTypeList',
+                        displayKey: 'proofTypeName',
+                        uniqueKey: 'applicantProofTypeId',
+                        onChange : "onHandleProofType",
+                        selectedObj : "proofTypeObj"
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Id No.',
+                        name: 'proofNo',
+                        inputType: 'text',
+                        placeholder: 'Enter Proof Id No',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Image Proof',
+                        name: 'imageProof',
+                        inputType: 'file',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        label: 'Address Info',
+        name: 'addressInfo',
+        icon: 'mdi mdi-home',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Address Type',
+                        name: 'addressTypeId',
+                        inputType: 'select',
+                        optionList: 'addressTypeList',
+                        displayKey: 'addressTypeName',
+                        uniqueKey: 'addressTypeId',
+                        onChange : "onHandleProofType",
+                        selectedObj : "addressTypeObj"
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Address',
+                        name: 'address',
+                        inputType: 'text',
+                        placeholder: 'Enter Address',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Land Mark',
+                        name: 'landmark',
+                        inputType: 'text',
+                        placeholder: 'Enter Land Mark',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'State',
+                        name: 'stateId',
+                        inputType: 'select',
+                        optionList: 'stateList',
+                        displayKey: 'stateName',
+                        uniqueKey: 'stateId',
+                        onChange : "onHandleState",
+                        selectedObj : "stateObj"
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'District',
+                        name: 'districtId',
+                        inputType: 'select',
+                        optionList: 'districtList',
+                        displayKey: 'districtName',
+                        uniqueKey: 'districtId',
+                        onChange : "onHandleProofType",
+                        selectedObj : "districtObj"
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Pincode',
+                        name: 'pincode',
+                        inputType: 'number',
+                        placeholder: 'Enter Pincode',
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        label: 'Income Info',
+        name: 'incomeInfo',
+        icon: 'mdi mdi-cash',
+        children: [
+            {
+                formFields: [
+                    {
+                        label: 'Applicant type',
+                        name: 'applicantTypeId',
+                        inputType: 'select',
+                        optionList: 'applicantTypeList',
+                        displayKey: 'applicantTypeName',
+                        uniqueKey: 'applicantTypeId',
+                        onChange : "onHandleProofType",
+                        selectedObj : "applicantTypeObj"
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Company / Business Name',
+                        name: 'companyname',
+                        inputType: 'text',
+                        placeholder: 'Enter Company/Business Name',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Company / Business Address',
+                        name: 'companyaddress',
+                        inputType: 'text',
+                        placeholder: 'Enter Company/Business Address',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Date Of Joining / Starting Date',
+                        name: 'dateofjoining',
+                        inputType: 'date',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Monthly Income',
+                        name: 'monthlyincome',
+                        inputType: 'number',
+                        placeholder: 'Enter Monthly Income',
+                    },
+                ],
+            },
+            {
+                formFields: [
+                    {
+                        label: 'Office Contact No',
+                        name: 'officeContactNo',
+                        inputType: 'number',
+                        placeholder: 'Enter Office No',
+                        maxlength: 10,
                     },
                 ],
             },
@@ -126,7 +311,6 @@ const applicantTabs = [
                         name: 'fatherName',
                         inputType: 'text',
                         placeholder: 'Enter Father Name',
-                        require: true,
                     },
                     {
                         label: 'Father Contact',
@@ -134,21 +318,18 @@ const applicantTabs = [
                         inputType: 'number',
                         placeholder: 'Enter Father Contact',
                         maxlength: 10,
-                        require: true,
                     },
                     {
                         label: 'Father Occupation',
                         name: 'fatherOccupation',
                         inputType: 'text',
                         placeholder: 'Enter Father Job',
-                        require: true,
                     },
                     {
                         label: 'Father Income',
                         name: 'fatherIncome',
                         inputType: 'number',
                         placeholder: 'Enter Father Income',
-                        require: true,
                     },
                 ],
             },
@@ -159,7 +340,6 @@ const applicantTabs = [
                         name: 'motherName',
                         inputType: 'text',
                         placeholder: 'Enter Mother Name',
-                        require: true,
                     },
                     {
                         label: 'Mother Contact',
@@ -167,14 +347,12 @@ const applicantTabs = [
                         inputType: 'text',
                         placeholder: 'Enter Mother Contact',
                         maxlength: 10,
-                        require: true,
                     },
                     {
                         label: 'Mother Occupation',
                         name: 'motherOccupation',
                         inputType: 'text',
                         placeholder: 'Enter Mother Job',
-                        require: true,
                     },
                     {
                         label: 'Mother Income',
@@ -182,224 +360,67 @@ const applicantTabs = [
                         inputType: 'text',
                         placeholder: 'Enter Mother Income',
                         maxlength: 10,
-                        require: true,
-                    },
-                ],
-            },
-        ],
-    },
-
-    {
-        label: 'Address Info',
-        name: 'addressInfo',
-        icon: 'mdi mdi-home',
-        children: [
-            {
-                formFields: [
-                    {
-                        label: 'Address type',
-                        name: 'addressType',
-                        inputType: 'select',
-                        optionList: 'addressType',
-                        displayKey: 'label',
-                        uniqueKey: 'label',
-
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Address',
-                        name: 'address',
-                        inputType: 'text',
-                        placeholder: 'Enter Address',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Land Mark',
-                        name: 'landmark',
-                        inputType: 'text',
-                        placeholder: 'Enter Land Mark',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Country',
-                        name: 'country',
-                        inputType: 'select',
-                        optionList: 'country',
-                        displayKey: 'label',
-                        uniqueKey: 'countryId',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'State',
-                        name: 'states',
-                        inputType: 'select',
-                        optionList: 'states',
-                        displayKey: 'label',
-                        uniqueKey: 'stateId',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'District',
-                        name: 'district',
-                        inputType: 'select',
-                        optionList: 'district',
-                        displayKey: 'label',
-                        uniqueKey: 'districtId',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Pincode',
-                        name: 'pincode',
-                        inputType: 'number',
-                        placeholder: 'Enter Pincode',
-                        require: true,
-                    },
-                ],
-            },
-        ],
-    },
-
-    {
-        label: 'Income Info',
-        name: 'incomeInfo',
-        icon: 'mdi mdi-cash',
-        children: [
-            {
-                formFields: [
-                    {
-                        label: 'Applicant type',
-                        name: 'applicantType',
-                        inputType: 'select',
-                        optionList: 'applicantType',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Company / Business Name',
-                        name: 'companyname',
-                        inputType: 'text',
-                        placeholder: 'Enter Company/Business Name',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Company / Business Address',
-                        name: 'companyaddress',
-                        inputType: 'text',
-                        placeholder: 'Enter Company/Business Address',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Date Of Joining / Starting Date',
-                        name: 'dateofjoining',
-                        inputType: 'date',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Monthly Income',
-                        name: 'monthlyincome',
-                        inputType: 'number',
-                        placeholder: 'Enter Monthly Income',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Office Contact No',
-                        name: 'officeContactNo',
-                        inputType: 'number',
-                        placeholder: 'Enter Office No',
-                        maxlength: 10,
-                        require: true,
-                    },
-                ],
-            },
-        ],
-    },
-
-    {
-        label: 'Id Proof',
-        name: 'idProof',
-        icon: 'mdi mdi-checkbox-marked-circle-outline',
-        children: [
-            {
-                formFields: [
-                    {
-                        label: 'Id Proof',
-                        name: 'idProof',
-                        inputType: 'select',
-                        optionList: 'idProof',
-                        displayKey: 'label',
-                        uniqueKey: 'label',
-
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Proof Id No',
-                        name: 'proofIdNo',
-                        inputType: 'text',
-                        placeholder: 'Enter Proof Id No',
-                        require: true,
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Image Proof',
-                        name: 'imageProof',
-                        inputType: 'file',
-                        require: true,
                     },
                 ],
             },
         ],
     },
 ];
+
+/* const columns = [
+        {
+            Header: 'S.No',
+            accessor: 'id',
+            Cell: (row) => <div>{row?.row?.index + 1}</div>,
+        },
+        {
+            Header: 'Customer Id',
+            accessor: 'applicantCode',
+            sort: true,
+        },
+        {
+            Header: 'Customer Name',
+            accessor: 'applicantName',
+            sort: false,
+        },
+        {
+            Header: 'Contact No.',
+            accessor: 'applicantContact',
+            sort: false,
+        },
+        {
+            Header: 'Gender',
+            accessor: 'genderName',
+            sort: false,
+        },
+        {
+            Header: 'Customer Type',
+            accessor: 'applicantTypeName',
+            sort: true,
+        },
+        {
+            Header: 'Actions',
+            accessor: 'actions',
+            Cell: ({ row }) => (
+                <div>
+                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original?.id)}>
+                        <i className={'fe-edit-1'}></i> Edit
+                    </span>
+                    <span
+                        className="text-danger cursor-pointer"
+                        onClick={() =>
+                            showConfirmationDialog(
+                                "You won't be able to revert this!",
+                                () => handleDelete(row?.original?.id),
+                                'Yes, Delete it!'
+                            )
+                        }>
+                        <i className={'fe-trash-2'}></i> Delete
+                    </span>
+                </div>
+            ),
+        },
+    ]; */
 
 export { applicantTabs };
 

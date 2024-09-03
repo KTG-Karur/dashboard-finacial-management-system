@@ -18,6 +18,7 @@ import proofTypeSaga from './proof-type/saga';
 import bankAccountSaga from './bank-account/saga';
 import expenseEntrySaga from './expense-entry/saga';
 import incomeEntrySaga from './income-entry/saga';
+import applicantSaga from './applicant/saga';
 
 export default function* rootSaga() {
     yield all([
@@ -39,5 +40,6 @@ export default function* rootSaga() {
         bankAccountSaga(),
         expenseEntrySaga(),
         incomeEntrySaga(),
+        applicantSaga(),
     ]);
 }

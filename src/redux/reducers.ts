@@ -19,6 +19,7 @@ import proofTypeReducer from './proof-type/reducers';
 import bankAccountReducer from './bank-account/reducers';
 import expenseEntryReducer from './expense-entry/reducers';
 import incomeEntryReducer from './income-entry/reducers';
+import applicantReducer from './applicant/reducers';
 
 export default combineReducers({
     Auth,
@@ -40,4 +41,5 @@ export default combineReducers({
     bankAccountReducer,
     expenseEntryReducer,
     incomeEntryReducer,
+    applicantReducer,
 });

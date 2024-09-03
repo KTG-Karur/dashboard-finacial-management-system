@@ -28,6 +28,18 @@ const Navigate: NavigateTypes[] = [
     },
     { label: 'Loan', isTitle: true },
     {
+        label: 'Customer',
+        isTitle: false,
+        icon: 'mdi mdi-bank',
+        url: '/view/applicant',
+    },
+    {
+        label: 'Borrower',
+        isTitle: false,
+        icon: 'mdi mdi-bank',
+        url: '/view/applicant',
+    },
+    {
         label: 'Add Loan',
         isTitle: false,
         icon: 'mdi mdi-bank',

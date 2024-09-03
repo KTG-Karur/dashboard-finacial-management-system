@@ -18,7 +18,7 @@ function FormComponent(props) {
         optionListState,
     } = props;
 
-    const handleChange = async (e, formType, formName) => {
+    const handleChange = async (e, formType, formName, uniqueKey = null, selectedObj = null) => {
         switch (formType) {
             case 'text':
             case 'number':
@@ -36,9 +36,11 @@ function FormComponent(props) {
                 }));
                 break;
             case 'select':
+                console.log(selectedObj)
                 setState((prev) => ({
                     ...prev,
-                    [formName]: e,
+                    [formName]: e[uniqueKey],
+                    [selectedObj] : e
                 }));
                 break;
             case 'radio':
@@ -115,7 +117,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={state[form.name] ? state[form.name] : ''}
+                                    value={state[form.name] || ''}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -176,7 +178,7 @@ function FormComponent(props) {
                                     className="mb-1"
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={state[form?.name]}
+                                    value={state[form?.name] || ""}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -256,13 +258,13 @@ function FormComponent(props) {
                                     required={form?.require}
                                     disabled={form?.isDisabled}
                                     onChange={(option) => {
-                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name) :
-                                            handleChange(option[form.uniqueKey], 'select', form?.name);
+                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name,form.uniqueKey,form.displayKey, form.selectedObj ) :
+                                            handleChange(option, 'select', form?.name, form.uniqueKey, form.selectedObj);
                                     }}
                                     // getOptionLabel={(option) => option?.label}
                                     getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
                                     getOptionValue={(option) => form.uniqueKey ? option[form.uniqueKey] : option}
-                                    value={_.find(optionListState?.[form?.optionList], option => _.isEqual(option[form.uniqueKey], state[form.name]))}
+                                    value={state[form.selectedObj] || ""}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable
@@ -292,27 +294,40 @@ function FormComponent(props) {
                                         </span>
                                     }
                                 </p>
-                                {[
-                                    { label: 'a', value: 'a' },
-                                    { label: 'b', value: 'b' },
-                                    { label: 'c', value: 'c' },
-                                ].map((item, i) => {
+                                {
+                                (optionListState?.[form?.optionList] || []) > 0 ?
+                                (optionListState?.[form?.optionList] || []).map((item, i) => {
                                     return (
                                         <Form.Check
                                             key={i}
-                                            label={form?.label}
+                                            label={form?.label || ""}
                                             value={state[form?.name]}
                                             type="checkbox"
                                             id={`basic-checkbox-${i}`}
                                             name={form?.name}
                                             className={'mb-2 form-check-Primary'}
-                                            defaultChecked={form?.defaultChecked}
+                                            defaultChecked={i == 0}
                                             onChange={(e) => {
                                                 handleChange(item, 'checkbox', form?.name);
                                             }}
                                         />
                                     );
-                                })}
+                                }) :
+                                    (<Form.Check
+                                        key={"2"}
+                                        label={form?.label || ""}
+                                        value={state[form?.name]}
+                                        type="checkbox"
+                                        id={`basic-checkbox-c`}
+                                        name={form?.name}
+                                        className={'mb-2 form-check-Primary'}
+                                        checked={state[form?.name] || false}
+                                        onChange={(e) => {
+                                            form.onChange ? onChangeCallBack[form.onChange](e, form.name) :
+                                            handleChange(e, 'checkbox', form?.name);
+                                        }}
+                                    />)
+                                }
                             </div>
                         );
                     case 'radio':
