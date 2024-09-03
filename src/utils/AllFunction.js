@@ -56,15 +56,9 @@ function deleteData(arr, id) {
     });
 }
 
-function findObj(optionList, designation = 0) {
-    console.log(optionList);
-    optionList.filter((item) => {
-        console.log(item[designation]);
-        console.log(designation);
-        console.log(item[designation] === designation);
-        console.log(item[designation] == designation);
-    });
-    return optionList.filter((item) => item[designation] === designation);
+function findObj(optionList = [], accessKey , value = "") {
+    const filterData = optionList.filter((item) => item[accessKey] === value);
+    return filterData.length > 0 ? filterData[0] : ""
 }
 
 function findArrObj(arr, id) {

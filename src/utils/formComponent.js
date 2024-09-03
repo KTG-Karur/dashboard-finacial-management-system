@@ -20,7 +20,7 @@ function FormComponent(props) {
         IsEditArrVal = false,
     } = props;
 
-    const handleChange = async (e, formType, formName, uniqueKey = null, selectedObj = null) => {
+    const handleChange = async (e, formType, formName, uniqueKey = null) => {
         switch (formType) {
             case 'text':
             case 'number':
@@ -38,11 +38,9 @@ function FormComponent(props) {
                 }));
                 break;
             case 'select':
-                console.log(selectedObj)
                 setState((prev) => ({
                     ...prev,
                     [formName]: e[uniqueKey],
-                    [selectedObj] : e
                 }));
                 break;
             case 'radio':
@@ -298,13 +296,13 @@ function FormComponent(props) {
                                     required={form?.require}
                                     disabled={form?.isDisabled}
                                     onChange={(option) => {
-                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name,form.uniqueKey,form.displayKey, form.selectedObj ) :
-                                            handleChange(option, 'select', form?.name, form.uniqueKey, form.selectedObj);
+                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name,form.uniqueKey,form.displayKey) :
+                                            handleChange(option, 'select', form?.name, form.uniqueKey);
                                     }}
                                     // getOptionLabel={(option) => option?.label}
                                     getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
                                     getOptionValue={(option) => form.uniqueKey ? option[form.uniqueKey] : option}
-                                    value={state[form.selectedObj] || ""}
+                                    value={findObj(optionListState[form?.optionList], form.uniqueKey, state[form.name] )}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable
