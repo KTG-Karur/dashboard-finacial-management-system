@@ -1,25 +1,10 @@
 import { apiReturnCallBack } from './ApiConfig';
 import apiContainer from './apiContainer';
-const applicant = apiContainer.applicant
-const applicantInfo = apiContainer.applicantInfo
+const loanChargesType = apiContainer.loanChargesType
 //GET--->
-export async function getApplicant(request) {
+export async function getLoanChargesType(request) {
   try {
-    const response = await apiReturnCallBack("GET", applicant, request);
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.message || JSON.stringify(data));
-    }    
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-//GET--->
-export async function getApplicantInfo(request) {
-  try {
-    const response = await apiReturnCallBack("GET", applicantInfo, request);
+    const response = await apiReturnCallBack("GET", loanChargesType, request);
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));
@@ -31,9 +16,9 @@ export async function getApplicantInfo(request) {
   }
 }
 //CREATE---->
-export async function createApplicant(request) {
+export async function createLoanChargesType(request) {
   try {
-    const response = await apiReturnCallBack("POST", applicant, request);
+    const response = await apiReturnCallBack("POST", loanChargesType, request);
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));
@@ -44,11 +29,10 @@ export async function createApplicant(request) {
     throw error;
   }
 }
-
 //UPDATE---->
-export async function updateApplicant(request, applicantId) {
+export async function updateLoanChargesType(request, loanChargesTypeId) {
   try {
-    const response = await apiReturnCallBack("PUT", applicant+`/${applicantId}`, request);
+    const response = await apiReturnCallBack("PUT", loanChargesType+`/${loanChargesTypeId}`, request);
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));
@@ -59,11 +43,10 @@ export async function updateApplicant(request, applicantId) {
     throw error;
   }
 }
-
 //DELETE---->
-// export async function deleteApplicant(applicantId) {
+// export async function deleteLoanChargesType(loanChargesTypeId) {
 //   try {
-//     const response = await apiReturnCallBack("DELETE", applicant+`/${applicantId}`);
+//     const response = await apiReturnCallBack("DELETE", loanChargesType+`/${loanChargesTypeId}`);
 //     if (!response.ok) {
 //       throw new Error(data.message || JSON.stringify(data));
 //     }

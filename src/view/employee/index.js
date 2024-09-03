@@ -2,42 +2,55 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Spinner } from 'react-bootstrap';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
-import { employeeFormContainer } from './formFieldData';
+import { employeeFormContainer, employeeFormEditContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
-import { createDistrictRequest, getCountryRequest, getDistrictRequest, getStateRequest, resetCreateDistrict, resetGetCountry, resetGetDistrict, resetUpdateDistrict, updateDistrictRequest } from '../../redux/actions';
+import { dateConversion, showConfirmationDialog, showMessage } from '../../utils/AllFunction';
+import { createEmployeeRequest, getCountryRequest, getDepartmentRequest, getDesignationRequest, getEmployeeRequest, getRoleRequest, getStateRequest, resetCreateEmployee, resetGetCountry, resetGetDepartment, resetGetDesignation, resetGetEmployee, resetUpdateEmployee, updateEmployeeRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
 import _ from 'lodash';
 
-let isEdit = false; 
+let isEdit = false;
 
 
 function Index() {
 
     const { dispatch, appSelector } = useRedux();
 
-    const { 
-        getDistrictSuccess, getDistrictList, getDistrictFailure,
-        getStateSuccess, getStateList, getStateFailure,
-        getCountrySuccess, getCountryList, getCountryFailure,
-        createDistrictSuccess, createDistrictData, createDistrictFailure,
-        updateDistrictSuccess, updateDistrictData, updateDistrictFailure,errorMessage
+    const {
+        getEmployeeSuccess, getEmployeeList, getEmployeeFailure,
+        getDepartmentSuccess, getDepartmentList, getDepartmentFailure,
+        getRoleSuccess, getRoleList, getRoleFailure,
+        getDesignationSuccess, getDesignationList, getDesignationFailure,
+        createEmployeeSuccess, createEmployeeData, createEmployeeFailure,
+        updateEmployeeSuccess, updateEmployeeData, updateEmployeeFailure, errorMessage
 
     } = appSelector((state) => ({
-        getDistrictSuccess: state.districtReducer.getDistrictSuccess,
-        getDistrictList: state.districtReducer.getDistrictList,
-        getDistrictFailure: state.districtReducer.getDistrictFailure,
+        getEmployeeSuccess: state.employeeReducer.getEmployeeSuccess,
+        getEmployeeList: state.employeeReducer.getEmployeeList,
+        getEmployeeFailure: state.employeeReducer.getEmployeeFailure,
 
-        createDistrictSuccess: state.districtReducer.createDistrictSuccess,
-        createDistrictData: state.districtReducer.createDistrictData,
-        createDistrictFailure: state.districtReducer.createDistrictFailure,
+        getRoleSuccess: state.roleReducer.getRoleSuccess,
+        getRoleList: state.roleReducer.getRoleList,
+        getRoleFailure: state.roleReducer.getRoleFailure,
 
-        updateDistrictSuccess: state.districtReducer.updateDistrictSuccess,
-        updateDistrictData: state.districtReducer.updateDistrictData,
-        updateDistrictFailure: state.districtReducer.updateDistrictFailure,
+        getDepartmentSuccess: state.departmentReducer.getDepartmentSuccess,
+        getDepartmentList: state.departmentReducer.getDepartmentList,
+        getDepartmentFailure: state.departmentReducer.getDepartmentFailure,
 
-        errorMessage: state.districtReducer.errorMessage,
+        getDesignationSuccess: state.designationReducer.getDesignationSuccess,
+        getDesignationList: state.designationReducer.getDesignationList,
+        getDesignationFailure: state.designationReducer.getDesignationFailure,
+
+        createEmployeeSuccess: state.employeeReducer.createEmployeeSuccess,
+        createEmployeeData: state.employeeReducer.createEmployeeData,
+        createEmployeeFailure: state.employeeReducer.createEmployeeFailure,
+
+        updateEmployeeSuccess: state.employeeReducer.updateEmployeeSuccess,
+        updateEmployeeData: state.employeeReducer.updateEmployeeData,
+        updateEmployeeFailure: state.employeeReducer.updateEmployeeFailure,
+
+        errorMessage: state.employeeReducer.errorMessage,
     }));
 
     const columns = [
@@ -48,12 +61,19 @@ function Index() {
         },
         {
             Header: 'Employee Name',
-            accessor: 'employeename',
+            accessor: 'employeeName',
             sort: true,
+            Cell: ({ row }) => {
+                return (
+                    <div>
+                        {row.original.firstName + " " + row.original.lastName}
+                    </div>
+                )
+            }
         },
         {
             Header: 'Contact Number',
-            accessor: 'contactnumber',
+            accessor: 'contactNo',
             sort: false,
         },
         {
@@ -62,41 +82,64 @@ function Index() {
             sort: true,
         },
         {
-            Header: 'Date of Joining',
-            accessor: 'dateofjoining',
+            Header: 'Role',
+            accessor: 'roleName',
             sort: true,
+        },
+        {
+            Header: 'Date of Joining',
+            accessor: 'dateOfJoining',
+            Cell: ({ row }) => {
+                return (
+                    <div>
+                        {dateConversion(row.original.dateOfJoining, "DD-MM-YYYY")}
+                    </div>
+                )
+            }
         },
         {
             Header: 'Actions',
             accessor: 'actions',
-            Cell: ({ row }) => (
-                <div>
-                    {/* <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original)}>
-                        <i className={'fe-edit-1'}></i> Edit
-                    </span>
-                    <span
-                        className="text-danger cursor-pointer"
-                        onClick={() =>
-                            showConfirmationDialog(
-                                "You won't be able to revert this!",
-                                () => handleDelete(row?.original?.id),
-                                'Yes, Delete it!'
-                            )
-                        }>
-                        <i className={'fe-trash-2'}></i> Delete
-                    </span> */}
-                </div>
-            ),
+            Cell: ({ row }) => {
+                const activeChecker = row.original.isActive
+                const iconColor = activeChecker ? "text-danger" : "text-warning";
+                const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
+                return (
+                    <div>
+                        <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+                            <i className={'fe-edit-1'}></i>
+                        </span>
+                        <span
+                            className={`${iconColor} cursor-pointer`}
+                            onClick={() =>
+                                showConfirmationDialog(
+                                    deleteMessage,
+                                    () => onDeleteForm(row.original, row.index, activeChecker),
+                                    'Yes'
+                                )
+                            }>
+                            {
+                                row?.original?.isActive ? <i className={'fe-trash-2'}></i> : <i className={'fas fa-recycle'}></i>
+                            }
+                        </span>
+                    </div>
+                )
+            },
         },
     ];
 
     const [state, setState] = useState({});
     const [parentList, setParentList] = useState([]);
     const [optionListState, setOptionListState] = useState({
-        stateList : []
+        stateList: [],
+        genderList: [
+            { genderId: 1, genderName: 'Male' },
+            { genderId: 2, genderName: 'Female' },
+            { genderId: 3, genderName: 'Others' },
+        ],
     });
     const [selectedItem, setSelectedItem] = useState({});
-    const [formData, setFormData] = useState({});
+    const [formData, setFormData] = useState(employeeFormContainer);
     const [selectedIndex, setSelectedIndex] = useState(false);
     const [modal, setModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -106,48 +149,104 @@ function Index() {
 
     useEffect(() => {
         setIsLoading(true)
-        dispatch(getDistrictRequest());
-        dispatch(getCountryRequest());
+        dispatch(getEmployeeRequest());
+        dispatch(getDepartmentRequest());
+        dispatch(getDesignationRequest());
+        dispatch(getRoleRequest());
     }, []);
 
     useEffect(() => {
-        if (getDistrictSuccess) {
+        if (getEmployeeSuccess) {
             setIsLoading(false)
-            setParentList(getDistrictList)
-            dispatch(resetGetDistrict())
-        } else if (getDistrictFailure) {
+            setParentList(getEmployeeList)
+            dispatch(resetGetEmployee())
+        } else if (getEmployeeFailure) {
             setIsLoading(false)
             setParentList([])
-            dispatch(resetGetDistrict())
+            dispatch(resetGetEmployee())
         }
-    }, [getDistrictSuccess, getDistrictFailure]);
+    }, [getEmployeeSuccess, getEmployeeFailure]);
 
     useEffect(() => {
-        if (createDistrictSuccess) {
-            const temp_state = [createDistrictData[0], ...parentList];
+        if (getRoleSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                roleList: getRoleList
+            })
+            dispatch(resetGetDepartment())
+        } else if (getRoleFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                roleList: []
+            })
+            dispatch(resetGetDepartment())
+        }
+    }, [getRoleSuccess, getRoleFailure]);
+
+    useEffect(() => {
+        if (getDepartmentSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                departmentList: getDepartmentList
+            })
+            dispatch(resetGetDepartment())
+        } else if (getDepartmentFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                departmentList: []
+            })
+            dispatch(resetGetDepartment())
+        }
+    }, [getDepartmentSuccess, getDepartmentFailure]);
+
+    useEffect(() => {
+        if (getDesignationSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                designationList: getDesignationList
+            })
+            dispatch(resetGetDesignation())
+        } else if (getDesignationFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                designationList: []
+            })
+            dispatch(resetGetDesignation())
+        }
+    }, [getDesignationSuccess, getDesignationFailure]);
+
+    useEffect(() => {
+        if (createEmployeeSuccess) {
+            const temp_state = [createEmployeeData[0], ...parentList];
             setParentList(temp_state)
             showMessage('success', 'Created Successfully');
             closeModel()
-            dispatch(resetCreateDistrict())
-        } else if (createDistrictFailure) {
+            dispatch(resetCreateEmployee())
+        } else if (createEmployeeFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetCreateDistrict())
+            dispatch(resetCreateEmployee())
         }
-    }, [createDistrictSuccess, createDistrictFailure]);
+    }, [createEmployeeSuccess, createEmployeeFailure]);
 
     useEffect(() => {
-        if (updateDistrictSuccess) {
+        if (updateEmployeeSuccess) {
             const temp_state = [...parentList];
-            temp_state[selectedIndex] = updateDistrictData[0];
+            temp_state[selectedIndex] = updateEmployeeData[0];
             setParentList(temp_state)
             isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
-            dispatch(resetUpdateDistrict())
-        } else if (updateDistrictFailure) {
+            dispatch(resetUpdateEmployee())
+        } else if (updateEmployeeFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetUpdateDistrict())
+            dispatch(resetUpdateEmployee())
         }
-    }, [updateDistrictSuccess, updateDistrictFailure]);
+    }, [updateEmployeeSuccess, updateEmployeeFailure]);
 
     const closeModel = () => {
         isEdit = false;
@@ -155,12 +254,37 @@ function Index() {
         setModal(false)
     }
 
+    let userData = [{
+        'label': "User Name",
+        'name': "userName",
+        'inputType': "text",
+        'placeholder': "Enter User Name",
+        'classStyle': 'col-6',
+        'require': true
+    },
+    {
+        'label': "Password",
+        'name': "password",
+        'inputType': "text",
+        'type': "password",
+        'placeholder': "Enter Password",
+        'classStyle': 'col-6',
+        'require': true
+    }]
+
     const onFormClear = () => {
+        const userDataNames = _.map(userData, 'name');
+        employeeFormContainer[0].formFields = _.filter(employeeFormContainer[0].formFields, (field) => {
+            return !_.includes(userDataNames, field.name);
+        });
+        employeeFormContainer[0].formFields[0].classStyle = "col-6"
+        setFormData(employeeFormContainer);
         setState({
             ...state,
-            isUser: '',
+            isUser: false,
             firstName: '',
             lastName: '',
+            referedBy: '',
             dob: '',
             genderId: '',
             contactNo: '',
@@ -171,6 +295,7 @@ function Index() {
             dateOfJoining: '',
             address: '',
         });
+
     };
 
     const createModel = () => {
@@ -180,19 +305,22 @@ function Index() {
     };
 
     const onEditForm = (data, index) => {
+        setFormData(employeeFormEditContainer)
         setState({
             ...state,
+            referedBy: data?.referedBy || "",
             firstName: data?.firstName || "",
             lastName: data?.lastName || "",
-            dob: data?.dob || "",
+            dob: data.dob ? dateConversion(data.dob, "YYYY-MM-DD") : "",
             genderId: data?.genderId || "",
             contactNo: data?.contactNo || "",
             emailId: data?.emailId || "",
             departmentId: data?.departmentId || "",
             designationId: data?.designationId || "",
             roleId: data?.roleId || "",
-            dateOfJoining: data?.dateOfJoining || "",
+            dateOfJoining: data.dateOfJoining ? dateConversion(data.dateOfJoining, "YYYY-MM-DD") : "",
             address: data?.address || "",
+            isUser: data.isUser === 1 ? true : false
         });
         isEdit = true;
         setSelectedItem(data)
@@ -206,14 +334,32 @@ function Index() {
 
     const onFormSubmit = async () => {
         const submitRequest = {
-            countryId: state.countryId ? parseInt(state.countryId) : "",
-            stateId: state.stateId ? parseInt(state.stateId) : "",
-            districtName: state?.districtName || "",
+            "isUser": state.isUser === true ? 1 : 0,
+            "firstName": state?.firstName || "",
+            "lastName": state?.lastName || "",
+            "dob": state?.dob || "",
+            "contactNo": state?.contactNo || "",
+            "emailId": state?.emailId || "",
+            "departmentId": state?.departmentId || "",
+            "designationId": state?.designationId || "",
+            "roleId": state?.roleId || "",
+            "dateOfJoining": state?.dateOfJoining || "",
+            "genderId": state?.genderId || "",
+            "referedBy": state?.referedBy || "",
+            "address": state?.address || "",
+            "userInfo": {
+                "userName": state?.userName || "",
+                "password": state?.password || "",
+            }
         }
         if (isEdit) {
-            dispatch(updateDistrictRequest(submitRequest, selectedItem.districtId))
+            delete submitRequest.userInfo;
+            dispatch(updateEmployeeRequest(submitRequest, selectedItem.employeeId))
         } else {
-            dispatch(createDistrictRequest(submitRequest))
+            if (!state?.isUser) {
+                delete submitRequest.userInfo;
+            }
+            dispatch(createEmployeeRequest(submitRequest))
         }
     };
 
@@ -222,33 +368,16 @@ function Index() {
             isActive: activeChecker == 0 ? 1 : 0
         }
         setSelectedIndex(index)
-        dispatch(updateDistrictRequest(submitRequest, data.districtId))
+        dispatch(updateEmployeeRequest(submitRequest, data.employeeId))
     };
 
     const handleCheckbox = (event, name) => {
-        const userData = [{
-            'label': "User Name",
-            'name': "userName",
-            'inputType': "text",
-            'placeholder': "Enter User Name",
-            'classStyle': 'col-6',
-            'require': true
-        },
-        {
-            'label': "Password",
-            'name': "password",
-            'inputType': "text",
-            'type': "password",
-            'placeholder': "Enter Password",
-            'classStyle': 'col-6',
-            'require': true
-        }]
         if (event.target.checked == true) {
             const filterFormData = employeeFormContainer[0].formFields
             employeeFormContainer[0].formFields = _.concat(
-                _.slice(filterFormData, 0, 1),
+                _.slice(filterFormData, 0, 2),
                 userData,
-                _.slice(filterFormData, 1)
+                _.slice(filterFormData, 2)
             );
             setFormData(employeeFormContainer)
         } else {
@@ -267,35 +396,22 @@ function Index() {
     return (
         <React.Fragment>
             <NotificationContainer />
-            { isLoading ? <div className='bg-light opacity-0.25'>
-            <div className="d-flex justify-content-center m-5">
-                <Spinner className='mt-5 mb-5' animation="border" />
-            </div>
+            {isLoading ? <div className='bg-light opacity-0.25'>
+                <div className="d-flex justify-content-center m-5">
+                    <Spinner className='mt-5 mb-5' animation="border" />
+                </div>
             </div> :
-            <Table
-                columns={columns}
-                Title={'Employee List'}
-                data={parentList || []}
-                pageSize={5}
-                toggle={createModel}
-            />}
+                <Table
+                    columns={columns}
+                    Title={'Employee List'}
+                    data={parentList || []}
+                    pageSize={5}
+                    toggle={createModel}
+                />}
 
-            {/* <Table
-                columns={columns}
-                Title={'Employee List'}
-                data={tblList || []}
-                pageSize={5}
-                sizePerPageList={sizePerPageList}
-                isSortable={true}
-                pagination={true}
-                isSearchable={true}
-                toggle={toggle}
-            /> */}
-
-            {/* FormModal */}
-            {/* <ModelViewBox
+            <ModelViewBox
                 modal={modal}
-                toggle={toggle}
+                setModel={setModal}
                 modelHeader={'Employee'}
                 modelSize={'lg'}
                 isEdit={isEdit}
@@ -303,7 +419,7 @@ function Index() {
                 <FormLayout
                     optionListState={optionListState}
                     dynamicForm={formData}
-                    handleSubmit={handleSubmit}
+                    handleSubmit={onFormSubmit}
                     setState={setState}
                     state={state}
                     ref={errorHandle}
@@ -313,7 +429,7 @@ function Index() {
                     errors={errors}
                     setErrors={setErrors}
                 />
-            </ModelViewBox> */}
+            </ModelViewBox>
         </React.Fragment>
     );
 }

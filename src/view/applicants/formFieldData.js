@@ -98,11 +98,11 @@ const applicantTabs = [
                 formFields: [
                     {
                         label: 'Marital Status',
-                        name: 'maritalStatusId',
+                        name: 'martialStatusId',
                         inputType: 'select',
                         optionList: 'maritalStatusList',
                         displayKey: 'maritalStatusName',
-                        uniqueKey: 'maritalStatusId',
+                        uniqueKey: 'martialStatusId',
                         selectedObj : "maritalStatusObj"
                     },
                 ],
@@ -251,7 +251,7 @@ const applicantTabs = [
                 formFields: [
                     {
                         label: 'Company / Business Name',
-                        name: 'companyname',
+                        name: 'companyName',
                         inputType: 'text',
                         placeholder: 'Enter Company/Business Name',
                     },
@@ -261,7 +261,7 @@ const applicantTabs = [
                 formFields: [
                     {
                         label: 'Company / Business Address',
-                        name: 'companyaddress',
+                        name: 'address',
                         inputType: 'text',
                         placeholder: 'Enter Company/Business Address',
                     },
@@ -280,7 +280,7 @@ const applicantTabs = [
                 formFields: [
                     {
                         label: 'Monthly Income',
-                        name: 'monthlyincome',
+                        name: 'monthlyIncome',
                         inputType: 'number',
                         placeholder: 'Enter Monthly Income',
                     },
@@ -314,7 +314,7 @@ const applicantTabs = [
                     },
                     {
                         label: 'Father Contact',
-                        name: 'fatherContact',
+                        name: 'fatherContactNo',
                         inputType: 'number',
                         placeholder: 'Enter Father Contact',
                         maxlength: 10,
@@ -343,7 +343,7 @@ const applicantTabs = [
                     },
                     {
                         label: 'Mother Contact',
-                        name: 'motherContact',
+                        name: 'motherContactNo',
                         inputType: 'text',
                         placeholder: 'Enter Mother Contact',
                         maxlength: 10,
@@ -367,61 +367,4 @@ const applicantTabs = [
     },
 ];
 
-/* const columns = [
-        {
-            Header: 'S.No',
-            accessor: 'id',
-            Cell: (row) => <div>{row?.row?.index + 1}</div>,
-        },
-        {
-            Header: 'Customer Id',
-            accessor: 'applicantCode',
-            sort: true,
-        },
-        {
-            Header: 'Customer Name',
-            accessor: 'applicantName',
-            sort: false,
-        },
-        {
-            Header: 'Contact No.',
-            accessor: 'applicantContact',
-            sort: false,
-        },
-        {
-            Header: 'Gender',
-            accessor: 'genderName',
-            sort: false,
-        },
-        {
-            Header: 'Customer Type',
-            accessor: 'applicantTypeName',
-            sort: true,
-        },
-        {
-            Header: 'Actions',
-            accessor: 'actions',
-            Cell: ({ row }) => (
-                <div>
-                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original?.id)}>
-                        <i className={'fe-edit-1'}></i> Edit
-                    </span>
-                    <span
-                        className="text-danger cursor-pointer"
-                        onClick={() =>
-                            showConfirmationDialog(
-                                "You won't be able to revert this!",
-                                () => handleDelete(row?.original?.id),
-                                'Yes, Delete it!'
-                            )
-                        }>
-                        <i className={'fe-trash-2'}></i> Delete
-                    </span>
-                </div>
-            ),
-        },
-    ]; */
-
 export { applicantTabs };
-
-// export { applicantTabs };

@@ -9,8 +9,7 @@ import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createApplicantRequest, getAddressTypeRequest, getApplicantRequest, getApplicantTypeRequest, getDistrictRequest, getProofTypeRequest, getStateRequest, resetCreateApplicant, resetGetAddressType, resetGetApplicant, resetGetApplicantType, resetGetDistrict, resetGetProofType, resetGetState, resetUpdateApplicant, updateApplicantRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
-
-let isEdit = false;
+import _ from 'lodash';
 
 function Index() {
 
@@ -172,7 +171,7 @@ function Index() {
                             onClick={() => {
                                 showConfirmationDialog(
                                     "You won't be able to revert this!",
-                                    () => handleDeleteTabTable(row?.original?.id),
+                                    () => handleDeleteTabTable(row?.original?.id, row?.index),
                                     'Yes, Delete it!'
                                 );
                             }}>
@@ -216,7 +215,7 @@ function Index() {
                             onClick={() => {
                                 showConfirmationDialog(
                                     "You won't be able to revert this!",
-                                    () => handleDeleteTabTable(row?.original?.id),
+                                    () => handleDeleteTabTable(row?.original?.id, row?.index),
                                     'Yes, Delete it!'
                                 );
                             }}>
@@ -239,8 +238,8 @@ function Index() {
             { genderId : 3 , genderName: 'Others' },
         ],
         maritalStatusList: [
-            { maritalStatusId : 1 , maritalStatusName: 'Married' },
-            { maritalStatusId : 2 , maritalStatusName: 'Single' },
+            { martialStatusId : 1 , maritalStatusName: 'Married' },
+            { martialStatusId : 2 , maritalStatusName: 'Single' },
         ],
     })
 
@@ -361,7 +360,7 @@ function Index() {
             setIsLoading(false)
             setOptionListState({
                 ...optionListState,
-                stateList :getStateList
+                stateList :getStateList,
             })
             dispatch(resetGetState())
         } else if (getStateFailure) {
@@ -402,43 +401,100 @@ function Index() {
     }, [updateApplicantSuccess, updateApplicantFailure]);
 
     const closeModel = () => {
-        isEdit = false;
         onFormClear()
-        setModal(false)
+        setWizardModel(false)
     }
 
     const onFormClear = () => {
-        setState({
-            ...state,
-            firstName: '',
-            lastName: '',
-            dob: '',
-            contactNo: '',
-            alternativeContactNo: '',
-            email: '',
-            genderId: '',
-            qualification: '',
-            maritalStatusId: '',
-        });
+        setState({});
     };
 
     const createModel = () => {
         onFormClear()
-        // isEdit = false;
-        // // setModal(true)
-        
+        setIsEdit(false);
         setWizardModel(true)
     };
 
     const onEditForm = (data, index) => {
-        setState({
+        setIsEdit(true);
+        setMultiStateValue([
+            {
+              "personalInfo": {
+                "firstName": "Venu",
+                "lastName": "Aravinth",
+                "dob": "",
+                "contactNo": "8765347834",
+                "alternativeContactNo": "9084578947",
+                "email": "",
+                "genderId": 1,
+                "qualification": "",
+                "maritalStatusId": ""
+              },
+              "idProof": [
+                {
+                  "id": 0,
+                  "proofTypeId": 1,
+                  "proofTypeName": "Aadhar",
+                  "proofNo": "536536",
+                  "imageProof": [
+                    {}
+                  ]
+                },
+                {
+                  "id": 1,
+                  "proofTypeId": 3,
+                  "proofTypeName": "Pan-card",
+                  "proofNo": "536536"
+                }
+              ],
+              "addressInfo": [
+                {
+                  "id": 0,
+                  "addressTypeId": 4,
+                  "addressTypeName": "Permanent",
+                  "address": "Karur",
+                  "landmark": "Little Angel",
+                  "stateId": 1,
+                  "stateName": "Tamil Nadu",
+                  "districtId": 1,
+                  "districtName": "Karur",
+                  "pincode": "639001"
+                },
+                {
+                  "id": 1,
+                  "addressTypeId": 1,
+                  "addressTypeName": "Office",
+                  "address": "Karur",
+                  "landmark": "Little Angel",
+                  "districtId": "",
+                  "districtName": "Namakal",
+                  "pincode": "89264",
+                  "stateId": 1,
+                  "stateName": "Tamil Nadu"
+                }
+              ],
+              "incomeInfo": {
+                "applicantTypeId": 4,
+                "applicantTypeName": "Testing Update",
+                "companyname": "MNC",
+                "companyaddress": "YY",
+                "dateofjoining": "2024-09-12",
+                "monthlyincome": "5363546",
+                "officeContactNo": "3546363546"
+              },
+              "additionalInfo": {
+                "fatherName": "Srinivasan",
+                "motherName": "Dhanalakshmi"
+              }
+            }
+          ])
+       /*  setState({
             ...state,
             applicantName: data?.applicantName || "",
-        });
-        isEdit = true;
+        }); */
         setSelectedItem(data)
         setSelectedIndex(index)
-        setModal(true)
+        setWizardModel(true)
     };
 
     const handleValidation = () => {
@@ -446,14 +502,22 @@ function Index() {
     }
 
     const onFormSubmit = async () => {
-        console.log(JSON.stringify(multiStateValue))
+        const personalInfo = [multiStateValue[0]?.personalInfo] || []
+        const idProofInfo = multiStateValue[0]?.idProof || []
+        const addressInfo = multiStateValue[0]?.addressInfo || []
+        const incomeInfo = !_.isEmpty(multiStateValue[0].incomeInfo) ? [multiStateValue[0].incomeInfo] : []
+        const additionalInfo = !_.isEmpty(multiStateValue[0].additionalInfo) ? [multiStateValue[0]?.additionalInfo] : []
         const submitRequest = {
-            applicantName: state?.applicantName || ""
+            personalInfo: personalInfo,
+            proofInfo: idProofInfo,
+            addressInfo: addressInfo,
+            incomeInfo : incomeInfo,
+            additionalInfo : additionalInfo
         }
         if (isEdit) {
             // dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
         } else {
-            // dispatch(createApplicantRequest(submitRequest))
+            dispatch(createApplicantRequest(submitRequest))
         }
     };
 
@@ -463,9 +527,11 @@ function Index() {
         setState(updatedState);
     };
     //handleDelete
-    const handleDeleteTabTable = async (id) => {
-        // const delData = await deleteData(arrVal, id);
-        // setArrVal(delData);
+    const handleDeleteTabTable = async (id, idx) => {
+        let remainingData = _.remove(arrVal, function (item, index) {
+            return idx != index;
+          });
+        setArrVal(remainingData);
     };
 
     const onDeleteForm = (data, index, activeChecker) => {

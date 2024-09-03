@@ -21,6 +21,7 @@ function FormComponent(props) {
     } = props;
 
     const handleChange = async (e, formType, formName, uniqueKey = null) => {
+        alert(e)
         switch (formType) {
             case 'text':
             case 'number':
@@ -519,6 +520,64 @@ function FormComponent(props) {
                             </div>
                         )
                         );
+                    // case 'select':
+                    //     return (
+                    //         shouldShowElement(form?.parentKey, form?.childKey, optionListState?.[form?.optionList]) && (
+                    //             <div className={`${form?.classStyle || ''} mb-2`} key={index}>
+                    //                 <Form.Label>
+                    //                     <span>
+                    //                         {form?.label}{' '}
+                    //                         {form?.require ? (
+                    //                             <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                    //                         ) : null}
+                    //                         {
+                    //                             //Add Option Modal Btn
+                    //                             (showSelectmodel || []).includes(form?.name) && (
+                    //                                 <Button
+                    //                                     variant="success"
+                    //                                     className="waves-effect waves-light mx-1"
+                    //                                     style={{ padding: '3px', lineHeight: '1.0' }}
+                    //                                     onClick={() => {
+                    //                                         toggleModal(form);
+                    //                                     }}>
+                    //                                     <i className="mdi mdi-plus-circle "></i>
+                    //                                 </Button>
+                    //                             )
+                    //                         }
+                    //                     </span>
+                    //                 </Form.Label>
+                    //                 <Select
+                    //                     isMulti={form?.isMultiple}
+                    //                     required={form?.require}
+                    //                     disabled={form?.isDisabled}
+                    //                     onChange={(option) => {
+                    //                         form.onChange
+                    //                             ? onChangeCallBack[form.onChange](option, form.name)
+                    //                             : handleChange(option[form.uniqueKey], 'select', form?.name);
+                    //                     }}
+                    //                     // getOptionLabel={(option) => option?.label}
+                    //                     getOptionLabel={(option) =>
+                    //                         form.displayKey ? option[form.displayKey] : option.label
+                    //                     }
+                    //                     getOptionValue={(option) => (form.uniqueKey ? option[form.uniqueKey] : option)}
+                    //                     value={_.find(optionListState?.[form?.optionList], (option) =>
+                    //                         _.isEqual(option[form.uniqueKey], state[form.name])
+                    //                     )}
+                    //                     className="react-select react-select-container"
+                    //                     classNamePrefix="react-select"
+                    //                     isSearchable
+                    //                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                    //                     options={optionListState?.[form?.optionList] || []}
+                    //                     // options={form?.optionList}
+                    //                 ></Select>
+                    //                 {errors?.includes(form?.name) && (
+                    //                     <p
+                    //                         className="text-danger"
+                    //                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                    //                 )}
+                    //             </div>
+                    //         )
+                    //     );
                     case 'checkbox':
                         return (
                             (
@@ -583,12 +642,12 @@ function FormComponent(props) {
                                                     id={`basic-radio-${i}`}
                                                     name={form?.name || ''}
                                                     className={'mb-2 form-check-Primary mx-2'}
-                                                    defaultChecked={i === 0}
-                                                    value={state[form?.name]}
+                                                    defaultChecked={item[form.uniqueKey] === state[form?.name] || i === 0}
+                                                    value={state[form?.name] || ""}
                                                     onChange={(e) => {
                                                         form.onChange
                                                             ? onChangeCallBack[form.onChange](item, form.name)
-                                                            : handleChange(item, 'radio', form?.name);
+                                                            : handleChange(item[form.uniqueKey], 'radio', form?.name);
                                                     }}
                                                 />
                                             );

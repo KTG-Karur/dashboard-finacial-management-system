@@ -135,6 +135,11 @@ const Navigate: NavigateTypes[] = [
                 parentKey: 'Master',
             },
             {
+                label: 'Loan Charges Type',
+                url: '/view/loan-charges-type',
+                parentKey: 'Master',
+            },
+            {
                 label: 'State',
                 url: '/view/state',
                 parentKey: 'Master',

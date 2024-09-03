@@ -14,11 +14,14 @@ const apiContainer = {
   proofType: "/proof-type",
   bankAccount: "/bank-account",
   loanCharges: "/loan-charges",
+  loanChargesType: "/loan-charges-type",
   expenseEntry: "/expense-entry",
   incomeEntry: "/income-entry",
   applicant: "/applicant",
   role: "/role",
   addLoan: "/loan",
+  employee: "/employee",
+  applicantInfo: "/applicant-info",
 };
 
 export default apiContainer;

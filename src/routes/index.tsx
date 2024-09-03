@@ -105,6 +105,7 @@ import {
     IncomeEntry,
     LoanList,
     Role,
+    LoanChargesType,
 } from './Route_Menu';
 
 const loading = () => <div className=""></div>;
@@ -248,6 +249,10 @@ const AllRoutes = () => {
                         {
                             path: 'proof-type',
                             element: <LoadComponent component={ProofType} />,
+                        },
+                        {
+                            path: 'loan-charges-type',
+                            element: <LoadComponent component={LoanChargesType} />,
                         },
                         {
                             path: 'bank-account',
