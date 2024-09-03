@@ -1,29 +1,88 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { formContainer } from './newFormFieldData';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 // component
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
-import { deleteData, percentageVal, showConfirmationDialog, updateData, ValtoPercentage } from '../../utils/AllFunction';
-import { createAddLoanRequest, getAddLoanRequest, resetCreateAddLoan, resetGetAddLoan, resetUpdateAddLoan, updateAddLoanRequest } from '../../redux/actions';
+import {
+    deleteData,
+    percentageVal,
+    showConfirmationDialog,
+    showMessage,
+    updateData,
+    ValtoPercentage,
+} from '../../utils/AllFunction';
+import {
+    getAddLoanRequest,
+    resetGetAddLoan,
+    createAddLoanRequest,
+    resetCreateAddLoan,
+    resetUpdateAddLoan,
+    updateAddLoanRequest,
+
+    //category
+    getCategoryRequest,
+    resetGetCategory,
+
+    //sub-category
+    getSubCategoryRequest,
+    resetGetSubCategory,
+
+    //loan-charges
+    getLoanChargesRequest,
+    resetGetLoanCharges,
+} from '../../redux/actions';
 import { useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
 import { NotificationContainer } from 'react-notifications';
 import LoanPdf from '../../utils/loanPdf';
 
+let isEdit = false;
 function Index() {
-
     const { dispatch, appSelector } = useRedux();
 
-    const { getAddLoanSuccess, getAddLoanList, getAddLoanFailure,
-        createAddLoanSuccess, createAddLoanData, createAddLoanFailure,
-        updateAddLoanSuccess, updateAddLoanData, updateAddLoanFailure, errorMessage
-
+    const {
+        getAddLoanSuccess,
+        getAddLoanList,
+        getAddLoanFailure,
+        createAddLoanSuccess,
+        createAddLoanData,
+        createAddLoanFailure,
+        updateAddLoanSuccess,
+        updateAddLoanData,
+        updateAddLoanFailure,
+        errorMessage,
+        //category
+        getCategoryList,
+        getCategorySuccess,
+        getCategoryFailure,
+        //sub-category
+        getSubCategoryList,
+        getSubCategorySuccess,
+        getSubCategoryFailure,
+        //loan-charges
+        getLoanChargesList,
+        getLoanChargesSuccess,
+        getLoanChargesFailure,
     } = appSelector((state) => ({
         getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
         getAddLoanList: state.addLoanReducer.getAddLoanList,
         getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
+
+        //category
+        getCategorySuccess: state.categoryReducer.getCategorySuccess,
+        getCategoryList: state.categoryReducer.getCategoryList,
+        getCategoryFailure: state.categoryReducer.getCategoryFailure,
+
+        //sub-category
+        getSubCategorySuccess: state.subCategoryReducer.getSubCategorySuccess,
+        getSubCategoryList: state.subCategoryReducer.getSubCategoryList,
+        getSubCategoryFailure: state.subCategoryReducer.getSubCategoryFailure,
+
+        //loan-charges
+        getLoanChargesSuccess: state.loanChargesReducer.getLoanChargesSuccess,
+        getLoanChargesList: state.loanChargesReducer.getLoanChargesList,
+        getLoanChargesFailure: state.loanChargesReducer.getLoanChargesFailure,
 
         createAddLoanSuccess: state.addLoanReducer.createAddLoanSuccess,
         createAddLoanData: state.addLoanReducer.createAddLoanData,
@@ -78,7 +137,7 @@ function Index() {
                 </div>
             ),
         },
-    ]
+    ];
     // useStates
     const errorHandle = useRef();
     const [state, setState] = useState({});
@@ -87,24 +146,15 @@ function Index() {
         applicant: [],
         coApplicant: [],
         guardiance: [],
-        category: [
-            { value: 'interest', label: 'Interest' },
-            { value: 'emi', label: 'EMI' },
-        ],
-        subCategory: [
-            { value: '1', label: 'Personal Loan' },
-            { value: '2', label: 'Business Loan' },
-            { value: '3', label: 'Car Loan' },
-            { value: '4', label: 'Home Loan' },
-        ],
-        ChargesType: [
-            { value: 'Document Charges', label: 'Document Charges' },
-            { value: 'Login Fees', label: 'Login Fees' },
-        ],
+
+        category: [],
+        subCategory: [],
+
+        ChargesType: [],
         percentOrAmount: [
-            { value: '1', label: 'Percentage' },
-            { value: '2', label: 'Amount' },
-        ],
+            { value: '1', label: 'Percentage %' },
+            { value: '2', label: 'Amount ₹' }, 
+        ],        
         disbursedMethod: [
             { value: 'cash', label: 'Cash' },
             { value: 'bank', label: 'Bank' },
@@ -118,6 +168,7 @@ function Index() {
             { value: '6', label: '36 Months' },
         ],
     });
+    const [selectedItem, setSelectedItem] = useState({});
     const [arrVal, setArrVal] = useState([]);
     const [perVal, setPerVal] = useState(0);
     const [IsEditArrVal, setIsEditArrVal] = useState(false);
@@ -134,26 +185,6 @@ function Index() {
     };
 
     useEffect(() => {
-        console.log("getRole Called")
-        setIsLoading(true)
-        dispatch(getAddLoanRequest());
-    }, []);
-
-    useEffect(() => {
-        console.log("getAdd Success in new Add loan")
-        console.log(getAddLoanSuccess)
-        if (getAddLoanSuccess) {
-            setIsLoading(false)
-            console.log("getAddLoanList")
-            console.log(getAddLoanList)
-            dispatch(resetGetAddLoan())
-        } else if (getAddLoanFailure) {
-            setIsLoading(false)
-            dispatch(resetGetAddLoan())
-        }
-    }, [getAddLoanSuccess, getAddLoanFailure]);
-
-    useEffect(() => {
         if (
             state?.percentOrAmount != '' &&
             state?.chargesAmount != '' &&
@@ -161,13 +192,9 @@ function Index() {
             state?.chargesAmount != null
         ) {
             if (state?.percentOrAmount === '1') {
-                const percentageValues = percentageVal(
-                    parseInt(state?.loanAmount),
-                    parseInt(state?.chargesAmount)
-                );
+                const percentageValues = percentageVal(parseInt(state?.loanAmount), parseInt(state?.chargesAmount));
                 setPerVal(percentageValues);
-            }
-            else {
+            } else {
                 setPerVal(state?.chargesAmount);
             }
         }
@@ -237,6 +264,149 @@ function Index() {
         }
     }, [state?.applicant, state?.coApplicant, state?.guardiance]);
 
+    //Dispatch Called
+    useEffect(() => {
+        setIsLoading(true);
+        dispatch(getAddLoanRequest());
+        dispatch(getCategoryRequest());
+        dispatch(getSubCategoryRequest());
+        dispatch(getLoanChargesRequest());
+    }, []);
+
+    console.log('state');
+    console.log(state);
+
+    // Category
+    useEffect(() => {
+        if (getCategorySuccess) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                category: getCategoryList,
+            });
+            dispatch(resetGetCategory());
+        } else if (getCategoryFailure) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                category: [],
+            });
+            dispatch(resetGetCategory());
+        }
+    }, [getCategorySuccess, getCategoryFailure]);
+
+    // Sub-Category
+    useEffect(() => {
+        if (getSubCategorySuccess) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                subCategory: getSubCategoryList,
+            });
+            dispatch(resetGetSubCategory());
+        } else if (getSubCategoryFailure) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                subCategory: [],
+            });
+            dispatch(resetGetSubCategory());
+        }
+    }, [getSubCategorySuccess, getSubCategoryFailure]);
+
+    // loan-charges
+    useEffect(() => {
+        console.log("getLoanChargesSuccess")
+        console.log(getLoanChargesSuccess)
+        console.log("getLoanChargesList")
+        console.log(getLoanChargesList)
+        if (getLoanChargesSuccess) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                ChargesType: getLoanChargesList,
+            });
+            dispatch(resetGetLoanCharges());
+        } else if (getLoanChargesFailure) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                ChargesType: [],
+            });
+            dispatch(resetGetLoanCharges());
+        }
+    }, [getLoanChargesSuccess, getLoanChargesFailure]);
+
+
+    useEffect(() => {
+        if (createAddLoanSuccess) {
+            const temp_state = [createAddLoanData[0]];
+            // const temp_state = [createAddLoanData[0], ...parentList];
+            // setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
+            // closeModel()
+            dispatch(resetCreateAddLoan());
+        } else if (createAddLoanFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetCreateAddLoan());
+        }
+    }, [createAddLoanSuccess, createAddLoanFailure]);
+
+    useEffect(() => {
+        if (updateAddLoanSuccess) {
+            // const temp_state = [...parentList];
+            // temp_state[selectedIndex] = updateAddLoanData[0];
+            // setParentList(temp_state);
+            isEdit && showMessage('success', 'Updated Successfully');
+            closeModel();
+            dispatch(resetUpdateAddLoan());
+        } else if (updateAddLoanFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetUpdateAddLoan());
+        }
+    }, [updateAddLoanSuccess, updateAddLoanFailure]);
+
+    const closeModel = () => {
+        isEdit = false;
+        onFormClear();
+        // setModal(false);
+    };
+
+    const onFormClear = () => {
+        setState({
+            ...state,
+            addLoanName: '',
+        });
+    };
+
+    const createModel = () => {
+        onFormClear();
+        isEdit = false;
+        // setModal(true);
+    };
+
+    const onEditForm = (data, index) => {
+        setState({
+            ...state,
+            applicant_id: '',
+            co_applicant_id: '',
+            guarantor_id: '',
+            category_id: '',
+            sub_category_id: '',
+            interest_rate: '',
+            loan_amount: '',
+            due_amount: '',
+            disbursed_date: '',
+            disbursed_amount: '',
+            tenure_period: '',
+            disbursed_method_id: '',
+        });
+        isEdit = true;
+        setSelectedItem(data);
+        // setSelectedIndex(index);
+        // setModal(true);
+    };
+
     const handleValidation = () => {
         errorHandle.current.validateFormFields();
     };
@@ -267,8 +437,43 @@ function Index() {
 
     // handleSubmit
     const handleSubmit = async () => {
-        console.log("handleSubmitted");
+        console.log('handleSubmitted');
         navigate('/dashboard', { state: { state } });
+    };
+
+    const onFormSubmit = async () => {
+        const submitRequest = {
+            applicant_id: state?.applicant || '',
+            co_applicant_id: state?.coApplicant || '',
+            guarantor_id: state?.guardiance || '',
+            category_id: state?.category || '',
+            sub_category_id: state?.subCategory || '',
+            interest_rate: state?.interest || '',
+            loan_amount: state?.loanAmount || '',
+            due_amount: '' || '',
+            disbursed_date: state?.disbursedDate || '',
+            disbursed_amount: '' || '',
+            tenure_period: state?.tenurePeriod || '',
+            disbursed_method_id: state?.disbursedMethod || '',
+            // bank_account_id: state?.addLoanName || "",
+            // created_by: state?.addLoanName || "",
+            // approved_by: state?.addLoanName || "",
+            // approved_date: state?.addLoanName || "",
+            // loan_status_id: state?.addLoanName || "",
+        };
+        if (isEdit) {
+            dispatch(updateAddLoanRequest(submitRequest, selectedItem.addLoanId));
+        } else {
+            dispatch(createAddLoanRequest(submitRequest));
+        }
+    };
+
+    const onDeleteForm = (data, index, activeChecker) => {
+        const submitRequest = {
+            isActive: activeChecker == 0 ? 1 : 0,
+        };
+        // setSelectedIndex(index);
+        dispatch(updateAddLoanRequest(submitRequest, data.addLoanId));
     };
 
     //Tab table handleEdit and handleDelete
@@ -304,7 +509,6 @@ function Index() {
                 const updata = await updateData(arrVal, state?.id, editData);
                 setArrVal(updata);
                 setIsEditArrVal(false);
-
             } else {
                 const addData = {
                     id: arrVal.length,
@@ -333,17 +537,15 @@ function Index() {
                             <FormLayout
                                 optionListState={optionListState}
                                 dynamicForm={formContainer}
-                                handleSubmit={() => showConfirmationDialog(
-                                    "Do you want to create it?",
-                                    handleSubmit,
-                                    'Yes, Create it!'
-                                )}
-                                setState={setState}
+                                handleSubmit={() =>
+                                    showConfirmationDialog('Do you want to create it?', onFormSubmit, 'Yes, Create it!')
+                                }
                                 state={state}
+                                setState={setState}
                                 ref={errorHandle}
                                 // onChangeCallBack={{ "handleCharges": handleCharges }}
                                 IsEditArrVal={IsEditArrVal}
-                                onClickCallBack={{ "handleAdd": handleAddTable }}
+                                onClickCallBack={{ handleAdd: handleAddTable }}
                                 editData={state}
                                 noOfColumns={4}
                                 errors={errors}
@@ -361,12 +563,7 @@ function Index() {
                     </div>
 
                     {/* Table */}
-                    <Table
-                        columns={columns || []}
-                        Title={`Loan Charges List`}
-                        data={arrVal || []}
-                        pageSize={5}
-                    />
+                    <Table columns={columns || []} Title={`Loan Charges List`} data={arrVal || []} pageSize={5} />
                 </Card.Body>
             </Card>
         </React.Fragment>

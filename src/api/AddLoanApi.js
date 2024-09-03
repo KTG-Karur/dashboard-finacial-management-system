@@ -5,8 +5,6 @@ const addLoan = apiContainer.addLoan
 export async function getAddLoan(request) {
   try {
     const response = await apiReturnCallBack("GET", addLoan, request);
-    console.log("response999999999999999999")
-    console.log(response)
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));

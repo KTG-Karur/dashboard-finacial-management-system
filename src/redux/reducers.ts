@@ -21,6 +21,7 @@ import expenseEntryReducer from './expense-entry/reducers';
 import incomeEntryReducer from './income-entry/reducers';
 import roleReducer from './role/reducers';
 import addLoanReducer from './add-loan/reducers';
+import loanChargesReducer from './loan-charges/reducers';
 export default combineReducers({
     Auth,
     Layout,
@@ -43,4 +44,5 @@ export default combineReducers({
     incomeEntryReducer,
     roleReducer,
     addLoanReducer,
+    loanChargesReducer,
 });

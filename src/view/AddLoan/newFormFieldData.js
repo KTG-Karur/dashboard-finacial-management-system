@@ -85,8 +85,8 @@ const formContainer = [
                 name: 'category',
                 inputType: 'select',
                 optionList: 'category',
-                displayKey: 'label',
-                uniqueKey: 'value',
+                displayKey: 'categoryName',
+                uniqueKey: 'categoryId',
                 require: true,
             },
         ],
@@ -98,10 +98,10 @@ const formContainer = [
                 name: 'subCategory',
                 inputType: 'select',
                 optionList: 'subCategory',
-                displayKey: 'label',
+                displayKey: 'subCategoryName',
+                uniqueKey: 'subCategoryId',
                 parentKey: 'category',
-                childKey: 'emi',
-                uniqueKey: 'value',
+                childKey: 'categoryId',
                 require: false,
             },
         ],
@@ -262,6 +262,19 @@ const formContainer = [
     {
         formFields: [
             {
+                label: 'Bank Name',
+                name: 'bank',
+                inputType: 'text',
+                placeholder: 'Enter Bank Name',
+                parentKey: 'disbursedMethod',
+                childKey: 'bank',
+                require: false,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
                 label: 'Account Holder Name',
                 name: 'accountHolderName',
                 inputType: 'text',
@@ -275,10 +288,10 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Branch',
+                label: 'Branch Name',
                 name: 'branch',
                 inputType: 'text',
-                placeholder: 'Enter Branch',
+                placeholder: 'Enter Branch Name',
                 parentKey: 'disbursedMethod',
                 childKey: 'bank',
                 require: false,
@@ -301,10 +314,10 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Ifsc',
+                label: 'IFSC',
                 name: 'ifcs',
                 inputType: 'text',
-                placeholder: 'Enter Ifsc',
+                placeholder: 'Enter IFSC',
                 parentKey: 'disbursedMethod',
                 childKey: 'bank',
                 require: false,

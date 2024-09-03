@@ -50,10 +50,10 @@ function FormComponent(props) {
                 }));
                 break;
             case 'file':
-                console.log("[formName]")
-                console.log(formName)
-                console.log("e.target.files[0]")
-                console.log(e.target.files[0])
+                console.log('[formName]');
+                console.log(formName);
+                console.log('e.target.files[0]');
+                console.log(e.target.files[0]);
                 setState((prev) => ({
                     ...prev,
                     [formName]: [e.target.files[0]],
@@ -64,323 +64,355 @@ function FormComponent(props) {
         }
     };
 
-
-
-    const shouldShowElement = (parentKey, childKey) => {
+    const shouldShowElement = (parentKey, childKey, optionList = null) => {
         if (parentKey && childKey) {
+            if (optionList != null) {
+                return optionList.find((obj) => obj[childKey] === state[parentKey]);
+            }
+
             return [childKey].includes(state[parentKey]);
         }
         return true;
     };
 
     return (
-        <div className='row'>
+        <div className="row">
             {formField.map((form, index) => {
                 switch (form?.inputType) {
                     case 'title':
                         return (
-                            <h4 className='mb-3 mt-2' key={index} >{form?.title || ''}</h4>
-                        )
+                            <h4 className="mb-3 mt-2" key={index}>
+                                {form?.title || ''}
+                            </h4>
+                        );
                     case 'button':
                         return (
-                            <div key={index}  style={{ height: "100px", display: "flex", justifyContent: "start", alignItems: "center" }}>
-                                <Button variant='success' onClick={() => { onClickCallBack[form?.onClick]() }}>{IsEditArrVal ? "Update" : form?.label || ''}</Button>
+                            <div
+                                key={index}
+                                style={{
+                                    height: '100px',
+                                    display: 'flex',
+                                    justifyContent: 'start',
+                                    alignItems: 'center',
+                                }}>
+                                <Button
+                                    variant="success"
+                                    onClick={() => {
+                                        onClickCallBack[form?.onClick]();
+                                    }}>
+                                    {IsEditArrVal ? 'Update' : form?.label || ''}
+                                </Button>
                             </div>
-                        )
+                        );
                     case 'textarea':
                         return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                    </span>
-                                </Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    name={form?.name}
-                                    className="mb-1"
-                                    rows={4}
-                                    placeholder={form?.placeholder}
-                                    required={form?.require}
-                                    value={state[form?.name]}
-                                    disabled={form?.isDisabled}
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    onChange={(e) => {
-                                        handleChange(e, 'textarea', form?.name);
-                                    }}
-                                />
-                                {errors?.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                )}
-                            </div>
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                                    <Form.Label>
+                                        <span>
+                                            {form?.label}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    </Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        name={form?.name}
+                                        className="mb-1"
+                                        rows={4}
+                                        placeholder={form?.placeholder}
+                                        required={form?.require}
+                                        value={state[form?.name]}
+                                        disabled={form?.isDisabled}
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        onChange={(e) => {
+                                            handleChange(e, 'textarea', form?.name);
+                                        }}
+                                    />
+                                    {errors?.includes(form?.name) && (
+                                        <p
+                                            className="text-danger"
+                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                    )}
+                                </div>
+                            )
                         );
                     case 'text':
                         return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                    </span>
-                                </Form.Label>
-                                <Form.Control
-                                    type={form?.type || "text"}
-                                    name={form?.name || ""}
-                                    className="mb-1"
-                                    placeholder={form?.placeholder}
-                                    required={form?.require}
-                                    value={state[form.name] ? state[form.name] : ''}
-                                    disabled={form?.isDisabled}
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    onChange={(e) => {
-                                        handleChange(e, 'text', form?.name);
-                                    }}
-                                />
-                                {errors?.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{form.errorMsg ? form.errorMsg : `* Please Enter ${form?.label || "Given Field"}`}</p>
-                                )}
-                            </div>
-                        );
-                    case 'file':
-                        return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                    </span>
-                                </Form.Label>
-                                <Form.Control
-                                    type="file"
-                                    name={form?.name}
-                                    className="mb-1"
-                                    placeholder={form?.placeholder}
-                                    required={form?.require}
-                                    disabled={form?.isDisabled}
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    onChange={(e) => {
-                                        handleChange(e, 'file', form?.name);
-                                    }}
-                                />
-                                {errors?.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                )}
-                            </div>
-                        );
-                    case 'number':
-                        return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                    </span>
-                                </Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name={form?.name}
-                                    className="mb-1"
-                                    placeholder={form?.placeholder}
-                                    required={form?.require}
-                                    value={state[form?.name]}
-                                    disabled={form?.isDisabled}
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    onChange={(e) => {
-                                        const value = e.target.value;
-                                        // Check if the value exceeds the maxlength
-                                        if (!form?.maxlength || value.length <= form?.maxlength) {
-                                            form.onChange ? onChangeCallBack[form.onChange](e.target.value, form.name) :
-                                                handleChange(e, 'number', form.name);
-                                        }
-                                    }}
-                                />
-                                {errors?.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                )}
-                            </div>
-                        );
-                    case 'date':
-                        return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div key={index} className={`${form?.classStyle || ""} mb-2`}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                    </span>
-                                </Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    name={form?.name}
-                                    className="mb-2"
-                                    key={index}
-                                    placeholder={form?.placeholder}
-                                    required={form?.require}
-                                    value={state[form?.name]}
-                                    disabled={form?.isDisabled}
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    onChange={(e) => {
-                                        handleChange(e, 'date', form?.name);
-                                    }}
-                                />
-                                {errors?.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                )}
-                            </div>
-                        );
-                    case 'select':
-                        return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div className={`${form?.classStyle || ""} mb-2`} key={index}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                        {
-                                            //Add Option Modal Btn
-                                            (showSelectmodel || []).includes(form?.name) && (
-                                                <Button
-                                                    variant="success"
-                                                    className="waves-effect waves-light mx-1"
-                                                    style={{ padding: '3px', lineHeight: '1.0' }}
-                                                    onClick={() => {
-                                                        toggleModal(form);
-                                                    }}>
-                                                    <i className="mdi mdi-plus-circle "></i>
-                                                </Button>
-                                            )
-                                        }
-                                    </span>
-                                </Form.Label>
-                                <Select
-                                    isMulti={form?.isMultiple}
-                                    required={form?.require}
-                                    disabled={form?.isDisabled}
-                                    onChange={(option) => {
-                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name) :
-                                            handleChange(option[form.uniqueKey], 'select', form?.name);
-                                    }}
-                                    // getOptionLabel={(option) => option?.label}
-                                    getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
-                                    getOptionValue={(option) => form.uniqueKey ? option[form.uniqueKey] : option}
-                                    value={_.find(optionListState?.[form?.optionList], option => _.isEqual(option[form.uniqueKey], state[form.name]))}
-                                    className="react-select react-select-container"
-                                    classNamePrefix="react-select"
-                                    isSearchable
-                                    onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                    options={optionListState?.[form?.optionList] || []}
-                                // options={form?.optionList}
-                                ></Select>
-                                {errors?.includes(form?.name) && (
-                                    <p
-                                        className="text-danger"
-                                        style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                )}
-
-                            </div>
-                        );
-                    case 'checkbox':
-                        return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div className={`${form?.classStyle || ""} mb-2`} key={index}>
-                                <p className="mb-1 fw-bold text-muted">
-                                    {' '}
-                                    {
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                                    <Form.Label>
                                         <span>
                                             {form?.label}{' '}
                                             {form?.require ? (
                                                 <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
                                             ) : null}
                                         </span>
-                                    }
-                                </p>
-                                {[
-                                    { label: 'a', value: 'a' },
-                                    { label: 'b', value: 'b' },
-                                    { label: 'c', value: 'c' },
-                                ].map((item, i) => {
-                                    return (
-                                        <Form.Check
-                                            key={i}
-                                            label={form?.label}
-                                            value={state[form?.name]}
-                                            type="checkbox"
-                                            id={`basic-checkbox-${i}`}
-                                            name={form?.name}
-                                            className={'mb-2 form-check-Primary'}
-                                            defaultChecked={form?.defaultChecked}
-                                            onChange={(e) => {
-                                                handleChange(item, 'checkbox', form?.name);
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </div>
+                                    </Form.Label>
+                                    <Form.Control
+                                        type={form?.type || 'text'}
+                                        name={form?.name || ''}
+                                        className="mb-1"
+                                        placeholder={form?.placeholder}
+                                        required={form?.require}
+                                        value={state[form.name] ? state[form.name] : ''}
+                                        disabled={form?.isDisabled}
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        onChange={(e) => {
+                                            handleChange(e, 'text', form?.name);
+                                        }}
+                                    />
+                                    {errors?.includes(form?.name) && (
+                                        <p className="text-danger" style={{ fontWeight: 'bold' }}>
+                                            {form.errorMsg
+                                                ? form.errorMsg
+                                                : `* Please Enter ${form?.label || 'Given Field'}`}
+                                        </p>
+                                    )}
+                                </div>
+                            )
                         );
-                    case 'radio':
+                    case 'file':
                         return (
-                            shouldShowElement(form?.parentKey, form?.childKey) &&
-                            <div className={`${form?.classStyle || ""} mb-3`} key={index}>
-                                <p className="mb-1 fw-bold text-muted">
-                                    {' '}
-                                    {
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                                    <Form.Label>
                                         <span>
-                                            {form?.label || ""}{' '}
+                                            {form?.label}{' '}
                                             {form?.require ? (
                                                 <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
                                             ) : null}
                                         </span>
-                                    }
-                                </p>
-                                <div className='d-flex'>
-                                    {(optionListState?.[form?.optionList] || []).map((item, i) => {
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="file"
+                                        name={form?.name}
+                                        className="mb-1"
+                                        placeholder={form?.placeholder}
+                                        required={form?.require}
+                                        disabled={form?.isDisabled}
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        onChange={(e) => {
+                                            handleChange(e, 'file', form?.name);
+                                        }}
+                                    />
+                                    {errors?.includes(form?.name) && (
+                                        <p
+                                            className="text-danger"
+                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                    )}
+                                </div>
+                            )
+                        );
+                    case 'number':
+                        return (
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                                    <Form.Label>
+                                        <span>
+                                            {form?.label}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name={form?.name}
+                                        className="mb-1"
+                                        placeholder={form?.placeholder}
+                                        required={form?.require}
+                                        value={state[form?.name]}
+                                        disabled={form?.isDisabled}
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            // Check if the value exceeds the maxlength
+                                            if (!form?.maxlength || value.length <= form?.maxlength) {
+                                                form.onChange
+                                                    ? onChangeCallBack[form.onChange](e.target.value, form.name)
+                                                    : handleChange(e, 'number', form.name);
+                                            }
+                                        }}
+                                    />
+                                    {errors?.includes(form?.name) && (
+                                        <p
+                                            className="text-danger"
+                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                    )}
+                                </div>
+                            )
+                        );
+                    case 'date':
+                        return (
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                                    <Form.Label>
+                                        <span>
+                                            {form?.label}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="date"
+                                        name={form?.name}
+                                        className="mb-2"
+                                        key={index}
+                                        placeholder={form?.placeholder}
+                                        required={form?.require}
+                                        value={state[form?.name]}
+                                        disabled={form?.isDisabled}
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        onChange={(e) => {
+                                            handleChange(e, 'date', form?.name);
+                                        }}
+                                    />
+                                    {errors?.includes(form?.name) && (
+                                        <p
+                                            className="text-danger"
+                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                    )}
+                                </div>
+                            )
+                        );
+                    case 'select':
+                        return (
+                            shouldShowElement(form?.parentKey, form?.childKey, optionListState?.[form?.optionList]) && (
+                                <div className={`${form?.classStyle || ''} mb-2`} key={index}>
+                                    <Form.Label>
+                                        <span>
+                                            {form?.label}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                            {
+                                                //Add Option Modal Btn
+                                                (showSelectmodel || []).includes(form?.name) && (
+                                                    <Button
+                                                        variant="success"
+                                                        className="waves-effect waves-light mx-1"
+                                                        style={{ padding: '3px', lineHeight: '1.0' }}
+                                                        onClick={() => {
+                                                            toggleModal(form);
+                                                        }}>
+                                                        <i className="mdi mdi-plus-circle "></i>
+                                                    </Button>
+                                                )
+                                            }
+                                        </span>
+                                    </Form.Label>
+                                    <Select
+                                        isMulti={form?.isMultiple}
+                                        required={form?.require}
+                                        disabled={form?.isDisabled}
+                                        onChange={(option) => {
+                                            form.onChange
+                                                ? onChangeCallBack[form.onChange](option, form.name)
+                                                : handleChange(option[form.uniqueKey], 'select', form?.name);
+                                        }}
+                                        // getOptionLabel={(option) => option?.label}
+                                        getOptionLabel={(option) =>
+                                            form.displayKey ? option[form.displayKey] : option.label
+                                        }
+                                        getOptionValue={(option) => (form.uniqueKey ? option[form.uniqueKey] : option)}
+                                        value={_.find(optionListState?.[form?.optionList], (option) =>
+                                            _.isEqual(option[form.uniqueKey], state[form.name])
+                                        )}
+                                        className="react-select react-select-container"
+                                        classNamePrefix="react-select"
+                                        isSearchable
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        options={optionListState?.[form?.optionList] || []}
+                                        // options={form?.optionList}
+                                    ></Select>
+                                    {errors?.includes(form?.name) && (
+                                        <p
+                                            className="text-danger"
+                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                    )}
+                                </div>
+                            )
+                        );
+                    case 'checkbox':
+                        return (
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div className={`${form?.classStyle || ''} mb-2`} key={index}>
+                                    <p className="mb-1 fw-bold text-muted">
+                                        {' '}
+                                        {
+                                            <span>
+                                                {form?.label}{' '}
+                                                {form?.require ? (
+                                                    <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                                ) : null}
+                                            </span>
+                                        }
+                                    </p>
+                                    {[
+                                        { label: 'a', value: 'a' },
+                                        { label: 'b', value: 'b' },
+                                        { label: 'c', value: 'c' },
+                                    ].map((item, i) => {
                                         return (
                                             <Form.Check
                                                 key={i}
-                                                label={item[form.displayKey] || ""}
-                                                type="radio"
-                                                id={`basic-radio-${i}`}
-                                                name={form?.name || ""}
-                                                className={'mb-2 form-check-Primary mx-2'}
-                                                defaultChecked={i === 0}
+                                                label={form?.label}
                                                 value={state[form?.name]}
+                                                type="checkbox"
+                                                id={`basic-checkbox-${i}`}
+                                                name={form?.name}
+                                                className={'mb-2 form-check-Primary'}
+                                                defaultChecked={form?.defaultChecked}
                                                 onChange={(e) => {
-                                                    form.onChange ? onChangeCallBack[form.onChange](item, form.name) :
-                                                        handleChange(item, 'radio', form?.name);
+                                                    handleChange(item, 'checkbox', form?.name);
                                                 }}
                                             />
                                         );
                                     })}
                                 </div>
-
-                            </div>
+                            )
+                        );
+                    case 'radio':
+                        return (
+                            shouldShowElement(form?.parentKey, form?.childKey) && (
+                                <div className={`${form?.classStyle || ''} mb-3`} key={index}>
+                                    <p className="mb-1 fw-bold text-muted">
+                                        {' '}
+                                        {
+                                            <span>
+                                                {form?.label || ''}{' '}
+                                                {form?.require ? (
+                                                    <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                                ) : null}
+                                            </span>
+                                        }
+                                    </p>
+                                    <div className="d-flex">
+                                        {(optionListState?.[form?.optionList] || []).map((item, i) => {
+                                            return (
+                                                <Form.Check
+                                                    key={i}
+                                                    label={item[form.displayKey] || ''}
+                                                    type="radio"
+                                                    id={`basic-radio-${i}`}
+                                                    name={form?.name || ''}
+                                                    className={'mb-2 form-check-Primary mx-2'}
+                                                    defaultChecked={i === 0}
+                                                    value={state[form?.name]}
+                                                    onChange={(e) => {
+                                                        form.onChange
+                                                            ? onChangeCallBack[form.onChange](item, form.name)
+                                                            : handleChange(item, 'radio', form?.name);
+                                                    }}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )
                         );
                     default:
                         console.log('form?.inputType : ', form?.inputType);

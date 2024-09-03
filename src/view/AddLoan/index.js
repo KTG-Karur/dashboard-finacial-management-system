@@ -727,8 +727,8 @@ const Index = () => {
     return (
         <React.Fragment>
             <NotificationContainer />
-            {/* <LoanPdf /> */}
-            {wizard ? (
+            <LoanPdf />
+            {/* {wizard ? (
                 <React.Fragment>
                     <WizardWithProgressbar
                         //state
@@ -795,7 +795,7 @@ const Index = () => {
                     isSearchable={true}
                     toggle={toggle}
                 />
-            )}
+            )} */}
         </React.Fragment>
     );
 };

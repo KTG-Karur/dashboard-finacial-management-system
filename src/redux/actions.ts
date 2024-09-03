@@ -19,4 +19,5 @@ export * from './expense-entry/actions';
 export * from './income-entry/actions';
 export * from './role/actions';
 export * from './add-loan/actions';
+export * from './loan-charges/actions';
 

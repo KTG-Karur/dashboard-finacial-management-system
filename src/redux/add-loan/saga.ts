@@ -12,8 +12,8 @@ import {
 // Saga to handle fetching addLoans
 function* fetchAddLoanSaga(action: any): Generator<any, any, any> {
   try {
-    console.log("fetchRoleSaga")
-    console.log(action.payload)
+    // console.log("fetchRoleSaga")
+    // console.log(action.payload)
     const data = yield call(getAddLoan, action.payload);
     yield put(getAddLoanSuccess(data));
   } catch (error: any) {
@@ -30,7 +30,11 @@ function* fetchAddLoanSaga(action: any): Generator<any, any, any> {
 // // Saga to handle creating a addLoan
 function* createAddLoanSaga(action: any): Generator<any, any, any> {
   try {
+    console.log("action.payload")
+    console.log(action.payload)
     const data = yield call(createAddLoan, action.payload);
+    console.log("data")
+    console.log(data)
     yield put(createAddLoanSuccess(data));
   } catch (error: any) {
     const errorMessage = error.response && error.response.data && error.response.data.message

@@ -13,7 +13,7 @@ import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
 
 const LoanPdf = (props) => {
 
-    const { principal = 1100000, annualInterest = 12, tenurePeriod = 13 } = props
+    const { principal = 1300000, annualInterest = 14.65, tenurePeriod = 17 } = props
 
     // console.log("multiStateValue in loan pdf")
     // console.log(multiStateValue[0])

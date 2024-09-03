@@ -17,7 +17,7 @@ const apiContainer = {
   expenseEntry: "/expense-entry",
   incomeEntry: "/income-entry",
   role: "/role",
-  addLoan: "/addLoan",
+  addLoan: "/loan",
 };
 
 export default apiContainer;
