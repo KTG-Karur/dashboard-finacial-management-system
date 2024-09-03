@@ -138,6 +138,7 @@ function Index() {
             ),
         },
     ];
+
     // useStates
     const errorHandle = useRef();
     const [state, setState] = useState({});
@@ -198,7 +199,7 @@ function Index() {
                 setPerVal(state?.chargesAmount);
             }
         }
-    }, [state?.percentOrAmount, state?.chargesAmount, state?.loanAmount]);
+    }, [state.percentOrAmount, state.chargesAmount, state.loanAmount]);
 
     useEffect(() => {
         let datafromApplicant;
@@ -262,7 +263,7 @@ function Index() {
                 guardiance: datafromGuardiance,
             });
         }
-    }, [state?.applicant, state?.coApplicant, state?.guardiance]);
+    }, [state.applicant, state.coApplicant, state.guardiance]);
 
     //Dispatch Called
     useEffect(() => {
@@ -316,10 +317,10 @@ function Index() {
 
     // loan-charges
     useEffect(() => {
-        console.log("getLoanChargesSuccess")
-        console.log(getLoanChargesSuccess)
-        console.log("getLoanChargesList")
-        console.log(getLoanChargesList)
+        // console.log("getLoanChargesSuccess")
+        // console.log(getLoanChargesSuccess)
+        // console.log("getLoanChargesList")
+        // console.log(getLoanChargesList)
         if (getLoanChargesSuccess) {
             setIsLoading(false);
             setOptionListState({
@@ -388,18 +389,16 @@ function Index() {
     const onEditForm = (data, index) => {
         setState({
             ...state,
-            applicant_id: '',
-            co_applicant_id: '',
-            guarantor_id: '',
-            category_id: '',
-            sub_category_id: '',
-            interest_rate: '',
-            loan_amount: '',
-            due_amount: '',
-            disbursed_date: '',
-            disbursed_amount: '',
-            tenure_period: '',
-            disbursed_method_id: '',
+            applicant: '',
+            coApplicant: '',
+            guardiance: '',
+            category: '',
+            subCategory: '',
+            interest: '',
+            loanAmount: '',
+            disbursedDate: '',
+            tenurePeriod: '',
+            disbursedMethod: '',
         });
         isEdit = true;
         setSelectedItem(data);
@@ -436,25 +435,25 @@ function Index() {
     };
 
     // handleSubmit
-    const handleSubmit = async () => {
-        console.log('handleSubmitted');
-        navigate('/dashboard', { state: { state } });
-    };
+    // const handleSubmit = async () => {
+    //     console.log('handleSubmitted');
+    //     navigate('/dashboard', { state: { state } });
+    // };
 
     const onFormSubmit = async () => {
         const submitRequest = {
-            applicant_id: state?.applicant || '',
-            co_applicant_id: state?.coApplicant || '',
-            guarantor_id: state?.guardiance || '',
-            category_id: state?.category || '',
-            sub_category_id: state?.subCategory || '',
-            interest_rate: state?.interest || '',
-            loan_amount: state?.loanAmount || '',
+            applicant: state?.applicant || '',
+            coApplicant: state?.coApplicant || '',
+            guardiance: state?.guardiance || '',
+            category: state?.category || '',
+            subCategory: state?.subCategory || '',
+            interest: state?.interest || '',
+            loanAmount: state?.loanAmount || '',
             due_amount: '' || '',
-            disbursed_date: state?.disbursedDate || '',
+            disbursedDate: state?.disbursedDate || '',
             disbursed_amount: '' || '',
-            tenure_period: state?.tenurePeriod || '',
-            disbursed_method_id: state?.disbursedMethod || '',
+            tenurePeriod: state?.tenurePeriod || '',
+            disbursedMethod: state?.disbursedMethod || '',
             // bank_account_id: state?.addLoanName || "",
             // created_by: state?.addLoanName || "",
             // approved_by: state?.addLoanName || "",

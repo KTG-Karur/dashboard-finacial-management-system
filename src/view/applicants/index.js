@@ -1,89 +1,138 @@
-import React, { useState, useEffect } from 'react';
-
-import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
-import Table from '../../components/Table';
-import { sizePerPageList } from '../../utils/constData';
-import { applicantTabs } from './formFieldData';
+import React, { useEffect, useRef, useState } from 'react';
+import { Badge, Spinner } from 'react-bootstrap';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
-import { Form } from 'react-bootstrap';
-import Select from 'react-select';
-import {
-    deleteData,
-    findArrObj,
-    formatDate,
-    showConfirmationDialog,
-    showMessage,
-    updateData,
-} from '../../utils/AllFunction';
+import FormLayout from '../../utils/formLayout';
+import { applicantTabs } from './formFieldData';
+import Table from '../../components/Table';
+import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
+import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
+import { createApplicantRequest, getAddressTypeRequest, getApplicantRequest, getApplicantTypeRequest, getDistrictRequest, getProofTypeRequest, getStateRequest, resetCreateApplicant, resetGetAddressType, resetGetApplicant, resetGetApplicantType, resetGetDistrict, resetGetProofType, resetGetState, resetUpdateApplicant, updateApplicantRequest } from '../../redux/actions';
+import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
 
-const Index = () => {
-    //Table column
+let isEdit = false;
+
+function Index() {
+
+    const { dispatch, appSelector } = useRedux();
+
+    const { getApplicantSuccess, getApplicantList, getApplicantFailure,
+        getDistrictSuccess, getDistrictList, getDistrictFailure,
+        getAddressTypeSuccess, getAddressTypeList, getAddressTypeFailure,
+        getApplicantTypeSuccess, getApplicantTypeList, getApplicantTypeFailure,
+        getStateSuccess, getStateList, getStateFailure,
+        getProofTypeSuccess, getProofTypeList, getProofTypeFailure,
+        createApplicantSuccess, createApplicantData, createApplicantFailure,
+        updateApplicantSuccess, updateApplicantData, updateApplicantFailure,errorMessage
+
+    } = appSelector((state) => ({
+        getApplicantSuccess: state.applicantReducer.getApplicantSuccess,
+        getApplicantList: state.applicantReducer.getApplicantList,
+        getApplicantFailure: state.applicantReducer.getApplicantFailure,
+
+        getStateSuccess: state.stateReducer.getStateSuccess,
+        getStateList: state.stateReducer.getStateList,
+        getStateFailure: state.stateReducer.getStateFailure,
+
+        getApplicantTypeSuccess: state.applicantTypeReducer.getApplicantTypeSuccess,
+        getApplicantTypeList: state.applicantTypeReducer.getApplicantTypeList,
+        getApplicantTypeFailure: state.applicantTypeReducer.getApplicantTypeFailure,
+
+        getDistrictSuccess: state.districtReducer.getDistrictSuccess,
+        getDistrictList: state.districtReducer.getDistrictList,
+        getDistrictFailure: state.districtReducer.getDistrictFailure,
+
+        getProofTypeSuccess: state.proofTypeReducer.getProofTypeSuccess,
+        getProofTypeList: state.proofTypeReducer.getProofTypeList,
+        getProofTypeFailure: state.proofTypeReducer.getProofTypeFailure,
+
+        getAddressTypeSuccess: state.addressTypeReducer.getAddressTypeSuccess,
+        getAddressTypeList: state.addressTypeReducer.getAddressTypeList,
+        getAddressTypeFailure: state.addressTypeReducer.getAddressTypeFailure,
+
+        createApplicantSuccess: state.applicantReducer.createApplicantSuccess,
+        createApplicantData: state.applicantReducer.createApplicantData,
+        createApplicantFailure: state.applicantReducer.createApplicantFailure,
+
+        updateApplicantSuccess: state.applicantReducer.updateApplicantSuccess,
+        updateApplicantData: state.applicantReducer.updateApplicantData,
+        updateApplicantFailure: state.applicantReducer.updateApplicantFailure,
+
+        errorMessage: state.applicantReducer.errorMessage,
+    }));
+
     const columns = [
         {
-            Header: 'S.no',
+            Header: 'S.No',
             accessor: 'id',
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Applicant Id',
-            accessor: 'applicantId',
+            Header: 'Customer Id',
+            accessor: 'applicantCode',
             sort: true,
         },
         {
-            Header: 'Applicant Name',
+            Header: 'Customer Name',
             accessor: 'applicantName',
             sort: false,
         },
         {
-            Header: 'Applicant Contact',
-            accessor: 'applicantContact',
+            Header: 'Contact No.',
+            accessor: 'contactNo',
             sort: false,
         },
         {
             Header: 'Gender',
-            accessor: 'gender',
+            accessor: 'genderName',
             sort: false,
         },
         {
-            Header: 'Applicant Type',
-            accessor: 'applicantType',
+            Header: 'Customer Type',
+            accessor: 'applicantTypeName',
             sort: true,
         },
         {
             Header: 'Actions',
             accessor: 'actions',
-            Cell: ({ row }) => (
-                <div>
-                    <span className="text-success  me-2 cursor-pointer" onClick={() => handleEdit(row?.original?.id)}>
-                        <i className={'fe-edit-1'}></i> Edit
-                    </span>
-                    <span
-                        className="text-danger cursor-pointer"
-                        onClick={() =>
-                            showConfirmationDialog(
-                                "You won't be able to revert this!",
-                                () => handleDelete(row?.original?.id),
-                                'Yes, Delete it!'
-                            )
-                        }>
-                        <i className={'fe-trash-2'}></i> Delete
-                    </span>
-                </div>
-            ),
-        },
+            Cell: ({ row }) => {
+                const activeChecker = row.original.isActive
+                const iconColor = activeChecker ? "text-danger" : "text-warning";
+                const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
+                return (
+                    <div>
+                        <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+                            <i className={'fe-edit-1'}></i>
+                        </span>
+                        <span
+                            className={`${iconColor} cursor-pointer`}
+                            onClick={() =>
+                                showConfirmationDialog(
+                                    deleteMessage,
+                                    () => onDeleteForm(row.original, row.index, activeChecker),
+                                    'Yes'
+                                )
+                            }>
+                            {
+                                row?.original?.isActive ? <i className={'fe-trash-2'}></i> : <i className={'fas fa-recycle'}></i>
+                            }
+                        </span>
+                    </div>
+                )
+            },
+        }
     ];
 
     const columnsWizard = {
         addressInfo: [
             {
-                Header: 'S.no',
+                Header: 'S.No',
                 accessor: 'id',
                 Cell: (row) => <div>{row?.row?.index + 1}</div>,
             },
             {
                 Header: 'Address Type',
-                accessor: 'addressType',
+                accessor: 'addressTypeName',
                 sort: true,
             },
             {
@@ -92,18 +141,13 @@ const Index = () => {
                 sort: true,
             },
             {
-                Header: 'Country',
-                accessor: 'country',
-                sort: false,
-            },
-            {
                 Header: 'State',
-                accessor: 'states',
+                accessor: 'stateName',
                 sort: true,
             },
             {
                 Header: 'District',
-                accessor: 'district',
+                accessor: 'districtName',
                 sort: true,
             },
             {
@@ -141,24 +185,26 @@ const Index = () => {
 
         idProof: [
             {
-                Header: 'S.no',
+                Header: 'S.No',
                 accessor: 'id',
                 Cell: (row) => <div>{row?.row?.index + 1}</div>,
             },
             {
-                Header: 'Id Proof',
-                accessor: 'idProof',
+                Header: 'Proof Type',
+                accessor: 'proofTypeName',
                 sort: true,
             },
             {
-                Header: 'Proof No',
-                accessor: 'proofIdNo',
+                Header: 'Proof No.',
+                accessor: 'proofNo',
                 sort: true,
             },
             {
                 Header: 'Actions',
                 accessor: 'actions',
-                Cell: ({ row }) => (
+                Cell: ({ row }) => {
+                    console.log(row.original)
+                    return(
                     <div>
                         <span
                             className="text-success  me-2 cursor-pointer"
@@ -177,412 +223,240 @@ const Index = () => {
                             <i className={'fe-trash-2'}></i> Delete
                         </span>
                     </div>
-                ),
+                )},
             },
         ],
     };
 
-    // useStates
     const [state, setState] = useState({});
+    const [parentList, setParentList] = useState([]);
+    const [selectedItem, setSelectedItem] = useState({});
+    const [selectedIndex, setSelectedIndex] = useState(false);
     const [optionListState, setOptionListState] = useState({
-        addressType: [
-            { value: 'personal', label: 'Personal' },
-            { value: 'current', label: 'Current' },
-            { value: 'office', label: 'Office' },
+        genderList: [
+            { genderId : 1 , genderName: 'Male' },
+            { genderId : 2 , genderName: 'Female' },
+            { genderId : 3 , genderName: 'Others' },
         ],
-        country: [
-            { countryId: '1', value: '1', label: 'India' },
-            { countryId: '2', value: '2', label: 'Srilanka' },
-            { countryId: '3', value: '3', label: 'Pakistan' },
+        maritalStatusList: [
+            { maritalStatusId : 1 , maritalStatusName: 'Married' },
+            { maritalStatusId : 2 , maritalStatusName: 'Single' },
         ],
-        states: [
-            { stateId: '1', value: '1', label: 'Karnataka', countryId: '1' },
-            { stateId: '2', value: '2', label: 'Colombo', countryId: '2' },
-            { stateId: '3', value: '3', label: 'Tamilnadu', countryId: '1' },
-        ],
-        district: [
-            { districtId: '1', value: '1', label: 'Karur', statesId: '3' },
-            { districtId: '2', value: '2', label: 'Chennai', statesId: '3' },
-            { districtId: '3', value: '3', label: 'bangalore', statesId: '1' },
-        ],
-        gender: [
-            { value: 'male', label: 'Male' },
-            { value: 'female', label: 'Female' },
-            { value: 'other', label: 'other' },
-        ],
-        marriedStatus: [
-            { value: 'married', label: 'Married' },
-            { value: 'unmarried', label: 'Unmarried' },
-        ],
-        applicantType: [
-            { applicantType: '1', value: 'salary', label: 'Salary' },
-            { applicantType: '2', value: 'bussiness', label: 'Bussiness' },
-        ],
-        idProof: [
-            { value: 'addharcard', label: 'Addhar Card' },
-            { value: 'pancard', label: 'Pan Card' },
-            { value: 'voteid', label: 'voteid' },
-        ],
-        salaryType: [
-            { value: 'cashonhand', label: 'Cash on hand' },
-            { value: 'banktransfor', label: 'Bank Transfor' },
-        ],
-    });
-    const [multiStateValue, setMultiStateValue] = useState([{}]);
-    const [stored, setStored] = useState([{ id: 1 }, { id: 2 }]);
-    const [errors, setErrors] = useState([]);
-    const [tblList, setTblList] = useState([
-        {
-            id: '1',
-            applicantId: 'HF01',
-            applicantName: 'Surya',
-            applicantContact: '9876543221',
-            gender: 'Male',
-            applicantType: 'salary',
-        },
-        {
-            id: '2',
-            applicantId: 'HF21',
-            applicantName: 'Raja',
-            applicantContact: '9876543221',
-            gender: 'Male',
-            applicantType: 'bussiness',
-        },
-    ]);
-    const [wizard, setWizard] = useState(false);
-    const [modal, setModel] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [tab, setTab] = useState('personalInfo');
-    const [getModelForm, setModelForm] = useState({});
-    const copyStateDistrict = {
-        states: [
-            { stateId: '1', value: '1', label: 'Karnataka', countryId: '1' },
-            { stateId: '2', value: '2', label: 'Colombo', countryId: '2' },
-            { stateId: '3', value: '3', label: 'Tamilnadu', countryId: '1' },
-        ],
-        district: [
-            { districtId: '1', value: '1', label: 'Karur', statesId: '3' },
-            { districtId: '2', value: '2', label: 'Chennai', statesId: '3' },
-            { districtId: '3', value: '3', label: 'bangalore', statesId: '1' },
-        ],
-    };
-    const showSelectmodel = ['addressType', 'district', 'states', 'idProof'];
-    const showMultiAdd = ['idProof', 'addressInfo'];
-    const [tabIndex, setTabIndex] = useState(0);
+    })
+
+    const [wizardModel, setWizardModel] = useState(false);
     const [arrVal, setArrVal] = useState([]);
+    const [tabIndex, setTabIndex] = useState(0);
+    const [tab, setTab] = useState('personalInfo');
+    const [multiStateValue, setMultiStateValue] = useState([{}]);
     const [IsEditArrVal, setIsEditArrVal] = useState(false);
+    const showSelectmodel = ['addressTypeId', 'districtId', 'stateId', 'proofTypeId'];
+    const [stored, setStored] = useState([{ id: 1 }, { id: 2 }]);
+    const showMultiAdd = ['idProof', 'addressInfo'];
+    const [getModelForm, setModelForm] = useState({});
+    const [isEdit, setIsEdit] = useState(false);
     const [tabList, setTabList] = useState(applicantTabs);
 
-    useEffect(() => {
-        if (state?.applicantType !== '') {
-            let updatedTabList = [...tabList]; // Create a copy of the current tab list
+    const [modal, setModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState([]);
 
-            const formList =
-                state?.applicantType === 'salary'
-                    ? {
-                          label: 'Income Info',
-                          name: 'incomeInfo',
-                          icon: 'mdi mdi-cash',
-                          children: [
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Select Applicant type',
-                                          name: 'applicantType',
-                                          inputType: 'select',
-                                          optionList: 'applicantType',
-                                          displayKey: 'label',
-                                          uniqueKey: 'value',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Company Name',
-                                          name: 'companyName',
-                                          inputType: 'text',
-                                          placeholder: 'Enter Company Name',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Company Address',
-                                          name: 'companyAddress',
-                                          inputType: 'text',
-                                          placeholder: 'Enter Company Address',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Office Contact No',
-                                          name: 'officeContactNo',
-                                          inputType: 'number',
-                                          maxlength: 10,
-                                          placeholder: 'Enter Office No',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Date Of Joining',
-                                          name: 'dateofjoining',
-                                          inputType: 'date',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Salary Date',
-                                          name: 'salaryDate',
-                                          inputType: 'date',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Salary Type',
-                                          name: 'salaryType',
-                                          inputType: 'select',
-                                          optionList: 'salaryType',
-                                          displayKey: 'label',
-                                          uniqueKey: 'value',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Monthly Income',
-                                          name: 'monthlyIncome',
-                                          inputType: 'number',
-                                          placeholder: 'Enter Monthly Income',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                          ],
-                      }
-                    : {
-                          label: 'Income Info',
-                          name: 'incomeInfo',
-                          icon: 'mdi mdi-cash',
-                          children: [
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Select Applicant type',
-                                          name: 'applicantType',
-                                          inputType: 'select',
-                                          optionList: 'applicantType',
-                                          displayKey: 'label',
-                                          uniqueKey: 'value',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Business Name',
-                                          name: 'businessName',
-                                          inputType: 'text',
-                                          placeholder: 'Enter Business Name',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Business Address',
-                                          name: 'businessAddress',
-                                          inputType: 'text',
-                                          placeholder: 'Enter Business Address',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Office Contact No',
-                                          name: 'officeContactNo',
-                                          inputType: 'number',
-                                          maxlength: 10,
-                                          placeholder: 'Enter Office No',
-                                          require: true,
-                                      },
-                                      {
-                                          label: 'Starting Date',
-                                          name: 'startingDate',
-                                          inputType: 'date',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                              {
-                                  formFields: [
-                                      {
-                                          label: 'Monthly Income',
-                                          name: 'monthlyIncome',
-                                          inputType: 'number',
-                                          placeholder: 'Enter Monthly Income',
-                                          require: true,
-                                      },
-                                  ],
-                              },
-                          ],
-                      };
-
-            // Find the index of the incomeInfo tab
-            const incomeInfoIndex = updatedTabList.findIndex((tab) => tab.name === 'incomeInfo');
-
-            if (incomeInfoIndex !== -1) {
-                // Replace the existing incomeInfo tab with the new formList
-                updatedTabList[incomeInfoIndex] = formList;
-                setTabList(updatedTabList); // Update the state with the modified tab list
-            }
-        }
-    }, [state?.applicantType]);
+    const errorHandle = useRef();
 
     useEffect(() => {
-        fetchDistrict();
-        fetchState();
-    }, [state?.country, state?.states]);
+        setIsLoading(true)
+        dispatch(getApplicantRequest());
+        dispatch(getProofTypeRequest());
+        dispatch(getAddressTypeRequest());
+        dispatch(getStateRequest());
+        dispatch(getApplicantTypeRequest());
+    }, []);
 
-
-    // Fetch District and State
-    const fetchDistrict = async () => {
-        const result = copyStateDistrict.district.filter((item) => item.statesId === state?.states);
-        setOptionListState((prevState) => ({
-            ...prevState,
-            district: result,
-        }));
-    };
-    const fetchState = async () => {
-        const result = copyStateDistrict.states.filter((item) => item.countryId === state?.country);
-        setOptionListState((prevState) => ({
-            ...prevState,
-            states: result,
-        }));
-    };
-
-    // Toggle
-    const toggle = () => {
-        setTab('personalInfo');
-        setTabIndex(0);
-        if (isEdit) {
-            setIsEdit(false);
+    useEffect(() => {
+        if (getApplicantSuccess) {
+            setIsLoading(false)
+            setParentList(getApplicantList)
+            dispatch(resetGetApplicant())
+        } else if (getApplicantFailure) {
+            setIsLoading(false)
+            setParentList([])
+            dispatch(resetGetApplicant())
         }
-        setWizard(!wizard);
-    };
-    const toggleModal = (form) => {
-        setModel(!modal);
-        setModelForm(form);
-    };
+    }, [getApplicantSuccess, getApplicantFailure]);
 
-    // Select Option Create Operation
-    let val = { value: '', label: '' };
-    const handleChangeSelectOption = (value, name = '') => {
-        if (name === 'states') {
-            val = { ...val, countryId: value?.countryId };
-        } else if (name === 'district') {
-            val = { ...val, stateId: value?.stateId };
+    useEffect(() => {
+        if (getProofTypeSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                proofTypeList :getProofTypeList
+            })
+            dispatch(resetGetProofType())
+        } else if (getProofTypeFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                proofTypeList : []
+            })
+            dispatch(resetGetProofType())
         }
-        val.value = value;
-        val.label = value;
-    };
+    }, [getProofTypeSuccess, getProofTypeFailure]);
 
-    // handleSubmit for Add Option
-    const handleSubmitSelectOption = () => {
-        if (val?.value === '') return false;
-
-        switch (getModelForm?.name || '') {
-            case 'addressType':
-                setOptionListState((prevState) => ({
-                    ...prevState,
-                    addressType: [...prevState.addressType, val],
-                }));
-                break;
-            case 'idProof':
-                setOptionListState((prevState) => ({
-                    ...prevState,
-                    idProof: [...prevState.idProof, val],
-                }));
-                break;
-            case 'country':
-                setOptionListState((prevState) => ({
-                    ...prevState,
-                    country: [...prevState.country, { countryId: optionListState.country.length + 1, ...val }],
-                }));
-                break;
-            case 'states':
-                setOptionListState((prevState) => ({
-                    ...prevState,
-                    states: [...prevState.states, { stateId: optionListState.states.length + 1, ...val }],
-                }));
-                break;
-            case 'district':
-                setOptionListState((prevState) => ({
-                    ...prevState,
-                    district: [...prevState.district, { districtId: optionListState.district.length + 1, ...val }],
-                }));
-                break;
-            default:
-                break;
+    useEffect(() => {
+        if (getDistrictSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                districtList : getDistrictList
+            })
+            dispatch(resetGetDistrict())
+        } else if (getDistrictFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                districtList : []
+            })
+            dispatch(resetGetDistrict())
         }
-        toggleModal();
-    };
+    }, [getDistrictSuccess, getDistrictFailure]);
 
-    // handleSubmit
-    const handleSubmit = async () => {
-        setTab('personalInfo');
-        setTabIndex(0);
-        setArrVal([]);
-        setState({});
-        if (isEdit) {
-            const res = {
-                id: multiStateValue[0]?.id,
-                applicantId: `HF0${multiStateValue[0]?.id}`,
-                applicantName: multiStateValue[0].personalInfo.firstName,
-                applicantContact: multiStateValue[0].personalInfo.contactNo,
-                gender: multiStateValue[0].personalInfo.gender,
-                applicantType: multiStateValue[0].incomeInfo.applicantType,
-            };
-            const updata = await updateData(tblList, multiStateValue[0]?.id, res);
-            const updataStore = await updateData(stored, multiStateValue[0]?.id, multiStateValue[0]);
-            setTblList(updata);
-            setStored(updataStore);
-            setIsEdit(false);
-            setMultiStateValue([{}]);
-            showMessage('success', 'Updated Successfully');
-        } else {
-            const newEntries = [];
-            multiStateValue.map((item, index) => {
-                const res = {
-                    id: stored.length + index + 1,
-                    applicantId: `HF0${stored.length + index + 1}`,
-                    applicantName: item.personalInfo.firstName,
-                    applicantContact: item.personalInfo.contactNo,
-                    gender: item.personalInfo.gender,
-                    applicantType: item.incomeInfo.applicantType,
-                };
-                const setId = { id: stored.length + index + 1, ...item };
-                setStored((prev) => [...prev, setId]);
-                newEntries.push(res);
-            });
-            setTblList((prev) => [...prev, ...newEntries]);
-            setMultiStateValue([{}]);
-            setState({});
+    useEffect(() => {
+        if (getApplicantTypeSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                applicantTypeList : getApplicantTypeList
+            })
+            dispatch(resetGetApplicantType())
+        } else if (getApplicantTypeFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                applicantTypeList : []
+            })
+            dispatch(resetGetApplicantType())
+        }
+    }, [getApplicantTypeSuccess, getApplicantTypeFailure]);
+
+    useEffect(() => {
+        if (getAddressTypeSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                addressTypeList :getAddressTypeList
+            })
+            dispatch(resetGetAddressType())
+        } else if (getAddressTypeFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                addressTypeList : []
+            })
+            dispatch(resetGetAddressType())
+        }
+    }, [getAddressTypeSuccess, getAddressTypeFailure]);
+
+    useEffect(() => {
+        if (getStateSuccess) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                stateList :getStateList
+            })
+            dispatch(resetGetState())
+        } else if (getStateFailure) {
+            setIsLoading(false)
+            setOptionListState({
+                ...optionListState,
+                stateList : []
+            })
+            dispatch(resetGetState())
+        }
+    }, [getStateSuccess, getStateFailure]);
+
+    useEffect(() => {
+        if (createApplicantSuccess) {
+            const temp_state = [createApplicantData[0], ...parentList];
+            setParentList(temp_state)
             showMessage('success', 'Created Successfully');
+            closeModel()
+            dispatch(resetCreateApplicant())
+        } else if (createApplicantFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetCreateApplicant())
         }
-        toggle();
+    }, [createApplicantSuccess, createApplicantFailure]);
+
+    useEffect(() => {
+        if (updateApplicantSuccess) {
+            const temp_state = [...parentList];
+            temp_state[selectedIndex] = updateApplicantData[0];
+            setParentList(temp_state)
+            isEdit && showMessage('success', 'Updated Successfully');
+            closeModel()
+            dispatch(resetUpdateApplicant())
+        } else if (updateApplicantFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetUpdateApplicant())
+        }
+    }, [updateApplicantSuccess, updateApplicantFailure]);
+
+    const closeModel = () => {
+        isEdit = false;
+        onFormClear()
+        setModal(false)
+    }
+
+    const onFormClear = () => {
+        setState({
+            ...state,
+            firstName: '',
+            lastName: '',
+            dob: '',
+            contactNo: '',
+            alternativeContactNo: '',
+            email: '',
+            genderId: '',
+            qualification: '',
+            maritalStatusId: '',
+        });
     };
 
-    // handleEdit
-    const handleEdit = async (id) => {
-        setIsEdit(true);
-        const result = await findArrObj(stored, parseInt(id));
-        setMultiStateValue(result);
-        toggle();
+    const createModel = () => {
+        onFormClear()
+        // isEdit = false;
+        // // setModal(true)
+        
+        setWizardModel(true)
     };
 
-    //handleDelete
-    const handleDelete = async (id) => {
-        const delDataforStored = await deleteData(stored, id);
-        setStored(delDataforStored);
-        const delDataforTable = await deleteData(tblList, id);
-        setTblList(delDataforTable);
+    const onEditForm = (data, index) => {
+        setState({
+            ...state,
+            applicantName: data?.applicantName || "",
+        });
+        isEdit = true;
+        setSelectedItem(data)
+        setSelectedIndex(index)
+        setModal(true)
     };
 
-    //Tab table handleEdit and handleDelete
+    const handleValidation = () => {
+        errorHandle.current.validateFormFields();
+    }
+
+    const onFormSubmit = async () => {
+        console.log(JSON.stringify(multiStateValue))
+        const submitRequest = {
+            applicantName: state?.applicantName || ""
+        }
+        if (isEdit) {
+            // dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
+        } else {
+            // dispatch(createApplicantRequest(submitRequest))
+        }
+    };
+
     const handleEditTabTable = async (data, id) => {
         setIsEditArrVal(true);
         const updatedState = { ...data, id: id };
@@ -590,16 +464,69 @@ const Index = () => {
     };
     //handleDelete
     const handleDeleteTabTable = async (id) => {
-        const delData = await deleteData(arrVal, id);
-        setArrVal(delData);
+        // const delData = await deleteData(arrVal, id);
+        // setArrVal(delData);
     };
+
+    const onDeleteForm = (data, index, activeChecker) => {
+        const submitRequest = {
+            isActive: activeChecker == 0 ? 1 : 0
+        }
+        setSelectedIndex(index)
+        dispatch(updateApplicantRequest(submitRequest, data.applicantId))
+    };
+
+    const toggleModal = (form) => {
+        // setModel(!modal);
+        // setModelForm(form);
+    };
+
+    const toggle = () => {
+        setTab('personalInfo');
+        setTabIndex(0);
+        if (isEdit) {
+            setIsEdit(false);
+        }
+        setWizardModel(!wizardModel);
+    };
+
+    //------->
+    const onHandleProofType = (data, name, uniqueKey, displayKey, selectedObj)=>{
+        const nameData = data[displayKey]
+        setState({
+            ...state,
+            [name] : data[uniqueKey],
+            [displayKey] : nameData,
+            [selectedObj] : data
+        })
+    }
+
+    const onHandleState = (data, name, uniqueKey, displayKey, selectedObj)=>{
+        const stateName = data.stateName
+        setState({
+            ...state,
+            [name] : data[uniqueKey],
+            stateName : stateName,
+            [selectedObj] : data,
+            districtId : ""
+        })
+        const districtReq = {
+            stateId : data[uniqueKey]
+        }
+        dispatch(getDistrictRequest(districtReq));
+    }
+
     return (
         <React.Fragment>
-            <NotificationContainer />
-            {wizard ? (
+        <NotificationContainer />
+           { isLoading ? <div className='bg-light opacity-0.25'>
+            <div className="d-flex justify-content-center m-5">
+                <Spinner className='mt-5 mb-5' animation="border" />
+            </div>
+            </div> : 
+            wizardModel ? (
                 <React.Fragment>
                     <WizardWithProgressbar
-                        //state
                         arrVal={arrVal}
                         setArrVal={setArrVal}
                         tabIndex={tabIndex}
@@ -607,6 +534,7 @@ const Index = () => {
                         isEdit={isEdit}
                         setTab={setTab}
                         tab={tab}
+                        onChangeCallBack = {{"onHandleProofType" : onHandleProofType, "onHandleState" : onHandleState}}
                         state={state}
                         setState={setState}
                         multiStateValue={multiStateValue}
@@ -616,22 +544,18 @@ const Index = () => {
                         setStored={setStored}
                         IsEditArrVal={IsEditArrVal}
                         setIsEditArrVal={setIsEditArrVal}
-                        tblList={tblList}
-                        //const value
-                        Title={'Applicant Details'}
+                        tblList={parentList}
+                        Title={'Customer Details'}
                         showSelectmodel={showSelectmodel}
                         showMultiAdd={showMultiAdd}
                         optionListState={optionListState}
-                        columnsWizard={columnsWizard}  
-                        //function
-                        // onChangeCallBack={{ handleSelect: handleCountry }}
+                        columnsWizard={columnsWizard}
                         toggleModal={toggleModal}
                         toggle={toggle}
-                        handleSubmit={handleSubmit}
-                        //formFieldData.js
+                        handleSubmit={onFormSubmit}
                         tabList={tabList}
                     />
-                    <ModelViewBox
+                    {/* <ModelViewBox
                         modal={modal}
                         setModel={setModel}
                         modelHeader={getModelForm?.label || ''}
@@ -668,23 +592,37 @@ const Index = () => {
                                 handleChangeSelectOption(e.target.value);
                             }}
                         />
-                    </ModelViewBox>
+                    </ModelViewBox> */}
                 </React.Fragment>
-            ) : (
-                <Table
-                    columns={columns}
-                    Title={'Applicant List'}
-                    data={tblList || []}
-                    pageSize={5}
-                    sizePerPageList={sizePerPageList}
-                    isSortable={true}
-                    pagination={true}
-                    isSearchable={true}
-                    toggle={toggle}
+            ) : 
+            <Table
+                columns={columns}
+                Title={'Customer List'}
+                data={parentList || []}
+                pageSize={5}
+                toggle={createModel}
+            />}
+
+            {/* <ModelViewBox
+                modal={modal}
+                setModel={setModal}
+                modelHeader={'Customer'}
+                modelSize={'md'}
+                isEdit={isEdit}
+                handleSubmit={handleValidation}>
+                <FormLayout
+                    dynamicForm={employeeFormContainer}
+                    handleSubmit={onFormSubmit}
+                    setState={setState}
+                    state={state}
+                    ref={errorHandle}
+                    noOfColumns={1}
+                    errors={errors}
+                    setErrors={setErrors}
                 />
-            )}
+            </ModelViewBox> */}
         </React.Fragment>
     );
-};
+}
 
 export default Index;

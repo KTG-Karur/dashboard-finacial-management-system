@@ -13,7 +13,7 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-cache',
     'If-Modified-Since': 0,
-    'auth' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZlbnNyaW5pMDQxNEBnbWFpbC5jb20iLCJpYXQiOjE3MjUyODc3Njh9.VciLKuV6NB_HcqXbAxgwJD7XaNKJtodfe6h4U2ZwPIg'
+    'auth' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZlbnNyaW5pMDQxNEBnbWFpbC5jb20iLCJpYXQiOjE3MjUzMzY0MjF9.ehs4AqxQS3Wj9m1LmTsUiRXsdpD-gKqBzjwDKZjLMas'
   };
 
   const fetchConfig = {

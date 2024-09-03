@@ -2,6 +2,14 @@ const employeeFormContainer = [
     {
         formFields: [
             {
+                'label': "Is User",
+                'name': "isUser",
+                'inputType': "checkbox",
+                'onChange' : "handleCheckbox",
+                'classStyle' : 'col-12',
+                'require': true
+            },
+            {
                 'label': "First Name",
                 'name': "firstName",
                 'inputType': "text",
@@ -83,7 +91,7 @@ const employeeFormContainer = [
             },
             {
                 'label': "Date of Joining",
-                'name': "dateofjoining",
+                'name': "dateOfJoining",
                 'inputType': "date",
                 'classStyle' : 'col-6',
                 'require': false

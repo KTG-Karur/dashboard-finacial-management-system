@@ -21,3 +21,4 @@ export * from './role/actions';
 export * from './add-loan/actions';
 export * from './loan-charges/actions';
 
+export * from './applicant/actions';

@@ -16,6 +16,7 @@ const apiContainer = {
   loanCharges: "/loan-charges",
   expenseEntry: "/expense-entry",
   incomeEntry: "/income-entry",
+  applicant: "/applicant",
   role: "/role",
   addLoan: "/loan",
 };
