@@ -87,6 +87,7 @@ const formContainer = [
                 optionList: 'category',
                 displayKey: 'categoryName',
                 uniqueKey: 'categoryId',
+                onChange: 'handleCharges',
                 require: true,
             },
         ],
@@ -100,8 +101,6 @@ const formContainer = [
                 optionList: 'subCategory',
                 displayKey: 'subCategoryName',
                 uniqueKey: 'subCategoryId',
-                parentKey: 'category',
-                childKey: 'categoryId',
                 require: false,
             },
         ],
@@ -166,8 +165,8 @@ const formContainer = [
                 inputType: 'select',
                 optionList: 'ChargesType',
                 // onChange:'handleCharges',
-                displayKey: 'label',
-                uniqueKey: 'value',
+                displayKey: 'loanChargesName',
+                uniqueKey: 'loanChargesId',
                 require: false,
             },
         ],
@@ -193,6 +192,7 @@ const formContainer = [
                 name: 'chargesAmount',
                 inputType: 'number',
                 // onChange:'handleCharges',
+                maxlength: 2,
                 placeholder: 'Enter Charges Amount',
                 require: false,
             }
@@ -260,70 +260,54 @@ const formContainer = [
         ],
     },
     {
-        formFields: [
-            {
-                label: 'Bank Name',
-                name: 'bank',
-                inputType: 'text',
-                placeholder: 'Enter Bank Name',
-                parentKey: 'disbursedMethod',
-                childKey: 'bank',
-                require: false,
-            },
-        ],
-    },
-    {
-        formFields: [
-            {
-                label: 'Account Holder Name',
-                name: 'accountHolderName',
-                inputType: 'text',
-                placeholder: 'Enter Account Holder Name',
-                parentKey: 'disbursedMethod',
-                childKey: 'bank',
-                require: false,
-            },
-        ],
-    },
-    {
-        formFields: [
-            {
-                label: 'Branch Name',
-                name: 'branch',
-                inputType: 'text',
-                placeholder: 'Enter Branch Name',
-                parentKey: 'disbursedMethod',
-                childKey: 'bank',
-                require: false,
-            },
-        ],
-    },
-    {
-        formFields: [
-            {
-                label: 'Account No',
-                name: 'accountNo',
-                inputType: 'number',
-                placeholder: 'Enter Account No',
-                parentKey: 'disbursedMethod',
-                childKey: 'bank',
-                require: false,
-            },
-        ],
-    },
-    {
-        formFields: [
-            {
-                label: 'IFSC',
-                name: 'ifcs',
-                inputType: 'text',
-                placeholder: 'Enter IFSC',
-                parentKey: 'disbursedMethod',
-                childKey: 'bank',
-                require: false,
-            },
-        ],
+        formFields: [],
     },
 ];
 
-export { formContainer };
+
+
+
+const modelFormContainer = [
+    {
+        formFields: [
+            {
+                label: 'Loan Charges',
+                name: 'ChargesType',
+                inputType: 'select',
+                optionList: 'ChargesType',
+                displayKey: 'loanChargesName',
+                uniqueKey: 'loanChargesId',
+                require: true,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
+                label: 'Percentage  or Amount',
+                name: 'percentOrAmount',
+                inputType: 'select',
+                optionList: 'percentOrAmount',
+                // onChange:'handleCharges',
+                displayKey: 'label',
+                uniqueKey: 'value',
+                require: false,
+            }
+        ]
+    },
+    {
+        formFields: [
+            {
+                label: 'Charges Amount',
+                name: 'chargesAmount',
+                inputType: 'number',
+                maxlength: 2,
+                // onChange:'handleCharges',
+                placeholder: 'Enter Charges Amount',
+                require: false,
+            }
+        ]
+    },
+]
+
+export { formContainer, modelFormContainer };

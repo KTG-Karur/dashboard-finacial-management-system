@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { formContainer } from './newFormFieldData';
+import { formContainer, modelFormContainer } from './newFormFieldData';
 import { Row, Col, Card, Button } from 'react-bootstrap';
 // component
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
 import {
     deleteData,
+    findObj,
     percentageVal,
     showConfirmationDialog,
     showMessage,
@@ -13,13 +14,8 @@ import {
     ValtoPercentage,
 } from '../../utils/AllFunction';
 import {
+    //loan
     getAddLoanRequest,
-    resetGetAddLoan,
-    createAddLoanRequest,
-    resetCreateAddLoan,
-    resetUpdateAddLoan,
-    updateAddLoanRequest,
-
     //category
     getCategoryRequest,
     resetGetCategory,
@@ -31,26 +27,28 @@ import {
     //loan-charges
     getLoanChargesRequest,
     resetGetLoanCharges,
+    createLoanChargesRequest,
+    updateLoanChargesRequest,
 } from '../../redux/actions';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
 import { NotificationContainer } from 'react-notifications';
 import LoanPdf from '../../utils/loanPdf';
+import ModelViewBox from '../../components/Atom/ModelViewBox';
 
-let isEdit = false;
 function Index() {
+    const showSelectmodel = ["ChargesType"];
     const { dispatch, appSelector } = useRedux();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { loanDataEdit, isUpdate } = location.state || false;
+    const errorHandle = useRef();
+    const errorHandleModel = useRef();
 
     const {
         getAddLoanSuccess,
         getAddLoanList,
         getAddLoanFailure,
-        createAddLoanSuccess,
-        createAddLoanData,
-        createAddLoanFailure,
-        updateAddLoanSuccess,
-        updateAddLoanData,
-        updateAddLoanFailure,
         errorMessage,
         //category
         getCategoryList,
@@ -65,6 +63,8 @@ function Index() {
         getLoanChargesSuccess,
         getLoanChargesFailure,
     } = appSelector((state) => ({
+
+        //loan
         getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
         getAddLoanList: state.addLoanReducer.getAddLoanList,
         getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
@@ -83,14 +83,6 @@ function Index() {
         getLoanChargesSuccess: state.loanChargesReducer.getLoanChargesSuccess,
         getLoanChargesList: state.loanChargesReducer.getLoanChargesList,
         getLoanChargesFailure: state.loanChargesReducer.getLoanChargesFailure,
-
-        createAddLoanSuccess: state.addLoanReducer.createAddLoanSuccess,
-        createAddLoanData: state.addLoanReducer.createAddLoanData,
-        createAddLoanFailure: state.addLoanReducer.createAddLoanFailure,
-
-        updateAddLoanSuccess: state.addLoanReducer.updateAddLoanSuccess,
-        updateAddLoanData: state.addLoanReducer.updateAddLoanData,
-        updateAddLoanFailure: state.addLoanReducer.updateAddLoanFailure,
 
         errorMessage: state.addLoanReducer.errorMessage,
     }));
@@ -119,7 +111,7 @@ function Index() {
                     <span
                         className="text-success  me-2 cursor-pointer"
                         onClick={() => {
-                            handleEditTable(row?.original, row?.index);
+                            onEditTable(row?.original, row?.index);
                         }}>
                         <i className={'fe-edit-1'}></i> Edit
                     </span>
@@ -128,7 +120,7 @@ function Index() {
                         onClick={() => {
                             showConfirmationDialog(
                                 "You won't be able to revert this!",
-                                () => handleDeleteTable(row?.original?.id),
+                                () => onDeleteTable(row?.original?.id),
                                 'Yes, Delete it!'
                             );
                         }}>
@@ -140,9 +132,16 @@ function Index() {
     ];
 
     // useStates
-    const errorHandle = useRef();
-    const [state, setState] = useState({});
+    const [state, setState] = useState({ loanChargesArrVal: [], });
+    const [modalState, setModalState] = useState({});
     const [errors, setErrors] = useState([]);
+    const [errorsModal, setErrorsModal] = useState([]);
+    const [perVal, setPerVal] = useState(0);
+    const [IsEditArrVal, setIsEditArrVal] = useState(false);
+    const [formFiledData, setFormFiledData] = useState(formContainer);
+    const [isLoading, setIsLoading] = useState(false);
+    const [modal, setModel] = useState(false);
+    const [selectedItem, setSelectedItem] = useState({})
     const [optionListState, setOptionListState] = useState({
         applicant: [],
         coApplicant: [],
@@ -151,30 +150,28 @@ function Index() {
         category: [],
         subCategory: [],
 
-        ChargesType: [],
+        ChargesType: [
+            {
+                loanChargesId: 1,
+                loanChargesName: 'Document Charges',
+                chargesAmount: '1000',
+                isPercentage: 0,
+            },
+            {
+                loanChargesId: 2,
+                loanChargesName: 'Login Charges',
+                chargesAmount: '8',
+                isPercentage: 1,
+            }],
         percentOrAmount: [
             { value: '1', label: 'Percentage %' },
-            { value: '2', label: 'Amount ₹' }, 
-        ],        
+            { value: '2', label: 'Amount ₹' },
+        ],
         disbursedMethod: [
-            { value: 'cash', label: 'Cash' },
-            { value: 'bank', label: 'Bank' },
-        ],
-        tenurePeriod: [
-            { value: '1', label: '6 Months' },
-            { value: '2', label: '12 Months' },
-            { value: '3', label: '18 Months' },
-            { value: '4', label: '24 Months' },
-            { value: '5', label: '30 Months' },
-            { value: '6', label: '36 Months' },
-        ],
+            { value: 0, label: 'Cash' },
+            { value: 1, label: 'Bank' },
+        ]
     });
-    const [selectedItem, setSelectedItem] = useState({});
-    const [arrVal, setArrVal] = useState([]);
-    const [perVal, setPerVal] = useState(0);
-    const [IsEditArrVal, setIsEditArrVal] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const navigate = useNavigate();
     const copyApplicantList = {
         applicant: [
             { value: 'Surya', label: 'Surya-HF01' },
@@ -184,6 +181,19 @@ function Index() {
             { value: 'Syed', label: 'Syed-HF05' },
         ],
     };
+    const copyChargesType = [
+        {
+            loanChargesId: 1,
+            loanChargesName: 'Document Charges',
+            chargesAmount: '1000',
+            isPercentage: 0,
+        },
+        {
+            loanChargesId: 2,
+            loanChargesName: 'Login Charges',
+            chargesAmount: '8',
+            isPercentage: 1,
+        }]
 
     useEffect(() => {
         if (
@@ -265,17 +275,105 @@ function Index() {
         }
     }, [state.applicant, state.coApplicant, state.guardiance]);
 
+    useEffect(() => {
+        if (state.disbursedMethod !== '' && state.disbursedMethod === 1) {
+            const formField = [
+                {
+                    formFields: [
+                        {
+                            label: 'Bank Name',
+                            name: 'bank',
+                            inputType: 'text',
+                            placeholder: 'Enter Bank Name',
+                            require: false,
+                        },
+                    ],
+                },
+                {
+                    formFields: [
+                        {
+                            label: 'Account Holder Name',
+                            name: 'accountHolderName',
+                            inputType: 'text',
+                            placeholder: 'Enter Account Holder Name',
+                            require: false,
+                        },
+                    ],
+                },
+                {
+                    formFields: [
+                        {
+                            label: 'Branch Name',
+                            name: 'branch',
+                            inputType: 'text',
+                            placeholder: 'Enter Branch Name',
+                            require: false,
+                        },
+                    ],
+                },
+                {
+                    formFields: [
+                        {
+                            label: 'Account No',
+                            name: 'accountNo',
+                            inputType: 'number',
+                            placeholder: 'Enter Account No',
+                            require: false,
+                        },
+                    ],
+                },
+                {
+                    formFields: [
+                        {
+                            label: 'IFSC',
+                            name: 'ifsc',
+                            inputType: 'text',
+                            placeholder: 'Enter IFSC',
+                            require: false,
+                        },
+                    ],
+                },
+            ];
+            setFormFiledData((prevFormFieldData) => [...prevFormFieldData, ...formField]);
+        }
+        else {
+            setFormFiledData(formContainer);
+        }
+    }, [state.disbursedMethod]);
+
+    useEffect(() => {
+        if (isUpdate) {
+            const req = { loanId: loanDataEdit?.loanId || '' }
+            dispatch(getAddLoanRequest(req));
+            // navigate('/loan/addloan', {
+            //     state: {
+            //         loanDataEdit: loanDataEdit,
+            //         isUpdate: false
+            //     }
+            // });
+        }
+    }, [loanDataEdit]);
+
     //Dispatch Called
     useEffect(() => {
         setIsLoading(true);
-        dispatch(getAddLoanRequest());
         dispatch(getCategoryRequest());
-        dispatch(getSubCategoryRequest());
-        dispatch(getLoanChargesRequest());
+        // dispatch(getSubCategoryRequest());
+        // dispatch(getLoanChargesRequest());
     }, []);
 
-    console.log('state');
-    console.log(state);
+    // loan
+    // useEffect(() => {
+    //     if (getAddLoanSuccess) {
+    //         setIsLoading(false);
+    //         setState(getAddLoanList)
+    //         dispatch(resetGetAddLoan());
+    //     } else if (getAddLoanFailure) {
+    //         setIsLoading(false);
+    //          setState({})
+    //         dispatch(resetGetAddLoan());
+    //     }
+    // }, [getAddLoanSuccess, getAddLoanFailure]);
 
     // Category
     useEffect(() => {
@@ -316,104 +414,35 @@ function Index() {
     }, [getSubCategorySuccess, getSubCategoryFailure]);
 
     // loan-charges
-    useEffect(() => {
-        // console.log("getLoanChargesSuccess")
-        // console.log(getLoanChargesSuccess)
-        // console.log("getLoanChargesList")
-        // console.log(getLoanChargesList)
-        if (getLoanChargesSuccess) {
-            setIsLoading(false);
-            setOptionListState({
-                ...optionListState,
-                ChargesType: getLoanChargesList,
-            });
-            dispatch(resetGetLoanCharges());
-        } else if (getLoanChargesFailure) {
-            setIsLoading(false);
-            setOptionListState({
-                ...optionListState,
-                ChargesType: [],
-            });
-            dispatch(resetGetLoanCharges());
-        }
-    }, [getLoanChargesSuccess, getLoanChargesFailure]);
+    // useEffect(() => {
+    //     // console.log("getLoanChargesSuccess")
+    //     // console.log(getLoanChargesSuccess)
+    //     // console.log("getLoanChargesList")
+    //     // console.log(getLoanChargesList)
+    //     if (getLoanChargesSuccess) {
+    //         setIsLoading(false);
+    //         setOptionListState({
+    //             ...optionListState,
+    //             ChargesType: getLoanChargesList,
+    //         });
+    //         dispatch(resetGetLoanCharges());
+    //     } else if (getLoanChargesFailure) {
+    //         setIsLoading(false);
+    //         // setOptionListState({
+    //         //     ...optionListState,
+    //         //     ChargesType: [],
+    //         // });
+    //         dispatch(resetGetLoanCharges());
+    //     }
+    // }, [getLoanChargesSuccess, getLoanChargesFailure]);
 
-
-    useEffect(() => {
-        if (createAddLoanSuccess) {
-            const temp_state = [createAddLoanData[0]];
-            // const temp_state = [createAddLoanData[0], ...parentList];
-            // setParentList(temp_state)
-            showMessage('success', 'Created Successfully');
-            // closeModel()
-            dispatch(resetCreateAddLoan());
-        } else if (createAddLoanFailure) {
-            showMessage('warning', errorMessage);
-            dispatch(resetCreateAddLoan());
-        }
-    }, [createAddLoanSuccess, createAddLoanFailure]);
-
-    useEffect(() => {
-        if (updateAddLoanSuccess) {
-            // const temp_state = [...parentList];
-            // temp_state[selectedIndex] = updateAddLoanData[0];
-            // setParentList(temp_state);
-            isEdit && showMessage('success', 'Updated Successfully');
-            closeModel();
-            dispatch(resetUpdateAddLoan());
-        } else if (updateAddLoanFailure) {
-            showMessage('warning', errorMessage);
-            dispatch(resetUpdateAddLoan());
-        }
-    }, [updateAddLoanSuccess, updateAddLoanFailure]);
-
-    const closeModel = () => {
-        isEdit = false;
-        onFormClear();
-        // setModal(false);
+    const toggleModal = () => {
+        setModel(!modal);
     };
 
     const onFormClear = () => {
-        setState({
-            ...state,
-            addLoanName: '',
-        });
-    };
-
-    const createModel = () => {
-        onFormClear();
-        isEdit = false;
-        // setModal(true);
-    };
-
-    const onEditForm = (data, index) => {
-        setState({
-            ...state,
-            applicant: '',
-            coApplicant: '',
-            guardiance: '',
-            category: '',
-            subCategory: '',
-            interest: '',
-            loanAmount: '',
-            disbursedDate: '',
-            tenurePeriod: '',
-            disbursedMethod: '',
-        });
-        isEdit = true;
-        setSelectedItem(data);
-        // setSelectedIndex(index);
-        // setModal(true);
-    };
-
-    const handleValidation = () => {
-        errorHandle.current.validateFormFields();
-    };
-
-    //handleClear
-    const handleClear = () => {
-        setState({
-            ...state,
+        setState(prev => ({
+            ...prev,
             applicant: '',
             coApplicant: '',
             guardiance: '',
@@ -431,14 +460,16 @@ function Index() {
             branch: '',
             accountNo: '',
             ifcs: '',
-        });
+            loanChargesArrVal: [],
+        }));
     };
 
-    // handleSubmit
-    // const handleSubmit = async () => {
-    //     console.log('handleSubmitted');
-    //     navigate('/dashboard', { state: { state } });
-    // };
+    const handleValidation = () => {
+        errorHandle.current.validateFormFields();
+    };
+    const handleValidationModel = () => {
+        errorHandleModel.current.validateFormFields();
+    };
 
     const onFormSubmit = async () => {
         const submitRequest = {
@@ -454,106 +485,182 @@ function Index() {
             disbursed_amount: '' || '',
             tenurePeriod: state?.tenurePeriod || '',
             disbursedMethod: state?.disbursedMethod || '',
+            loanCharges: state?.loanChargesArrVal || ''
             // bank_account_id: state?.addLoanName || "",
             // created_by: state?.addLoanName || "",
             // approved_by: state?.addLoanName || "",
             // approved_date: state?.addLoanName || "",
             // loan_status_id: state?.addLoanName || "",
         };
-        if (isEdit) {
-            dispatch(updateAddLoanRequest(submitRequest, selectedItem.addLoanId));
-        } else {
-            dispatch(createAddLoanRequest(submitRequest));
-        }
+        navigate('/view/loan', { state: { loanData: submitRequest, isCreated: isUpdate ? false : true } });
     };
 
-    const onDeleteForm = (data, index, activeChecker) => {
-        const submitRequest = {
-            isActive: activeChecker == 0 ? 1 : 0,
-        };
-        // setSelectedIndex(index);
-        dispatch(updateAddLoanRequest(submitRequest, data.addLoanId));
-    };
 
-    //Tab table handleEdit and handleDelete
-    const handleEditTable = async (data, id) => {
-        setIsEditArrVal(true);
-        const updatedState = { ...data, id: id };
-        if (updatedState?.chargesAmount && updatedState?.percentOrAmount === '1') {
-            updatedState.chargesAmount = ValtoPercentage(updatedState.chargesAmount, state.loanAmount);
-        }
-        setState({
-            ...state,
-            id: updatedState.id,
-            ChargesType: updatedState.ChargesType,
-            percentOrAmount: updatedState.percentOrAmount,
-            chargesAmount: updatedState.chargesAmount,
-        });
-    };
-
-    //handleDelete
-    const handleDeleteTable = async (id) => {
-        const delData = await deleteData(arrVal, id);
-        setArrVal(delData);
-    };
-
-    const handleAddTable = async () => {
+    const onTableSubmit = async () => {
         if (state?.loanAmount && !isNaN(state.loanAmount) && state?.chargesAmount && !isNaN(state.chargesAmount)) {
+            // const submitRequest = {
+            //     ChargesType: state.ChargesType,
+            //     percentOrAmount: state.percentOrAmount,
+            //     chargesAmount: perVal,
+            // }
+            // // if (IsEditArrVal) {
+            // //     dispatch(updateLoanChargesRequest(submitRequest, selectedItem.loanCharges.loanChargesId));
+            // // } else {
+            // //     dispatch(createLoanChargesRequest(submitRequest));
+            // // }
             if (IsEditArrVal) {
                 const editData = {
+                    id: state.id,
                     ChargesType: state.ChargesType,
                     percentOrAmount: state.percentOrAmount,
                     chargesAmount: perVal,
                 };
-                const updata = await updateData(arrVal, state?.id, editData);
-                setArrVal(updata);
+                const updata = await updateData(state.loanChargesArrVal, state?.id, editData);
+                setState(prev => ({
+                    ...prev,
+                    loanChargesArrVal: updata
+                }))
+                // setArrVal(updata);
                 setIsEditArrVal(false);
             } else {
                 const addData = {
-                    id: arrVal.length,
+                    id: state.loanChargesArrVal.length,
                     ChargesType: state.ChargesType,
                     percentOrAmount: state.percentOrAmount,
                     chargesAmount: perVal,
                 };
-                const updatedArrVal = [...arrVal, addData];
-                setArrVal(updatedArrVal);
+                setState(prev => ({
+                    ...prev,
+                    loanChargesArrVal: [...prev.loanChargesArrVal, addData]
+                }))
+                // setArrVal(updatedArrVal);
             }
-            setState({
-                ...state,
+            setState(prevState => ({
+                ...prevState,
                 ChargesType: '',
                 percentOrAmount: '',
                 chargesAmount: '',
-            });
+            }));
+            const delData = await deleteData(optionListState.ChargesType, state.ChargesType, "loanChargesId");
+            setOptionListState(prev => ({
+                ...prev,
+                ChargesType: delData
+            }))
         }
     };
+
+    //Tab table handleEdit and handleDelete
+    const onEditTable = async (data, id) => {
+        setState(prev => ({
+            ...prev,
+            ChargesType: '',
+            percentOrAmount: '',
+            chargesAmount: ''
+        }))
+        setIsEditArrVal(true);
+        const updatedState = { ...data, id: id };
+        const reStoreData = await findObj(copyChargesType, "loanChargesId", updatedState.ChargesType)
+        setOptionListState(prev => ({
+            ...prev,
+            ChargesType: copyChargesType
+        }))
+        if (updatedState?.chargesAmount && updatedState?.percentOrAmount === '1') {
+            updatedState.chargesAmount = ValtoPercentage(updatedState.chargesAmount, state.loanAmount);
+        }
+        setState(prev => ({
+            ...prev,
+            id: updatedState.id,
+            ChargesType: reStoreData.loanChargesId,
+            percentOrAmount: updatedState.percentOrAmount,
+            chargesAmount: updatedState.chargesAmount,
+        }));
+        setSelectedItem(data);
+    };
+
+    //handleDelete
+    const onDeleteTable = async (id) => {
+        const delData = await deleteData(state.loanChargesArrVal, id);
+        setState(prev => ({
+            ...prev,
+            loanChargesArrVal: delData
+        }))
+        // setArrVal(delData);
+    };
+
+    const onModelFormSubmit = async () => {
+        const submitRequest = {
+            ChargesType: modalState.ChargesType,
+            chargesAmount: modalState.chargesAmount,
+            percentOrAmount: modalState.percentOrAmount,
+        };
+        toggleModal();
+        // dispatch(createLoanChargesRequest(submitRequest));
+    }
+
+    const handleSelect = async (option, name, uniquekey, displaykey) => {
+
+        if (state.category != '') {
+            const req = { categoryId: option.categoryId }
+            dispatch(getSubCategoryRequest(req));
+        }
+        setState(prev => ({
+            ...prev,
+            [name]: option[uniquekey],
+            [displaykey]: option[displaykey]
+        }))
+
+    }
+
     return (
         <React.Fragment>
             {/* <LoanPdf /> */}
+            <ModelViewBox
+                modal={modal}
+                setModel={setModel}
+                modelHeader={'Loan Charges'}
+                modelSize={'md'}
+                handleSubmit={handleValidationModel}
+            >
+                <FormLayout
+                    dynamicForm={modelFormContainer}
+                    ref={errorHandleModel}
+                    noOfColumns={1}
+                    errors={errorsModal}
+                    setErrors={setErrorsModal}
+                    state={modalState}
+                    setState={setModalState}
+                    optionListState={optionListState}
+                    handleSubmit={onModelFormSubmit}
+
+                />
+            </ModelViewBox>
             <Card>
                 <Card.Body>
                     <Row>
                         <Col xs={12}>
                             <FormLayout
                                 optionListState={optionListState}
-                                dynamicForm={formContainer}
+                                dynamicForm={formFiledData}
                                 handleSubmit={() =>
-                                    showConfirmationDialog('Do you want to create it?', onFormSubmit, 'Yes, Create it!')
+                                    showConfirmationDialog('Do you want to create it?', onFormSubmit, 'Yes, Create it!', "Created", 'Successfully Created')
                                 }
                                 state={state}
                                 setState={setState}
                                 ref={errorHandle}
-                                // onChangeCallBack={{ "handleCharges": handleCharges }}
                                 IsEditArrVal={IsEditArrVal}
-                                onClickCallBack={{ handleAdd: handleAddTable }}
+                                toggleModal={toggleModal}
+                                onClickCallBack={{ 'handleAdd': onTableSubmit }}
+                                onChangeCallBack={{ 'handleCharges': handleSelect }}
                                 editData={state}
                                 noOfColumns={4}
                                 errors={errors}
                                 setErrors={setErrors}
+                                showSelectmodel={showSelectmodel}
                             />
                         </Col>
                     </Row>
                     <div className="d-flex justify-content-end">
-                        <Button onClick={handleClear} className="mx-2" variant="secondary">
+                        <Button onClick={onFormClear} className="mx-2" variant="secondary">
                             Reset
                         </Button>
                         <Button onClick={handleValidation} variant="primary">
@@ -562,7 +669,7 @@ function Index() {
                     </div>
 
                     {/* Table */}
-                    <Table columns={columns || []} Title={`Loan Charges List`} data={arrVal || []} pageSize={5} />
+                    <Table columns={columns || []} Title={`Loan Charges List`} data={state.loanChargesArrVal || []} pageSize={5} />
                 </Card.Body>
             </Card>
         </React.Fragment>

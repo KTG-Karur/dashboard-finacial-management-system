@@ -5,8 +5,6 @@ const loanCharges = apiContainer.loanCharges
 export async function getLoanCharges(request) {
   try {
     const response = await apiReturnCallBack("GET", loanCharges, request);
-    console.log("response8888888888888888")
-    console.log(response)
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));

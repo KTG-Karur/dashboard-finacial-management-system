@@ -5,22 +5,33 @@ import { Badge, Spinner } from 'react-bootstrap';
 // import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
 import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
-import { createIncomeEntryRequest, getIncomeEntryRequest, getIncomeTypeRequest, resetCreateIncomeEntry, resetGetIncomeEntry, resetGetIncomeType, resetUpdateIncomeEntry, updateIncomeEntryRequest } from '../../redux/actions';
+import {
+    createIncomeEntryRequest, getIncomeEntryRequest, getIncomeTypeRequest, resetCreateIncomeEntry, resetGetIncomeEntry, resetGetIncomeType, resetUpdateIncomeEntry, updateIncomeEntryRequest, createAddLoanRequest, resetCreateAddLoan, getAddLoanRequest, resetGetAddLoan,
+    resetUpdateAddLoan, updateAddLoanRequest,
+} from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
 import { districtFormContainer } from './formData';
 import _ from 'lodash';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 let isEdit = false;
 
 function Index() {
 
     const { dispatch, appSelector } = useRedux();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const errorHandle = useRef();
+    const { loanData, isCreated } = location.state || false;
+
 
     const { getIncomeEntrySuccess, getIncomeEntryList, getIncomeEntryFailure,
         getIncomeTypeSuccess, getIncomeTypeList, getIncomeTypeFailure,
         createIncomeEntrySuccess, createIncomeEntryData, createIncomeEntryFailure,
-        updateIncomeEntrySuccess, updateIncomeEntryData, updateIncomeEntryFailure, errorMessage
+        updateIncomeEntrySuccess, updateIncomeEntryData, updateIncomeEntryFailure, errorMessage,
+        createAddLoanSuccess, createAddLoanData, createAddLoanFailure, updateAddLoanSuccess, updateAddLoanData,
+        updateAddLoanFailure, getAddLoanSuccess, getAddLoanList, getAddLoanFailure,
 
     } = appSelector((state) => ({
         getIncomeEntrySuccess: state.incomeEntryReducer.getIncomeEntrySuccess,
@@ -38,6 +49,18 @@ function Index() {
         updateIncomeEntrySuccess: state.incomeEntryReducer.updateIncomeEntrySuccess,
         updateIncomeEntryData: state.incomeEntryReducer.updateIncomeEntryData,
         updateIncomeEntryFailure: state.incomeEntryReducer.updateIncomeEntryFailure,
+
+        getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
+        getAddLoanList: state.addLoanReducer.getAddLoanList,
+        getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
+
+        createAddLoanSuccess: state.addLoanReducer.createAddLoanSuccess,
+        createAddLoanData: state.addLoanReducer.createAddLoanData,
+        createAddLoanFailure: state.addLoanReducer.createAddLoanFailure,
+
+        updateAddLoanSuccess: state.addLoanReducer.updateAddLoanSuccess,
+        updateAddLoanData: state.addLoanReducer.updateAddLoanData,
+        updateAddLoanFailure: state.addLoanReducer.updateAddLoanFailure,
 
         errorMessage: state.incomeEntryReducer.errorMessage,
     }));
@@ -113,18 +136,25 @@ function Index() {
                         <span className="text-warning  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
                             <i className={'fas fa-calculator'}></i>
                         </span>
-                      { 
-                      row?.original?.loanStatusId === 2 && <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
-                            <i className={'fas fa-check-circle'}></i>
+                        <span
+                            className="text-success  me-2 cursor-pointer"
+                            onClick={() => {
+                                navigate('/loan/addloan', { state: { loanDataEdit: row.original, isUpdate: true } });
+                            }}>
+                            <i className={'fe-edit-1'}></i>
                         </span>
+                        {
+                            row?.original?.loanStatusId === 2 && <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+                                <i className={'fas fa-check-circle'}></i>
+                            </span>
                         }
-                      { row?.original?.loanStatusId === 3 && <span className="text-primary  me-2 cursor-pointer" onClick={() =>
-                                showConfirmationDialog(
-                                    deleteMessage,
-                                    () => onDeleteForm(row.original, row.index, activeChecker),
-                                    'Yes'
-                                )
-                            }>
+                        {row?.original?.loanStatusId === 3 && <span className="text-primary  me-2 cursor-pointer" onClick={() =>
+                            showConfirmationDialog(
+                                deleteMessage,
+                                () => onDeleteForm(row.original, row.index, activeChecker),
+                                'Yes'
+                            )
+                        }>
                             <i className={'fas fa-arrow-circle-right'}></i>
                         </span>}
                     </div>
@@ -134,10 +164,15 @@ function Index() {
     ];
 
     const [state, setState] = useState({});
+    const [selectedItem, setSelectedItem] = useState({});
+    const [selectedIndex, setSelectedIndex] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState([]);
     const [optionListState, setOptionListState] = useState({
         incomeTypeList: [],
         loanStatusList: [
-            
+
             {
                 loanStatusId: 1,
                 loanStatusName: "All"
@@ -162,6 +197,7 @@ function Index() {
     });
     const parentData = [
         {
+            loanId: 1,
             "applicationNo": "HFC-2425-FL-0001",
             applicantCode: "HFC-0001",
             applicantName: "Mohan",
@@ -172,6 +208,7 @@ function Index() {
             loanStatusName: "Requested",
         },
         {
+            loanId: 2,
             "applicationNo": "HFC-2425-FL-0002",
             applicantCode: "HFC-0004",
             applicantName: "Ragul",
@@ -182,6 +219,7 @@ function Index() {
             loanStatusId: 4
         },
         {
+            loanId: 3,
             "applicationNo": "HFC-2425-FL-0003",
             applicantCode: "HFC-0006",
             applicantName: "Vicky",
@@ -192,6 +230,7 @@ function Index() {
             loanStatusId: 3
         },
         {
+            loanId: 4,
             "applicationNo": "HFC-2425-FL-0004",
             applicantCode: "HFC-0006",
             applicantName: "Yogi",
@@ -202,6 +241,7 @@ function Index() {
             loanStatusId: 5
         },
         {
+            loanId: 5,
             "applicationNo": "HFC-2425-FL-0005",
             applicantCode: "HFC-0003",
             applicantName: "Ram",
@@ -213,19 +253,53 @@ function Index() {
         },
     ]
     const [parentList, setParentList] = useState(parentData);
-    const [selectedItem, setSelectedItem] = useState({});
-    const [selectedIndex, setSelectedIndex] = useState(false);
-    const [modal, setModal] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState([]);
 
-    const errorHandle = useRef();
+    useEffect(() => {
+        console.log("state in useLocation in loan List page")
+        console.log(loanData)
+        console.log("isCreated")
+        console.log(isCreated)
+        // if(isCreated){
+        //     // dispatch(createAddLoanRequest(loanData));
+        // }else{
+        //     // dispatch(updateAddLoanRequest(loanData,loanData.addLoanId));
+        // }
+    }, [loanData])
 
     useEffect(() => {
         // setIsLoading(true)
+        // dispatch(getAddLoanRequest());
         // dispatch(getIncomeEntryRequest());
         // dispatch(getIncomeTypeRequest());
     }, []);
+
+    // useEffect(() => {
+    //     if (updateAddLoanSuccess) {
+    //         // const temp_state = [...parentList];
+    //         // temp_state[selectedIndex] = updateAddLoanData[0];
+    //         // setParentList(temp_state);
+    //         isEdit && showMessage('success', 'Updated Successfully');
+    //         closeModel();
+    //         dispatch(resetUpdateAddLoan());
+    //     } else if (updateAddLoanFailure) {
+    //         showMessage('warning', errorMessage);
+    //         dispatch(resetUpdateAddLoan());
+    //     }
+    // }, [updateAddLoanSuccess, updateAddLoanFailure]);
+
+    // useEffect(() => {
+    //     if (createAddLoanSuccess) {
+    //         const temp_state = [createAddLoanData[0]];
+    //         // const temp_state = [createAddLoanData[0], ...parentList];
+    //         // setParentList(temp_state)
+    //         showMessage('success', 'Created Successfully');
+    //         // closeModel()
+    //         dispatch(resetCreateAddLoan());
+    //     } else if (createAddLoanFailure) {
+    //         showMessage('warning', errorMessage);
+    //         dispatch(resetCreateAddLoan());
+    //     }
+    // }, [createAddLoanSuccess, createAddLoanFailure]);
 
     // useEffect(() => {
     //     if (getIncomeEntrySuccess) {
@@ -284,6 +358,38 @@ function Index() {
     //     }
     // }, [updateIncomeEntrySuccess, updateIncomeEntryFailure]);
 
+    // const onDeleteForm = (data, index, activeChecker) => {
+    //     //     const submitRequest = {
+    //     //         isActive: activeChecker == 0 ? 1 : 0,
+    //     //     };
+    //     //     // setSelectedIndex(index);
+    //     //     dispatch(updateAddLoanRequest(submitRequest, data.addLoanId));
+    // }
+
+    // const onEditForm = (data, index) => {
+    //     setState(prev => ({
+    //         ...prev,
+    //         applicant: '',
+    //         coApplicant: '',
+    //         guardiance: '',
+    //         category: '',
+    //         subCategory: '',
+    //         interest: '',
+    //         loanAmount: '',
+    //         disbursedDate: '',
+    //         tenurePeriod: '',
+    //         disbursedMethod: '',
+    //     }));
+    //     isEdit = true;
+    //     setSelectedItem({
+    //         ...selectedItem,
+    //         loanDetails: data
+    //     });
+    //     // setSelectedIndex(index);
+    //     // setModal(true);
+    // };
+    //     // };
+
     const closeModel = () => {
         isEdit = false;
         onFormClear()
@@ -341,9 +447,9 @@ function Index() {
         alert("in-->")
     }
     const handlerStatus = (data, name) => {
-        if(data.loanStatusId == 1){
+        if (data.loanStatusId == 1) {
             setParentList(parentData)
-        }else{
+        } else {
             const filterData = _.filter(parentData, { loanStatusId: data.loanStatusId });
             setParentList(filterData)
         }
@@ -359,11 +465,11 @@ function Index() {
             </div> :
                 <Table
                     columns={columns}
-                    toggle = {false}
+                    toggle={false}
                     Title={'Loan List'}
                     data={parentList || []}
                     pageSize={5}
-                    filterTbl = {true}
+                    filterTbl={true}
                     filterFormContainer={districtFormContainer}
                     optionListState={optionListState}
                     onChangeCallBack={{ "handlerStatus": handlerStatus }}

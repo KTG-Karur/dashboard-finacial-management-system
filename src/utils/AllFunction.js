@@ -50,13 +50,18 @@ function updateData(arr, id, newState) {
     return arr.map((item) => (item.id === id ? newState : item));
 }
 
-function deleteData(arr, id) {
+function deleteData(arr, id, accessKey = null) {
+    if (accessKey != null) {
+        return arr.filter((item) => {
+            return item[accessKey] !== id;
+        });
+    }
     return arr.filter((item) => {
         return item.id !== id;
     });
 }
 
-function findObj(optionList = [], accessKey , value = "") {
+function findObj(optionList = [], accessKey, value = "") {
     const filterData = optionList.filter((item) => item[accessKey] === value);
     return filterData.length > 0 ? filterData[0] : ""
 }
@@ -76,14 +81,16 @@ function ValtoPercentage(amount, percentage) {
 const dateConversion = (date, format = "DD-MM-YYYY") => {
     const result = date ? moment(date).format(format) : "";
     return result
-  }
+}
 
 const showConfirmationDialog = (
     message,
     callback,
     confirmButtonText = 'Yes',
+    action = 'Successfully',
+    successTitle = 'Successfully',
     cancelButtonText = 'No',
-    title = 'Are you sure?'
+    title = 'Are you sure?',
 ) => {
     Swal.fire({
         title: title,
@@ -99,7 +106,15 @@ const showConfirmationDialog = (
         },
     }).then((result) => {
         if (result.isConfirmed) {
-            callback();
+            Swal.fire({
+                title: action,
+                text: successTitle,
+                icon: "success",
+                timer: 500,
+            });
+            setTimeout(() => {
+                callback();
+            }, 800)
         } else {
             Swal.fire({
                 title: 'Cancelled!',
@@ -190,5 +205,5 @@ export {
     annualToMonthlyInterestRate,
     calculateTotalInterestPayable,
     numberWithCommas,
-    
+
 };
