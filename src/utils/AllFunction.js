@@ -145,6 +145,41 @@ const emiCalculation = (principal, annualInterest, tenurePeriod) => {
     return emi;
 };
 
+const findDueDate = (disbursedDate = formatDate()) => {
+    const disbursedDateArr = disbursedDate.split("-");
+    const year = disbursedDateArr[0]
+    const day = disbursedDateArr[2]
+    let month = parseInt(disbursedDateArr[1]) + 1
+    if (parseInt(disbursedDateArr[1]) >= 12) {
+        month = 1;
+    }
+    return `${year}-${month}-${day}`
+}
+
+const findLastDate = (disbursedDate = formatDate(), tenurePeriod) => {
+    // Split the disbursedDate into an array of [year, month, day]
+    const disbursedDateArr = disbursedDate.split("-");
+    let year = parseInt(disbursedDateArr[0]);
+    let month = parseInt(disbursedDateArr[1]);
+    let day = disbursedDateArr[2];
+
+    let additionalYears = Math.floor(tenurePeriod / 12);
+    let additionalMonths = tenurePeriod % 12;
+
+    year += additionalYears;
+    month += additionalMonths;
+
+    if (month > 12) {
+        year += 1;
+        month -= 12;
+    }
+
+    month = month < 10 ? `0${month}` : month;
+
+    return `${year}-${month}-${day}`;
+};
+
+
 
 const interestForMonth = (remainingPrincipal, monthlyInterestRate) => {
     const monthInterest = parseFloat(remainingPrincipal * monthlyInterestRate);
@@ -198,6 +233,8 @@ export {
     ValtoPercentage,
     dateConversion,
 
+    findLastDate,
+    findDueDate,
     emiCalculation,
     interestForMonth,
     principalRepayment,

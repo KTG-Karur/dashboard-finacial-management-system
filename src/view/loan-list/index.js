@@ -20,11 +20,10 @@ let isEdit = false;
 function Index() {
 
     const { dispatch, appSelector } = useRedux();
+    const errorHandle = useRef();
     const navigate = useNavigate();
     const location = useLocation();
-    const errorHandle = useRef();
     const { loanData, isCreated } = location.state || false;
-
 
     const { getIncomeEntrySuccess, getIncomeEntryList, getIncomeEntryFailure,
         getIncomeTypeSuccess, getIncomeTypeList, getIncomeTypeFailure,
@@ -65,6 +64,8 @@ function Index() {
         errorMessage: state.incomeEntryReducer.errorMessage,
     }));
 
+    const status = ['Request', 'Approval', 'Disbursed']
+
     const columns = [
         {
             Header: 'S.No',
@@ -92,11 +93,25 @@ function Index() {
             sort: true,
         },
         {
+            Header: 'Loan Amount',
+            accessor: 'loanAmount',
+            sort: true,
+            Cell: ({ row }) => {
+                const loanAmount = row.original?.loanAmount || 0
+                return (
+                    <span>
+                        {/* 1 - requested 2-approved 3-cancelled 4-disbursed */}
+                        {`₹ ${loanAmount}`}
+                    </span>
+                )
+            },
+        },
+        {
             Header: 'Loan Type',
             accessor: 'LoanTypeName',
             Cell: ({ row }) => {
-                const loanTypeId = row.original.loanTypeId
-                const loanTypeName = row.original.loanTypeName
+                const loanTypeId = row.original.categoryId
+                const loanTypeName = row.original.categoryName
                 return (
                     <div>
                         {/* 1 - requested 2-approved 3-cancelled 4-disbursed */}
@@ -113,7 +128,7 @@ function Index() {
             Cell: ({ row }) => {
                 const loanStatusId = row.original.loanStatusId
                 const loanStatusName = row.original.loanStatusName
-                const badgeColour = loanStatusId == 2 ? 'warning' : loanStatusId == 3 ? 'success' : loanStatusId == 4 ? 'danger' : 'primary'
+                const badgeColour = loanStatusId == 2 ? 'success' : loanStatusId == 4 ? 'success' : loanStatusId == 3 ? 'danger' : 'primary'
                 // const result = ""
                 return (
                     <div>
@@ -127,15 +142,16 @@ function Index() {
             Header: 'Actions',
             accessor: 'actions',
             Cell: ({ row }) => {
-                const loanStatusId = row.original.loanStatusId
                 const activeChecker = row.original.isActive
                 const iconColor = activeChecker ? "text-danger" : "text-warning";
                 const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
                 return (
                     <div>
-                        <span className="text-warning  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+                        {/* pdf */}
+                        <span className="text-warning  me-2 cursor-pointer" onClick={() => { navigate('/loan/pdf', { state: { loanDetails: row.original, isLoanUrl: true } }); }}>
                             <i className={'fas fa-calculator'}></i>
                         </span>
+                        {/* edit */}
                         <span
                             className="text-success  me-2 cursor-pointer"
                             onClick={() => {
@@ -143,12 +159,57 @@ function Index() {
                             }}>
                             <i className={'fe-edit-1'}></i>
                         </span>
+                        {/* status */}
+                        {/* Request or to be approval */}
                         {
-                            row?.original?.loanStatusId === 2 && <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+                            row?.original?.loanStatusId === 1 && <span className="text-primary  me-2 cursor-pointer" onClick={() =>
+                                showConfirmationDialog(
+                                    `Do you want to Change ${status[row?.original?.loanStatusId]}`,
+                                    () => onChangeStatus(row.original, row.index, 2),
+                                    'Yes'
+                                )
+                            }>
+                                <i className={'fas fa-solid fa-bell'}></i>
+                            </span>
+                        }
+                        {/* Approval */}
+                        {
+                            row?.original?.loanStatusId === 2 && <span className="text-success  me-2 cursor-pointer" onClick={() =>
+                                showConfirmationDialog(
+                                    `Do you want to Change ${status[row?.original?.loanStatusId]}`,
+                                    () => onChangeStatus(row.original, row.index, 4),
+                                    'Yes'
+                                )
+                            }>
                                 <i className={'fas fa-check-circle'}></i>
                             </span>
                         }
-                        {row?.original?.loanStatusId === 3 && <span className="text-primary  me-2 cursor-pointer" onClick={() =>
+                        {/* Cancelled */}
+                        {
+                            row?.original?.loanStatusId === 3 && <span className="text-danger  me-2 cursor-pointer">
+                                <i className={'fas fa-user-slash'}></i>
+                            </span>
+                        }
+                        {/* Approval */}
+                        {
+                            row?.original?.loanStatusId === 4 && <span className="text-success  me-2 cursor-pointer" >
+                                <i className={'fas fa-money-bill-1'}></i>
+                            </span>
+                        }
+
+                        {/* Cancelled */}
+                        {row?.original?.loanStatusId !== 3 && row?.original?.loanStatusId !== 4 && <span className="text-danger  me-2 cursor-pointer" onClick={() =>
+                            showConfirmationDialog(
+                                "Do you want to Cancelled",
+                                () => onChangeStatus(row.original, row.index, 3),
+                                'Yes'
+                            )
+                        }>
+                            <i className={'fas fa-power-off'}></i>
+                        </span>}
+
+                        {/* Delete is Active */}
+                        {/* <span className="text-primary  me-2 cursor-pointer" onClick={() =>
                             showConfirmationDialog(
                                 deleteMessage,
                                 () => onDeleteForm(row.original, row.index, activeChecker),
@@ -156,7 +217,8 @@ function Index() {
                             )
                         }>
                             <i className={'fas fa-arrow-circle-right'}></i>
-                        </span>}
+                        </span>  */}
+
                     </div>
                 )
             },
@@ -254,52 +316,75 @@ function Index() {
     ]
     const [parentList, setParentList] = useState(parentData);
 
+
     useEffect(() => {
-        console.log("state in useLocation in loan List page")
-        console.log(loanData)
-        console.log("isCreated")
-        console.log(isCreated)
-        // if(isCreated){
-        //     // dispatch(createAddLoanRequest(loanData));
-        // }else{
-        //     // dispatch(updateAddLoanRequest(loanData,loanData.addLoanId));
-        // }
+        if (loanData != '' && isCreated) {
+            dispatch(createAddLoanRequest(loanData));
+        }
+        else if (loanData != '' && isCreated == false) {
+            // dispatch(updateAddLoanRequest(loanData, loanData.loanId));
+        }
+        navigate('/view/loan', {
+            state: {
+                loanData: '',
+                isCreated: false
+            }
+        });
     }, [loanData])
 
     useEffect(() => {
         // setIsLoading(true)
-        // dispatch(getAddLoanRequest());
+        dispatch(getAddLoanRequest());
         // dispatch(getIncomeEntryRequest());
         // dispatch(getIncomeTypeRequest());
     }, []);
 
-    // useEffect(() => {
-    //     if (updateAddLoanSuccess) {
-    //         // const temp_state = [...parentList];
-    //         // temp_state[selectedIndex] = updateAddLoanData[0];
-    //         // setParentList(temp_state);
-    //         isEdit && showMessage('success', 'Updated Successfully');
-    //         closeModel();
-    //         dispatch(resetUpdateAddLoan());
-    //     } else if (updateAddLoanFailure) {
-    //         showMessage('warning', errorMessage);
-    //         dispatch(resetUpdateAddLoan());
-    //     }
-    // }, [updateAddLoanSuccess, updateAddLoanFailure]);
+    // loan
+    useEffect(() => {
+        if (getAddLoanSuccess) {
+            setIsLoading(false);
+            // console.log("getAddLoanList")
+            // console.log(getAddLoanList)
+            setParentList(getAddLoanList)
+            dispatch(resetGetAddLoan());
+        } else if (getAddLoanFailure) {
+            setIsLoading(false);
+            setState({})
+            dispatch(resetGetAddLoan());
+        }
+    }, [getAddLoanSuccess, getAddLoanFailure]);
 
-    // useEffect(() => {
-    //     if (createAddLoanSuccess) {
-    //         const temp_state = [createAddLoanData[0]];
-    //         // const temp_state = [createAddLoanData[0], ...parentList];
-    //         // setParentList(temp_state)
-    //         showMessage('success', 'Created Successfully');
-    //         // closeModel()
-    //         dispatch(resetCreateAddLoan());
-    //     } else if (createAddLoanFailure) {
-    //         showMessage('warning', errorMessage);
-    //         dispatch(resetCreateAddLoan());
-    //     }
-    // }, [createAddLoanSuccess, createAddLoanFailure]);
+
+    useEffect(() => {
+        if (updateAddLoanSuccess) {
+            const temp_state = [...parentList];
+            temp_state[selectedIndex] = updateAddLoanData[0];
+            console.log("updateAddLoanData")
+            console.log(updateAddLoanData)
+            setParentList(temp_state);
+            isEdit && showMessage('success', 'Updated Successfully');
+            closeModel();
+            dispatch(resetUpdateAddLoan());
+        } else if (updateAddLoanFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetUpdateAddLoan());
+        }
+    }, [updateAddLoanSuccess, updateAddLoanFailure]);
+
+    useEffect(() => {
+        if (createAddLoanSuccess) {
+            const temp_state = [createAddLoanData[0]];
+            // const temp_state = [createAddLoanData[0], ...parentList];
+            // setParentList(temp_state)
+            console.log("temp_state")
+            console.log(temp_state)
+            showMessage('success', 'Created Successfully');
+            dispatch(resetCreateAddLoan());
+        } else if (createAddLoanFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetCreateAddLoan());
+        }
+    }, [createAddLoanSuccess, createAddLoanFailure]);
 
     // useEffect(() => {
     //     if (getIncomeEntrySuccess) {
@@ -390,6 +475,31 @@ function Index() {
     // };
     //     // };
 
+
+
+    const onChangeStatus = (data, idx, statusId) => {
+        console.log("data")
+        console.log(data)
+        let duePaymentInfo;
+        if (statusId == 4) {
+            duePaymentInfo = {
+                loanId: data.loanId,
+                totalAmount: "17000",
+                paidAmount: "0",
+                balanceAmount: "17000",
+                dueAmount: "1000",
+                dueStartDate: "2024-09-10",
+                dueEndDate: "2024-09-10"
+            }
+        }
+        let req = {
+            loanStatusId: statusId,
+        }
+        isEdit = true;
+        setSelectedIndex(idx)
+        dispatch(updateAddLoanRequest(req, data.loanId))
+    }
+
     const closeModel = () => {
         isEdit = false;
         onFormClear()
@@ -469,7 +579,7 @@ function Index() {
                     Title={'Loan List'}
                     data={parentList || []}
                     pageSize={5}
-                    filterTbl={true}
+                    filterTbl={false}
                     filterFormContainer={districtFormContainer}
                     optionListState={optionListState}
                     onChangeCallBack={{ "handlerStatus": handlerStatus }}

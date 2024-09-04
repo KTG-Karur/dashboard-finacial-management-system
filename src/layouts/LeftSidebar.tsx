@@ -44,7 +44,7 @@ const UserBox = () => {
 
     /*
      * toggle dropdown
-     */
+    */
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
     };

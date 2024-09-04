@@ -19,6 +19,7 @@ const apiContainer = {
   incomeEntry: "/income-entry",
   applicant: "/applicant",
   role: "/role",
+  // addLoan: "/loan-details",
   addLoan: "/loan",
   employee: "/employee",
   applicantInfo: "/applicant-info",

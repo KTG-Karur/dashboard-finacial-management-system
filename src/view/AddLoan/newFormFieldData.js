@@ -21,11 +21,11 @@ const formContainer = [
         formFields: [
             {
                 label: 'Applicant',
-                name: 'applicant',
+                name: 'applicantId',
                 inputType: 'select',
-                optionList: 'applicant',
-                displayKey: 'label',
-                uniqueKey: 'value',
+                optionList: 'applicantId',
+                displayKey: 'applicantName',
+                uniqueKey: 'applicantId',
                 require: true,
             },
         ],
@@ -34,11 +34,11 @@ const formContainer = [
         formFields: [
             {
                 label: 'Co-applicant',
-                name: 'coApplicant',
+                name: 'coApplicantId',
                 inputType: 'select',
-                optionList: 'coApplicant',
-                displayKey: 'label',
-                uniqueKey: 'value',
+                optionList: 'coApplicantId',
+                displayKey: 'applicantName',
+                uniqueKey: 'applicantId',
                 require: true,
             },
         ],
@@ -47,11 +47,11 @@ const formContainer = [
         formFields: [
             {
                 label: 'Select Guardian',
-                name: 'guardiance',
+                name: 'guarantorId',
                 inputType: 'select',
-                optionList: 'guardiance',
-                displayKey: 'label',
-                uniqueKey: 'value',
+                optionList: 'guarantorId',
+                displayKey: 'applicantName',
+                uniqueKey: 'applicantId',
                 require: true,
             },
         ],
@@ -82,9 +82,9 @@ const formContainer = [
         formFields: [
             {
                 label: 'Category',
-                name: 'category',
+                name: 'categoryId',
                 inputType: 'select',
-                optionList: 'category',
+                optionList: 'categoryId',
                 displayKey: 'categoryName',
                 uniqueKey: 'categoryId',
                 onChange: 'handleCharges',
@@ -96,9 +96,9 @@ const formContainer = [
         formFields: [
             {
                 label: 'Sub-category',
-                name: 'subCategory',
+                name: 'subCategoryId',
                 inputType: 'select',
-                optionList: 'subCategory',
+                optionList: 'subCategoryId',
                 displayKey: 'subCategoryName',
                 uniqueKey: 'subCategoryId',
                 require: false,
@@ -115,7 +115,7 @@ const formContainer = [
         formFields: [
             {
                 label: 'Interest %',
-                name: 'interest',
+                name: 'interestRate',
                 inputType: 'number',
                 placeholder: 'Enter Interest %',
                 require: true,
@@ -161,12 +161,13 @@ const formContainer = [
         formFields: [
             {
                 label: 'Loan Charges',
-                name: 'ChargesType',
+                name: 'loanChargesId',
                 inputType: 'select',
-                optionList: 'ChargesType',
-                // onChange:'handleCharges',
+                optionList: 'loanChargesId',
+                onChange: 'handleCharges',
                 displayKey: 'loanChargesName',
                 uniqueKey: 'loanChargesId',
+                defaultShowChildKey: ['isPercentage', 'chargesAmount'],
                 require: false,
             },
         ],
@@ -175,10 +176,9 @@ const formContainer = [
         formFields: [
             {
                 label: 'Percentage  or Amount',
-                name: 'percentOrAmount',
+                name: 'isPercentage',
                 inputType: 'select',
-                optionList: 'percentOrAmount',
-                // onChange:'handleCharges',
+                optionList: 'isPercentage',
                 displayKey: 'label',
                 uniqueKey: 'value',
                 require: false,
@@ -191,7 +191,6 @@ const formContainer = [
                 label: 'Charges Amount',
                 name: 'chargesAmount',
                 inputType: 'number',
-                // onChange:'handleCharges',
                 maxlength: 2,
                 placeholder: 'Enter Charges Amount',
                 require: false,
@@ -250,17 +249,14 @@ const formContainer = [
         formFields: [
             {
                 label: 'Disbursed Method',
-                name: 'disbursedMethod',
+                name: 'disbursedMethodId',
                 inputType: 'select',
-                optionList: 'disbursedMethod',
+                optionList: 'disbursedMethodId',
                 displayKey: 'label',
                 uniqueKey: 'value',
                 require: true,
             },
         ],
-    },
-    {
-        formFields: [],
     },
 ];
 
@@ -272,9 +268,9 @@ const modelFormContainer = [
         formFields: [
             {
                 label: 'Loan Charges',
-                name: 'ChargesType',
+                name: 'loanChargesId',
                 inputType: 'select',
-                optionList: 'ChargesType',
+                optionList: 'loanChargesId',
                 displayKey: 'loanChargesName',
                 uniqueKey: 'loanChargesId',
                 require: true,
@@ -285,10 +281,9 @@ const modelFormContainer = [
         formFields: [
             {
                 label: 'Percentage  or Amount',
-                name: 'percentOrAmount',
+                name: 'isPercentage',
                 inputType: 'select',
-                optionList: 'percentOrAmount',
-                // onChange:'handleCharges',
+                optionList: 'isPercentage',
                 displayKey: 'label',
                 uniqueKey: 'value',
                 require: false,
@@ -302,7 +297,6 @@ const modelFormContainer = [
                 name: 'chargesAmount',
                 inputType: 'number',
                 maxlength: 2,
-                // onChange:'handleCharges',
                 placeholder: 'Enter Charges Amount',
                 require: false,
             }

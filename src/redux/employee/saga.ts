@@ -1,6 +1,6 @@
 // saga.ts
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { createEmployee, getEmployee, updateEmployee } from '../../api/EmployeeApi'; // Adjust the path as needed
+import { createEmployee, getEmployee, updateEmployee } from '../../api/employeeApi'; // Adjust the path as needed
 import { 
   getEmployeeSuccess, getEmployeeFailure,
   createEmployeeSuccess,

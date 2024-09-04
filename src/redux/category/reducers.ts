@@ -19,8 +19,6 @@ export default function categoryReducer(state = initialState, action: any) {
 
   switch (action.type) {
     case "GET_CATEGORY_SUCCESS": {
-      console.log("getCategoryList");
-      console.log(state.getCategoryList);
       return {
         ...state,
         getCategorySuccess: true,

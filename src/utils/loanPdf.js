@@ -1,5 +1,5 @@
 import { Card, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
     emiCalculation,
@@ -10,15 +10,62 @@ import {
     numberWithCommas
 } from './AllFunction';
 import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
+import { getCategoryRequest } from '../redux/actions';
+import { useRedux } from '../hooks';
 
 const LoanPdf = (props) => {
 
     const { principal = 1300000, annualInterest = 14.65, tenurePeriod = 17 } = props
+    let remainingPrincipal = principal;
+    const { dispatch, appSelector } = useRedux();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { loanDetails, isLoanUrl } = location.state || false;
+
+    // const {
+    //     getAddLoanSuccess,
+    //     getAddLoanList,
+    //     getAddLoanFailure,
+    //     errorMessage,
+    //     //loan-charges
+    //     getLoanChargesList,
+    //     getLoanChargesSuccess,
+    //     getLoanChargesFailure,
+    // } = appSelector((state) => ({
+
+    //     //loan
+    //     getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
+    //     getAddLoanList: state.addLoanReducer.getAddLoanList,
+    //     getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
+
+    //     //loan-charges
+    //     getLoanChargesSuccess: state.loanChargesReducer.getLoanChargesSuccess,
+    //     getLoanChargesList: state.loanChargesReducer.getLoanChargesList,
+    //     getLoanChargesFailure: state.loanChargesReducer.getLoanChargesFailure,
+
+    //     errorMessage: state.addLoanReducer.errorMessage,
+    // }));
 
     // console.log("multiStateValue in loan pdf")
     // console.log(multiStateValue[0])
     const [loanState, setLoanState] = useState([]);
-    let remainingPrincipal = principal;
+
+    // loan
+    // useEffect(() => {
+    //     if (getAddLoanSuccess) {
+    //         setIsLoading(false);
+    //         setState(getAddLoanList)
+    //         dispatch(resetGetAddLoan());
+    //     } else if (getAddLoanFailure) {
+    //         setIsLoading(false);
+    //          setState({})
+    //         dispatch(resetGetAddLoan());
+    //     }
+    // }, [getAddLoanSuccess, getAddLoanFailure]);
+
+    useEffect(() => {
+        dispatch(getCategoryRequest());
+    }, [loanDetails, isLoanUrl]);
 
     useEffect(() => {
         const initialDueDate = new Date();
@@ -108,6 +155,18 @@ const LoanPdf = (props) => {
     return (
         <Row>
             <Col md={12}>
+                <Row>
+                    <Col className='d-flex justify-content-between'>
+                        <div>
+                            <Link to={"/view/loan"} >Back
+                                <span
+                                    className="cursor-pointer ms-1">
+                                    <i className={'fe-arrow-right'}></i>
+                                </span>
+                            </Link>
+                        </div>
+                    </Col>
+                </Row>
                 <Card>
                     <Card.Body>
                         <div className="panel-body">

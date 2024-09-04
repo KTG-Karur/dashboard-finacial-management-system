@@ -21,7 +21,6 @@ function FormComponent(props) {
     } = props;
 
     const handleChange = async (e, formType, formName, uniqueKey = null) => {
-        alert(e)
         switch (formType) {
             case 'text':
             case 'number':
@@ -286,7 +285,7 @@ function FormComponent(props) {
                                     required={form?.require}
                                     disabled={form?.isDisabled}
                                     onChange={(option) => {
-                                        form.onChange ? onChangeCallBack[form.onChange](option, form.name, form.uniqueKey, form.displayKey) :
+                                        form.onChange ? onChangeCallBack[form.onChange](option, form) :
                                             handleChange(option, 'select', form?.name, form.uniqueKey);
                                     }}
                                     // getOptionLabel={(option) => option?.label}

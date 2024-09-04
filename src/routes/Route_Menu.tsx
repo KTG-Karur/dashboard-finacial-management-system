@@ -32,6 +32,7 @@ export const ExpenseEntry = React.lazy(() => import('../view/expense-entry'));
 export const LoanList = React.lazy(() => import('../view/loan-list'));
 export const Role = React.lazy(() => import('../view/role'));
 export const LoanChargesType = React.lazy(() => import('../view/loan-charges-type'));
+export const LoanPDF = React.lazy(() => import('../utils/loanPdf'));
 
 // Loan
 export const AddLoan=React.lazy(()=> import('../view/addLoan/newAddLoan'));

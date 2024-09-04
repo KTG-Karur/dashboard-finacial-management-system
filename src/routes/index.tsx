@@ -106,6 +106,7 @@ import {
     LoanList,
     Role,
     LoanChargesType,
+    LoanPDF,
 } from './Route_Menu';
 
 const loading = () => <div className=""></div>;
@@ -194,6 +195,10 @@ const AllRoutes = () => {
                 {
                     path: '/loan/dashboard',
                     element: <LoadComponent component={LoanDashBoard} />,
+                },
+                {
+                    path: '/loan/pdf',
+                    element: <LoadComponent component={LoanPDF} />,
                 },
                 {
                     path: 'view',

@@ -6,6 +6,9 @@ import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
 import {
     deleteData,
+    emiCalculation,
+    findDueDate,
+    findLastDate,
     findObj,
     percentageVal,
     showConfirmationDialog,
@@ -16,19 +19,23 @@ import {
 import {
     //loan
     getAddLoanRequest,
-    //category
+    resetGetAddLoan,
+    //categoryId
     getCategoryRequest,
     resetGetCategory,
-
-    //sub-category
+    //sub-categoryId
     getSubCategoryRequest,
     resetGetSubCategory,
-
     //loan-charges
     getLoanChargesRequest,
     resetGetLoanCharges,
     createLoanChargesRequest,
     updateLoanChargesRequest,
+    //applicantId
+    getApplicantRequest,
+    resetGetApplicant,
+    getBankAccountRequest,
+    resetGetBankAccount,
 } from '../../redux/actions';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
@@ -36,8 +43,11 @@ import { NotificationContainer } from 'react-notifications';
 import LoanPdf from '../../utils/loanPdf';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 
+let copyApplicantList = [];
+let copyLoanChargesId = [];
+let perVal = 0;
 function Index() {
-    const showSelectmodel = ["ChargesType"];
+    // const showSelectmodel = ["loanChargesId"];
     const { dispatch, appSelector } = useRedux();
     const navigate = useNavigate();
     const location = useLocation();
@@ -46,15 +56,20 @@ function Index() {
     const errorHandleModel = useRef();
 
     const {
+        //loan
         getAddLoanSuccess,
         getAddLoanList,
         getAddLoanFailure,
         errorMessage,
-        //category
+        //Applicant 
+        getApplicantList,
+        getApplicantSuccess,
+        getApplicantFailure,
+        //categoryId
         getCategoryList,
         getCategorySuccess,
         getCategoryFailure,
-        //sub-category
+        //sub-categoryId
         getSubCategoryList,
         getSubCategorySuccess,
         getSubCategoryFailure,
@@ -62,27 +77,37 @@ function Index() {
         getLoanChargesList,
         getLoanChargesSuccess,
         getLoanChargesFailure,
+        //bank Account
+        getBankAccountSuccess,
+        getBankAccountList,
+        getBankAccountFailure,
     } = appSelector((state) => ({
 
         //loan
         getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
         getAddLoanList: state.addLoanReducer.getAddLoanList,
         getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
-
-        //category
+        //Applicant
+        getApplicantList: state.applicantReducer.getApplicantList,
+        getApplicantSuccess: state.applicantReducer.getApplicantSuccess,
+        getApplicantFailure: state.applicantReducer.getApplicantFailure,
+        //categoryId
         getCategorySuccess: state.categoryReducer.getCategorySuccess,
         getCategoryList: state.categoryReducer.getCategoryList,
         getCategoryFailure: state.categoryReducer.getCategoryFailure,
-
-        //sub-category
+        //sub-categoryId
         getSubCategorySuccess: state.subCategoryReducer.getSubCategorySuccess,
         getSubCategoryList: state.subCategoryReducer.getSubCategoryList,
         getSubCategoryFailure: state.subCategoryReducer.getSubCategoryFailure,
-
         //loan-charges
         getLoanChargesSuccess: state.loanChargesReducer.getLoanChargesSuccess,
         getLoanChargesList: state.loanChargesReducer.getLoanChargesList,
         getLoanChargesFailure: state.loanChargesReducer.getLoanChargesFailure,
+
+        //bank Account
+        getBankAccountSuccess: state.bankAccountReducer.getBankAccountSuccess,
+        getBankAccountList: state.bankAccountReducer.getBankAccountList,
+        getBankAccountFailure: state.bankAccountReducer.getBankAccountFailure,
 
         errorMessage: state.addLoanReducer.errorMessage,
     }));
@@ -95,7 +120,7 @@ function Index() {
         },
         {
             Header: 'Charges Type',
-            accessor: 'ChargesType',
+            accessor: 'loanChargesName',
             sort: true,
         },
         {
@@ -132,157 +157,126 @@ function Index() {
     ];
 
     // useStates
-    const [state, setState] = useState({ loanChargesArrVal: [], });
+    const [state, setState] = useState({
+        loanStatusId: 1,
+        loanChargesInfo: [],
+    });
     const [modalState, setModalState] = useState({});
     const [errors, setErrors] = useState([]);
     const [errorsModal, setErrorsModal] = useState([]);
-    const [perVal, setPerVal] = useState(0);
     const [IsEditArrVal, setIsEditArrVal] = useState(false);
     const [formFiledData, setFormFiledData] = useState(formContainer);
     const [isLoading, setIsLoading] = useState(false);
     const [modal, setModel] = useState(false);
     const [selectedItem, setSelectedItem] = useState({})
     const [optionListState, setOptionListState] = useState({
-        applicant: [],
-        coApplicant: [],
-        guardiance: [],
+        applicantId: [],
+        coApplicantId: [],
+        guarantorId: [],
 
-        category: [],
-        subCategory: [],
+        categoryId: [],
+        subCategoryId: [],
 
-        ChargesType: [
-            {
-                loanChargesId: 1,
-                loanChargesName: 'Document Charges',
-                chargesAmount: '1000',
-                isPercentage: 0,
-            },
-            {
-                loanChargesId: 2,
-                loanChargesName: 'Login Charges',
-                chargesAmount: '8',
-                isPercentage: 1,
-            }],
-        percentOrAmount: [
-            { value: '1', label: 'Percentage %' },
-            { value: '2', label: 'Amount ₹' },
+        loanChargesId: [],
+        isPercentage: [
+            { value: 0, label: 'Amount ₹' },
+            { value: 1, label: 'Percentage %' },
         ],
-        disbursedMethod: [
-            { value: 0, label: 'Cash' },
-            { value: 1, label: 'Bank' },
-        ]
+        disbursedMethodId: [
+            { value: 1, label: 'Cash' },
+            { value: 2, label: 'Neft' },
+        ],
+        bankAccountId: []
     });
-    const copyApplicantList = {
-        applicant: [
-            { value: 'Surya', label: 'Surya-HF01' },
-            { value: 'Aravind', label: 'Aravind-HF02' },
-            { value: 'Velu', label: 'Velu-HF03' },
-            { value: 'Deena', label: 'Deena-HF04' },
-            { value: 'Syed', label: 'Syed-HF05' },
-        ],
-    };
-    const copyChargesType = [
-        {
-            loanChargesId: 1,
-            loanChargesName: 'Document Charges',
-            chargesAmount: '1000',
-            isPercentage: 0,
-        },
-        {
-            loanChargesId: 2,
-            loanChargesName: 'Login Charges',
-            chargesAmount: '8',
-            isPercentage: 1,
-        }]
 
-    useEffect(() => {
-        if (
-            state?.percentOrAmount != '' &&
-            state?.chargesAmount != '' &&
-            state?.chargesAmount != undefined &&
-            state?.chargesAmount != null
-        ) {
-            if (state?.percentOrAmount === '1') {
-                const percentageValues = percentageVal(parseInt(state?.loanAmount), parseInt(state?.chargesAmount));
-                setPerVal(percentageValues);
-            } else {
-                setPerVal(state?.chargesAmount);
-            }
-        }
-    }, [state.percentOrAmount, state.chargesAmount, state.loanAmount]);
 
     useEffect(() => {
         let datafromApplicant;
         let datafromCoApplicant;
         let datafromGuardiance;
-        if (state?.applicant != '') {
-            datafromCoApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.applicant);
+        if (state?.applicantId != '') {
+            datafromCoApplicant = copyApplicantList.filter((item) => item.applicantId !== state?.applicantId);
             setOptionListState({
                 ...optionListState,
-                coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance,
+                coApplicantId: datafromCoApplicant,
+                guarantorId: datafromGuardiance,
             });
         }
-        if (state?.coApplicant != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.coApplicant);
+        if (state?.coApplicantId != '') {
+            datafromApplicant = copyApplicantList.filter((item) => item.applicantId !== state?.coApplicantId);
             setOptionListState({
                 ...optionListState,
-                applicant: datafromApplicant,
-                guardiance: datafromGuardiance,
+                applicantId: datafromApplicant,
+                guarantorId: datafromGuardiance,
             });
         }
-        if (state?.guardiance != '') {
-            datafromApplicant = copyApplicantList.applicant.filter((item) => item.value !== state?.guardiance);
+        if (state?.guarantorId != '') {
+            datafromApplicant = copyApplicantList.filter((item) => item.applicantId !== state?.guarantorId);
             setOptionListState({
                 ...optionListState,
-                applicant: datafromApplicant,
-                coApplicant: datafromCoApplicant,
+                applicantId: datafromApplicant,
+                coApplicantId: datafromCoApplicant,
             });
         }
 
-        if (state?.applicant != '' && state?.coApplicant != '') {
-            datafromGuardiance = copyApplicantList.applicant.filter(
-                (item) => item.value !== state?.applicant && item.value !== state?.coApplicant
+        if (state?.applicantId != '' && state?.coApplicantId != '') {
+            datafromGuardiance = copyApplicantList.filter(
+                (item) => item.applicantId !== state?.applicantId && item.applicantId !== state?.coApplicantId
             );
             setOptionListState({
                 ...optionListState,
-                applicant: datafromApplicant,
-                coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance,
+                applicantId: datafromApplicant,
+                coApplicantId: datafromCoApplicant,
+                guarantorId: datafromGuardiance,
             });
         }
-        if (state?.applicant != '' && state?.guardiance != '') {
-            datafromCoApplicant = copyApplicantList.applicant.filter(
-                (item) => item.value !== state?.applicant && item.value !== state?.guardiance
+        if (state?.applicantId != '' && state?.guarantorId != '') {
+            datafromCoApplicant = copyApplicantList.filter(
+                (item) => item.applicantId !== state?.applicantId && item.applicantId !== state?.guarantorId
             );
             setOptionListState({
                 ...optionListState,
-                applicant: datafromApplicant,
-                coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance,
+                applicantId: datafromApplicant,
+                coApplicantId: datafromCoApplicant,
+                guarantorId: datafromGuardiance,
             });
         }
-        if (state?.coApplicant != '' && state?.guardiance != '') {
-            datafromApplicant = copyApplicantList.applicant.filter(
-                (item) => item.value !== state?.coApplicant && item.value !== state?.guardiance
+        if (state?.coApplicantId != '' && state?.guarantorId != '') {
+            datafromApplicant = copyApplicantList.filter(
+                (item) => item.applicantId !== state?.coApplicantId && item.applicantId !== state?.guarantorId
             );
             setOptionListState({
                 ...optionListState,
-                applicant: datafromApplicant,
-                coApplicant: datafromCoApplicant,
-                guardiance: datafromGuardiance,
+                applicantId: datafromApplicant,
+                coApplicantId: datafromCoApplicant,
+                guarantorId: datafromGuardiance,
             });
         }
-    }, [state.applicant, state.coApplicant, state.guardiance]);
+    }, [state.applicantId, state.coApplicantId, state.guarantorId]);
 
     useEffect(() => {
-        if (state.disbursedMethod !== '' && state.disbursedMethod === 1) {
+        if (state.disbursedMethodId !== '' && state.disbursedMethodId === 2) {
             const formField = [
                 {
                     formFields: [
                         {
+                            label: 'Bank Account List',
+                            name: 'bankAccountId',
+                            inputType: 'select',
+                            optionList: 'bankAccountId',
+                            displayKey: 'accountNo',
+                            onChange: 'handleCharges',
+                            uniqueKey: 'bankAccountId',
+                            defaultShowChildKey: ['bankName', 'accountHolderName', 'branchName', 'accountNo', 'ifscCode'],
+                            require: true,
+                        },
+                    ],
+                },
+                {
+                    formFields: [
+                        {
                             label: 'Bank Name',
-                            name: 'bank',
+                            name: 'bankName',
                             inputType: 'text',
                             placeholder: 'Enter Bank Name',
                             require: false,
@@ -304,7 +298,7 @@ function Index() {
                     formFields: [
                         {
                             label: 'Branch Name',
-                            name: 'branch',
+                            name: 'branchName',
                             inputType: 'text',
                             placeholder: 'Enter Branch Name',
                             require: false,
@@ -326,7 +320,7 @@ function Index() {
                     formFields: [
                         {
                             label: 'IFSC',
-                            name: 'ifsc',
+                            name: 'ifscCode',
                             inputType: 'text',
                             placeholder: 'Enter IFSC',
                             require: false,
@@ -339,41 +333,63 @@ function Index() {
         else {
             setFormFiledData(formContainer);
         }
-    }, [state.disbursedMethod]);
-
-    useEffect(() => {
-        if (isUpdate) {
-            const req = { loanId: loanDataEdit?.loanId || '' }
-            dispatch(getAddLoanRequest(req));
-            // navigate('/loan/addloan', {
-            //     state: {
-            //         loanDataEdit: loanDataEdit,
-            //         isUpdate: false
-            //     }
-            // });
-        }
-    }, [loanDataEdit]);
+    }, [state.disbursedMethodId]);
 
     //Dispatch Called
     useEffect(() => {
         setIsLoading(true);
         dispatch(getCategoryRequest());
-        // dispatch(getSubCategoryRequest());
-        // dispatch(getLoanChargesRequest());
+        dispatch(getLoanChargesRequest());
+        dispatch(getApplicantRequest());
+        dispatch(getBankAccountRequest());
     }, []);
 
+    //Sub Category Dispatch Called 
+    useEffect(() => {
+        if (isUpdate) {
+            const req = { loanId: loanDataEdit?.loanId || '' }
+            // console.log("Called dispatch add loan")
+            dispatch(getAddLoanRequest(req));
+            navigate('/loan/addloan', {
+                state: {
+                    loanDataEdit: loanDataEdit,
+                    isUpdate: false
+                }
+            });
+        }
+    }, [loanDataEdit]);
+
+    // Applicant
+    useEffect(() => {
+        if (getApplicantSuccess) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                applicantId: getApplicantList,
+            });
+            copyApplicantList = getApplicantList;
+            dispatch(resetGetApplicant());
+        } else if (getApplicantFailure) {
+            setIsLoading(false);
+            setState({})
+            copyApplicantList = []
+            dispatch(resetGetApplicant());
+        }
+    }, [getApplicantSuccess, getApplicantFailure]);
+
     // loan
-    // useEffect(() => {
-    //     if (getAddLoanSuccess) {
-    //         setIsLoading(false);
-    //         setState(getAddLoanList)
-    //         dispatch(resetGetAddLoan());
-    //     } else if (getAddLoanFailure) {
-    //         setIsLoading(false);
-    //          setState({})
-    //         dispatch(resetGetAddLoan());
-    //     }
-    // }, [getAddLoanSuccess, getAddLoanFailure]);
+    useEffect(() => {
+        if (getAddLoanSuccess) {
+            setIsLoading(false);
+            // console.log("getAddLoanList")
+            // console.log(getAddLoanList)
+            dispatch(resetGetAddLoan());
+        } else if (getAddLoanFailure) {
+            setIsLoading(false);
+            setState({})
+            dispatch(resetGetAddLoan());
+        }
+    }, [getAddLoanSuccess, getAddLoanFailure]);
 
     // Category
     useEffect(() => {
@@ -381,14 +397,14 @@ function Index() {
             setIsLoading(false);
             setOptionListState({
                 ...optionListState,
-                category: getCategoryList,
+                categoryId: getCategoryList,
             });
             dispatch(resetGetCategory());
         } else if (getCategoryFailure) {
             setIsLoading(false);
             setOptionListState({
                 ...optionListState,
-                category: [],
+                categoryId: [],
             });
             dispatch(resetGetCategory());
         }
@@ -400,41 +416,72 @@ function Index() {
             setIsLoading(false);
             setOptionListState({
                 ...optionListState,
-                subCategory: getSubCategoryList,
+                subCategoryId: getSubCategoryList,
             });
             dispatch(resetGetSubCategory());
         } else if (getSubCategoryFailure) {
             setIsLoading(false);
             setOptionListState({
                 ...optionListState,
-                subCategory: [],
+                subCategoryId: [],
             });
             dispatch(resetGetSubCategory());
         }
     }, [getSubCategorySuccess, getSubCategoryFailure]);
 
     // loan-charges
-    // useEffect(() => {
-    //     // console.log("getLoanChargesSuccess")
-    //     // console.log(getLoanChargesSuccess)
-    //     // console.log("getLoanChargesList")
-    //     // console.log(getLoanChargesList)
-    //     if (getLoanChargesSuccess) {
-    //         setIsLoading(false);
-    //         setOptionListState({
-    //             ...optionListState,
-    //             ChargesType: getLoanChargesList,
-    //         });
-    //         dispatch(resetGetLoanCharges());
-    //     } else if (getLoanChargesFailure) {
-    //         setIsLoading(false);
-    //         // setOptionListState({
-    //         //     ...optionListState,
-    //         //     ChargesType: [],
-    //         // });
-    //         dispatch(resetGetLoanCharges());
-    //     }
-    // }, [getLoanChargesSuccess, getLoanChargesFailure]);
+    useEffect(() => {
+        if (getLoanChargesSuccess) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                loanChargesId: getLoanChargesList,
+            });
+            copyLoanChargesId = getLoanChargesList
+            dispatch(resetGetLoanCharges());
+        } else if (getLoanChargesFailure) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                loanChargesId: [],
+            });
+            copyLoanChargesId = [];
+            dispatch(resetGetLoanCharges());
+        }
+    }, [getLoanChargesSuccess, getLoanChargesFailure]);
+
+    // bank Account
+    useEffect(() => {
+        if (getBankAccountSuccess) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                bankAccountId: getBankAccountList,
+            });
+            dispatch(resetGetBankAccount());
+        } else if (getBankAccountFailure) {
+            setIsLoading(false);
+            setOptionListState({
+                ...optionListState,
+                bankAccountId: [],
+            });
+            dispatch(resetGetBankAccount());
+        }
+    }, [getBankAccountSuccess, getBankAccountFailure]);
+
+    const ConvertPercentage = () => {
+        const { isPercentage, chargesAmount, loanAmount } = state;
+        if (chargesAmount && loanAmount) {
+            const loanAmt = parseInt(loanAmount);
+            const chargesAmt = parseInt(chargesAmount);
+            if (isPercentage === 1) {
+                const percentageValues = percentageVal(loanAmt, chargesAmt);
+                perVal = parseInt(percentageValues);
+            } else {
+                perVal = chargesAmt;
+            }
+        }
+    };
 
     const toggleModal = () => {
         setModel(!modal);
@@ -443,24 +490,24 @@ function Index() {
     const onFormClear = () => {
         setState(prev => ({
             ...prev,
-            applicant: '',
-            coApplicant: '',
-            guardiance: '',
-            category: '',
-            subCategory: '',
-            interest: '',
+            applicantId: '',
+            coApplicantId: '',
+            guarantorId: '',
+            categoryId: '',
+            subCategoryId: '',
+            interestRate: '',
             loanAmount: '',
-            ChargesType: '',
+            loanChargesId: '',
             disbursedDate: '',
             dueDate: '',
             tenurePeriod: '',
             deadLineDate: '',
-            disbursedMethod: '',
+            disbursedMethodId: '',
             accountHolderName: '',
             branch: '',
             accountNo: '',
-            ifcs: '',
-            loanChargesArrVal: [],
+            ifsc: '',
+            loanChargesInfo: [],
         }));
     };
 
@@ -472,79 +519,88 @@ function Index() {
     };
 
     const onFormSubmit = async () => {
+        const dueAmt = await emiCalculation(state.loanAmount, state.interestRate, state.tenurePeriod);
+        const duedate = await findDueDate(state.disbursedDate);
+        const lastdate = await findLastDate(state.disbursedDate, state.tenurePeriod);
+
+        let allChargesAmount = 0;
+        let allChargestList = [];
+        (state.loanChargesInfo || []).forEach(item => {
+            let perItem = {
+                loanChargesId: item.loanChargesId,
+                chargeAmount: item.chargesAmount
+            };
+            allChargestList.push(perItem);
+        });
+        (state.loanChargesInfo || []).map(item => {
+            allChargesAmount += item.chargesAmount;
+        })
+        allChargesAmount = parseInt(state?.loanAmount) - parseInt(allChargesAmount)
         const submitRequest = {
-            applicant: state?.applicant || '',
-            coApplicant: state?.coApplicant || '',
-            guardiance: state?.guardiance || '',
-            category: state?.category || '',
-            subCategory: state?.subCategory || '',
-            interest: state?.interest || '',
+            applicantId: state?.applicantId || '',
+            coApplicantId: state?.coApplicantId || '',
+            guarantorId: state?.guarantorId || '',
+            categoryId: state?.categoryId || '',
+            subCategoryId: state?.subCategoryId || '',
+            interestRate: parseInt(state?.interestRate ) || '',
             loanAmount: state?.loanAmount || '',
-            due_amount: '' || '',
+            dueAmount: dueAmt.toFixed(2).toString() || '',
+            dueDate: duedate || '',
+            lastDate: lastdate || '',
             disbursedDate: state?.disbursedDate || '',
-            disbursed_amount: '' || '',
+            disbursedAmount: allChargesAmount || '',
             tenurePeriod: state?.tenurePeriod || '',
-            disbursedMethod: state?.disbursedMethod || '',
-            loanCharges: state?.loanChargesArrVal || ''
-            // bank_account_id: state?.addLoanName || "",
-            // created_by: state?.addLoanName || "",
-            // approved_by: state?.addLoanName || "",
-            // approved_date: state?.addLoanName || "",
-            // loan_status_id: state?.addLoanName || "",
+            disbursedMethodId: state?.disbursedMethodId || '',
+            bankAccountId: state?.disbursedMethodId === 2 ? (state?.bankAccountId || 1) : 1,
+            createdBy: 1,
+            loanStatusId: state?.loanStatusId,
+            loanChargesInfo: allChargestList || [],
         };
         navigate('/view/loan', { state: { loanData: submitRequest, isCreated: isUpdate ? false : true } });
     };
 
-
     const onTableSubmit = async () => {
+        ConvertPercentage()
         if (state?.loanAmount && !isNaN(state.loanAmount) && state?.chargesAmount && !isNaN(state.chargesAmount)) {
-            // const submitRequest = {
-            //     ChargesType: state.ChargesType,
-            //     percentOrAmount: state.percentOrAmount,
-            //     chargesAmount: perVal,
-            // }
-            // // if (IsEditArrVal) {
-            // //     dispatch(updateLoanChargesRequest(submitRequest, selectedItem.loanCharges.loanChargesId));
-            // // } else {
-            // //     dispatch(createLoanChargesRequest(submitRequest));
-            // // }
             if (IsEditArrVal) {
                 const editData = {
                     id: state.id,
-                    ChargesType: state.ChargesType,
-                    percentOrAmount: state.percentOrAmount,
+                    loanChargesId: state.loanChargesId,
+                    loanChargesName: state.loanChargesName,
+                    isPercentage: state.isPercentage,
                     chargesAmount: perVal,
                 };
-                const updata = await updateData(state.loanChargesArrVal, state?.id, editData);
+                const updata = await updateData(state.loanChargesInfo, state?.id, editData);
                 setState(prev => ({
                     ...prev,
-                    loanChargesArrVal: updata
+                    loanChargesInfo: updata
                 }))
                 // setArrVal(updata);
                 setIsEditArrVal(false);
             } else {
                 const addData = {
-                    id: state.loanChargesArrVal.length,
-                    ChargesType: state.ChargesType,
-                    percentOrAmount: state.percentOrAmount,
+                    id: state.loanChargesInfo.length,
+                    loanChargesId: state.loanChargesId,
+                    loanChargesName: state.loanChargesName,
+                    isPercentage: state.isPercentage,
                     chargesAmount: perVal,
                 };
                 setState(prev => ({
                     ...prev,
-                    loanChargesArrVal: [...prev.loanChargesArrVal, addData]
+                    loanChargesInfo: [...prev.loanChargesInfo, addData]
                 }))
                 // setArrVal(updatedArrVal);
             }
             setState(prevState => ({
                 ...prevState,
-                ChargesType: '',
-                percentOrAmount: '',
+                loanChargesId: '',
+                isPercentage: '',
                 chargesAmount: '',
             }));
-            const delData = await deleteData(optionListState.ChargesType, state.ChargesType, "loanChargesId");
+            const delData = await deleteData(optionListState.loanChargesId, state.loanChargesId, "loanChargesId");
             setOptionListState(prev => ({
                 ...prev,
-                ChargesType: delData
+                loanChargesId: delData
             }))
         }
     };
@@ -553,25 +609,26 @@ function Index() {
     const onEditTable = async (data, id) => {
         setState(prev => ({
             ...prev,
-            ChargesType: '',
-            percentOrAmount: '',
+            loanChargesId: '',
+            isPercentage: '',
             chargesAmount: ''
         }))
         setIsEditArrVal(true);
         const updatedState = { ...data, id: id };
-        const reStoreData = await findObj(copyChargesType, "loanChargesId", updatedState.ChargesType)
+        const reStoreData = await findObj(copyLoanChargesId, "loanChargesId", updatedState.loanChargesId)
         setOptionListState(prev => ({
             ...prev,
-            ChargesType: copyChargesType
+            loanChargesId: copyLoanChargesId
         }))
-        if (updatedState?.chargesAmount && updatedState?.percentOrAmount === '1') {
+        if (updatedState?.chargesAmount && updatedState?.isPercentage === '1') {
             updatedState.chargesAmount = ValtoPercentage(updatedState.chargesAmount, state.loanAmount);
         }
         setState(prev => ({
             ...prev,
             id: updatedState.id,
-            ChargesType: reStoreData.loanChargesId,
-            percentOrAmount: updatedState.percentOrAmount,
+            loanChargesId: reStoreData.loanChargesId,
+            isPercentage: updatedState.isPercentage,
+            loanChargesName: updatedState.loanChargesName,
             chargesAmount: updatedState.chargesAmount,
         }));
         setSelectedItem(data);
@@ -579,37 +636,54 @@ function Index() {
 
     //handleDelete
     const onDeleteTable = async (id) => {
-        const delData = await deleteData(state.loanChargesArrVal, id);
+        const delData = await deleteData(state.loanChargesInfo, id);
         setState(prev => ({
             ...prev,
-            loanChargesArrVal: delData
+            loanChargesInfo: delData
+        }))
+        setOptionListState(prev => ({
+            ...prev,
+            loanChargesId: copyLoanChargesId
         }))
         // setArrVal(delData);
     };
 
     const onModelFormSubmit = async () => {
         const submitRequest = {
-            ChargesType: modalState.ChargesType,
+            loanChargesId: modalState.loanChargesId,
             chargesAmount: modalState.chargesAmount,
-            percentOrAmount: modalState.percentOrAmount,
+            isPercentage: modalState.isPercentage,
         };
         toggleModal();
         // dispatch(createLoanChargesRequest(submitRequest));
     }
 
-    const handleSelect = async (option, name, uniquekey, displaykey) => {
+    //Callback Select
+    const handleSelect = async (option, form) => {
+        const { uniqueKey, displayKey, defaultShowChildKey = null, name } = form;
 
-        if (state.category != '') {
-            const req = { categoryId: option.categoryId }
-            dispatch(getSubCategoryRequest(req));
+        if (state.categoryId != '') {
+            const req = { categoryId: option.categoryId };
+            await dispatch(getSubCategoryRequest(req));
         }
+
+        if (defaultShowChildKey) {
+            defaultShowChildKey.forEach(item => {
+                if (option[item] !== undefined) {
+                    setState(prev => ({
+                        ...prev,
+                        [item]: option[item],
+                    }));
+                }
+            });
+        }
+
         setState(prev => ({
             ...prev,
-            [name]: option[uniquekey],
-            [displaykey]: option[displaykey]
-        }))
-
-    }
+            [name]: option[uniqueKey],
+            [displayKey]: option[displayKey],
+        }));
+    };
 
     return (
         <React.Fragment>
@@ -655,7 +729,7 @@ function Index() {
                                 noOfColumns={4}
                                 errors={errors}
                                 setErrors={setErrors}
-                                showSelectmodel={showSelectmodel}
+                            // showSelectmodel={showSelectmodel}
                             />
                         </Col>
                     </Row>
@@ -669,7 +743,7 @@ function Index() {
                     </div>
 
                     {/* Table */}
-                    <Table columns={columns || []} Title={`Loan Charges List`} data={state.loanChargesArrVal || []} pageSize={5} />
+                    <Table columns={columns || []} Title={`Loan Charges List`} data={state.loanChargesInfo || []} pageSize={5} />
                 </Card.Body>
             </Card>
         </React.Fragment>
