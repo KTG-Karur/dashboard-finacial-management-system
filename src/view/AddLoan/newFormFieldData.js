@@ -167,7 +167,7 @@ const formContainer = [
                 onChange: 'handleCharges',
                 displayKey: 'loanChargesName',
                 uniqueKey: 'loanChargesId',
-                defaultShowChildKey: ['isPercentage', 'chargesAmount'],
+                defaultShowChildKey: ['isPercentage', 'chargeAmount'],
                 require: false,
             },
         ],
@@ -189,7 +189,7 @@ const formContainer = [
         formFields: [
             {
                 label: 'Charges Amount',
-                name: 'chargesAmount',
+                name: 'chargeAmount',
                 inputType: 'number',
                 maxlength: 2,
                 placeholder: 'Enter Charges Amount',
@@ -222,16 +222,6 @@ const formContainer = [
     },
     {
         formFields: [],
-    },
-    {
-        formFields: [
-            {
-                label: 'Disbursed Date',
-                name: 'disbursedDate',
-                inputType: 'date',
-                require: true,
-            },
-        ],
     },
     {
         formFields: [
@@ -294,7 +284,7 @@ const modelFormContainer = [
         formFields: [
             {
                 label: 'Charges Amount',
-                name: 'chargesAmount',
+                name: 'chargeAmount',
                 inputType: 'number',
                 maxlength: 2,
                 placeholder: 'Enter Charges Amount',

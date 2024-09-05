@@ -22,6 +22,11 @@ const LoanPdf = (props) => {
     const location = useLocation();
     const { loanDetails, isLoanUrl } = location.state || false;
 
+    console.log("loanDetails")
+    console.log(loanDetails)
+    console.log("isLoanUrl")
+    console.log(isLoanUrl)
+
     // const {
     //     getAddLoanSuccess,
     //     getAddLoanList,

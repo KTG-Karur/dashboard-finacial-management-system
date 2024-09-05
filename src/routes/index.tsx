@@ -292,6 +292,22 @@ const AllRoutes = () => {
                             path: 'addloan',
                             element: <LoadComponent component={AddLoan} />,
                         },
+                        {
+                            path: 'request',
+                            element: <LoadComponent component={LoanList} />,
+                        },
+                        {
+                            path: 'approved',
+                            element: <LoadComponent component={LoanList} />,
+                        },
+                        {
+                            path: 'disbursed',
+                            element: <LoadComponent component={LoanList} />,
+                        },
+                        {
+                            path: 'cancelled',
+                            element: <LoadComponent component={LoanList} />,
+                        },
                     ],
                 },
                 {

@@ -46,10 +46,28 @@ const Navigate: NavigateTypes[] = [
         url: '/loan/addloan',
     },
     {
-        label: 'Approvals',
+        label: 'To be approvals',
         isTitle: false,
         icon: 'mdi mdi-list-status',
-        url: '/view/loan',
+        url: '/loan/request',
+    },
+    {
+        label: 'Approved',
+        isTitle: false,
+        icon: 'mdi mdi-list-status',
+        url: '/loan/approved',
+    },
+    {
+        label: 'Disbursed',
+        isTitle: false,
+        icon: 'mdi mdi-list-status',
+        url: '/loan/disbursed',
+    },
+    {
+        label: 'Cancelled',
+        isTitle: false,
+        icon: 'mdi mdi-list-status',
+        url: '/loan/cancelled',
     },
     { label: 'Entry', isTitle: true },
     {
