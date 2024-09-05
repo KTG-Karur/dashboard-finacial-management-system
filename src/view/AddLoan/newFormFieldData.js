@@ -3,7 +3,7 @@ const formContainer = [
     {
         formFields: [
             {
-                title: 'Applicant Detail',
+                title: 'Customer Detail',
                 inputType: 'title',
             },
         ],
@@ -181,8 +181,8 @@ const formContainer = [
                 displayKey: 'label',
                 uniqueKey: 'value',
                 require: false,
-            }
-        ]
+            },
+        ],
     },
     {
         formFields: [
@@ -193,16 +193,18 @@ const formContainer = [
                 maxlength: 2,
                 placeholder: 'Enter Charges Amount',
                 require: false,
-            }
-        ]
+            },
+        ],
     },
     {
-        formFields: [{
-            inputType: 'button',
-            label: 'Add',
-            name: 'AddMultiChargesBtn',
-            onClick: 'handleAdd',
-        }],
+        formFields: [
+            {
+                inputType: 'button',
+                label: 'Add',
+                name: 'AddMultiChargesBtn',
+                onClick: 'handleAdd',
+            },
+        ],
     },
     //Loan Charges
     {
@@ -249,19 +251,14 @@ const formContainer = [
     },
 ];
 
-
-
-
 const modelFormContainer = [
     {
         formFields: [
             {
-                label: 'Loan Charges',
-                name: 'loanChargeId',
-                inputType: 'select',
-                optionList: 'loanChargeId',
-                displayKey: 'loanChargesName',
-                uniqueKey: 'loanChargeId',
+                label: 'Loan Charges Name',
+                name: 'loanChargesName',
+                inputType: 'text',
+                placeholder: 'Enter Loan Charges Name',
                 require: true,
             },
         ],
@@ -269,15 +266,14 @@ const modelFormContainer = [
     {
         formFields: [
             {
-                label: 'Percentage  or Amount',
+                label: 'Is Percentage',
                 name: 'isPercentage',
-                inputType: 'select',
-                optionList: 'isPercentage',
-                displayKey: 'label',
-                uniqueKey: 'value',
-                require: false,
-            }
-        ]
+                inputType: 'radio',
+                optionList: 'percentageStatusList',
+                displayKey: 'percentageStatusName',
+                uniqueKey: 'percentageStatusId',
+            },
+        ],
     },
     {
         formFields: [
@@ -285,12 +281,70 @@ const modelFormContainer = [
                 label: 'Charges Amount',
                 name: 'chargeAmount',
                 inputType: 'number',
-                maxlength: 2,
+                maxlength: 3,
                 placeholder: 'Enter Charges Amount',
                 require: false,
-            }
-        ]
+            },
+        ],
     },
-]
+];
 
-export { formContainer, modelFormContainer };
+const modelFormBankContainer = [
+    {
+        formFields: [
+            {
+                label: 'Account Holder Name',
+                name: 'accountHolderName',
+                inputType: 'text',
+                placeholder: 'Enter Account Holder Name',
+                require: true,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
+                label: 'Bank Name',
+                name: 'bankName',
+                inputType: 'text',
+                placeholder: 'Enter Bank Name',
+                require: true,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
+                label: 'Branch Name',
+                name: 'branchName',
+                inputType: 'text',
+                placeholder: 'Enter Branch Name',
+                require: true,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
+                label: 'Account No.',
+                name: 'accountNo',
+                inputType: 'text',
+                placeholder: 'Enter Account Number',
+                require: true,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
+                label: 'IFSC Code',
+                name: 'ifscCode',
+                inputType: 'text',
+                placeholder: 'Enter IFSC Code',
+                require: true,
+            },
+        ],
+    },
+];
+
+export { formContainer, modelFormContainer, modelFormBankContainer };

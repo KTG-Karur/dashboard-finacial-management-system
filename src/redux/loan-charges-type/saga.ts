@@ -28,7 +28,11 @@ function* fetchLoanChargesTypeSaga(action: any): Generator<any, any, any> {
 // // Saga to handle creating a loanChargesType
 function* createLoanChargesTypeSaga(action: any): Generator<any, any, any> {
   try {
+    console.log("action.payload")
+    console.log(action.payload)
     const data = yield call(createLoanChargesType, action.payload);
+    console.log("createLoanChargesTypeSaga")
+    console.log(data)
     yield put(createLoanChargesTypeSuccess(data));
   } catch (error: any) {
     const errorMessage = error.response && error.response.data && error.response.data.message

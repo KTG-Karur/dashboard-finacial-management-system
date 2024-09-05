@@ -153,7 +153,7 @@ function Index() {
                         <span
                             className="text-warning  me-2 cursor-pointer"
                             onClick={() => {
-                                navigate('/loan/pdf', { state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname } });
+                                navigate('/loan/pdf', { state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname, } });
                             }}>
                             <i className={'fas fa-calculator'}></i>
                         </span>
