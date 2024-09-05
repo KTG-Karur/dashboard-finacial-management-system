@@ -58,21 +58,21 @@ export const resetUpdateLoanCharges = () => ({
   type: 'RESET_UPDATE_LOANCHARGES',
 });
 //Delete Reducer Call--->
-// export const deleteLoanChargesRequest = ( id: string) => ({
-//   type: 'DELETE_LOANCHARGES_REQUEST',
-//   payload: { id },
-// });
+export const deleteLoanChargesRequest = ( id: string) => ({
+  type: 'DELETE_LOANCHARGES_REQUEST',
+  payload: { id },
+});
 
-// export const deleteLoanChargesSuccess = (data: any) => ({
-//   type: 'DELETE_LOANCHARGES_SUCCESS',
-//   payload: { data },
-// });
+export const deleteLoanChargesSuccess = (data: any) => ({
+  type: 'DELETE_LOANCHARGES_SUCCESS',
+  payload: { data },
+});
 
-// export const deleteLoanChargesFailure = (errorMessage: string) => ({
-//   type: 'DELETE_LOANCHARGES_FAILURE',
-//   errorMessage: { errorMessage },
-// });
+export const deleteLoanChargesFailure = (errorMessage: string) => ({
+  type: 'DELETE_LOANCHARGES_FAILURE',
+  errorMessage: { errorMessage },
+});
 
-// export const deleteUpdateLoanCharges = () => ({
-//   type: 'RESET_DELETE_LOANCHARGES',
-// });
+export const deleteUpdateLoanCharges = () => ({
+  type: 'RESET_DELETE_LOANCHARGES',
+});

@@ -1,5 +1,5 @@
 import { Card, Col, Row } from 'react-bootstrap';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
     emiCalculation,
@@ -10,7 +10,7 @@ import {
     numberWithCommas
 } from './AllFunction';
 import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
-import { getCategoryRequest } from '../redux/actions';
+import { getAddLoanRequest, resetGetAddLoan } from '../redux/actions';
 import { useRedux } from '../hooks';
 
 const LoanPdf = (props) => {
@@ -18,59 +18,50 @@ const LoanPdf = (props) => {
     const { principal = 1300000, annualInterest = 14.65, tenurePeriod = 17 } = props
     let remainingPrincipal = principal;
     const { dispatch, appSelector } = useRedux();
-    const navigate = useNavigate();
     const location = useLocation();
-    const { loanDetails, isLoanUrl } = location.state || false;
+    const { loanDetails, isLoanUrl, loc } = location.state || false;
 
-    console.log("loanDetails")
-    console.log(loanDetails)
-    console.log("isLoanUrl")
-    console.log(isLoanUrl)
+    // console.log("loanDetails")
+    // console.log(loanDetails)
+    // console.log("isLoanUrl")
+    // console.log(isLoanUrl)
+    console.log(loc)
 
-    // const {
-    //     getAddLoanSuccess,
-    //     getAddLoanList,
-    //     getAddLoanFailure,
-    //     errorMessage,
-    //     //loan-charges
-    //     getLoanChargesList,
-    //     getLoanChargesSuccess,
-    //     getLoanChargesFailure,
-    // } = appSelector((state) => ({
+    useEffect(() => {
+        if (isLoanUrl) {
+            const req = { loanId: loanDetails?.loanId || '', path: true };
+            dispatch(getAddLoanRequest(req));
+        }
+    }, [loanDetails]);
 
-    //     //loan
-    //     getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
-    //     getAddLoanList: state.addLoanReducer.getAddLoanList,
-    //     getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
+    const {
+        getAddLoanSuccess,
+        getAddLoanList,
+        getAddLoanFailure,
+    } = appSelector((state) => ({
 
-    //     //loan-charges
-    //     getLoanChargesSuccess: state.loanChargesReducer.getLoanChargesSuccess,
-    //     getLoanChargesList: state.loanChargesReducer.getLoanChargesList,
-    //     getLoanChargesFailure: state.loanChargesReducer.getLoanChargesFailure,
+        //loan
+        getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
+        getAddLoanList: state.addLoanReducer.getAddLoanList,
+        getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
 
-    //     errorMessage: state.addLoanReducer.errorMessage,
-    // }));
+    }));
+
+
 
     // console.log("multiStateValue in loan pdf")
     // console.log(multiStateValue[0])
     const [loanState, setLoanState] = useState([]);
 
     // loan
-    // useEffect(() => {
-    //     if (getAddLoanSuccess) {
-    //         setIsLoading(false);
-    //         setState(getAddLoanList)
-    //         dispatch(resetGetAddLoan());
-    //     } else if (getAddLoanFailure) {
-    //         setIsLoading(false);
-    //          setState({})
-    //         dispatch(resetGetAddLoan());
-    //     }
-    // }, [getAddLoanSuccess, getAddLoanFailure]);
-
+    console.log(getAddLoanList);
     useEffect(() => {
-        dispatch(getCategoryRequest());
-    }, [loanDetails, isLoanUrl]);
+        if (getAddLoanSuccess) {
+            dispatch(resetGetAddLoan());
+        } else if (getAddLoanFailure) {
+            dispatch(resetGetAddLoan());
+        }
+    }, [getAddLoanSuccess, getAddLoanFailure]);
 
     useEffect(() => {
         const initialDueDate = new Date();
@@ -161,9 +152,9 @@ const LoanPdf = (props) => {
         <Row>
             <Col md={12}>
                 <Row>
-                    <Col className='d-flex justify-content-between'>
+                    <Col className='d-flex justify-content-end'>
                         <div>
-                            <Link to={"/view/loan"} >Back
+                            <Link to={loc ? loc : '/loan/request'} >Back
                                 <span
                                     className="cursor-pointer ms-1">
                                     <i className={'fe-arrow-right'}></i>

@@ -8,7 +8,7 @@ export async function getLoanChargesType(request) {
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));
-    }    
+    }
     return data;
   } catch (error) {
     console.error(error);
@@ -32,7 +32,7 @@ export async function createLoanChargesType(request) {
 //UPDATE---->
 export async function updateLoanChargesType(request, loanChargesTypeId) {
   try {
-    const response = await apiReturnCallBack("PUT", loanChargesType+`/${loanChargesTypeId}`, request);
+    const response = await apiReturnCallBack("PUT", loanChargesType + `/${loanChargesTypeId}`, request);
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));
@@ -44,17 +44,18 @@ export async function updateLoanChargesType(request, loanChargesTypeId) {
   }
 }
 //DELETE---->
-// export async function deleteLoanChargesType(loanChargesTypeId) {
-//   try {
-//     const response = await apiReturnCallBack("DELETE", loanChargesType+`/${loanChargesTypeId}`);
-//     if (!response.ok) {
-//       throw new Error(data.message || JSON.stringify(data));
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.error('Fetch error:', error);
-//     throw error;
-//   }
-// }
+export async function deleteLoanChargesType(loanChargesTypeId) {
+  try {
+    console.log("delete loan api")
+    const response = await apiReturnCallBack("DELETE", loanChargesType + `/${loanChargesTypeId}`);
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+}
 

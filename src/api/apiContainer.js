@@ -13,7 +13,7 @@ const apiContainer = {
   addressType: "/address-type",
   proofType: "/proof-type",
   bankAccount: "/bank-account",
-  loanCharges: "/loan-charges",
+  loanChargesDetails: "/loan-charges-details",
   loanChargesType: "/loan-charges-type",
   expenseEntry: "/expense-entry",
   incomeEntry: "/income-entry",

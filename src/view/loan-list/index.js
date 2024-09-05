@@ -14,12 +14,6 @@ import {
 } from '../../utils/AllFunction';
 import {
     createIncomeEntryRequest,
-    getIncomeEntryRequest,
-    getIncomeTypeRequest,
-    resetCreateIncomeEntry,
-    resetGetIncomeEntry,
-    resetGetIncomeType,
-    resetUpdateIncomeEntry,
     updateIncomeEntryRequest,
     createAddLoanRequest,
     resetCreateAddLoan,
@@ -38,67 +32,32 @@ let isEdit = false;
 
 function Index() {
     const { dispatch, appSelector } = useRedux();
-    const errorHandle = useRef();
     const navigate = useNavigate();
     const location = useLocation();
     const { loanData, isCreated } = location.state || false;
 
     const {
-        getIncomeEntrySuccess,
-        getIncomeEntryList,
-        getIncomeEntryFailure,
-        getIncomeTypeSuccess,
-        getIncomeTypeList,
-        getIncomeTypeFailure,
-        createIncomeEntrySuccess,
-        createIncomeEntryData,
-        createIncomeEntryFailure,
-        updateIncomeEntrySuccess,
-        updateIncomeEntryData,
-        updateIncomeEntryFailure,
-        errorMessage,
         createAddLoanSuccess,
-        createAddLoanData,
         createAddLoanFailure,
         updateAddLoanSuccess,
-        updateAddLoanData,
         updateAddLoanFailure,
         getAddLoanSuccess,
         getAddLoanList,
         getAddLoanFailure,
+        errorMessage,
     } = appSelector((state) => ({
-        getIncomeEntrySuccess: state.incomeEntryReducer.getIncomeEntrySuccess,
-        getIncomeEntryList: state.incomeEntryReducer.getIncomeEntryList,
-        getIncomeEntryFailure: state.incomeEntryReducer.getIncomeEntryFailure,
-
-        getIncomeTypeSuccess: state.incomeTypeReducer.getIncomeTypeSuccess,
-        getIncomeTypeList: state.incomeTypeReducer.getIncomeTypeList,
-        getIncomeTypeFailure: state.incomeTypeReducer.getIncomeTypeFailure,
-
-        createIncomeEntrySuccess: state.incomeEntryReducer.createIncomeEntrySuccess,
-        createIncomeEntryData: state.incomeEntryReducer.createIncomeEntryData,
-        createIncomeEntryFailure: state.incomeEntryReducer.createIncomeEntryFailure,
-
-        updateIncomeEntrySuccess: state.incomeEntryReducer.updateIncomeEntrySuccess,
-        updateIncomeEntryData: state.incomeEntryReducer.updateIncomeEntryData,
-        updateIncomeEntryFailure: state.incomeEntryReducer.updateIncomeEntryFailure,
-
         getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
         getAddLoanList: state.addLoanReducer.getAddLoanList,
         getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
 
         createAddLoanSuccess: state.addLoanReducer.createAddLoanSuccess,
-        createAddLoanData: state.addLoanReducer.createAddLoanData,
         createAddLoanFailure: state.addLoanReducer.createAddLoanFailure,
 
         updateAddLoanSuccess: state.addLoanReducer.updateAddLoanSuccess,
-        updateAddLoanData: state.addLoanReducer.updateAddLoanData,
         updateAddLoanFailure: state.addLoanReducer.updateAddLoanFailure,
 
-        errorMessage: state.incomeEntryReducer.errorMessage,
+        errorMessage: state.addLoanReducer.errorMessage,
     }));
-
-    const status = ['Request', 'Approval', 'Disbursed'];
 
     const columns = [
         {
@@ -168,10 +127,10 @@ function Index() {
                     loanStatusId == 2
                         ? 'success'
                         : loanStatusId == 4
-                        ? 'success'
-                        : loanStatusId == 3
-                        ? 'danger'
-                        : 'primary';
+                            ? 'success'
+                            : loanStatusId == 3
+                                ? 'danger'
+                                : 'primary';
                 // const result = ""
                 return (
                     <div>
@@ -194,7 +153,7 @@ function Index() {
                         <span
                             className="text-warning  me-2 cursor-pointer"
                             onClick={() => {
-                                navigate('/loan/pdf', { state: { loanDetails: row.original, isLoanUrl: true } });
+                                navigate('/loan/pdf', { state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname } });
                             }}>
                             <i className={'fas fa-calculator'}></i>
                         </span>
@@ -202,7 +161,7 @@ function Index() {
                         <span
                             className="text-success  me-2 cursor-pointer"
                             onClick={() => {
-                                navigate('/loan/addloan', { state: { loanDataEdit: row.original, isUpdate: true } });
+                                navigate('/loan/addloan', { state: { loanDataEdit: row.original, isUpdate: true, loc: location.pathname } });
                             }}>
                             <i className={'fe-edit-1'}></i>
                         </span>
@@ -213,7 +172,7 @@ function Index() {
                                 className="text-primary  me-2 cursor-pointer"
                                 onClick={() =>
                                     showConfirmationDialog(
-                                        `Do you want to Change ${status[row?.original?.loanStatusId]}`,
+                                        `Do you want to Change Approval`,
                                         () => onChangeStatus(row.original, row.index, 2),
                                         'Yes'
                                     )
@@ -227,7 +186,7 @@ function Index() {
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() =>
                                     showConfirmationDialog(
-                                        `Do you want to Change ${status[row?.original?.loanStatusId]}`,
+                                        `Do you want to Change Disbursed`,
                                         () => onChangeStatus(row.original, row.index, 4),
                                         'Yes'
                                     )
@@ -312,32 +271,6 @@ function Index() {
     });
     const [parentList, setParentList] = useState([]);
 
-    useEffect(() => {
-        console.log('loanData');
-        console.log(loanData);
-        console.log('isCreated');
-        console.log(isCreated);
-        if (loanData != '' && isCreated) {
-            dispatch(createAddLoanRequest(loanData));
-        } else if (loanData != '' && isCreated == false) {
-            const req = { loanId: loanData.loanId };
-            dispatch(updateAddLoanRequest(loanData, req));
-        }
-        // navigate('/view/loan', {
-        //     state: {
-        //         loanData: '',
-        //         isCreated: false,
-        //     },
-        // });
-    }, [loanData]);
-
-    useEffect(() => {
-        setIsLoading(true);
-        callDispatchStatus();
-        // dispatch(getIncomeEntryRequest());
-        // dispatch(getIncomeTypeRequest());
-    }, [location]);
-
     const callDispatchStatus = () => {
         const req = {};
         const pathName = location.pathname.split('/')[2];
@@ -361,10 +294,23 @@ function Index() {
         dispatch(getAddLoanRequest(req));
     };
 
-    // loan
     useEffect(() => {
-        console.log('getAddLoanSuccess');
-        console.log(getAddLoanSuccess);
+        // console.log("Called Create dispatch")
+        if (loanData && isCreated) {
+            dispatch(createAddLoanRequest(loanData));
+        } else if (loanData && isCreated === false) {
+            dispatch(updateAddLoanRequest(loanData, loanData.loanId));
+        }
+
+        callDispatchStatus();
+        navigate(location.pathname, { state: { loanData: false, isCreated: false } });
+
+    }, [loanData, isCreated]);
+
+
+
+    // Add Loan 
+    useEffect(() => {
         if (getAddLoanSuccess) {
             setIsLoading(false);
             setParentList(getAddLoanList);
@@ -376,30 +322,10 @@ function Index() {
         }
     }, [getAddLoanSuccess, getAddLoanFailure]);
 
-    useEffect(() => {
-        if (updateAddLoanSuccess) {
-            const temp_state = [...parentList];
-            temp_state[selectedIndex] = updateAddLoanData[0];
-            callDispatchStatus();
-            console.log('Update temp_state');
-            console.log(temp_state);
-            setParentList(temp_state);
-            isEdit && showMessage('success', 'Updated Successfully');
-            closeModel();
-            dispatch(resetUpdateAddLoan());
-        } else if (updateAddLoanFailure) {
-            showMessage('warning', errorMessage);
-            dispatch(resetUpdateAddLoan());
-        }
-    }, [updateAddLoanSuccess, updateAddLoanFailure]);
-
+    // CreateLoanSuccess
     useEffect(() => {
         if (createAddLoanSuccess) {
-            // const temp_state = [createAddLoanData[0]];
-            const temp_state = [createAddLoanData[0], ...parentList];
-            // setParentList(temp_state)
-            console.log('create temp_state');
-            console.log(temp_state);
+            callDispatchStatus();
             showMessage('success', 'Created Successfully');
             dispatch(resetCreateAddLoan());
         } else if (createAddLoanFailure) {
@@ -408,94 +334,20 @@ function Index() {
         }
     }, [createAddLoanSuccess, createAddLoanFailure]);
 
-    // useEffect(() => {
-    //     if (getIncomeEntrySuccess) {
-    //         setIsLoading(false)
-    //         setParentList(getIncomeEntryList)
-    //         dispatch(resetGetIncomeEntry())
-    //     } else if (getIncomeEntryFailure) {
-    //         setIsLoading(false)
-    //         setParentList([])
-    //         dispatch(resetGetIncomeEntry())
-    //     }
-    // }, [getIncomeEntrySuccess, getIncomeEntryFailure]);
-
-    // useEffect(() => {
-    //     if (getIncomeTypeSuccess) {
-    //         setIsLoading(false)
-    //         setOptionListState({
-    //             ...optionListState,
-    //             incomeTypeList :getIncomeTypeList
-    //         })
-    //         dispatch(resetGetIncomeType())
-    //     } else if (getIncomeTypeFailure) {
-    //         setIsLoading(false)
-    //         setOptionListState({
-    //             ...optionListState,
-    //             incomeTypeList : []
-    //         })
-    //         dispatch(resetGetIncomeType())
-    //     }
-    // }, [getIncomeTypeSuccess, getIncomeTypeFailure]);
-
-    // useEffect(() => {
-    //     if (createIncomeEntrySuccess) {
-    //         const temp_state = [createIncomeEntryData[0], ...parentList];
-    //         setParentList(temp_state)
-    //         showMessage('success', 'Created Successfully');
-    //         closeModel()
-    //         dispatch(resetCreateIncomeEntry())
-    //     } else if (createIncomeEntryFailure) {
-    //         showMessage('warning', errorMessage);
-    //         dispatch(resetCreateIncomeEntry())
-    //     }
-    // }, [createIncomeEntrySuccess, createIncomeEntryFailure]);
-
-    // useEffect(() => {
-    //     if (updateIncomeEntrySuccess) {
-    //         const temp_state = [...parentList];
-    //         temp_state[selectedIndex] = updateIncomeEntryData[0];
-    //         setParentList(temp_state)
-    //         isEdit && showMessage('success', 'Updated Successfully');
-    //         closeModel()
-    //         dispatch(resetUpdateIncomeEntry())
-    //     } else if (updateIncomeEntryFailure) {
-    //         showMessage('warning', errorMessage);
-    //         dispatch(resetUpdateIncomeEntry())
-    //     }
-    // }, [updateIncomeEntrySuccess, updateIncomeEntryFailure]);
-
-    // const onDeleteForm = (data, index, activeChecker) => {
-    //     //     const submitRequest = {
-    //     //         isActive: activeChecker == 0 ? 1 : 0,
-    //     //     };
-    //     //     // setSelectedIndex(index);
-    //     //     dispatch(updateAddLoanRequest(submitRequest, data.addLoanId));
-    // }
-
-    // const onEditForm = (data, index) => {
-    //     setState(prev => ({
-    //         ...prev,
-    //         applicant: '',
-    //         coApplicant: '',
-    //         guardiance: '',
-    //         category: '',
-    //         subCategory: '',
-    //         interest: '',
-    //         loanAmount: '',
-    //         disbursedDate: '',
-    //         tenurePeriod: '',
-    //         disbursedMethod: '',
-    //     }));
-    //     isEdit = true;
-    //     setSelectedItem({
-    //         ...selectedItem,
-    //         loanDetails: data
-    //     });
-    //     // setSelectedIndex(index);
-    //     // setModal(true);
-    // };
-    //     // };
+    // Update Loan
+    useEffect(() => {
+        console.log("updateAddLoanSuccess")
+        console.log(updateAddLoanSuccess)
+        if (updateAddLoanSuccess) {
+            callDispatchStatus();
+            isEdit && showMessage('success', 'Updated Successfully');
+            dispatch(resetUpdateAddLoan());
+        } else if (updateAddLoanFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetUpdateAddLoan());
+        }
+        isEdit = false;
+    }, [updateAddLoanSuccess, updateAddLoanFailure]);
 
     const onChangeStatus = async (data, idx, statusId) => {
         const today = await formatDate(new Date());
@@ -522,57 +374,13 @@ function Index() {
                 dueEndDate: lastdate,
             };
         }
-
         isEdit = true;
         setSelectedIndex(idx);
-        console.log('req');
-        console.log(req);
         dispatch(updateAddLoanRequest(req, data.loanId));
     };
 
-    const closeModel = () => {
-        isEdit = false;
-        onFormClear();
-        setModal(false);
-    };
-
     const onFormClear = () => {
-        setState({
-            ...state,
-            incomeEntryName: '',
-        });
-    };
-
-    const createModel = () => {
-        onFormClear();
-        isEdit = false;
-        setModal(true);
-    };
-
-    const onEditForm = (data, index) => {
-        setState({
-            ...state,
-            incomeEntryName: data?.incomeEntryName || '',
-        });
-        isEdit = true;
-        setSelectedItem(data);
-        setSelectedIndex(index);
-        setModal(true);
-    };
-
-    const handleValidation = () => {
-        errorHandle.current.validateFormFields();
-    };
-
-    const onFormSubmit = async () => {
-        const submitRequest = {
-            incomeEntryName: state?.incomeEntryName || '',
-        };
-        if (isEdit) {
-            dispatch(updateIncomeEntryRequest(submitRequest, selectedItem.incomeEntryId));
-        } else {
-            dispatch(createIncomeEntryRequest(submitRequest));
-        }
+        setState({});
     };
 
     const onDeleteForm = (data, index, activeChecker) => {
@@ -583,16 +391,8 @@ function Index() {
         dispatch(updateIncomeEntryRequest(submitRequest, data.incomeEntryId));
     };
 
-    const submitFun = () => {
-        alert('in-->');
-    };
-    // const handlerStatus = (data, name) => {
-    //     if (data.loanStatusId == 1) {
-    //         setParentList(parentData);
-    //     } else {
-    //         const filterData = _.filter(parentData, { loanStatusId: data.loanStatusId });
-    //         setParentList(filterData);
-    //     }
+    // const submitFun = () => {
+    //     alert('in-->');
     // };
 
     return (
@@ -615,31 +415,12 @@ function Index() {
                     filterFormContainer={districtFormContainer}
                     optionListState={optionListState}
                     // onChangeCallBack={{ handlerStatus: handlerStatus }}
-                    filterSubmitFunction={submitFun}
+                    // filterSubmitFunction={submitFun}
                     setState={setState}
                     state={state}
                     filterColNo={1}
                 />
             )}
-
-            {/* <ModelViewBox
-                modal={modal}
-                setModel={setModal}
-                modelHeader={'Income Entry'}
-                modelSize={'md'}
-                isEdit={isEdit}
-                handleSubmit={handleValidation}>
-                <FormLayout
-                    dynamicForm={formContainer}
-                    handleSubmit={onFormSubmit}
-                    setState={setState}
-                    state={state}
-                    ref={errorHandle}
-                    noOfColumns={1}
-                    errors={errors}
-                    setErrors={setErrors}
-                />
-            </ModelViewBox> */}
         </React.Fragment>
     );
 }

@@ -2,9 +2,9 @@ const baseURL = 'http://localhost:5059';
 // const ports = '5059';
 
 const getBaseUrl = (url) => {
-//   if (url === "login" || url.includes("employee-management")) {
-//     return `${baseURL}${ports}${url}`;
-//   }
+  //   if (url === "login" || url.includes("employee-management")) {
+  //     return `${baseURL}${ports}${url}`;
+  //   }
   return `${baseURL}${url}`;
 };
 
@@ -13,7 +13,7 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
     'Content-Type': 'application/json',
     'Cache-Control': 'no-cache',
     'If-Modified-Since': 0,
-    'auth' : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZlbnNyaW5pMDQxNEBnbWFpbC5jb20iLCJpYXQiOjE3MjU0MjkzMzB9.eSEH9zugtZvJ5dmrcjOmfDX23wvuS7sriabNXuaSF6Y'
+    'auth': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InZlbnNyaW5pMDQxNEBnbWFpbC5jb20iLCJpYXQiOjE3MjU0MjkzMzB9.eSEH9zugtZvJ5dmrcjOmfDX23wvuS7sriabNXuaSF6Y'
   };
 
   const fetchConfig = {
@@ -30,10 +30,10 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
       });
       fetchConfig.body = formData;
       fetchConfig.headers['Content-Type'] = 'multipart/form-data';
-    }  else if (method === 'GET') {
+    } else if (method === 'GET') {
       const queryParams = new URLSearchParams(object).toString();
       url += `?${queryParams}`;
-    }else {
+    } else {
       fetchConfig.body = JSON.stringify(object);
     }
   }

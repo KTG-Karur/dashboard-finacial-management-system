@@ -34,6 +34,8 @@ export async function createAddLoan(request) {
 export async function updateAddLoan(request, addLoanId) {
     try {
         const response = await apiReturnCallBack('PUT', addLoan + `/${addLoanId}`, request);
+        console.log("response in updatedAddloan")
+        console.log(response)
         const data = await response.json();
         if (!response.ok) {
             throw new Error(data.message || JSON.stringify(data));
