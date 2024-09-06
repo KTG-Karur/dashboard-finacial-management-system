@@ -509,8 +509,6 @@ function Index() {
 
     //Loan Charges Delete
     useEffect(() => {
-        // console.log("deleteLoanChargesSuccess")
-        // console.log(deleteLoanChargesSuccess)
         if (deleteLoanChargesSuccess) {
             showMessage('success', 'Deleted Successfully');
             dispatch(resetGetCategory());
@@ -720,8 +718,6 @@ function Index() {
     const onDeleteTable = async (rowData, ids) => {
         if (rowData?.loanChargesDetailsId) {
             const id = rowData.loanChargesDetailsId;
-            console.log('id in delete table');
-            console.log(id);
             dispatch(deleteLoanChargesRequest(id));
         }
         // const delData = await deleteData(state.loanChargesInfo, ids);

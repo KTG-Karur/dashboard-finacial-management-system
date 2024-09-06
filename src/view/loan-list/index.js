@@ -13,7 +13,6 @@ import {
     showMessage,
 } from '../../utils/AllFunction';
 import {
-    createIncomeEntryRequest,
     updateIncomeEntryRequest,
     createAddLoanRequest,
     resetCreateAddLoan,
@@ -127,10 +126,10 @@ function Index() {
                     loanStatusId == 2
                         ? 'success'
                         : loanStatusId == 4
-                            ? 'success'
-                            : loanStatusId == 3
-                                ? 'danger'
-                                : 'primary';
+                        ? 'success'
+                        : loanStatusId == 3
+                        ? 'danger'
+                        : 'primary';
                 // const result = ""
                 return (
                     <div>
@@ -153,7 +152,9 @@ function Index() {
                         <span
                             className="text-warning  me-2 cursor-pointer"
                             onClick={() => {
-                                navigate('/loan/pdf', { state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname, } });
+                                navigate('/loan/pdf', {
+                                    state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname },
+                                });
                             }}>
                             <i className={'fas fa-calculator'}></i>
                         </span>
@@ -161,7 +162,9 @@ function Index() {
                         <span
                             className="text-success  me-2 cursor-pointer"
                             onClick={() => {
-                                navigate('/loan/addloan', { state: { loanDataEdit: row.original, isUpdate: true, loc: location.pathname } });
+                                navigate('/loan/addloan', {
+                                    state: { loanDataEdit: row.original, isUpdate: true, loc: location.pathname },
+                                });
                             }}>
                             <i className={'fe-edit-1'}></i>
                         </span>
@@ -239,11 +242,7 @@ function Index() {
     ];
 
     const [state, setState] = useState({});
-    const [selectedItem, setSelectedItem] = useState({});
-    const [selectedIndex, setSelectedIndex] = useState(false);
-    const [modal, setModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState([]);
     const [optionListState, setOptionListState] = useState({
         incomeTypeList: [],
         loanStatusList: [
@@ -295,21 +294,17 @@ function Index() {
     };
 
     useEffect(() => {
-        // console.log("Called Create dispatch")
         if (loanData && isCreated) {
             dispatch(createAddLoanRequest(loanData));
         } else if (loanData && isCreated === false) {
             dispatch(updateAddLoanRequest(loanData, loanData.loanId));
         }
-
+        setIsLoading(true)
         callDispatchStatus();
         navigate(location.pathname, { state: { loanData: false, isCreated: false } });
-
     }, [loanData, isCreated]);
 
-
-
-    // Add Loan 
+    // Add Loan
     useEffect(() => {
         if (getAddLoanSuccess) {
             setIsLoading(false);
@@ -336,8 +331,6 @@ function Index() {
 
     // Update Loan
     useEffect(() => {
-        console.log("updateAddLoanSuccess")
-        console.log(updateAddLoanSuccess)
         if (updateAddLoanSuccess) {
             callDispatchStatus();
             isEdit && showMessage('success', 'Updated Successfully');
@@ -375,20 +368,7 @@ function Index() {
             };
         }
         isEdit = true;
-        setSelectedIndex(idx);
         dispatch(updateAddLoanRequest(req, data.loanId));
-    };
-
-    const onFormClear = () => {
-        setState({});
-    };
-
-    const onDeleteForm = (data, index, activeChecker) => {
-        const submitRequest = {
-            isActive: activeChecker == 0 ? 1 : 0,
-        };
-        setSelectedIndex(index);
-        dispatch(updateIncomeEntryRequest(submitRequest, data.incomeEntryId));
     };
 
     // const submitFun = () => {
