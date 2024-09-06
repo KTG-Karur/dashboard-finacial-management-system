@@ -36,11 +36,13 @@ import {
     resetCreateLoanCharges,
     createBankAccountRequest,
     resetCreateBankAccount,
+    resetDeleteLoanCharges,
 } from '../../redux/actions';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { NotificationContainer } from 'react-notifications';
+import { Link } from 'react-router-dom';
 
 let copyApplicantList = [];
 let copyLoanChargesId = [];
@@ -279,9 +281,69 @@ function Index() {
         }
     }, [state.applicantId, state.coApplicantId, state.guarantorId]);
 
+    //Dispatch Called
     useEffect(() => {
-        if (state.disbursedMethodId !== '' && state.disbursedMethodId === 2) {
-            const formField = [
+        dispatch(getCategoryRequest());
+        dispatch(getLoanChargesTypeRequest());
+        dispatch(getApplicantRequest());
+        dispatch(getBankAccountRequest());
+    }, []);
+
+    console.log(formFiledData)
+    useEffect(() => {
+        if (state?.categoryId) {
+            const updatedFormFiledData = [...formFiledData];
+            if (state?.categoryId === 1) {
+                updatedFormFiledData[13] = {
+                    formFields: [],
+                };
+                updatedFormFiledData[32] = {
+                    formFields: [],
+                };
+            } else {
+                updatedFormFiledData[13] = {
+                    formFields: [
+                        {
+                            label: 'Sub-category',
+                            name: 'subCategoryId',
+                            inputType: 'select',
+                            optionList: 'subCategoryId',
+                            displayKey: 'subCategoryName',
+                            uniqueKey: 'subCategoryId',
+                            onChange: 'handlesubCategorySelect',
+                            require: false,
+                        },
+                    ],
+                };
+                updatedFormFiledData[32] = {
+                    formFields: [
+                        {
+                            label: 'Tenure Period (in month)',
+                            name: 'tenurePeriod',
+                            inputType: 'number',
+                            placeholder: 'Enter tenure (in month)',
+                            optionList: 'tenurePeriod',
+                            require: false,
+                        },
+                    ],
+                };
+            }
+            setFormFiledData(updatedFormFiledData);
+        }
+    }, [state?.categoryId])
+
+    useEffect(() => {
+        const bankFieldsNames = [
+            'bankAccountId',
+            'bankName',
+            'accountHolderName',
+            'branchName',
+            'accountNo',
+            'ifscCode',
+        ];
+
+        if (state?.disbursedMethodId === 2) {
+            const bankFields = [
                 {
                     formFields: [
                         {
@@ -352,19 +414,29 @@ function Index() {
                     ],
                 },
             ];
-            setFormFiledData((prevFormFieldData) => [...prevFormFieldData, ...formField]);
+            setFormFiledData((prevFormFieldData) => {
+                const filteredFormFields = prevFormFieldData.filter(
+                    (field) => !field.formFields.some((formField) => bankFieldsNames.includes(formField.name))
+                );
+                return [...filteredFormFields, ...bankFields];
+            });
         } else {
-            setFormFiledData(formContainer);
+            setFormFiledData((prevFormFieldData) => {
+                return prevFormFieldData.filter(
+                    (field) => !field.formFields.some((formField) => bankFieldsNames.includes(formField.name))
+                );
+            });
+            setState((prevState) => ({
+                ...prevState,
+                bankName: '',
+                branchName: '',
+                accountHolderName: '',
+                accountNo: '',
+                ifscCode: '',
+                bankAccountId: '',
+            }));
         }
-    }, [state.disbursedMethodId]);
-
-    //Dispatch Called
-    useEffect(() => {
-        dispatch(getCategoryRequest());
-        dispatch(getLoanChargesTypeRequest());
-        dispatch(getApplicantRequest());
-        dispatch(getBankAccountRequest());
-    }, []);
+    }, [state?.disbursedMethodId]);
 
     //Sub Category Dispatch Called
     useEffect(() => {
@@ -511,10 +583,10 @@ function Index() {
     useEffect(() => {
         if (deleteLoanChargesSuccess) {
             showMessage('success', 'Deleted Successfully');
-            dispatch(resetGetCategory());
+            dispatch(resetDeleteLoanCharges());
         } else if (deleteLoanChargesFailure) {
             showMessage('warning', 'Deleted Failed');
-            dispatch(resetGetCategory());
+            dispatch(resetDeleteLoanCharges());
         }
     }, [deleteLoanChargesSuccess, deleteLoanChargesFailure]);
 
@@ -593,14 +665,14 @@ function Index() {
         const allChargestList = (state.loanChargesInfo || []).map((item) =>
             item.loanChargesDetailsId
                 ? {
-                      loanChargesDetailsId: item.loanChargesDetailsId,
-                      loanChargeId: item.loanChargeId,
-                      chargeAmount: item.chargeAmount,
-                  }
+                    loanChargesDetailsId: item.loanChargesDetailsId,
+                    loanChargeId: item.loanChargeId,
+                    chargeAmount: item.chargeAmount,
+                }
                 : {
-                      loanChargeId: item.loanChargeId,
-                      chargeAmount: item.chargeAmount,
-                  }
+                    loanChargeId: item.loanChargeId,
+                    chargeAmount: item.chargeAmount,
+                }
         );
         (state.loanChargesInfo || []).map((item) => {
             allChargesAmount += item.chargeAmount;
@@ -627,7 +699,6 @@ function Index() {
         if (isUpdate) {
             submitRequest.loanId = state?.loanId || '';
         }
-
         const url = loc ? loc : '/loan/request';
         navigate(url, { state: { loanData: submitRequest, isCreated: isUpdate ? false : true } });
     };
@@ -651,6 +722,7 @@ function Index() {
                     loanChargesInfo: updata,
                 }));
                 setIsEditArrVal(false);
+
             } else {
                 const addData = {
                     id: state.loanChargesInfo.length,
@@ -695,13 +767,13 @@ function Index() {
             isPercentage: isUpdate
                 ? [{ value: 0, label: 'Amount ₹' }]
                 : [
-                      { value: 0, label: 'Amount ₹' },
-                      { value: 1, label: 'Percentage %' },
-                  ],
+                    { value: 0, label: 'Amount ₹' },
+                    { value: 1, label: 'Percentage %' },
+                ],
         }));
 
-        if (updatedState?.chargeAmount && updatedState?.isPercentage === '1') {
-            updatedState.chargeAmount = ValtoPercentage(updatedState.chargeAmount, state.loanAmount);
+        if (updatedState?.chargeAmount && updatedState?.isPercentage === 1) {
+            updatedState.chargeAmount = await ValtoPercentage(updatedState.chargeAmount, state.loanAmount);
         }
         setState((prev) => ({
             ...prev,
@@ -720,15 +792,15 @@ function Index() {
             const id = rowData.loanChargesDetailsId;
             dispatch(deleteLoanChargesRequest(id));
         }
-        // const delData = await deleteData(state.loanChargesInfo, ids);
-        // setState((prev) => ({
-        //     ...prev,
-        //     loanChargesInfo: delData,
-        // }));
-        // setOptionListState((prev) => ({
-        //     ...prev,
-        //     loanChargeId: copyLoanChargesId,
-        // }));
+        const delData = await deleteData(state.loanChargesInfo, ids);
+        setState((prev) => ({
+            ...prev,
+            loanChargesInfo: delData,
+        }));
+        setOptionListState((prev) => ({
+            ...prev,
+            loanChargeId: copyLoanChargesId,
+        }));
     };
 
     const onModelFormSubmit = async () => {
@@ -780,9 +852,29 @@ function Index() {
             dispatch(getSubCategoryRequest(req));
         }
 
+        if (option[form.uniqueKey] === 1) {
+            setState({
+                ...state,
+                subCategoryId: '',
+                interestRate: '',
+            })
+        } else {
+            setState({
+                ...state,
+                interestRate: '',
+            })
+        }
+
         setState((prev) => ({
             ...prev,
             [form.name]: option[form.uniqueKey],
+        }));
+    };
+    const handlesubCategorySelect = async (option, form) => {
+        setState((prev) => ({
+            ...prev,
+            [form.name]: option[form.uniqueKey],
+            interestRate: option.interestRate
         }));
     };
 
@@ -807,6 +899,24 @@ function Index() {
                     handleSubmit={onModelFormSubmit}
                 />
             </ModelViewBox>
+            {
+                isUpdate &&
+                <Row>
+                    <Col className="d-flex justify-content-end">
+                        <div>
+                            <Link to={'/loan/request'} >
+                                <Button className='mb-2'>
+                                    Back
+                                    <span className="cursor-pointer ms-1">
+                                        <i className={'fe-arrow-right'}></i>
+                                    </span>
+                                </Button>
+                            </Link>
+
+                        </div>
+                    </Col>
+                </Row>
+            }
             <Card>
                 <Card.Body>
                     <Row>
@@ -816,11 +926,11 @@ function Index() {
                                 dynamicForm={formFiledData}
                                 handleSubmit={() =>
                                     showConfirmationDialog(
-                                        'Do you want to create it?',
+                                        isUpdate ? 'Do you want to Update application?' : 'Do you want to Submit application?',
                                         onFormSubmit,
-                                        'Yes, Create it!',
-                                        'Created',
-                                        'Successfully Created'
+                                        'Yes',
+                                        isUpdate ? 'Updated' : 'Created',
+                                        isUpdate ? 'Successfully Updated' : 'Successfully Created'
                                     )
                                 }
                                 state={state}
@@ -833,6 +943,7 @@ function Index() {
                                     handleDocumentSelect: handleDocumentSelect,
                                     handleBankSelect: handleBankSelect,
                                     handleCategorySelect: handleCategorySelect,
+                                    handlesubCategorySelect: handlesubCategorySelect,
                                 }}
                                 editData={state}
                                 noOfColumns={4}

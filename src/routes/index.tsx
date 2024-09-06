@@ -107,7 +107,9 @@ import {
     Role,
     LoanChargesType,
     LoanPDF,
+    WelcomeLetter,
 } from './Route_Menu';
+
 
 const loading = () => <div className=""></div>;
 
@@ -199,6 +201,10 @@ const AllRoutes = () => {
                 {
                     path: '/loan/pdf',
                     element: <LoadComponent component={LoanPDF} />,
+                },
+                {
+                    path: '/loan/welcomeletter',
+                    element: <LoadComponent component={WelcomeLetter} />,
                 },
                 {
                     path: 'view',

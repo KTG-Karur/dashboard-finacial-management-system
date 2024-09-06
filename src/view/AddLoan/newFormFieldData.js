@@ -93,17 +93,7 @@ const formContainer = [
         ],
     },
     {
-        formFields: [
-            {
-                label: 'Sub-category',
-                name: 'subCategoryId',
-                inputType: 'select',
-                optionList: 'subCategoryId',
-                displayKey: 'subCategoryName',
-                uniqueKey: 'subCategoryId',
-                require: false,
-            },
-        ],
+        formFields: [],
     },
     {
         formFields: [],
@@ -190,7 +180,6 @@ const formContainer = [
                 label: 'Charges Amount',
                 name: 'chargeAmount',
                 inputType: 'number',
-                maxlength: 2,
                 placeholder: 'Enter Charges Amount',
                 require: false,
             },
@@ -281,7 +270,6 @@ const modelFormContainer = [
                 label: 'Charges Amount',
                 name: 'chargeAmount',
                 inputType: 'number',
-                maxlength: 3,
                 placeholder: 'Enter Charges Amount',
                 require: false,
             },

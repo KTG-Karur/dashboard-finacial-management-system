@@ -44,6 +44,14 @@ function formatDate(date) {
     return [year, month, day].join('-');
 }
 
+function DateMonthYear(date) {
+    const ddmmyyyy = date.split('-');
+    const d = ddmmyyyy[2];
+    const m = ddmmyyyy[1];
+    const y = ddmmyyyy[0];
+    return `${d}-${m}-${y}`
+}
+
 function updateData(arr, id, newState) {
     // arr[id - 1] = newState;
     // return arr;
@@ -128,6 +136,8 @@ const showConfirmationDialog = (
         }
     });
 };
+
+
 //emi
 
 const annualToMonthlyInterestRate = (annualInterest) => {
@@ -138,7 +148,7 @@ const annualToMonthlyInterestRate = (annualInterest) => {
 const emiCalculation = (principal, annualInterest, tenurePeriod) => {
     const p = parseFloat(principal);
     const r = annualToMonthlyInterestRate(annualInterest);
-    const t = parseInt(tenurePeriod) * 12;
+    const t = parseFloat(tenurePeriod) * 12;
 
     const emi = (p * r * Math.pow(1 + r, t)) / (Math.pow(1 + r, t) - 1);
 
@@ -242,5 +252,6 @@ export {
     annualToMonthlyInterestRate,
     calculateTotalInterestPayable,
     numberWithCommas,
+    DateMonthYear,
 
 };

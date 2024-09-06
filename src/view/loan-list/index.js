@@ -126,10 +126,10 @@ function Index() {
                     loanStatusId == 2
                         ? 'success'
                         : loanStatusId == 4
-                        ? 'success'
-                        : loanStatusId == 3
-                        ? 'danger'
-                        : 'primary';
+                            ? 'success'
+                            : loanStatusId == 3
+                                ? 'danger'
+                                : 'primary';
                 // const result = ""
                 return (
                     <div>
@@ -149,25 +149,41 @@ function Index() {
                 return (
                     <div>
                         {/* pdf */}
-                        <span
-                            className="text-warning  me-2 cursor-pointer"
-                            onClick={() => {
-                                navigate('/loan/pdf', {
-                                    state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname },
+                        {
+                            row.original?.categoryId !== 1 &&
+                            <span
+                                className="text-warning  me-2 cursor-pointer"
+                                onClick={() => {
+                                    navigate('/loan/pdf', {
+                                        state: { loanDetails: row.original, isLoanUrl: true, loc: location.pathname },
+                                    });
+                                }}>
+                                <i className={'fas fa-calculator'}></i>
+                            </span>
+                        }
+                        {/* Download for Welcome Letter */}
+                        {row?.original?.loanStatusId === 4 && (
+                            <span className="text-success  me-2 cursor-pointer" onClick={() => {
+                                navigate('/loan/welcomeletter', {
+                                    state: { loanDetails: row.original, isLoanUrl: true },
                                 });
                             }}>
-                            <i className={'fas fa-calculator'}></i>
-                        </span>
+                                <i className={'fas fa-download'}></i>
+                            </span>
+                        )}
                         {/* edit */}
-                        <span
-                            className="text-success  me-2 cursor-pointer"
-                            onClick={() => {
-                                navigate('/loan/addloan', {
-                                    state: { loanDataEdit: row.original, isUpdate: true, loc: location.pathname },
-                                });
-                            }}>
-                            <i className={'fe-edit-1'}></i>
-                        </span>
+                        {
+                            row?.original?.loanStatusId === 1 &&
+                            <span
+                                className="text-success  me-2 cursor-pointer"
+                                onClick={() => {
+                                    navigate('/loan/addloan', {
+                                        state: { loanDataEdit: row.original, isUpdate: true, loc: location.pathname },
+                                    });
+                                }}>
+                                <i className={'fe-edit-1'}></i>
+                            </span>
+                        }
                         {/* status */}
                         {/* Request or to be approval */}
                         {row?.original?.loanStatusId === 1 && (
@@ -175,7 +191,7 @@ function Index() {
                                 className="text-primary  me-2 cursor-pointer"
                                 onClick={() =>
                                     showConfirmationDialog(
-                                        `Do you want to Change Approval`,
+                                        `You want to Approval this loan`,
                                         () => onChangeStatus(row.original, row.index, 2),
                                         'Yes'
                                     )
@@ -189,7 +205,7 @@ function Index() {
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() =>
                                     showConfirmationDialog(
-                                        `Do you want to Change Disbursed`,
+                                        `You want to Disbursed this loan`,
                                         () => onChangeStatus(row.original, row.index, 4),
                                         'Yes'
                                     )
@@ -209,14 +225,13 @@ function Index() {
                                 <i className={'fas fa-money-bill-1'}></i>
                             </span>
                         )}
-
                         {/* Cancelled */}
                         {row?.original?.loanStatusId !== 3 && row?.original?.loanStatusId !== 4 && (
                             <span
                                 className="text-danger  me-2 cursor-pointer"
                                 onClick={() =>
                                     showConfirmationDialog(
-                                        'Do you want to Cancelled',
+                                        'You want to Cancelled this loan',
                                         () => onChangeStatus(row.original, row.index, 3),
                                         'Yes'
                                     )

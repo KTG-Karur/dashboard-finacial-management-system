@@ -47,10 +47,7 @@ function* createAddLoanSaga(action: any): Generator<any, any, any> {
 // // Saga to handle updating a addLoan
 function* updateAddLoanSaga(action: any): Generator<any, any, any> {
     try {
-        console.log('action.payload');
-        console.log(action.payload);
         const data = yield call(updateAddLoan, action.payload.data, action.payload.id);
-        console.log(data);
         yield put(updateAddLoanSuccess(data));
     } catch (error: any) {
         const errorMessage =

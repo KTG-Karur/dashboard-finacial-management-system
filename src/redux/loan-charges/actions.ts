@@ -73,6 +73,6 @@ export const deleteLoanChargesFailure = (errorMessage: string) => ({
   errorMessage: { errorMessage },
 });
 
-export const deleteUpdateLoanCharges = () => ({
+export const resetDeleteLoanCharges = () => ({
   type: 'RESET_DELETE_LOANCHARGES',
 });

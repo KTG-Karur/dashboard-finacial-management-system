@@ -46,9 +46,9 @@ const Navigate: NavigateTypes[] = [
         url: '/loan/addloan',
     },
     {
-        label: 'To be approvals',
+        label: 'Requested',
         isTitle: false,
-        icon: 'mdi mdi-list-status',
+        icon: 'mdi mdi-comment-text-multiple',
         url: '/loan/request',
     },
     {
@@ -60,13 +60,13 @@ const Navigate: NavigateTypes[] = [
     {
         label: 'Disbursed',
         isTitle: false,
-        icon: 'mdi mdi-list-status',
+        icon: 'mdi mdi-cash-check',
         url: '/loan/disbursed',
     },
     {
         label: 'Cancelled',
         isTitle: false,
-        icon: 'mdi mdi-list-status',
+        icon: 'mdi mdi-book-cancel',
         url: '/loan/cancelled',
     },
     { label: 'Entry', isTitle: true },

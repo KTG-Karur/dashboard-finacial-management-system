@@ -33,9 +33,10 @@ export const LoanList = React.lazy(() => import('../view/loan-list'));
 export const Role = React.lazy(() => import('../view/role'));
 export const LoanChargesType = React.lazy(() => import('../view/loan-charges-type'));
 export const LoanPDF = React.lazy(() => import('../utils/loanPdf'));
+export const WelcomeLetter = React.lazy(() => import('../utils/welcomeLetter'));
 
 // Loan
-export const AddLoan=React.lazy(()=> import('../view/addLoan/newAddLoan'));
+export const AddLoan = React.lazy(() => import('../view/addLoan/newAddLoan'));
 
 // apps
 export const CalendarApp = React.lazy(() => import('../pages/apps/Calendar'));

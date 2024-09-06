@@ -1,4 +1,4 @@
-import { Card, Col, Row } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -9,6 +9,7 @@ import {
     annualToMonthlyInterestRate,
     numberWithCommas,
     formatDate,
+    DateMonthYear,
 } from './AllFunction';
 import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
 import { getAddLoanRequest, resetGetAddLoan } from '../redux/actions';
@@ -41,10 +42,6 @@ const LoanPdf = (props) => {
         if (getAddLoanSuccess) {
             setState({
                 applicationNo: getAddLoanList[0].applicationNo,
-                applicantName: getAddLoanList[0].applicantName,
-                coApplicantName: getAddLoanList[0].coApplicantName,
-                guarantorName: getAddLoanList[0].guarantorName,
-
                 categoryName: getAddLoanList[0].categoryName,
                 subCategoryName: getAddLoanList[0].subCategoryName,
                 interestRate: getAddLoanList[0].interestRate,
@@ -86,7 +83,7 @@ const LoanPdf = (props) => {
                 const emi = emiCalculation(
                     parseInt(state?.loanAmount || 0),
                     parseInt(state?.interestRate || 0),
-                    parseInt(state?.tenurePeriod || 0) / 12 // Still calculate EMI on a yearly basis
+                    parseFloat(state?.tenurePeriod || 0) / 12 // Still calculate EMI on a yearly basis
                 );
 
                 const monthlyInterestRate = annualToMonthlyInterestRate(parseInt(state?.interestRate || 0));
@@ -120,51 +117,17 @@ const LoanPdf = (props) => {
 
     // WelcomeDetails
     const WelcomeDetails = {
-        customer: state?.applicantName || '',
-        phone: '93877 59353',
         toDate: formatDate(),
         status: state?.loanStatusName || '',
-        address: {
-            location: 'NO 48, Thumbivadi',
-            city: 'Karur',
-            state: 'Tamilnadu',
-            country: 'India',
-            pincode: 639001,
-        },
-        headerDescription:
-            'We thank you for choosing our Company for your financial requirements and giving us an opportunity to serve you.',
-        headerSubDescripion: 'We Wish to list Loan details which are as follows: ',
         loanNo: state?.applicationNo || '',
+        categoryName: state?.categoryName || '',
         loanAmount: `₹ ${state?.loanAmount || 0}.00`,
-        Tenure: `${state?.tenurePeriod || ''} in Month`,
-        dateofAgreement: formatDate(state?.createdAt),
+        Tenure: `${state?.tenurePeriod || ''} (Months)`,
+        dateofAgreement: DateMonthYear(formatDate(state?.createdAt)),
         disbursedMethod: state?.disbursedMethodName || '',
         firstInstallment: state?.dueDate || '',
         lastInstallment: state?.lastDate || '',
-        footerDescription:
-            'We request you to make the Monthly payment as per the Agreement. The Monthly Installment Schedule is attached herewith',
-        footersubDescription: 'You Mobile No. as per our records is +91 1234567890 Please inform us,',
-        footersubDescription2: 'if there is a change in your Mobile No.',
-        footersubDescription3: 'Please update your AADHAAR Number with our branch, if no yet updated.',
-        footersubDescription4:
-            'If you require any futher details, please contact us at our Branch Office address given below:',
-        officeAddress: {
-            companyName: 'SHRIRAM FINANCE LIMI',
-            companyAddress: '108 ANNAMALAI COMPLEX 2ND FLR KOVAI MAIN ROAD',
-            companyDistrict: 'ERODE',
-            companyPincode: 639002,
-            companyState: 'TAMILNADU',
-            companyCountry: 'INDIA',
-            ph: '04324-249495',
-            fax: '04324-249495',
-        },
-        thankyou: 'Thanking you',
-        termsandCondition: {
-            NoOne: 'Please quote your Loan No mentioned above for all your future communications.',
-            NoTwo: 'Please collect proper receipt on payment of cash/cheque.',
-            NoThree:
-                'Please register your Mobile Number(ignore if already registered), at our branch office, to receive SMS regarding new schemes and confirmation of receipt of installments within 3 working days of payment.',
-        },
+        headerSubDescripion: 'We Wish to list Loan details which are as follows: ',
     };
 
     return (
@@ -173,12 +136,15 @@ const LoanPdf = (props) => {
                 <Row>
                     <Col className="d-flex justify-content-end">
                         <div>
-                            <Link to={loc ? loc : '/loan/request'}>
-                                Back
-                                <span className="cursor-pointer ms-1">
-                                    <i className={'fe-arrow-right'}></i>
-                                </span>
+                            <Link to={loc ? loc : '/loan/request'} >
+                                <Button className='mb-2'>
+                                    Back
+                                    <span className="cursor-pointer ms-1">
+                                        <i className={'fe-arrow-right'}></i>
+                                    </span>
+                                </Button>
                             </Link>
+
                         </div>
                     </Col>
                 </Row>
@@ -204,19 +170,6 @@ const LoanPdf = (props) => {
                             <hr />
                             <Row>
                                 <Col md={12}>
-                                    <div className="float-start mt-3">
-                                        <address>
-                                            <p> To</p>
-                                            {/* <strong>{multiStateValue[0]?.applicantInfo?.applicant}</strong> */}
-                                            {WelcomeDetails.customer}
-                                            <br />
-                                            {WelcomeDetails.address.location}
-                                            <br />
-                                            {WelcomeDetails.address.city}-{WelcomeDetails.address.pincode},<br />{' '}
-                                            {WelcomeDetails.address.state},{WelcomeDetails.address.country}
-                                            <br />
-                                        </address>
-                                    </div>
                                     <div className="float-end mt-3">
                                         <address>
                                             <p>{WelcomeDetails.headerSubDescripion}</p>
@@ -224,6 +177,10 @@ const LoanPdf = (props) => {
                                                 <tr>
                                                     <th>Loan No</th>
                                                     <td>: {WelcomeDetails.loanNo}</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Loan Type</th>
+                                                    <td>: {WelcomeDetails.categoryName}</td>
                                                 </tr>
                                                 <tr>
                                                     <th>Loan Amount</th>
@@ -238,73 +195,12 @@ const LoanPdf = (props) => {
                                                     <td>: {WelcomeDetails.dateofAgreement}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th>Disbursed Date</th>
-                                                    <td>: {WelcomeDetails.disbursedMethod}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>1st Installment Date</th>
-                                                    <td>: {WelcomeDetails.firstInstallment}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Last Installment Date</th>
-                                                    <td>: {WelcomeDetails.lastInstallment}</td>
-                                                </tr>
-                                                <tr>
                                                     <th>Status</th>
                                                     <td>: {WelcomeDetails.status}</td>
                                                 </tr>
                                             </table>
                                         </address>
                                     </div>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Col>
-                                    <p>Dear Sir/Madam</p>
-                                    <div className="mb-2">{WelcomeDetails.headerDescription}</div>
-                                    <div className="mb-2">{WelcomeDetails.footerDescription}</div>
-                                    <div className="mb-2">{WelcomeDetails.footersubDescription}</div>
-                                    <div className="mb-2">{WelcomeDetails.footersubDescription2}</div>
-                                    <div className="mb-2">{WelcomeDetails.footersubDescription3}</div>
-                                    <div className="mb-2">{WelcomeDetails.footersubDescription4}</div>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col md={12}>
-                                    <div className="float-start mt-3">
-                                        <address>
-                                            <p> Karur Branch</p>
-                                            {/* <strong>{multiStateValue[0]?.applicantInfo?.applicant}</strong> */}
-                                            {WelcomeDetails.officeAddress.companyName}
-                                            <br />
-                                            {WelcomeDetails.officeAddress.companyAddress}
-                                            <br />
-                                            {WelcomeDetails.officeAddress.companyDistrict}-
-                                            {WelcomeDetails.officeAddress.companyPincode},<br />{' '}
-                                            {WelcomeDetails.officeAddress.companyState},
-                                            {WelcomeDetails.officeAddress.companyCountry}
-                                            <br />
-                                            Ph: {WelcomeDetails.officeAddress.ph}
-                                            <br />
-                                            Fax: {WelcomeDetails.officeAddress.fax}
-                                        </address>
-                                    </div>
-                                </Col>
-                            </Row>
-
-                            <Row>
-                                <Col>
-                                    <div className="d-flex justify-content-center"> {WelcomeDetails.thankyou}</div>
-                                </Col>
-                            </Row>
-
-                            <Row className="mt-2">
-                                <Col>
-                                    <div className="mb-2">{WelcomeDetails.officeAddress.companyName}</div>
-                                    <div className="mb-2">1. {WelcomeDetails.termsandCondition.NoOne}</div>
-                                    <div className="mb-2">2. {WelcomeDetails.termsandCondition.NoTwo}</div>
-                                    <div className="mb-2">3. {WelcomeDetails.termsandCondition.NoThree}</div>
                                 </Col>
                             </Row>
 
@@ -345,10 +241,7 @@ const LoanPdf = (props) => {
                                     <div className="clearfix mt-4">
                                         <h5 className="small text-dark fw-normal">PAYMENT TERMS AND POLICIES</h5>
                                         <small>
-                                            All accounts are to be paid within 7 days from receipt of invoice. To be
-                                            paid by cheque or credit card or direct payment online. If the account is
-                                            not paid within 7 days the credits details supplied as confirmation of work
-                                            undertaken will be charged the agreed quoted fee noted above.
+                                            This receipt has been automatically generated by our software system. It serves as a digital record of your transaction, ensuring accuracy and transparency. Please retain this receipt for your records, as it reflects the details processed by the software.
                                         </small>
                                     </div>
                                 </Col>
