@@ -5,15 +5,14 @@ const districtFormContainer = [
                 label: 'Loan Status',
                 name: 'filterStatus',
                 inputType: 'radio',
-                onChange : 'handlerStatus',
+                onChange: 'handlerStatus',
                 optionList: 'loanStatusList',
                 displayKey: 'loanStatusName',
                 uniqueKey: 'loanStatusId',
             },
-        ]
+        ],
     },
-]
+];
 
-export {
-    districtFormContainer
-}
+
+export { districtFormContainer };

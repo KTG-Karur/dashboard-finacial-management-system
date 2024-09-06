@@ -221,7 +221,7 @@ const formContainer = [
                 inputType: 'number',
                 placeholder: 'Enter tenure (in month)',
                 optionList: 'tenurePeriod',
-                require: true,
+                require: false,
             },
         ],
     },
@@ -237,6 +237,12 @@ const formContainer = [
                 require: true,
             },
         ],
+    },
+    {
+        formFields: [],
+    },
+    {
+        formFields: [],
     },
 ];
 

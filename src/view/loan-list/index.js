@@ -10,7 +10,9 @@ import {
     findLastDate,
     formatDate,
     showConfirmationDialog,
+    showConfirmationDisbursed,
     showMessage,
+    TableWithForm,
 } from '../../utils/AllFunction';
 import {
     updateIncomeEntryRequest,
@@ -26,9 +28,11 @@ import { NotificationContainer } from 'react-notifications';
 import { districtFormContainer } from './formData';
 import _ from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
+import FormLayout from '../../utils/formLayout';
 
 let isEdit = false;
-
+const today = new Date().toISOString().split('T')[0];
+let curdate = today;
 function Index() {
     const { dispatch, appSelector } = useRedux();
     const navigate = useNavigate();
@@ -57,6 +61,12 @@ function Index() {
 
         errorMessage: state.addLoanReducer.errorMessage,
     }));
+
+    const [currentDate, setCurrentDate] = useState(today);
+
+    useEffect(() => {
+        curdate = currentDate;
+    }, [currentDate]);
 
     const columns = [
         {
@@ -126,10 +136,10 @@ function Index() {
                     loanStatusId == 2
                         ? 'success'
                         : loanStatusId == 4
-                            ? 'success'
-                            : loanStatusId == 3
-                                ? 'danger'
-                                : 'primary';
+                        ? 'success'
+                        : loanStatusId == 3
+                        ? 'danger'
+                        : 'primary';
                 // const result = ""
                 return (
                     <div>
@@ -149,8 +159,7 @@ function Index() {
                 return (
                     <div>
                         {/* pdf */}
-                        {
-                            row.original?.categoryId !== 1 &&
+                        {row.original?.categoryId !== 1 && (
                             <span
                                 className="text-warning  me-2 cursor-pointer"
                                 onClick={() => {
@@ -160,20 +169,21 @@ function Index() {
                                 }}>
                                 <i className={'fas fa-calculator'}></i>
                             </span>
-                        }
+                        )}
                         {/* Download for Welcome Letter */}
                         {row?.original?.loanStatusId === 4 && (
-                            <span className="text-success  me-2 cursor-pointer" onClick={() => {
-                                navigate('/loan/welcomeletter', {
-                                    state: { loanDetails: row.original, isLoanUrl: true },
-                                });
-                            }}>
+                            <span
+                                className="text-success  me-2 cursor-pointer"
+                                onClick={() => {
+                                    navigate('/loan/welcomeletter', {
+                                        state: { loanDetails: row.original, isLoanUrl: true },
+                                    });
+                                }}>
                                 <i className={'fas fa-download'}></i>
                             </span>
                         )}
                         {/* edit */}
-                        {
-                            row?.original?.loanStatusId === 1 &&
+                        {row?.original?.loanStatusId === 1 && (
                             <span
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() => {
@@ -183,7 +193,7 @@ function Index() {
                                 }}>
                                 <i className={'fe-edit-1'}></i>
                             </span>
-                        }
+                        )}
                         {/* status */}
                         {/* Request or to be approval */}
                         {row?.original?.loanStatusId === 1 && (
@@ -193,30 +203,37 @@ function Index() {
                                     showConfirmationDialog(
                                         `You want to Approval this loan`,
                                         () => onChangeStatus(row.original, row.index, 2),
-                                        'Yes'
+                                        'Yes',
+                                        'Approval',
+                                        'Approval Successfully'
                                     )
                                 }>
                                 <i className={'fas fa-solid fa-bell'}></i>
                             </span>
                         )}
-                        {/* Approval */}
+                        {/* Disbursed */}
                         {row?.original?.loanStatusId === 2 && (
                             <span
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() =>
-                                    showConfirmationDialog(
+                                    showConfirmationDisbursed(
                                         `You want to Disbursed this loan`,
                                         () => onChangeStatus(row.original, row.index, 4),
-                                        'Yes'
+                                        'Yes',
+                                        'Disbursed',
+                                        'Disbursed Successfully',
+                                        <TableWithForm
+                                            currentDate={currentDate}
+                                            setCurrentDate={setCurrentDate}
+                                            loanAmount={row.original.loanAmount}
+                                            categoryName={row.original.categoryName}
+                                            applicationNo={row.original.applicationNo}
+                                        />,
+                                        'No',
+                                        'Are you sure?'
                                     )
                                 }>
                                 <i className={'fas fa-check-circle'}></i>
-                            </span>
-                        )}
-                        {/* Cancelled */}
-                        {row?.original?.loanStatusId === 3 && (
-                            <span className="text-danger  me-2 cursor-pointer">
-                                <i className={'fas fa-user-slash'}></i>
                             </span>
                         )}
                         {/* Approval */}
@@ -239,17 +256,6 @@ function Index() {
                                 <i className={'fas fa-power-off'}></i>
                             </span>
                         )}
-
-                        {/* Delete is Active */}
-                        {/* <span className="text-primary  me-2 cursor-pointer" onClick={() =>
-                            showConfirmationDialog(
-                                deleteMessage,
-                                () => onDeleteForm(row.original, row.index, activeChecker),
-                                'Yes'
-                            )
-                        }>
-                            <i className={'fas fa-arrow-circle-right'}></i>
-                        </span>  */}
                     </div>
                 );
             },
@@ -314,7 +320,7 @@ function Index() {
         } else if (loanData && isCreated === false) {
             dispatch(updateAddLoanRequest(loanData, loanData.loanId));
         }
-        setIsLoading(true)
+        setIsLoading(true);
         callDispatchStatus();
         navigate(location.pathname, { state: { loanData: false, isCreated: false } });
     }, [loanData, isCreated]);
@@ -348,7 +354,13 @@ function Index() {
     useEffect(() => {
         if (updateAddLoanSuccess) {
             callDispatchStatus();
-            isEdit && showMessage('success', 'Updated Successfully');
+            let checkCurrectStatus = 'Updated';
+            if (location.pathname == '/loan/approved') {
+                checkCurrectStatus = 'Disbursed';
+            } else if (location.pathname == '/loan/request') {
+                checkCurrectStatus = 'Approved';
+            }
+            isEdit && showMessage('success', `${checkCurrectStatus} Successfully`);
             dispatch(resetUpdateAddLoan());
         } else if (updateAddLoanFailure) {
             showMessage('warning', errorMessage);
@@ -358,20 +370,20 @@ function Index() {
     }, [updateAddLoanSuccess, updateAddLoanFailure]);
 
     const onChangeStatus = async (data, idx, statusId) => {
-        const today = await formatDate(new Date());
-        const duedate = await findDueDate(today);
-        const lastdate = await findLastDate(today, parseInt(data.tenurePeriod));
-        const interest = calculateTotalInterestPayable(
-            parseInt(data.loanAmount),
-            parseInt(data.interestRate),
-            parseInt(data.tenurePeriod / 12)
-        );
-        const totalPayment = parseInt(data.loanAmount) + parseFloat(interest);
-
         let req = {
             loanStatusId: statusId,
         };
         if (statusId == 4) {
+            console.log(data);
+            const duedate = await findDueDate(curdate || today);
+            const lastdate = await findLastDate(curdate || today, parseInt(data?.tenurePeriod || 0));
+            const interest = await calculateTotalInterestPayable(
+                parseInt(data?.loanAmount || 0),
+                parseInt(data?.interestRate || 0),
+                parseFloat(data.tenurePeriod / 12)
+            );
+            const totalPayment = parseInt(data.loanAmount) + parseFloat(interest);
+
             req.duePaymentInfo = {
                 loanId: data.loanId,
                 totalAmount: parseInt(totalPayment).toString(),
@@ -382,13 +394,10 @@ function Index() {
                 dueEndDate: lastdate,
             };
         }
+        console.log('req', req);
         isEdit = true;
         dispatch(updateAddLoanRequest(req, data.loanId));
     };
-
-    // const submitFun = () => {
-    //     alert('in-->');
-    // };
 
     return (
         <React.Fragment>
@@ -409,8 +418,6 @@ function Index() {
                     filterTbl={false}
                     filterFormContainer={districtFormContainer}
                     optionListState={optionListState}
-                    // onChangeCallBack={{ handlerStatus: handlerStatus }}
-                    // filterSubmitFunction={submitFun}
                     setState={setState}
                     state={state}
                     filterColNo={1}

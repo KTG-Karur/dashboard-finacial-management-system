@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { NotificationManager } from 'react-notifications';
-import moment from "moment";
+import moment from 'moment';
+import ReactDOM from 'react-dom';
 
 const showMessage = (type, msg, title = null) => {
     switch (type) {
@@ -49,7 +50,7 @@ function DateMonthYear(date) {
     const d = ddmmyyyy[2];
     const m = ddmmyyyy[1];
     const y = ddmmyyyy[0];
-    return `${d}-${m}-${y}`
+    return `${d}-${m}-${y}`;
 }
 
 function updateData(arr, id, newState) {
@@ -69,9 +70,9 @@ function deleteData(arr, id, accessKey = null) {
     });
 }
 
-function findObj(optionList = [], accessKey, value = "") {
+function findObj(optionList = [], accessKey, value = '') {
     const filterData = optionList.filter((item) => item[accessKey] === value);
-    return filterData.length > 0 ? filterData[0] : ""
+    return filterData.length > 0 ? filterData[0] : '';
 }
 
 function findArrObj(arr, id) {
@@ -86,10 +87,10 @@ function ValtoPercentage(amount, percentage) {
     return (parseInt(amount) / parseInt(percentage)) * 100;
 }
 
-const dateConversion = (date, format = "DD-MM-YYYY") => {
-    const result = date ? moment(date).format(format) : "";
-    return result
-}
+const dateConversion = (date, format = 'DD-MM-YYYY') => {
+    const result = date ? moment(date).format(format) : '';
+    return result;
+};
 
 const showConfirmationDialog = (
     message,
@@ -98,7 +99,7 @@ const showConfirmationDialog = (
     action = 'Successfully',
     successTitle = 'Successfully',
     cancelButtonText = 'No',
-    title = 'Are you sure?',
+    title = 'Are you sure?'
 ) => {
     Swal.fire({
         title: title,
@@ -117,12 +118,12 @@ const showConfirmationDialog = (
             Swal.fire({
                 title: action,
                 text: successTitle,
-                icon: "success",
+                icon: 'success',
                 timer: 500,
             });
             setTimeout(() => {
                 callback();
-            }, 800)
+            }, 800);
         } else {
             Swal.fire({
                 title: 'Cancelled!',
@@ -137,6 +138,108 @@ const showConfirmationDialog = (
     });
 };
 
+const TableWithForm = ({ setCurrentDate, applicationNo, categoryName, loanAmount }) => {
+    return (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <table>
+                <tbody>
+                    <tr style={{ padding: '20px 0' }}>
+                        <th style={{ textAlign: 'left' }}>Loan No</th>
+                        <td style={{ textAlign: 'center' }}> : </td>
+                        <td style={{ textAlign: 'left' }}>{applicationNo}</td>
+                    </tr>
+                    <tr style={{ padding: '20px 0' }}>
+                        <th style={{ textAlign: 'left' }}>Loan Type</th>
+                        <td style={{ textAlign: 'center' }}> : </td>
+                        <td style={{ textAlign: 'left' }}>{categoryName}</td>
+                    </tr>
+                    <tr style={{ padding: '20px 0' }}>
+                        <th style={{ textAlign: 'left' }}>Loan Amount</th>
+                        <td style={{ textAlign: 'center' }}> : </td>
+                        <td style={{ textAlign: 'left' }}>{loanAmount}</td>
+                    </tr>
+                    <tr style={{ padding: '20px 0' }}>
+                        <th style={{ textAlign: 'left' }}>Disbursed Date</th>
+                        <td style={{ textAlign: 'center' }}> : </td>
+                        <td style={{ textAlign: 'left' }}>
+                            {/* Here you can render your dynamic form component */}
+
+                            <input
+                                type="date"
+                                name={'disbursedDate'}
+                                placeholder={'disbursed Date'}
+                                onChange={(e) => {
+                                    setCurrentDate(e.target.value);
+                                }}
+                                style={{
+                                    border: 'none',
+                                    outline: 'none',
+                                    color: '#6c757',
+                                    backgroundColor: 'transparent',
+                                }}
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+const showConfirmationDisbursed = (
+    message,
+    callback,
+    confirmButtonText = 'Yes',
+    action = 'Successfully',
+    successTitle = 'Successfully',
+    htmlContent = null,
+    cancelButtonText = 'No',
+    title = 'Are you sure?'
+) => {
+    console.log("message")
+    console.log(message)
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: 'warning',
+        html: `<h4 style="margin-bottom:30px">${message}</h4> <div id="react-swal-content"></div>`,
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: confirmButtonText,
+        cancelButtonText: cancelButtonText,
+        customClass: {
+            icon: 'swal-icon-custom',
+        },
+        didOpen: () => {
+            if (htmlContent) {
+                ReactDOM.render(htmlContent, document.getElementById('react-swal-content'));
+            }
+        },
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: action,
+                text: successTitle,
+                icon: 'success',
+                timer: 500,
+            });
+            setTimeout(() => {
+                callback();
+            }, 800);
+        } else {
+            Swal.fire({
+                title: 'Cancelled!',
+                text: 'Permission denied.',
+                icon: 'error',
+                customClass: {
+                    icon: 'swal-icon-custom',
+                },
+                timer: 1500,
+            });
+        }
+    });
+};
 
 //emi
 
@@ -156,19 +259,19 @@ const emiCalculation = (principal, annualInterest, tenurePeriod) => {
 };
 
 const findDueDate = (disbursedDate = formatDate()) => {
-    const disbursedDateArr = disbursedDate.split("-");
-    const year = disbursedDateArr[0]
-    const day = disbursedDateArr[2]
-    let month = parseInt(disbursedDateArr[1]) + 1
+    const disbursedDateArr = disbursedDate.split('-');
+    const year = disbursedDateArr[0];
+    const day = disbursedDateArr[2];
+    let month = parseInt(disbursedDateArr[1]) + 1;
     if (parseInt(disbursedDateArr[1]) >= 12) {
         month = 1;
     }
-    return `${year}-${month}-${day}`
-}
+    return `${year}-${month}-${day}`;
+};
 
 const findLastDate = (disbursedDate = formatDate(), tenurePeriod) => {
     // Split the disbursedDate into an array of [year, month, day]
-    const disbursedDateArr = disbursedDate.split("-");
+    const disbursedDateArr = disbursedDate.split('-');
     let year = parseInt(disbursedDateArr[0]);
     let month = parseInt(disbursedDateArr[1]);
     let day = disbursedDateArr[2];
@@ -189,19 +292,15 @@ const findLastDate = (disbursedDate = formatDate(), tenurePeriod) => {
     return `${year}-${month}-${day}`;
 };
 
-
-
 const interestForMonth = (remainingPrincipal, monthlyInterestRate) => {
     const monthInterest = parseFloat(remainingPrincipal * monthlyInterestRate);
     return monthInterest;
 };
 
-
 const principalRepayment = (emi, monthInterest) => {
     const principalRepay = parseFloat(emi - monthInterest);
     return principalRepay;
 };
-
 
 const principalRemaining = (remainingPrincipal, principalRepayment) => {
     const principalRemain = parseFloat(remainingPrincipal - principalRepayment);
@@ -227,7 +326,7 @@ const calculateTotalInterestPayable = (principal, annualInterest, tenurePeriod) 
 };
 
 function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export {
@@ -242,7 +341,6 @@ export {
     percentageVal,
     ValtoPercentage,
     dateConversion,
-
     findLastDate,
     findDueDate,
     emiCalculation,
@@ -253,5 +351,6 @@ export {
     calculateTotalInterestPayable,
     numberWithCommas,
     DateMonthYear,
-
+    showConfirmationDisbursed,
+    TableWithForm,
 };
