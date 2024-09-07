@@ -4,39 +4,19 @@ import { Row, Col, Card, Button } from 'react-bootstrap';
 // component
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
-import {
-    deleteData,
-    emiCalculation,
-    percentageVal,
-    showConfirmationDialog,
-    showMessage,
-    updateData,
-    ValtoPercentage,
-} from '../../utils/AllFunction';
+import { deleteData, emiCalculation, percentageVal, showConfirmationDialog, showMessage, updateData, ValtoPercentage, } from '../../utils/AllFunction';
 import {
     //loan
-    getAddLoanRequest,
-    resetGetAddLoan,
+    getAddLoanDetailsRequest, resetGetAddLoanDetails,
     //categoryId
-    getCategoryRequest,
-    resetGetCategory,
+    getCategoryRequest, resetGetCategory,
     //sub-categoryId
-    getSubCategoryRequest,
-    resetGetSubCategory,
+    getSubCategoryRequest, resetGetSubCategory,
     //loan-charges
-    getLoanChargesTypeRequest,
-    resetGetLoanChargesType,
-    createLoanChargesTypeRequest,
+    getLoanChargesTypeRequest, resetGetLoanChargesType, createLoanChargesTypeRequest,
     //applicantId
-    getApplicantRequest,
-    resetGetApplicant,
-    getBankAccountRequest,
-    resetGetBankAccount,
-    deleteLoanChargesRequest,
-    resetCreateLoanCharges,
-    createBankAccountRequest,
-    resetCreateBankAccount,
-    resetDeleteLoanCharges,
+    getApplicantRequest, resetGetApplicant, getBankAccountRequest, resetGetBankAccount, deleteLoanChargesRequest, resetCreateLoanCharges, createBankAccountRequest, resetCreateBankAccount, resetDeleteLoanCharges,
+
 } from '../../redux/actions';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
@@ -59,9 +39,9 @@ function Index() {
 
     const {
         //loan
-        getAddLoanSuccess,
-        getAddLoanList,
-        getAddLoanFailure,
+        getAddLoanDetailsSuccess,
+        getAddLoanDetailsList,
+        getAddLoanDetailsFailure,
         //Applicant
         getApplicantList,
         getApplicantSuccess,
@@ -95,9 +75,9 @@ function Index() {
         createBankAccountFailure,
     } = appSelector((state) => ({
         //loan
-        getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
-        getAddLoanList: state.addLoanReducer.getAddLoanList,
-        getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
+        getAddLoanDetailsSuccess: state.addLoanReducer.getAddLoanDetailsSuccess,
+        getAddLoanDetailsList: state.addLoanReducer.getAddLoanDetailsList,
+        getAddLoanDetailsFailure: state.addLoanReducer.getAddLoanDetailsFailure,
         //Applicant
         getApplicantList: state.applicantReducer.getApplicantList,
         getApplicantSuccess: state.applicantReducer.getApplicantSuccess,
@@ -218,68 +198,28 @@ function Index() {
     });
 
     useEffect(() => {
-        let datafromApplicant;
-        let datafromCoApplicant;
-        let datafromGuardiance;
-        if (state?.applicantId != '') {
-            datafromCoApplicant = copyApplicantList.filter((item) => item.applicantId !== state?.applicantId);
-            setOptionListState({
-                ...optionListState,
-                coApplicantId: datafromCoApplicant,
-                guarantorId: datafromGuardiance,
-            });
+        let datafromApplicant = copyApplicantList;
+        let datafromCoApplicant = copyApplicantList;
+        let datafromGuardiance = copyApplicantList;
+        if (state?.applicantId) {
+            datafromCoApplicant = datafromCoApplicant.filter((item) => item.applicantId !== state?.applicantId);
+            datafromGuardiance = datafromGuardiance.filter((item) => item.applicantId !== state?.applicantId);
         }
-        if (state?.coApplicantId != '') {
-            datafromApplicant = copyApplicantList.filter((item) => item.applicantId !== state?.coApplicantId);
-            setOptionListState({
-                ...optionListState,
-                applicantId: datafromApplicant,
-                guarantorId: datafromGuardiance,
-            });
+        if (state?.coApplicantId) {
+            datafromApplicant = datafromApplicant.filter((item) => item.applicantId !== state?.coApplicantId);
+            datafromGuardiance = datafromGuardiance.filter((item) => item.applicantId !== state?.coApplicantId);
         }
-        if (state?.guarantorId != '') {
-            datafromApplicant = copyApplicantList.filter((item) => item.applicantId !== state?.guarantorId);
-            setOptionListState({
-                ...optionListState,
-                applicantId: datafromApplicant,
-                coApplicantId: datafromCoApplicant,
-            });
+        if (state?.guarantorId) {
+            datafromApplicant = datafromApplicant.filter((item) => item.applicantId !== state?.guarantorId);
+            datafromCoApplicant = datafromCoApplicant.filter((item) => item.applicantId !== state?.guarantorId);
         }
-
-        if (state?.applicantId != '' && state?.coApplicantId != '') {
-            datafromGuardiance = copyApplicantList.filter(
-                (item) => item.applicantId !== state?.applicantId && item.applicantId !== state?.coApplicantId
-            );
-            setOptionListState({
-                ...optionListState,
-                applicantId: datafromApplicant,
-                coApplicantId: datafromCoApplicant,
-                guarantorId: datafromGuardiance,
-            });
-        }
-        if (state?.applicantId != '' && state?.guarantorId != '') {
-            datafromCoApplicant = copyApplicantList.filter(
-                (item) => item.applicantId !== state?.applicantId && item.applicantId !== state?.guarantorId
-            );
-            setOptionListState({
-                ...optionListState,
-                applicantId: datafromApplicant,
-                coApplicantId: datafromCoApplicant,
-                guarantorId: datafromGuardiance,
-            });
-        }
-        if (state?.coApplicantId != '' && state?.guarantorId != '') {
-            datafromApplicant = copyApplicantList.filter(
-                (item) => item.applicantId !== state?.coApplicantId && item.applicantId !== state?.guarantorId
-            );
-            setOptionListState({
-                ...optionListState,
-                applicantId: datafromApplicant,
-                coApplicantId: datafromCoApplicant,
-                guarantorId: datafromGuardiance,
-            });
-        }
-    }, [state.applicantId, state.coApplicantId, state.guarantorId]);
+        setOptionListState({
+            ...optionListState,
+            applicantId: datafromApplicant,
+            coApplicantId: datafromCoApplicant,
+            guarantorId: datafromGuardiance,
+        });
+    }, [state?.applicantId, state?.coApplicantId, state?.guarantorId, copyApplicantList]);
 
     //Dispatch Called
     useEffect(() => {
@@ -397,6 +337,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter Bank Name',
                             require: false,
+                            isDisabled: true
                         },
                     ],
                 },
@@ -408,6 +349,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter Account Holder Name',
                             require: false,
+                            isDisabled: true
                         },
                     ],
                 },
@@ -419,6 +361,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter Branch Name',
                             require: false,
+                            isDisabled: true
                         },
                     ],
                 },
@@ -430,6 +373,7 @@ function Index() {
                             inputType: 'number',
                             placeholder: 'Enter Account No',
                             require: false,
+                            isDisabled: true
                         },
                     ],
                 },
@@ -441,6 +385,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter IFSC',
                             require: false,
+                            isDisabled: true
                         },
                     ],
                 },
@@ -479,11 +424,11 @@ function Index() {
         });
     }, [state.loanChargesInfo]);
 
-    //Sub Category Dispatch Called
+    //Get Loan Details Dispatch Called
     useEffect(() => {
         if (isUpdate) {
-            const req = { loanId: loanDataEdit?.loanId || '', path: true };
-            dispatch(getAddLoanRequest(req));
+            const req = { loanId: loanDataEdit?.loanId || '' };
+            dispatch(getAddLoanDetailsRequest(req));
         }
     }, [loanDataEdit]);
 
@@ -497,7 +442,10 @@ function Index() {
             copyApplicantList = getApplicantList;
             dispatch(resetGetApplicant());
         } else if (getApplicantFailure) {
-            setState({});
+            setOptionListState({
+                ...optionListState,
+                applicantId: [],
+            });
             copyApplicantList = [];
             dispatch(resetGetApplicant());
         }
@@ -505,9 +453,9 @@ function Index() {
 
     // loan
     useEffect(() => {
-        if (getAddLoanSuccess) {
+        if (getAddLoanDetailsSuccess) {
             //convert loanChargesName
-            const arr = getAddLoanList[0]?.loanCharges ? JSON.parse(getAddLoanList[0]?.loanCharges) : [];
+            const arr = getAddLoanDetailsList[0]?.loanCharges ? JSON.parse(getAddLoanDetailsList[0]?.loanCharges) : [];
             const arrList = arr.map((item, idx) => ({
                 id: idx,
                 chargeAmount: item.chargeAmount,
@@ -516,39 +464,39 @@ function Index() {
                 loanChargesDetailsId: item.loanChargesDetailsId,
             }));
 
-            const req = { categoryId: getAddLoanList[0]?.subCategoryId };
+            const req = { categoryId: getAddLoanDetailsList[0]?.subCategoryId };
             dispatch(getSubCategoryRequest(req));
             setState({
-                loanId: getAddLoanList[0]?.loanId || '',
-                loanStatusId: getAddLoanList[0]?.loanStatusId || '',
+                loanId: getAddLoanDetailsList[0]?.loanId || '',
+                loanStatusId: getAddLoanDetailsList[0]?.loanStatusId || '',
 
-                applicantId: getAddLoanList[0]?.applicantId || '',
-                coApplicantId: getAddLoanList[0]?.coApplicantId || '',
-                guarantorId: getAddLoanList[0]?.guarantorId || '',
+                applicantId: getAddLoanDetailsList[0]?.applicantId || '',
+                coApplicantId: getAddLoanDetailsList[0]?.coApplicantId || '',
+                guarantorId: getAddLoanDetailsList[0]?.guarantorId || '',
 
-                categoryId: getAddLoanList[0]?.categoryId || '',
-                subCategoryId: getAddLoanList[0]?.subCategoryId || '',
-                interestRate: getAddLoanList[0]?.interestRate || '',
-                loanAmount: getAddLoanList[0]?.loanAmount || '',
+                categoryId: getAddLoanDetailsList[0]?.categoryId || '',
+                subCategoryId: getAddLoanDetailsList[0]?.subCategoryId || '',
+                interestRate: getAddLoanDetailsList[0]?.interestRate || '',
+                loanAmount: getAddLoanDetailsList[0]?.loanAmount || '',
 
-                tenurePeriod: getAddLoanList[0]?.tenurePeriod || '',
-                disbursedMethodId: getAddLoanList[0]?.disbursedMethodId || '',
+                tenurePeriod: getAddLoanDetailsList[0]?.tenurePeriod || '',
+                disbursedMethodId: getAddLoanDetailsList[0]?.disbursedMethodId || '',
 
-                bankAccountId: getAddLoanList[0]?.bankAccountId || '',
-                bankName: getAddLoanList[0]?.bankName || '',
-                branchName: getAddLoanList[0]?.branchName || '',
-                ifscCode: getAddLoanList[0]?.ifscCode || '',
-                accountHolderName: getAddLoanList[0]?.accountHolderName || '',
-                accountNo: getAddLoanList[0]?.accountNo || '',
+                bankAccountId: getAddLoanDetailsList[0]?.bankAccountId || '',
+                bankName: getAddLoanDetailsList[0]?.bankName || '',
+                branchName: getAddLoanDetailsList[0]?.branchName || '',
+                ifscCode: getAddLoanDetailsList[0]?.ifscCode || '',
+                accountHolderName: getAddLoanDetailsList[0]?.accountHolderName || '',
+                accountNo: getAddLoanDetailsList[0]?.accountNo || '',
 
                 loanChargesInfo: arrList || [],
             });
-            dispatch(resetGetAddLoan());
-        } else if (getAddLoanFailure) {
+            dispatch(resetGetAddLoanDetails());
+        } else if (getAddLoanDetailsFailure) {
             setState({});
-            dispatch(resetGetAddLoan());
+            dispatch(resetGetAddLoanDetails());
         }
-    }, [getAddLoanSuccess, getAddLoanFailure]);
+    }, [getAddLoanDetailsSuccess, getAddLoanDetailsFailure]);
 
     // Category
     useEffect(() => {
@@ -679,7 +627,6 @@ function Index() {
 
     const toggleModal = (form) => {
         setModel(!modal);
-
         if (form?.uniqueKey == 'loanChargesId') {
             isBankModel = false;
         } else {
@@ -706,14 +653,14 @@ function Index() {
         const allChargestList = (state.loanChargesInfo || []).map((item) =>
             item.loanChargesDetailsId
                 ? {
-                      loanChargesDetailsId: item.loanChargesDetailsId,
-                      loanChargeId: item.loanChargeId,
-                      chargeAmount: item.chargeAmount,
-                  }
+                    loanChargesDetailsId: item.loanChargesDetailsId,
+                    loanChargeId: item.loanChargeId,
+                    chargeAmount: item.chargeAmount,
+                }
                 : {
-                      loanChargeId: item.loanChargeId,
-                      chargeAmount: item.chargeAmount,
-                  }
+                    loanChargeId: item.loanChargeId,
+                    chargeAmount: item.chargeAmount,
+                }
         );
         (state.loanChargesInfo || []).map((item) => {
             allChargesAmount += item.chargeAmount;
@@ -724,18 +671,23 @@ function Index() {
             coApplicantId: state?.coApplicantId || '',
             guarantorId: state?.guarantorId || '',
             categoryId: state?.categoryId || '',
-            subCategoryId: state?.subCategoryId || '',
+
             interestRate: parseInt(state?.interestRate) || '',
             loanAmount: state?.loanAmount || '',
-            dueAmount: dueAmt.toFixed(2).toString() || '',
+
             disbursedAmount: allChargesAmount || '',
             tenurePeriod: state?.tenurePeriod || '',
             disbursedMethodId: state?.disbursedMethodId || '',
-            bankAccountId: state?.disbursedMethodId === 2 ? state?.bankAccountId || 1 : 1,
+            bankAccountId: state?.disbursedMethodId === 2 ? state?.bankAccountId || 1 : 0,
             createdBy: 1,
             loanStatusId: state?.loanStatusId,
             loanChargesInfo: allChargestList || [],
         };
+
+        if (state.categoryId !== 1) {
+            submitRequest.dueAmount = dueAmt.toFixed(2).toString() || '';
+            submitRequest.subCategoryId = state?.subCategoryId || '';
+        }
 
         if (isUpdate) {
             submitRequest.loanId = state?.loanId || '';
@@ -783,11 +735,6 @@ function Index() {
                 isPercentage: '',
                 chargeAmount: '',
             }));
-            // const delData = await deleteData(optionListState.loanChargeId, state.loanChargeId, 'loanChargesId');
-            // setOptionListState((prev) => ({
-            //     ...prev,
-            //     loanChargeId: delData,
-            // }));
         }
     };
 
@@ -808,9 +755,9 @@ function Index() {
             isPercentage: isUpdate
                 ? [{ value: 0, label: 'Amount ₹' }]
                 : [
-                      { value: 0, label: 'Amount ₹' },
-                      { value: 1, label: 'Percentage %' },
-                  ],
+                    { value: 0, label: 'Amount ₹' },
+                    { value: 1, label: 'Percentage %' },
+                ],
         }));
 
         if (updatedState?.chargeAmount && updatedState?.isPercentage === 1) {

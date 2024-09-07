@@ -14,8 +14,27 @@ export const getAddLoanFailure = (errorMessage: string) => ({
   errorMessage: { errorMessage },
 });
 
+export const getAddLoanDetailsRequest = (params?: any) => ({
+  type: 'GET_ADDLOAN_DETAILS_REQUEST',
+  payload: params,
+});
+
+export const getAddLoanDetailsSuccess = (data: any) => ({
+  type: 'GET_ADDLOAN_DETAILS_SUCCESS',
+  payload: { data },
+});
+
+export const getAddLoanDetailsFailure = (errorMessage: string) => ({
+  type: 'GET_ADDLOAN_DETAILS_FAILURE',
+  errorMessage: { errorMessage },
+});
+
 export const resetGetAddLoan = () => ({
   type: 'RESET_GET_ADDLOAN',
+});
+
+export const resetGetAddLoanDetails = () => ({
+  type: 'RESET_GET_ADDLOAN_DETAILS',
 });
 
 //Create Reducer Call--->

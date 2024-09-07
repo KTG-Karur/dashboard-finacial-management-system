@@ -226,14 +226,17 @@ function FormComponent(props) {
                     case 'date':
                         return (
                             <div key={index} className={`${form?.classStyle || ""} mb-2`}>
-                                <Form.Label>
-                                    <span>
-                                        {form?.label}{' '}
-                                        {form?.require ? (
-                                            <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                        ) : null}
-                                    </span>
-                                </Form.Label>
+                                {
+                                    form?.label &&
+                                    <Form.Label>
+                                        <span>
+                                            {form?.label}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    </Form.Label>
+                                }
                                 <Form.Control
                                     type="date"
                                     name={form?.name}

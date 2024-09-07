@@ -72,8 +72,8 @@ const Index = () => {
         const { loanAmount, interestRate, loanTenure } = state;
 
         if (loanAmount > 0 && interestRate > 0 && loanTenure > 0) {
-            const emi = emiCalculation(loanAmount, interestRate, loanTenure);
-            const interest = calculateTotalInterestPayable(loanAmount, interestRate, loanTenure);
+            const emi = emiCalculation(loanAmount, interestRate, loanTenure / 12);
+            const interest = calculateTotalInterestPayable(loanAmount, interestRate, loanTenure / 12);
             const totalPayment = loanAmount + parseFloat(interest);
 
             const principalAmtPer = (loanAmount / totalPayment) * 100;
@@ -104,12 +104,13 @@ const Index = () => {
     return (
         <React.Fragment>
             <Statistics />
-            <Card>
-                <Card.Body>
-                    <h4 className="header-title mt-0">EMI Calculator</h4>
 
-                    <Row className="mt-3">
-                        <Col xs={12} md={6}>
+            <h4 className="header-title mt-0">EMI Calculator</h4>
+
+            <Row className="mt-3">
+                <Col xs={12} md={4} >
+                    <Card >
+                        <Card.Body style={{ height: "350px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
                             <div className="mb-2">
                                 <Form.Label>Loan Amount</Form.Label>
                                 <Form.Control
@@ -131,7 +132,7 @@ const Index = () => {
                                 />
                             </div>
                             <div className="mb-2">
-                                <Form.Label>Loan Tenure (in years)</Form.Label>
+                                <Form.Label>Loan Tenure {"(Months)"}</Form.Label>
                                 <Form.Control
                                     type="number"
                                     name="loanTenure"
@@ -140,10 +141,16 @@ const Index = () => {
                                     onChange={onChange}
                                 />
                             </div>
+                        </Card.Body>
+                    </Card>
+                </Col>
 
-                            <div className="mt-5 d-flex justify-content-center">
+                <Col xs={12} md={4}>
+                    <Card>
+                        <Card.Body style={{ height: "350px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
+                            <div className="d-flex justify-content-center">
                                 <div>
-                                    <h3>Loan EMI</h3>
+                                    <h4>Loan EMI</h4>
                                     <p className="text-center" style={{ fontSize: '18px' }}>
                                         <strong>{numberWithCommas(emiValue.loanEmi)}</strong>
                                     </p>
@@ -151,7 +158,7 @@ const Index = () => {
                             </div>
                             <div className="d-flex justify-content-center">
                                 <div>
-                                    <h3>Total Interest Payable</h3>
+                                    <h4>Total Interest Payable</h4>
                                     <p className="text-center" style={{ fontSize: '18px' }}>
                                         <strong>{numberWithCommas(emiValue.interestPayable)}</strong>
                                     </p>
@@ -159,16 +166,20 @@ const Index = () => {
                             </div>
                             <div className="d-flex justify-content-center">
                                 <div>
-                                    <h3>Total Payment</h3>
+                                    <h4 className='text-center'>Total Payment</h4>
                                     <h5>{"(Principal + Interest)"}</h5>
                                     <p className="text-center" style={{ fontSize: '18px' }}>
                                         <strong>{numberWithCommas(emiValue.totalPayment)}</strong>
                                     </p>
                                 </div>
                             </div>
-                        </Col>
+                        </Card.Body>
+                    </Card>
+                </Col>
 
-                        <Col xs={12} md={6}>
+                <Col xs={12} md={4}>
+                    <Card>
+                        <Card.Body style={{ height: "350px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
                             <div dir="ltr">
                                 <Chart
                                     options={apexOpts}
@@ -178,10 +189,10 @@ const Index = () => {
                                     className="apex-charts mt-2"
                                 />
                             </div>
-                        </Col>
-                    </Row>
-                </Card.Body>
-            </Card>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         </React.Fragment>
     );
 };

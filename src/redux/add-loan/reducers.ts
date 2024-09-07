@@ -1,10 +1,15 @@
 // employee/reducers.ts
 const initialState = {
   getAddLoanList: [],
+  getAddLoanDetailsList: [],
   createAddLoanData: null,
   updateAddLoanData: null,
+  createAddLoanDetailsData: null,
+  updateAddLoanDetailsData: null,
   isLoading: false,
   errorMessage: null,
+  getAddLoanDetailsSuccess: false,
+  getAddLoanDetailsFailure: false,
   getAddLoanSuccess: false,
   getAddLoanFailure: false,
   createAddLoanSuccess: false,
@@ -41,6 +46,32 @@ export default function addLoanReducer(state = initialState, action: any) {
         getAddLoanSuccess: false,
         getAddLoanFailure: false,
         getAddLoanList: [],
+        errorMessage: null,
+      };
+    }
+
+    case "GET_ADDLOAN_DETAILS_SUCCESS": {
+      return {
+        ...state,
+        getAddLoanDetailsSuccess: true,
+        getAddLoanDetailsList: action.payload.data.data,
+        getAddLoanDetailsFailure: false,
+      };
+    }
+    case "GET_ADDLOAN_DETAILS_FAILURE": {
+      return {
+        ...state,
+        getAddLoanDetailsFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        getAddLoanDetailsSuccess: false,
+      };
+    }
+    case "RESET_GET_ADDLOAN_DETAILS": {
+      return {
+        ...state,
+        getAddLoanDetailsSuccess: false,
+        getAddLoanDetailsFailure: false,
+        getAddLoanDetailsList: [],
         errorMessage: null,
       };
     }

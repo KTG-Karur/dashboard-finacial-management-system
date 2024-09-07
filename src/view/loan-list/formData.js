@@ -15,4 +15,19 @@ const districtFormContainer = [
 ];
 
 
-export { districtFormContainer };
+const disbursedDateFormContainer = [
+    {
+        formFields: [
+            {
+                // 'label': "Disbursed Date",
+                'name': "disbursedDate",
+                'inputType': "date",
+                'require': false
+            },
+        ],
+    },
+];
+
+
+
+export { districtFormContainer, disbursedDateFormContainer };

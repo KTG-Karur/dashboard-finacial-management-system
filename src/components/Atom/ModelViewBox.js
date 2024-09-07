@@ -3,7 +3,7 @@ import { VerticalForm } from '../form';
 import { Modal, Button } from 'react-bootstrap';
 
 function ModelViewBox(props) {
-    const { modal, setModel, children, modelHeader, modelSize, handleSubmit, isEdit } = props;
+    const { modal, setModel, children, modelHeader, modelSize, handleSubmit, isEdit, onlyHeader } = props;
 
     const handleClose = () => {
         setModel(false);
@@ -13,10 +13,10 @@ function ModelViewBox(props) {
         <React.Fragment>
             <Modal show={modal} onHide={handleClose} centered size={modelSize}>
                 <Modal.Header closeButton>
-                    <Modal.Title as="h4">{`${isEdit ? 'Edit ' : 'Add'} ${modelHeader}`}</Modal.Title>
+                    <Modal.Title as="h4">{`${isEdit ? 'Edit ' : onlyHeader ? '' : 'Add'} ${modelHeader}`}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <VerticalForm onSubmit={() => {}} defaultValues={{}}>
+                    <VerticalForm onSubmit={() => { }} defaultValues={{}}>
                         {children}
 
                         <div className='d-flex justify-content-end'>

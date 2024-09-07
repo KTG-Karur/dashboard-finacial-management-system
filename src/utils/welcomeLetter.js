@@ -12,7 +12,7 @@ import {
     DateMonthYear,
 } from './AllFunction';
 import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
-import { getAddLoanRequest, resetGetAddLoan } from '../redux/actions';
+import { getAddLoanDetailsRequest, resetGetAddLoanDetails } from '../redux/actions';
 import { useRedux } from '../hooks';
 
 const WelcomeLetter = () => {
@@ -23,57 +23,56 @@ const WelcomeLetter = () => {
     useEffect(() => {
         if (isLoanUrl) {
             const req = { loanId: loanDetails?.loanId || '', path: true };
-            dispatch(getAddLoanRequest(req));
+            dispatch(getAddLoanDetailsRequest(req));
         }
     }, [loanDetails]);
 
-    const { getAddLoanSuccess, getAddLoanList, getAddLoanFailure } = appSelector((state) => ({
-        //loan
-        getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
-        getAddLoanList: state.addLoanReducer.getAddLoanList,
-        getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
-    }));
+    const { getAddLoanDetailsSuccess,
+        getAddLoanDetailsList,
+        getAddLoanDetailsFailure } = appSelector((state) => ({
+            //loan
+            getAddLoanDetailsSuccess: state.addLoanReducer.getAddLoanDetailsSuccess,
+            getAddLoanDetailsList: state.addLoanReducer.getAddLoanDetailsList,
+            getAddLoanDetailsFailure: state.addLoanReducer.getAddLoanDetailsFailure,
+        }));
 
     const [loanState, setLoanState] = useState([]);
     const [state, setState] = useState({});
 
-    console.log("getAddLoanList")
-    console.log(getAddLoanList)
     // get loan details
     useEffect(() => {
-        if (getAddLoanSuccess) {
+        if (getAddLoanDetailsSuccess) {
             setState({
-                applicationNo: getAddLoanList[0].applicationNo,
-                applicantName: getAddLoanList[0].applicantName,
-                coApplicantName: getAddLoanList[0].coApplicantName,
-                guarantorName: getAddLoanList[0].guarantorName,
+                applicationNo: getAddLoanDetailsList[0].applicationNo,
+                applicantName: getAddLoanDetailsList[0].applicantName,
+                coApplicantName: getAddLoanDetailsList[0].coApplicantName,
+                guarantorName: getAddLoanDetailsList[0].guarantorName,
 
-                categoryId: getAddLoanList[0].categoryId,
-                categoryName: getAddLoanList[0].categoryName,
-                subCategoryName: getAddLoanList[0].subCategoryName,
-                interestRate: getAddLoanList[0].interestRate,
-                loanAmount: getAddLoanList[0].loanAmount,
+                categoryId: getAddLoanDetailsList[0].categoryId,
+                categoryName: getAddLoanDetailsList[0].categoryName,
+                subCategoryName: getAddLoanDetailsList[0].subCategoryName,
+                interestRate: getAddLoanDetailsList[0].interestRate,
+                loanAmount: getAddLoanDetailsList[0].loanAmount,
 
-                approvedBy: getAddLoanList[0].approvedBy,
+                approvedBy: getAddLoanDetailsList[0].approvedBy,
 
-                loanCharges: JSON.parse(getAddLoanList[0]?.loanCharges || []),
-                loanStatusName: getAddLoanList[0].loanStatusName,
+                loanCharges: JSON.parse(getAddLoanDetailsList[0]?.loanCharges || []),
+                loanStatusName: getAddLoanDetailsList[0].loanStatusName,
 
-                tenurePeriod: getAddLoanList[0].tenurePeriod,
+                tenurePeriod: getAddLoanDetailsList[0].tenurePeriod,
 
-                disbursedMethodName: getAddLoanList[0].disbursedMethodName,
-                disbursedDate: getAddLoanList[0].disbursedDate,
-                dueDate: getAddLoanList[0].dueDate,
-                lastDate: getAddLoanList[0].lastDate,
+                disbursedMethodName: getAddLoanDetailsList[0].disbursedMethodName,
+                disbursedDate: getAddLoanDetailsList[0].disbursedDate,
+                dueDate: getAddLoanDetailsList[0].dueDate,
+                lastDate: getAddLoanDetailsList[0].lastDate,
 
-                createdAt: getAddLoanList[0].createdAt,
+                createdAt: getAddLoanDetailsList[0].createdAt,
             });
-            dispatch(resetGetAddLoan());
-            // calCulationTable();
-        } else if (getAddLoanFailure) {
-            dispatch(resetGetAddLoan());
+            dispatch(resetGetAddLoanDetails());
+        } else if (getAddLoanDetailsFailure) {
+            dispatch(resetGetAddLoanDetails());
         }
-    }, [getAddLoanSuccess, getAddLoanFailure]);
+    }, [getAddLoanDetailsSuccess, getAddLoanDetailsFailure]);
 
     useEffect(() => {
         calCulationTable();
@@ -124,7 +123,6 @@ const WelcomeLetter = () => {
         })();
     };
 
-    console.log(getAddLoanList)
     // WelcomeDetails
     const WelcomeDetails = {
         customerCode: state?.applicantNo || '',
@@ -163,13 +161,13 @@ const WelcomeLetter = () => {
             'If you require any futher details, please contact us at our Branch Office address given below:',
         officeAddress: {
             companyName: 'HARSHINI FINCORP',
-            companyAddress: '108 THANTHODRIMALAI',
+            companyAddress: 'No 11 Opposite District Collectorate,',
             companyDistrict: 'KARUR',
-            companyPincode: 639002,
+            companyPincode: 639007,
             companyState: 'TAMILNADU',
             companyCountry: 'INDIA',
-            ph: '04324-249495',
-            fax: '04324-249495',
+            ph: '98765 43210',
+            fax: '98765 43210',
         },
         thankyou: 'Thanking you',
         termsandCondition: {
@@ -251,10 +249,6 @@ const WelcomeLetter = () => {
                                             <p>{WelcomeDetails.headerSubDescripion}</p>
                                             <table>
                                                 <tr>
-                                                    <th>Loan No</th>
-                                                    <td>: {WelcomeDetails.loanNo}</td>
-                                                </tr>
-                                                <tr>
                                                     <th>Loan Type</th>
                                                     <td>: {WelcomeDetails.categoryName}</td>
                                                 </tr>
@@ -262,10 +256,13 @@ const WelcomeLetter = () => {
                                                     <th>Loan Amount</th>
                                                     <td>: {WelcomeDetails.loanAmount}</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Loan Tenure</th>
-                                                    <td>: {WelcomeDetails.Tenure}</td>
-                                                </tr>
+                                                {
+                                                    state?.categoryId !== 1 &&
+                                                    <tr>
+                                                        <th>Loan Tenure</th>
+                                                        <td>: {WelcomeDetails.Tenure}</td>
+                                                    </tr>
+                                                }
                                                 <tr>
                                                     <th>Date of Agreement</th>
                                                     <td>: {WelcomeDetails.dateofAgreement}</td>
@@ -282,14 +279,20 @@ const WelcomeLetter = () => {
                                                     <th>Disbursed Date</th>
                                                     <td>: {WelcomeDetails.disbursedDate}</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>1st Installment Date</th>
-                                                    <td>: {WelcomeDetails.firstInstallment}</td>
-                                                </tr>
-                                                <tr>
-                                                    <th>Last Installment Date</th>
-                                                    <td>: {WelcomeDetails.lastInstallment}</td>
-                                                </tr>
+                                                {
+                                                    state?.categoryId !== 1 &&
+                                                    <tr>
+                                                        <th>1st Installment Date</th>
+                                                        <td>: {WelcomeDetails.firstInstallment}</td>
+                                                    </tr>
+                                                }
+                                                {
+                                                    state?.categoryId !== 1 &&
+                                                    <tr>
+                                                        <th>Last Installment Date</th>
+                                                        <td>: {WelcomeDetails.lastInstallment}</td>
+                                                    </tr>
+                                                }
                                                 <tr>
                                                     <th>Status</th>
                                                     <td>: {WelcomeDetails.status}</td>

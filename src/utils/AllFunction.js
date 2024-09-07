@@ -92,6 +92,18 @@ const dateConversion = (date, format = 'DD-MM-YYYY') => {
     return result;
 };
 
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function objectToKeyValueArray(obj) {
+    return Object.entries(obj).map(([key, value]) => ({ Key: key, Value: value }));
+}
+
 const showConfirmationDialog = (
     message,
     callback,
@@ -186,61 +198,6 @@ const TableWithForm = ({ setCurrentDate, applicationNo, categoryName, loanAmount
     );
 };
 
-const showConfirmationDisbursed = (
-    message,
-    callback,
-    confirmButtonText = 'Yes',
-    action = 'Successfully',
-    successTitle = 'Successfully',
-    htmlContent = null,
-    cancelButtonText = 'No',
-    title = 'Are you sure?'
-) => {
-    console.log("message")
-    console.log(message)
-    Swal.fire({
-        title: title,
-        text: message,
-        icon: 'warning',
-        html: `<h4 style="margin-bottom:30px">${message}</h4> <div id="react-swal-content"></div>`,
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: confirmButtonText,
-        cancelButtonText: cancelButtonText,
-        customClass: {
-            icon: 'swal-icon-custom',
-        },
-        didOpen: () => {
-            if (htmlContent) {
-                ReactDOM.render(htmlContent, document.getElementById('react-swal-content'));
-            }
-        },
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire({
-                title: action,
-                text: successTitle,
-                icon: 'success',
-                timer: 500,
-            });
-            setTimeout(() => {
-                callback();
-            }, 800);
-        } else {
-            Swal.fire({
-                title: 'Cancelled!',
-                text: 'Permission denied.',
-                icon: 'error',
-                customClass: {
-                    icon: 'swal-icon-custom',
-                },
-                timer: 1500,
-            });
-        }
-    });
-};
-
 //emi
 
 const annualToMonthlyInterestRate = (annualInterest) => {
@@ -259,6 +216,8 @@ const emiCalculation = (principal, annualInterest, tenurePeriod) => {
 };
 
 const findDueDate = (disbursedDate = formatDate()) => {
+    console.log("disbursedDate")
+    console.log(disbursedDate)
     const disbursedDateArr = disbursedDate.split('-');
     const year = disbursedDateArr[0];
     const day = disbursedDateArr[2];
@@ -325,9 +284,6 @@ const calculateTotalInterestPayable = (principal, annualInterest, tenurePeriod) 
     return totalInterestPayable;
 };
 
-function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
 
 export {
     showMessage,
@@ -351,6 +307,7 @@ export {
     calculateTotalInterestPayable,
     numberWithCommas,
     DateMonthYear,
-    showConfirmationDisbursed,
     TableWithForm,
+    capitalizeFirstLetter,
+    objectToKeyValueArray,
 };

@@ -12,10 +12,10 @@ import {
     DateMonthYear,
 } from './AllFunction';
 import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
-import { getAddLoanRequest, resetGetAddLoan } from '../redux/actions';
+import { getAddLoanDetailsRequest, resetGetAddLoanDetails, } from '../redux/actions';
 import { useRedux } from '../hooks';
 
-const LoanPdf = (props) => {
+const LoanPdf = () => {
     const { dispatch, appSelector } = useRedux();
     const location = useLocation();
     const { loanDetails, isLoanUrl, loc } = location.state || false;
@@ -23,48 +23,51 @@ const LoanPdf = (props) => {
     useEffect(() => {
         if (isLoanUrl) {
             const req = { loanId: loanDetails?.loanId || '', path: true };
-            dispatch(getAddLoanRequest(req));
+            dispatch(getAddLoanDetailsRequest(req));
         }
     }, [loanDetails]);
 
-    const { getAddLoanSuccess, getAddLoanList, getAddLoanFailure } = appSelector((state) => ({
-        //loan
-        getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
-        getAddLoanList: state.addLoanReducer.getAddLoanList,
-        getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
-    }));
+    const { getAddLoanDetailsSuccess,
+        getAddLoanDetailsList,
+        getAddLoanDetailsFailure } = appSelector((state) => ({
+            //loan
+            getAddLoanDetailsSuccess: state.addLoanReducer.getAddLoanDetailsSuccess,
+            getAddLoanDetailsList: state.addLoanReducer.getAddLoanDetailsList,
+            getAddLoanDetailsFailure: state.addLoanReducer.getAddLoanDetailsFailure,
+        }));
 
     const [loanState, setLoanState] = useState([]);
     const [state, setState] = useState({});
 
     // get loan details
     useEffect(() => {
-        if (getAddLoanSuccess) {
+        if (getAddLoanDetailsSuccess) {
             setState({
-                applicationNo: getAddLoanList[0].applicationNo,
-                categoryName: getAddLoanList[0].categoryName,
-                subCategoryName: getAddLoanList[0].subCategoryName,
-                interestRate: getAddLoanList[0].interestRate,
-                loanAmount: getAddLoanList[0].loanAmount,
+                applicationNo: getAddLoanDetailsList[0].applicationNo,
+                categoryName: getAddLoanDetailsList[0].categoryName,
+                categoryId: getAddLoanDetailsList[0].categoryId,
+                subCategoryName: getAddLoanDetailsList[0].subCategoryName,
+                interestRate: getAddLoanDetailsList[0].interestRate,
+                loanAmount: getAddLoanDetailsList[0].loanAmount,
 
-                loanCharges: JSON.parse(getAddLoanList[0]?.loanCharges || []),
-                loanStatusName: getAddLoanList[0].loanStatusName,
+                loanCharges: JSON.parse(getAddLoanDetailsList[0]?.loanCharges || []),
+                loanStatusName: getAddLoanDetailsList[0].loanStatusName,
 
-                tenurePeriod: getAddLoanList[0].tenurePeriod,
+                tenurePeriod: getAddLoanDetailsList[0].tenurePeriod,
 
-                disbursedMethodName: getAddLoanList[0].disbursedMethodName,
-                disbursedDate: getAddLoanList[0].disbursedDate,
-                dueDate: getAddLoanList[0].dueDate,
-                lastDate: getAddLoanList[0].lastDate,
+                disbursedMethodName: getAddLoanDetailsList[0].disbursedMethodName,
+                disbursedDate: getAddLoanDetailsList[0].disbursedDate,
+                dueDate: getAddLoanDetailsList[0].dueDate,
+                lastDate: getAddLoanDetailsList[0].lastDate,
 
-                createdAt: getAddLoanList[0].createdAt,
+                createdAt: getAddLoanDetailsList[0].createdAt,
             });
-            dispatch(resetGetAddLoan());
+            dispatch(resetGetAddLoanDetails());
             // calCulationTable();
-        } else if (getAddLoanFailure) {
-            dispatch(resetGetAddLoan());
+        } else if (getAddLoanDetailsFailure) {
+            dispatch(resetGetAddLoanDetails());
         }
-    }, [getAddLoanSuccess, getAddLoanFailure]);
+    }, [getAddLoanDetailsSuccess, getAddLoanDetailsFailure]);
 
     useEffect(() => {
         calCulationTable();
@@ -175,10 +178,6 @@ const LoanPdf = (props) => {
                                             <p>{WelcomeDetails.headerSubDescripion}</p>
                                             <table>
                                                 <tr>
-                                                    <th>Loan No</th>
-                                                    <td>: {WelcomeDetails.loanNo}</td>
-                                                </tr>
-                                                <tr>
                                                     <th>Loan Type</th>
                                                     <td>: {WelcomeDetails.categoryName}</td>
                                                 </tr>
@@ -186,10 +185,13 @@ const LoanPdf = (props) => {
                                                     <th>Loan Amount</th>
                                                     <td>: {WelcomeDetails.loanAmount}</td>
                                                 </tr>
-                                                <tr>
-                                                    <th>Loan Tenure</th>
-                                                    <td>: {WelcomeDetails.Tenure}</td>
-                                                </tr>
+                                                {
+                                                    state?.categoryId !== 1 &&
+                                                    <tr>
+                                                        <th>Loan Tenure</th>
+                                                        <td>: {WelcomeDetails.Tenure}</td>
+                                                    </tr>
+                                                }
                                                 <tr>
                                                     <th>Date of Agreement</th>
                                                     <td>: {WelcomeDetails.dateofAgreement}</td>

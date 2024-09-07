@@ -1,6 +1,6 @@
 // saga.ts
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { createAddLoan, getAddLoan, updateAddLoan } from '../../api/AddLoanApi'; // Adjust the path as needed
+import { createAddLoan, getAddLoan, getAddLoanDetails, updateAddLoan } from '../../api/AddLoanApi'; // Adjust the path as needed
 import {
     getAddLoanSuccess,
     getAddLoanFailure,
@@ -8,6 +8,8 @@ import {
     createAddLoanFailure,
     updateAddLoanSuccess,
     updateAddLoanFailure,
+    getAddLoanDetailsSuccess,
+    getAddLoanDetailsFailure,
 } from './actions';
 
 // Saga to handle fetching addLoans
@@ -24,6 +26,22 @@ function* fetchAddLoanSaga(action: any): Generator<any, any, any> {
                 : 'An unexpected error occurred';
 
         yield put(getAddLoanFailure(errorMessage));
+    }
+}
+
+function* fetchAddLoanDetailsSaga(action: any): Generator<any, any, any> {
+    try {
+        const data = yield call(getAddLoanDetails, action.payload);
+        yield put(getAddLoanDetailsSuccess(data));
+    } catch (error: any) {
+        const errorMessage =
+            error.response && error.response.data && error.response.data.message
+                ? error.response.data.message
+                : error.message
+                ? error.message
+                : 'An unexpected error occurred';
+
+        yield put(getAddLoanDetailsFailure(errorMessage));
     }
 }
 
@@ -73,6 +91,7 @@ function* updateAddLoanSaga(action: any): Generator<any, any, any> {
 
 export default function* addLoanSaga() {
     yield takeEvery('GET_ADDLOAN_REQUEST', fetchAddLoanSaga);
+    yield takeEvery('GET_ADDLOAN_DETAILS_REQUEST', fetchAddLoanDetailsSaga);
     yield takeEvery('CREATE_ADDLOAN_REQUEST', createAddLoanSaga);
     yield takeEvery('UPDATE_ADDLOAN_REQUEST', updateAddLoanSaga);
     // yield takeEvery('DELETE_ADDLOAN_REQUEST', deleteAddLoanSaga);

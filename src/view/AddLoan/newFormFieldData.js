@@ -216,18 +216,6 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Tenure Period (in month)',
-                name: 'tenurePeriod',
-                inputType: 'number',
-                placeholder: 'Enter tenure (in month)',
-                optionList: 'tenurePeriod',
-                require: false,
-            },
-        ],
-    },
-    {
-        formFields: [
-            {
                 label: 'Disbursed Method',
                 name: 'disbursedMethodId',
                 inputType: 'select',
@@ -237,6 +225,9 @@ const formContainer = [
                 require: true,
             },
         ],
+    },
+    {
+        formFields: [],
     },
     {
         formFields: [],

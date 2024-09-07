@@ -1,14 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Badge, Spinner } from 'react-bootstrap';
+import { Badge, Col, Row, Spinner } from 'react-bootstrap';
 // import ModelViewBox from '../../components/Atom/ModelViewBox';
 // import FormLayout from '../../utils/formLayout';
 // import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
 import {
     calculateTotalInterestPayable,
+    capitalizeFirstLetter,
+    DateMonthYear,
     findDueDate,
     findLastDate,
     formatDate,
+    objectToKeyValueArray,
+    percentageVal,
     showConfirmationDialog,
     showConfirmationDisbursed,
     showMessage,
@@ -22,17 +26,21 @@ import {
     resetGetAddLoan,
     resetUpdateAddLoan,
     updateAddLoanRequest,
+    getAddLoanDetailsRequest,
+    resetGetAddLoanDetails,
 } from '../../redux/actions';
 import { useRedux } from '../../hooks';
 import { NotificationContainer } from 'react-notifications';
-import { districtFormContainer } from './formData';
+import { disbursedDateFormContainer, districtFormContainer } from './formData';
 import _ from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FormLayout from '../../utils/formLayout';
+import ModelViewBox from '../../components/Atom/ModelViewBox';
 
 let isEdit = false;
+let StatusName = "Update"
 const today = new Date().toISOString().split('T')[0];
-let curdate = today;
+let stateValue = {};
 function Index() {
     const { dispatch, appSelector } = useRedux();
     const navigate = useNavigate();
@@ -40,33 +48,40 @@ function Index() {
     const { loanData, isCreated } = location.state || false;
 
     const {
+        // create loan
         createAddLoanSuccess,
         createAddLoanFailure,
+        // update loan
         updateAddLoanSuccess,
         updateAddLoanFailure,
+        // loan data
         getAddLoanSuccess,
         getAddLoanList,
         getAddLoanFailure,
+        //get loan details
+        getAddLoanDetailsSuccess,
+        getAddLoanDetailsList,
+        getAddLoanDetailsFailure,
+        // error
         errorMessage,
     } = appSelector((state) => ({
+        //loan data
         getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
         getAddLoanList: state.addLoanReducer.getAddLoanList,
         getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
-
+        //loan details
+        getAddLoanDetailsSuccess: state.addLoanReducer.getAddLoanDetailsSuccess,
+        getAddLoanDetailsList: state.addLoanReducer.getAddLoanDetailsList,
+        getAddLoanDetailsFailure: state.addLoanReducer.getAddLoanDetailsFailure,
+        //create loan data
         createAddLoanSuccess: state.addLoanReducer.createAddLoanSuccess,
         createAddLoanFailure: state.addLoanReducer.createAddLoanFailure,
-
+        //update loan data
         updateAddLoanSuccess: state.addLoanReducer.updateAddLoanSuccess,
         updateAddLoanFailure: state.addLoanReducer.updateAddLoanFailure,
 
         errorMessage: state.addLoanReducer.errorMessage,
     }));
-
-    const [currentDate, setCurrentDate] = useState(today);
-
-    useEffect(() => {
-        curdate = currentDate;
-    }, [currentDate]);
 
     const columns = [
         {
@@ -127,35 +142,9 @@ function Index() {
             },
         },
         {
-            Header: 'Loan Status',
-            accessor: 'loanStatusId',
-            Cell: ({ row }) => {
-                const loanStatusId = row.original.loanStatusId;
-                const loanStatusName = row.original.loanStatusName;
-                const badgeColour =
-                    loanStatusId == 2
-                        ? 'success'
-                        : loanStatusId == 4
-                        ? 'success'
-                        : loanStatusId == 3
-                        ? 'danger'
-                        : 'primary';
-                // const result = ""
-                return (
-                    <div>
-                        {/* 1 - requested 2-approved 3-cancelled 4-disbursed */}
-                        {<Badge bg={`${badgeColour}`}>{loanStatusName}</Badge>}
-                    </div>
-                );
-            },
-        },
-        {
             Header: 'Actions',
             accessor: 'actions',
             Cell: ({ row }) => {
-                const activeChecker = row.original.isActive;
-                const iconColor = activeChecker ? 'text-danger' : 'text-warning';
-                const deleteMessage = activeChecker ? 'You want to In-Active...?' : 'You want to retrive this Data...?';
                 return (
                     <div>
                         {/* pdf */}
@@ -199,14 +188,10 @@ function Index() {
                         {row?.original?.loanStatusId === 1 && (
                             <span
                                 className="text-primary  me-2 cursor-pointer"
-                                onClick={() =>
-                                    showConfirmationDialog(
-                                        `You want to Approval this loan`,
-                                        () => onChangeStatus(row.original, row.index, 2),
-                                        'Yes',
-                                        'Approval',
-                                        'Approval Successfully'
-                                    )
+                                onClick={() => {
+                                    showLoanDetailsModal(row?.original, 2);
+                                    StatusName = "Approval";
+                                }
                                 }>
                                 <i className={'fas fa-solid fa-bell'}></i>
                             </span>
@@ -215,23 +200,10 @@ function Index() {
                         {row?.original?.loanStatusId === 2 && (
                             <span
                                 className="text-success  me-2 cursor-pointer"
-                                onClick={() =>
-                                    showConfirmationDisbursed(
-                                        `You want to Disbursed this loan`,
-                                        () => onChangeStatus(row.original, row.index, 4),
-                                        'Yes',
-                                        'Disbursed',
-                                        'Disbursed Successfully',
-                                        <TableWithForm
-                                            currentDate={currentDate}
-                                            setCurrentDate={setCurrentDate}
-                                            loanAmount={row.original.loanAmount}
-                                            categoryName={row.original.categoryName}
-                                            applicationNo={row.original.applicationNo}
-                                        />,
-                                        'No',
-                                        'Are you sure?'
-                                    )
+                                onClick={() => {
+                                    showLoanDetailsModal(row?.original, 4)
+                                    StatusName = "Disbursed";
+                                }
                                 }>
                                 <i className={'fas fa-check-circle'}></i>
                             </span>
@@ -246,14 +218,31 @@ function Index() {
                         {row?.original?.loanStatusId !== 3 && row?.original?.loanStatusId !== 4 && (
                             <span
                                 className="text-danger  me-2 cursor-pointer"
-                                onClick={() =>
+                                onClick={() => {
                                     showConfirmationDialog(
-                                        'You want to Cancelled this loan',
-                                        () => onChangeStatus(row.original, row.index, 3),
+                                        'You want to Cancelled this loan Applicantion',
+                                        () => onChangeStatus(row.original, 3),
                                         'Yes'
                                     )
+                                    StatusName = "Cancelled";
+                                }
                                 }>
                                 <i className={'fas fa-power-off'}></i>
+                            </span>
+                        )}
+                        {row?.original?.loanStatusId === 3 && (
+                            <span
+                                className="text-danger  me-2 cursor-pointer"
+                                onClick={() => {
+                                    showConfirmationDialog(
+                                        'You want to Retrive this loan Applicantion',
+                                        () => onChangeStatus(row.original, 1),
+                                        'Yes'
+                                    )
+                                    StatusName = "Retrive";
+                                }
+                                }>
+                                <i className={'fas fa-recycle'}></i>
                             </span>
                         )}
                     </div>
@@ -262,34 +251,14 @@ function Index() {
         },
     ];
 
-    const [state, setState] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [optionListState, setOptionListState] = useState({
-        incomeTypeList: [],
-        loanStatusList: [
-            {
-                loanStatusId: 1,
-                loanStatusName: 'All',
-            },
-            {
-                loanStatusId: 2,
-                loanStatusName: 'To Be Approved',
-            },
-            {
-                loanStatusId: 3,
-                loanStatusName: 'Approved Loan',
-            },
-            {
-                loanStatusId: 4,
-                loanStatusName: 'Cancelled',
-            },
-            {
-                loanStatusId: 5,
-                loanStatusName: 'Disbursed',
-            },
-        ],
+    const [currentDate, setCurrentDate] = useState({
+        disbursedDate: today
     });
+    const [modal, setModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [parentList, setParentList] = useState([]);
+    const [selectedItem, setSelectedItem] = useState([]);
+    const [statusItem, setStatusdItem] = useState([]);
 
     const callDispatchStatus = () => {
         const req = {};
@@ -314,6 +283,7 @@ function Index() {
         dispatch(getAddLoanRequest(req));
     };
 
+    //Create dispatch
     useEffect(() => {
         if (loanData && isCreated) {
             dispatch(createAddLoanRequest(loanData));
@@ -333,10 +303,46 @@ function Index() {
             dispatch(resetGetAddLoan());
         } else if (getAddLoanFailure) {
             setIsLoading(false);
-            setState({});
+            setParentList({});
             dispatch(resetGetAddLoan());
         }
     }, [getAddLoanSuccess, getAddLoanFailure]);
+
+    // loan Details
+    useEffect(() => {
+        if (getAddLoanDetailsSuccess) {
+            //convert loanChargesName
+            stateValue = {
+                "Application No": getAddLoanDetailsList[0]?.applicationNo || '',
+                "Applicant Name": getAddLoanDetailsList[0]?.applicantName || '',
+                "Co Applicant Name": getAddLoanDetailsList[0]?.coApplicantName || '',
+                "Guarantor Name": getAddLoanDetailsList[0]?.guarantorName || '',
+
+                "Loan Type": getAddLoanDetailsList[0]?.categoryName || '',
+
+                "Loan Amount": getAddLoanDetailsList[0]?.loanAmount || '',
+                "Interest Rate": getAddLoanDetailsList[0]?.interestRate || '',
+
+                "Created By": getAddLoanDetailsList[0]?.createdBy || '',
+                "Created Date": DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
+
+                "Disbursed Method": getAddLoanDetailsList[0]?.disbursedMethodName || '',
+
+                "Disbursed Amount": getAddLoanDetailsList[0]?.disbursedAmount || '',
+            }
+            if (getAddLoanDetailsList[0]?.categoryId !== 1) {
+                stateValue.subCategoryName = getAddLoanDetailsList[0]?.subCategoryName || '';
+                stateValue.tenurePeriod = getAddLoanDetailsList[0]?.tenurePeriod || '';
+            }
+
+            const keyValueArray = objectToKeyValueArray(stateValue)
+            setSelectedItem(keyValueArray)
+            dispatch(resetGetAddLoanDetails());
+        } else if (getAddLoanDetailsFailure) {
+            stateValue = {};
+            dispatch(resetGetAddLoanDetails());
+        }
+    }, [getAddLoanDetailsSuccess, getAddLoanDetailsFailure]);
 
     // CreateLoanSuccess
     useEffect(() => {
@@ -354,13 +360,7 @@ function Index() {
     useEffect(() => {
         if (updateAddLoanSuccess) {
             callDispatchStatus();
-            let checkCurrectStatus = 'Updated';
-            if (location.pathname == '/loan/approved') {
-                checkCurrectStatus = 'Disbursed';
-            } else if (location.pathname == '/loan/request') {
-                checkCurrectStatus = 'Approved';
-            }
-            isEdit && showMessage('success', `${checkCurrectStatus} Successfully`);
+            isEdit && showMessage('success', `${StatusName} Successfully`);
             dispatch(resetUpdateAddLoan());
         } else if (updateAddLoanFailure) {
             showMessage('warning', errorMessage);
@@ -369,34 +369,65 @@ function Index() {
         isEdit = false;
     }, [updateAddLoanSuccess, updateAddLoanFailure]);
 
-    const onChangeStatus = async (data, idx, statusId) => {
+    const showLoanDetailsModal = async (data, statusId) => {
+        setStatusdItem({
+            categoryId: data.categoryId,
+            dueAmount: data.dueAmount,
+            loanId: data.loanId,
+            loanAmount: data.loanAmount,
+            interestRate: data.interestRate,
+            tenurePeriod: data.tenurePeriod,
+            statusId: statusId,
+        })
+        const req = { loanId: data?.loanId || '' };
+        dispatch(getAddLoanDetailsRequest(req));
+        setModal(true);
+    }
+
+    const onChangeStatus = async (data, statusId) => {
         let req = {
             loanStatusId: statusId,
         };
+        setModal(false);
         if (statusId == 4) {
-            console.log(data);
-            const duedate = await findDueDate(curdate || today);
-            const lastdate = await findLastDate(curdate || today, parseInt(data?.tenurePeriod || 0));
-            const interest = await calculateTotalInterestPayable(
-                parseInt(data?.loanAmount || 0),
-                parseInt(data?.interestRate || 0),
-                parseFloat(data.tenurePeriod / 12)
-            );
-            const totalPayment = parseInt(data.loanAmount) + parseFloat(interest);
+            if (data.categoryId !== 1) {
+                const duedate = await findDueDate(currentDate?.disbursedDate || today);
+                const lastdate = await findLastDate(currentDate?.disbursedDate || today, parseInt(data?.tenurePeriod || 0));
+                const interest = await calculateTotalInterestPayable(
+                    parseInt(data?.loanAmount || 0),
+                    parseInt(data?.interestRate || 0),
+                    parseFloat(data.tenurePeriod / 12)
+                );
+                const totalPayment = parseInt(data.loanAmount) + parseFloat(interest);
 
-            req.duePaymentInfo = {
-                loanId: data.loanId,
-                totalAmount: parseInt(totalPayment).toString(),
-                paidAmount: '0',
-                balanceAmount: parseInt(totalPayment).toString(),
-                dueAmount: parseInt(data.dueAmount).toString(),
-                dueStartDate: duedate,
-                dueEndDate: lastdate,
-            };
+                req.duePaymentInfo = {
+                    loanId: data.loanId,
+                    totalAmount: parseInt(totalPayment).toString(),
+                    paidAmount: '0',
+                    balanceAmount: parseInt(totalPayment).toString(),
+                    dueAmount: parseInt(data.dueAmount).toString(),
+                    dueStartDate: duedate,
+                    dueEndDate: lastdate,
+                };
+            }
+            else if (data.categoryId === 1) {
+                const duedate = await findDueDate(currentDate?.disbursedDate || today);
+
+                req.duePaymentInfo = {
+                    loanId: data.loanId,
+                    totalAmount: parseInt(data.loanAmount).toString(),
+                    paidAmount: '0',
+                    balanceAmount: parseInt(data.loanAmount).toString(),
+                    dueAmount: percentageVal(data.loanAmount, data.interestRate).toString(),
+                    dueStartDate: duedate,
+                };
+            }
         }
-        console.log('req', req);
         isEdit = true;
         dispatch(updateAddLoanRequest(req, data.loanId));
+        setCurrentDate({
+            disbursedDate: today
+        });
     };
 
     return (
@@ -412,18 +443,72 @@ function Index() {
                 <Table
                     columns={columns}
                     toggle={false}
-                    Title={'Loan List'}
+                    Title={`${capitalizeFirstLetter(location.pathname.split('/')[2])} Loan List`}
                     data={parentList || []}
                     pageSize={5}
                     filterTbl={false}
                     filterFormContainer={districtFormContainer}
-                    optionListState={optionListState}
-                    setState={setState}
-                    state={state}
                     filterColNo={1}
                 />
             )}
-        </React.Fragment>
+
+            <ModelViewBox
+                modal={modal}
+                setModel={setModal}
+                modelHeader={'Disbursed Loan Details'}
+                modelSize={'md'}
+                onlyHeader={true}
+                handleSubmit={() => showConfirmationDialog(
+                    `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,
+                    () => onChangeStatus(statusItem, statusItem.statusId),
+                    'Yes',
+                    'Approval',
+                    'Approval Successfully'
+                )}
+            >
+                <div style={{ marginBottom: "20px" }}>
+                    {
+                        (selectedItem || []).map((Item, i) => (
+                            <Row key={i} style={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
+                                <Col md={5}>
+                                    <h5 style={{ margin: "0px" }}> {Item.Key}</h5>
+                                </Col>
+                                <Col md={1}>
+                                    {":"}
+                                </Col>
+
+                                <Col md={5}>
+                                    <h5 style={{ margin: "0px" }}>  {Item.Value}</h5>
+                                </Col>
+                            </Row>
+                        ))
+                    }
+
+                    <div>
+                        {
+                            statusItem.statusId === 4 &&
+                            <Row style={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
+                                <Col md={5}>
+                                    <h5 style={{ margin: "0px" }}>{"Disbursed Date"}</h5>
+                                </Col>
+                                <Col md={1}>
+                                    {":"}
+                                </Col>
+                                <Col md={5}>
+                                    <FormLayout
+                                        dynamicForm={disbursedDateFormContainer}
+                                        noOfColumns={1}
+                                        state={currentDate}
+                                        setState={setCurrentDate}
+                                    />
+                                </Col>
+                            </Row>
+                        }
+
+                    </div>
+                </div>
+            </ModelViewBox>
+        </React.Fragment >
     );
 }
 
