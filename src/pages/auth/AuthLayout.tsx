@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 // images
-import LogoDark from '../../assets/images/Harsini Fincorp.png';
-import LogoLight from '../../assets/images/Harsini Fincorp.png';
+import LogoDark from '../../assets/images/Harsini_Fincorp.png';
+import LogoLight from '../../assets/images/Harsini_Fincorp.png';
 
 type AccountLayoutProps = {
     hasLogo?: boolean;

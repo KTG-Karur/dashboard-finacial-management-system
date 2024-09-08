@@ -4,19 +4,39 @@ import { Row, Col, Card, Button } from 'react-bootstrap';
 // component
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
-import { deleteData, emiCalculation, percentageVal, showConfirmationDialog, showMessage, updateData, ValtoPercentage, } from '../../utils/AllFunction';
+import {
+    deleteData,
+    emiCalculation,
+    percentageVal,
+    showConfirmationDialog,
+    showMessage,
+    updateData,
+    ValtoPercentage,
+} from '../../utils/AllFunction';
 import {
     //loan
-    getAddLoanDetailsRequest, resetGetAddLoanDetails,
+    getAddLoanDetailsRequest,
+    resetGetAddLoanDetails,
     //categoryId
-    getCategoryRequest, resetGetCategory,
+    getCategoryRequest,
+    resetGetCategory,
     //sub-categoryId
-    getSubCategoryRequest, resetGetSubCategory,
+    getSubCategoryRequest,
+    resetGetSubCategory,
     //loan-charges
-    getLoanChargesTypeRequest, resetGetLoanChargesType, createLoanChargesTypeRequest,
+    getLoanChargesTypeRequest,
+    resetGetLoanChargesType,
+    createLoanChargesTypeRequest,
     //applicantId
-    getApplicantRequest, resetGetApplicant, getBankAccountRequest, resetGetBankAccount, deleteLoanChargesRequest, resetCreateLoanCharges, createBankAccountRequest, resetCreateBankAccount, resetDeleteLoanCharges,
-
+    getApplicantRequest,
+    resetGetApplicant,
+    getBankAccountRequest,
+    resetGetBankAccount,
+    deleteLoanChargesRequest,
+    resetCreateLoanCharges,
+    createBankAccountRequest,
+    resetCreateBankAccount,
+    resetDeleteLoanCharges,
 } from '../../redux/actions';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
@@ -337,7 +357,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter Bank Name',
                             require: false,
-                            isDisabled: true
+                            isDisabled: true,
                         },
                     ],
                 },
@@ -349,7 +369,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter Account Holder Name',
                             require: false,
-                            isDisabled: true
+                            isDisabled: true,
                         },
                     ],
                 },
@@ -361,7 +381,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter Branch Name',
                             require: false,
-                            isDisabled: true
+                            isDisabled: true,
                         },
                     ],
                 },
@@ -373,7 +393,7 @@ function Index() {
                             inputType: 'number',
                             placeholder: 'Enter Account No',
                             require: false,
-                            isDisabled: true
+                            isDisabled: true,
                         },
                     ],
                 },
@@ -385,7 +405,7 @@ function Index() {
                             inputType: 'text',
                             placeholder: 'Enter IFSC',
                             require: false,
-                            isDisabled: true
+                            isDisabled: true,
                         },
                     ],
                 },
@@ -647,20 +667,25 @@ function Index() {
     };
 
     const onFormSubmit = async () => {
-        const dueAmt = await emiCalculation(state.loanAmount, state.interestRate, state.tenurePeriod);
+        let dueAmt = 0;
+        if (state.categoryId !== 1) {
+            dueAmt = await emiCalculation(state.loanAmount, state.interestRate, state.tenurePeriod);
+        } else {
+            dueAmt = await percentageVal(state.loanAmount, state.interestRate);
+        }
 
         let allChargesAmount = 0;
         const allChargestList = (state.loanChargesInfo || []).map((item) =>
             item.loanChargesDetailsId
                 ? {
-                    loanChargesDetailsId: item.loanChargesDetailsId,
-                    loanChargeId: item.loanChargeId,
-                    chargeAmount: item.chargeAmount,
-                }
+                      loanChargesDetailsId: item.loanChargesDetailsId,
+                      loanChargeId: item.loanChargeId,
+                      chargeAmount: item.chargeAmount,
+                  }
                 : {
-                    loanChargeId: item.loanChargeId,
-                    chargeAmount: item.chargeAmount,
-                }
+                      loanChargeId: item.loanChargeId,
+                      chargeAmount: item.chargeAmount,
+                  }
         );
         (state.loanChargesInfo || []).map((item) => {
             allChargesAmount += item.chargeAmount;
@@ -671,10 +696,12 @@ function Index() {
             coApplicantId: state?.coApplicantId || '',
             guarantorId: state?.guarantorId || '',
             categoryId: state?.categoryId || '',
+            subCategoryId: state?.subCategoryId || 0,
 
             interestRate: parseInt(state?.interestRate) || '',
             loanAmount: state?.loanAmount || '',
 
+            dueAmount: dueAmt.toFixed(2).toString() || '',
             disbursedAmount: allChargesAmount || '',
             tenurePeriod: state?.tenurePeriod || '',
             disbursedMethodId: state?.disbursedMethodId || '',
@@ -685,8 +712,7 @@ function Index() {
         };
 
         if (state.categoryId !== 1) {
-            submitRequest.dueAmount = dueAmt.toFixed(2).toString() || '';
-            submitRequest.subCategoryId = state?.subCategoryId || '';
+            submitRequest.tenurePeriod = state?.tenurePeriod || '';
         }
 
         if (isUpdate) {
@@ -755,9 +781,9 @@ function Index() {
             isPercentage: isUpdate
                 ? [{ value: 0, label: 'Amount ₹' }]
                 : [
-                    { value: 0, label: 'Amount ₹' },
-                    { value: 1, label: 'Percentage %' },
-                ],
+                      { value: 0, label: 'Amount ₹' },
+                      { value: 1, label: 'Percentage %' },
+                  ],
         }));
 
         if (updatedState?.chargeAmount && updatedState?.isPercentage === 1) {

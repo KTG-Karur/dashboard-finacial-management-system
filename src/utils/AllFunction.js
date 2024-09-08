@@ -150,54 +150,6 @@ const showConfirmationDialog = (
     });
 };
 
-const TableWithForm = ({ setCurrentDate, applicationNo, categoryName, loanAmount }) => {
-    return (
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <table>
-                <tbody>
-                    <tr style={{ padding: '20px 0' }}>
-                        <th style={{ textAlign: 'left' }}>Loan No</th>
-                        <td style={{ textAlign: 'center' }}> : </td>
-                        <td style={{ textAlign: 'left' }}>{applicationNo}</td>
-                    </tr>
-                    <tr style={{ padding: '20px 0' }}>
-                        <th style={{ textAlign: 'left' }}>Loan Type</th>
-                        <td style={{ textAlign: 'center' }}> : </td>
-                        <td style={{ textAlign: 'left' }}>{categoryName}</td>
-                    </tr>
-                    <tr style={{ padding: '20px 0' }}>
-                        <th style={{ textAlign: 'left' }}>Loan Amount</th>
-                        <td style={{ textAlign: 'center' }}> : </td>
-                        <td style={{ textAlign: 'left' }}>{loanAmount}</td>
-                    </tr>
-                    <tr style={{ padding: '20px 0' }}>
-                        <th style={{ textAlign: 'left' }}>Disbursed Date</th>
-                        <td style={{ textAlign: 'center' }}> : </td>
-                        <td style={{ textAlign: 'left' }}>
-                            {/* Here you can render your dynamic form component */}
-
-                            <input
-                                type="date"
-                                name={'disbursedDate'}
-                                placeholder={'disbursed Date'}
-                                onChange={(e) => {
-                                    setCurrentDate(e.target.value);
-                                }}
-                                style={{
-                                    border: 'none',
-                                    outline: 'none',
-                                    color: '#6c757',
-                                    backgroundColor: 'transparent',
-                                }}
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    );
-};
-
 //emi
 
 const annualToMonthlyInterestRate = (annualInterest) => {
@@ -307,7 +259,6 @@ export {
     calculateTotalInterestPayable,
     numberWithCommas,
     DateMonthYear,
-    TableWithForm,
     capitalizeFirstLetter,
     objectToKeyValueArray,
 };

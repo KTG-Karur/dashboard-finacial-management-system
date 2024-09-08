@@ -13,8 +13,8 @@ import { logoutUser, resetAuth } from '../../redux/actions';
 import AuthLayout from './AuthLayout';
 
 // images
-import LogoDark from '../../assets/images/Harsini Fincorp.png';
-import LogoLight from '../../assets/images/Harsini Fincorp.png';
+import LogoDark from '../../assets/images/Harsini_Fincorp.png';
+import LogoLight from '../../assets/images/Harsini_Fincorp.png';
 
 const LogoutIcon = () => {
     return (

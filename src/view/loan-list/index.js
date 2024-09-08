@@ -38,7 +38,7 @@ import FormLayout from '../../utils/formLayout';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 
 let isEdit = false;
-let StatusName = "Update"
+let StatusName = 'Update';
 const today = new Date().toISOString().split('T')[0];
 let stateValue = {};
 function Index() {
@@ -190,9 +190,8 @@ function Index() {
                                 className="text-primary  me-2 cursor-pointer"
                                 onClick={() => {
                                     showLoanDetailsModal(row?.original, 2);
-                                    StatusName = "Approval";
-                                }
-                                }>
+                                    StatusName = 'Approval';
+                                }}>
                                 <i className={'fas fa-solid fa-bell'}></i>
                             </span>
                         )}
@@ -201,10 +200,9 @@ function Index() {
                             <span
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() => {
-                                    showLoanDetailsModal(row?.original, 4)
-                                    StatusName = "Disbursed";
-                                }
-                                }>
+                                    showLoanDetailsModal(row?.original, 4);
+                                    StatusName = 'Disbursed';
+                                }}>
                                 <i className={'fas fa-check-circle'}></i>
                             </span>
                         )}
@@ -223,10 +221,9 @@ function Index() {
                                         'You want to Cancelled this loan Applicantion',
                                         () => onChangeStatus(row.original, 3),
                                         'Yes'
-                                    )
-                                    StatusName = "Cancelled";
-                                }
-                                }>
+                                    );
+                                    StatusName = 'Cancelled';
+                                }}>
                                 <i className={'fas fa-power-off'}></i>
                             </span>
                         )}
@@ -238,10 +235,9 @@ function Index() {
                                         'You want to Retrive this loan Applicantion',
                                         () => onChangeStatus(row.original, 1),
                                         'Yes'
-                                    )
-                                    StatusName = "Retrive";
-                                }
-                                }>
+                                    );
+                                    StatusName = 'Retrive';
+                                }}>
                                 <i className={'fas fa-recycle'}></i>
                             </span>
                         )}
@@ -252,7 +248,7 @@ function Index() {
     ];
 
     const [currentDate, setCurrentDate] = useState({
-        disbursedDate: today
+        disbursedDate: today,
     });
     const [modal, setModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -313,30 +309,31 @@ function Index() {
         if (getAddLoanDetailsSuccess) {
             //convert loanChargesName
             stateValue = {
-                "Application No": getAddLoanDetailsList[0]?.applicationNo || '',
-                "Applicant Name": getAddLoanDetailsList[0]?.applicantName || '',
-                "Co Applicant Name": getAddLoanDetailsList[0]?.coApplicantName || '',
-                "Guarantor Name": getAddLoanDetailsList[0]?.guarantorName || '',
+                'Application No': getAddLoanDetailsList[0]?.applicationNo || '',
+                'Applicant Name': getAddLoanDetailsList[0]?.applicantName || '',
+                'Co Applicant Name': getAddLoanDetailsList[0]?.coApplicantName || '',
+                'Guarantor Name': getAddLoanDetailsList[0]?.guarantorName || '',
 
-                "Loan Type": getAddLoanDetailsList[0]?.categoryName || '',
+                'Loan Type': getAddLoanDetailsList[0]?.categoryName || '',
 
-                "Loan Amount": getAddLoanDetailsList[0]?.loanAmount || '',
-                "Interest Rate": getAddLoanDetailsList[0]?.interestRate || '',
+                'Loan Amount': getAddLoanDetailsList[0]?.loanAmount || '',
+                'Interest Rate': getAddLoanDetailsList[0]?.interestRate || '',
 
-                "Created By": getAddLoanDetailsList[0]?.createdBy || '',
-                "Created Date": DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
+                'Created By': getAddLoanDetailsList[0]?.createdBy || '',
+                'Created Date': DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
 
-                "Disbursed Method": getAddLoanDetailsList[0]?.disbursedMethodName || '',
+                'Disbursed Method': getAddLoanDetailsList[0]?.disbursedMethodName || '',
 
-                "Disbursed Amount": getAddLoanDetailsList[0]?.disbursedAmount || '',
-            }
+                // 'Disbursed Amount': getAddLoanDetailsList[0]?.disbursedAmount || '',
+                'Total Charges': getAddLoanDetailsList[0]?.loanAmount - getAddLoanDetailsList[0]?.disbursedAmount,
+            };
             if (getAddLoanDetailsList[0]?.categoryId !== 1) {
                 stateValue.subCategoryName = getAddLoanDetailsList[0]?.subCategoryName || '';
                 stateValue.tenurePeriod = getAddLoanDetailsList[0]?.tenurePeriod || '';
             }
 
-            const keyValueArray = objectToKeyValueArray(stateValue)
-            setSelectedItem(keyValueArray)
+            const keyValueArray = objectToKeyValueArray(stateValue);
+            setSelectedItem(keyValueArray);
             dispatch(resetGetAddLoanDetails());
         } else if (getAddLoanDetailsFailure) {
             stateValue = {};
@@ -370,6 +367,7 @@ function Index() {
     }, [updateAddLoanSuccess, updateAddLoanFailure]);
 
     const showLoanDetailsModal = async (data, statusId) => {
+        console.log(data);
         setStatusdItem({
             categoryId: data.categoryId,
             dueAmount: data.dueAmount,
@@ -378,21 +376,29 @@ function Index() {
             interestRate: data.interestRate,
             tenurePeriod: data.tenurePeriod,
             statusId: statusId,
-        })
+        });
         const req = { loanId: data?.loanId || '' };
         dispatch(getAddLoanDetailsRequest(req));
         setModal(true);
-    }
+    };
 
     const onChangeStatus = async (data, statusId) => {
         let req = {
             loanStatusId: statusId,
         };
         setModal(false);
+        if (statusId === 2) {
+            req.approvedBy = 1;
+            req.approvedDate = formatDate(new Date());
+        }
+
         if (statusId == 4) {
             if (data.categoryId !== 1) {
                 const duedate = await findDueDate(currentDate?.disbursedDate || today);
-                const lastdate = await findLastDate(currentDate?.disbursedDate || today, parseInt(data?.tenurePeriod || 0));
+                const lastdate = await findLastDate(
+                    currentDate?.disbursedDate || today,
+                    parseInt(data?.tenurePeriod || 0)
+                );
                 const interest = await calculateTotalInterestPayable(
                     parseInt(data?.loanAmount || 0),
                     parseInt(data?.interestRate || 0),
@@ -409,8 +415,8 @@ function Index() {
                     dueStartDate: duedate,
                     dueEndDate: lastdate,
                 };
-            }
-            else if (data.categoryId === 1) {
+                req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
+            } else if (data.categoryId === 1) {
                 const duedate = await findDueDate(currentDate?.disbursedDate || today);
 
                 req.duePaymentInfo = {
@@ -421,12 +427,13 @@ function Index() {
                     dueAmount: percentageVal(data.loanAmount, data.interestRate).toString(),
                     dueStartDate: duedate,
                 };
+                req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
             }
         }
         isEdit = true;
         dispatch(updateAddLoanRequest(req, data.loanId));
         setCurrentDate({
-            disbursedDate: today
+            disbursedDate: today,
         });
     };
 
@@ -458,42 +465,36 @@ function Index() {
                 modelHeader={'Disbursed Loan Details'}
                 modelSize={'md'}
                 onlyHeader={true}
-                handleSubmit={() => showConfirmationDialog(
-                    `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,
-                    () => onChangeStatus(statusItem, statusItem.statusId),
-                    'Yes',
-                    'Approval',
-                    'Approval Successfully'
-                )}
-            >
-                <div style={{ marginBottom: "20px" }}>
-                    {
-                        (selectedItem || []).map((Item, i) => (
-                            <Row key={i} style={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
-                                <Col md={5}>
-                                    <h5 style={{ margin: "0px" }}> {Item.Key}</h5>
-                                </Col>
-                                <Col md={1}>
-                                    {":"}
-                                </Col>
+                handleSubmit={() =>
+                    showConfirmationDialog(
+                        `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,
+                        () => onChangeStatus(statusItem, statusItem.statusId),
+                        'Yes',
+                        'Approval',
+                        'Approval Successfully'
+                    )
+                }>
+                <div style={{ marginBottom: '20px' }}>
+                    {(selectedItem || []).map((Item, i) => (
+                        <Row key={i} style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
+                            <Col md={5}>
+                                <h5 style={{ margin: '0px' }}> {Item.Key}</h5>
+                            </Col>
+                            <Col md={1}>{':'}</Col>
 
-                                <Col md={5}>
-                                    <h5 style={{ margin: "0px" }}>  {Item.Value}</h5>
-                                </Col>
-                            </Row>
-                        ))
-                    }
+                            <Col md={5}>
+                                <h5 style={{ margin: '0px' }}> {Item.Value}</h5>
+                            </Col>
+                        </Row>
+                    ))}
 
                     <div>
-                        {
-                            statusItem.statusId === 4 &&
-                            <Row style={{ display: "flex", justifyContent: "center", marginBottom: "5px" }}>
+                        {statusItem.statusId === 4 && (
+                            <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
                                 <Col md={5}>
-                                    <h5 style={{ margin: "0px" }}>{"Disbursed Date"}</h5>
+                                    <h5 style={{ margin: '0px' }}>{'Disbursed Date'}</h5>
                                 </Col>
-                                <Col md={1}>
-                                    {":"}
-                                </Col>
+                                <Col md={1}>{':'}</Col>
                                 <Col md={5}>
                                     <FormLayout
                                         dynamicForm={disbursedDateFormContainer}
@@ -503,12 +504,11 @@ function Index() {
                                     />
                                 </Col>
                             </Row>
-                        }
-
+                        )}
                     </div>
                 </div>
             </ModelViewBox>
-        </React.Fragment >
+        </React.Fragment>
     );
 }
 

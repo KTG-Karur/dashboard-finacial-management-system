@@ -11,7 +11,7 @@ import {
     formatDate,
     DateMonthYear,
 } from './AllFunction';
-import harshiniFincorpLogo from '../assets/images/Harsini Fincorp.png';
+import harshiniFincorpLogo from '../assets/images/Harsini_Fincorp.png';
 import { getAddLoanDetailsRequest, resetGetAddLoanDetails } from '../redux/actions';
 import { useRedux } from '../hooks';
 

@@ -24,8 +24,8 @@ import { notifications, profileMenus, searchOptions } from './data';
 // images
 import logoSm from '../../assets/images/logo-sm.png';
 import avatar1 from '../../assets/images/users/user-1.jpg';
-import logoDark from '../../assets/images/Harsini Fincorp.png';
-import logoLight from '../../assets/images/Harsini Fincorp.png';
+import logoDark from '../../assets/images/Harsini_Fincorp.png';
+import logoLight from '../../assets/images/Harsini_Fincorp.png';
 
 type TopbarProps = {
     openLeftMenuCallBack: () => void;
