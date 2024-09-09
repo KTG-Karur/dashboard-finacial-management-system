@@ -588,13 +588,11 @@ function Index() {
         }
     }, [getBankAccountSuccess, getBankAccountFailure]);
 
-    //Loan Charges Delete
+    //Loan Charges details Delete
     useEffect(() => {
         if (deleteLoanChargesSuccess) {
-            showMessage('success', 'Loan Charges Deleted Successfully');
             dispatch(resetDeleteLoanCharges());
         } else if (deleteLoanChargesFailure) {
-            showMessage('warning', 'Loan Charges Deleted Failed');
             dispatch(resetDeleteLoanCharges());
         }
     }, [deleteLoanChargesSuccess, deleteLoanChargesFailure]);
@@ -689,7 +687,7 @@ function Index() {
                 }
         );
         (state.loanChargesInfo || []).map((item) => {
-            allChargesAmount += item.chargeAmount;
+            allChargesAmount += parseInt(item.chargeAmount);
         });
         allChargesAmount = parseInt(state?.loanAmount) - parseInt(allChargesAmount);
         const submitRequest = {
@@ -806,7 +804,6 @@ function Index() {
             const id = rowData.loanChargesDetailsId;
             dispatch(deleteLoanChargesRequest(id));
         }
-
         const delData = await deleteData(state.loanChargesInfo, ids);
         const arrValue = copyLoanChargesId.find((item) => item.loanChargesId === rowData.loanChargeId);
         setState((prev) => ({

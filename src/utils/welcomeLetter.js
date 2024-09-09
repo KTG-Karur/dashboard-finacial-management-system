@@ -355,6 +355,11 @@ const WelcomeLetter = () => {
                                 state?.categoryId !== 1 &&
                                 <React.Fragment>
                                     <Row>
+                                        <Col sm={12} className='d-flex justify-content-center'>
+                                            <h4>Due Payment List</h4>
+                                        </Col>
+                                    </Row>
+                                    <Row>
                                         <Col md={12}>
                                             <div className="table-responsive">
                                                 <table className="table mt-4">

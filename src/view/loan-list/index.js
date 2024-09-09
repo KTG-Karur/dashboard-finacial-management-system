@@ -279,13 +279,12 @@ function Index() {
         dispatch(getAddLoanRequest(req));
     };
 
-    //Create dispatch
+    //Create update addLoan dispatch
     useEffect(() => {
         if (loanData && isCreated) {
             dispatch(createAddLoanRequest(loanData));
         } else if (loanData && isCreated === false) {
             isEdit = true;
-            console.log("update add loan called dispatch");
             dispatch(updateAddLoanRequest(loanData, loanData.loanId));
         }
         setIsLoading(true);
@@ -327,7 +326,7 @@ function Index() {
                 'Disbursed Method': getAddLoanDetailsList[0]?.disbursedMethodName || '',
 
                 // 'Disbursed Amount': getAddLoanDetailsList[0]?.disbursedAmount || '',
-                'Total Charges': getAddLoanDetailsList[0]?.loanAmount - getAddLoanDetailsList[0]?.disbursedAmount,
+                'Total Charges': parseInt(getAddLoanDetailsList[0]?.loanAmount) - parseInt(getAddLoanDetailsList[0]?.disbursedAmount),
             };
             if (getAddLoanDetailsList[0]?.categoryId !== 1) {
                 stateValue.subCategoryName = getAddLoanDetailsList[0]?.subCategoryName || '';
@@ -347,7 +346,6 @@ function Index() {
     useEffect(() => {
         if (createAddLoanSuccess) {
             callDispatchStatus();
-            showMessage('success', 'Loan Created Successfully');
             dispatch(resetCreateAddLoan());
         } else if (createAddLoanFailure) {
             showMessage('warning', errorMessage);
@@ -357,7 +355,6 @@ function Index() {
 
     // Update Loan
     useEffect(() => {
-        console.log("update add Loan success")
         if (updateAddLoanSuccess) {
             callDispatchStatus();
             isEdit && showMessage('success', `${StatusName} Successfully`);
