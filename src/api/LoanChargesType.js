@@ -18,13 +18,7 @@ export async function getLoanChargesType(request) {
 //CREATE---->
 export async function createLoanChargesType(request) {
   try {
-    console.log("loanChargesType")
-    console.log(loanChargesType)
-    console.log("request")
-    console.log(request)
     const response = await apiReturnCallBack("POST", loanChargesType, request);
-    console.log("response")
-    console.log(response)
     const data = await response.json();
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));
@@ -52,7 +46,6 @@ export async function updateLoanChargesType(request, loanChargesTypeId) {
 //DELETE---->
 export async function deleteLoanChargesType(loanChargesTypeId) {
   try {
-    console.log("delete loan api")
     const response = await apiReturnCallBack("DELETE", loanChargesType + `/${loanChargesTypeId}`);
     if (!response.ok) {
       throw new Error(data.message || JSON.stringify(data));

@@ -33,10 +33,10 @@ import {
     getBankAccountRequest,
     resetGetBankAccount,
     deleteLoanChargesRequest,
-    resetCreateLoanCharges,
     createBankAccountRequest,
     resetCreateBankAccount,
     resetDeleteLoanCharges,
+    resetCreateLoanChargesType,
 } from '../../redux/actions';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useRedux } from '../../hooks';
@@ -591,27 +591,28 @@ function Index() {
     //Loan Charges Delete
     useEffect(() => {
         if (deleteLoanChargesSuccess) {
-            showMessage('success', 'Deleted Successfully');
+            showMessage('success', 'Loan Charges Deleted Successfully');
             dispatch(resetDeleteLoanCharges());
         } else if (deleteLoanChargesFailure) {
-            showMessage('warning', 'Deleted Failed');
+            showMessage('warning', 'Loan Charges Deleted Failed');
             dispatch(resetDeleteLoanCharges());
         }
     }, [deleteLoanChargesSuccess, deleteLoanChargesFailure]);
 
-    // CreateLoanChargesSuccess
+    // CreateLoanCharges type Success
     useEffect(() => {
         if (createLoanChargesTypeSuccess) {
-            showMessage('success', 'Created Successfully');
+            showMessage('success', 'Loan Charges Type Created Successfully');
             const tempState = [createLoanChargesTypeData[0], ...optionListState.loanChargeId];
             setOptionListState({
                 ...optionListState,
                 loanChargeId: tempState,
             });
-            dispatch(resetCreateLoanCharges());
+            copyLoanChargesId = tempState;
+            dispatch(resetCreateLoanChargesType());
         } else if (createLoanChargesTypeFailure) {
             showMessage('warning', errorMessage);
-            dispatch(resetCreateLoanCharges());
+            dispatch(resetCreateLoanChargesType());
         }
     }, [createLoanChargesTypeSuccess, createLoanChargesTypeFailure]);
 
@@ -623,7 +624,7 @@ function Index() {
                 ...optionListState,
                 bankAccountId: tempState,
             });
-            showMessage('success', 'Created Successfully');
+            showMessage('success', 'Bank Created Successfully');
             dispatch(resetCreateBankAccount());
         } else if (createBankAccountFailure) {
             showMessage('warning', errorMessage);
@@ -678,14 +679,14 @@ function Index() {
         const allChargestList = (state.loanChargesInfo || []).map((item) =>
             item.loanChargesDetailsId
                 ? {
-                      loanChargesDetailsId: item.loanChargesDetailsId,
-                      loanChargeId: item.loanChargeId,
-                      chargeAmount: item.chargeAmount,
-                  }
+                    loanChargesDetailsId: item.loanChargesDetailsId,
+                    loanChargeId: item.loanChargeId,
+                    chargeAmount: item.chargeAmount,
+                }
                 : {
-                      loanChargeId: item.loanChargeId,
-                      chargeAmount: item.chargeAmount,
-                  }
+                    loanChargeId: item.loanChargeId,
+                    chargeAmount: item.chargeAmount,
+                }
         );
         (state.loanChargesInfo || []).map((item) => {
             allChargesAmount += item.chargeAmount;
@@ -696,14 +697,12 @@ function Index() {
             coApplicantId: state?.coApplicantId || '',
             guarantorId: state?.guarantorId || '',
             categoryId: state?.categoryId || '',
-            subCategoryId: state?.subCategoryId || 0,
 
             interestRate: parseInt(state?.interestRate) || '',
             loanAmount: state?.loanAmount || '',
 
             dueAmount: dueAmt.toFixed(2).toString() || '',
             disbursedAmount: allChargesAmount || '',
-            tenurePeriod: state?.tenurePeriod || '',
             disbursedMethodId: state?.disbursedMethodId || '',
             bankAccountId: state?.disbursedMethodId === 2 ? state?.bankAccountId || 1 : 0,
             createdBy: 1,
@@ -712,7 +711,8 @@ function Index() {
         };
 
         if (state.categoryId !== 1) {
-            submitRequest.tenurePeriod = state?.tenurePeriod || '';
+            submitRequest.tenurePeriod = state?.tenurePeriod || 0;
+            submitRequest.subCategoryId = state?.subCategoryId || 0;
         }
 
         if (isUpdate) {
@@ -781,9 +781,9 @@ function Index() {
             isPercentage: isUpdate
                 ? [{ value: 0, label: 'Amount ₹' }]
                 : [
-                      { value: 0, label: 'Amount ₹' },
-                      { value: 1, label: 'Percentage %' },
-                  ],
+                    { value: 0, label: 'Amount ₹' },
+                    { value: 1, label: 'Percentage %' },
+                ],
         }));
 
         if (updatedState?.chargeAmount && updatedState?.isPercentage === 1) {
@@ -806,6 +806,7 @@ function Index() {
             const id = rowData.loanChargesDetailsId;
             dispatch(deleteLoanChargesRequest(id));
         }
+
         const delData = await deleteData(state.loanChargesInfo, ids);
         const arrValue = copyLoanChargesId.find((item) => item.loanChargesId === rowData.loanChargeId);
         setState((prev) => ({

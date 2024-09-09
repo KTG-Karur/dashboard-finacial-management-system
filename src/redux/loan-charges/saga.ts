@@ -66,11 +66,7 @@ function* updateLoanChargesSaga(action: any): Generator<any, any, any> {
 // Saga to handle updating a loanCharges
 function* deleteLoanChargesSaga(action: any): Generator<any, any, any> {
     try {
-        console.log('deleteLoanChargesSaga');
-        console.log(action.payload);
         const data = yield call(deleteLoanCharges, action.payload.id);
-        console.log('deleteLoanCharges');
-        console.log(data);
         yield put(deleteLoanChargesSuccess(data));
     } catch (error: any) {
         yield put(deleteLoanChargesFailure(error.message));

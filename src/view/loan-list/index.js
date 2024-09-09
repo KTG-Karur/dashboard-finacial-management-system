@@ -284,6 +284,8 @@ function Index() {
         if (loanData && isCreated) {
             dispatch(createAddLoanRequest(loanData));
         } else if (loanData && isCreated === false) {
+            isEdit = true;
+            console.log("update add loan called dispatch");
             dispatch(updateAddLoanRequest(loanData, loanData.loanId));
         }
         setIsLoading(true);
@@ -345,7 +347,7 @@ function Index() {
     useEffect(() => {
         if (createAddLoanSuccess) {
             callDispatchStatus();
-            showMessage('success', 'Created Successfully');
+            showMessage('success', 'Loan Created Successfully');
             dispatch(resetCreateAddLoan());
         } else if (createAddLoanFailure) {
             showMessage('warning', errorMessage);
@@ -355,6 +357,7 @@ function Index() {
 
     // Update Loan
     useEffect(() => {
+        console.log("update add Loan success")
         if (updateAddLoanSuccess) {
             callDispatchStatus();
             isEdit && showMessage('success', `${StatusName} Successfully`);
@@ -367,7 +370,6 @@ function Index() {
     }, [updateAddLoanSuccess, updateAddLoanFailure]);
 
     const showLoanDetailsModal = async (data, statusId) => {
-        console.log(data);
         setStatusdItem({
             categoryId: data.categoryId,
             dueAmount: data.dueAmount,
