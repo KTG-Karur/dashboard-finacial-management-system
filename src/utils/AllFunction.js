@@ -101,7 +101,7 @@ function numberWithCommas(x) {
 }
 
 function objectToKeyValueArray(obj) {
-    return Object.entries(obj).map(([key, value]) => ({ Key: key, Value: value }));
+    return (obj).map(([key, value]) => ({ Key: key, Value: value }));
 }
 
 const showConfirmationDialog = (
@@ -168,8 +168,6 @@ const emiCalculation = (principal, annualInterest, tenurePeriod) => {
 };
 
 const findDueDate = (disbursedDate = formatDate()) => {
-    console.log("disbursedDate")
-    console.log(disbursedDate)
     const disbursedDateArr = disbursedDate.split('-');
     const year = disbursedDateArr[0];
     const day = disbursedDateArr[2];

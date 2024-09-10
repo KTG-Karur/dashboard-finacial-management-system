@@ -22,7 +22,7 @@ import ProfileDropdown from '../../components/topbar/ProfileDropdown';
 import { notifications, profileMenus, searchOptions } from './data';
 
 // images
-import logoSm from '../../assets/images/logo-sm.png';
+import logoSm from '../../assets/images/HariniFavIcon.png';
 import avatar1 from '../../assets/images/users/user-1.jpg';
 import logoDark from '../../assets/images/Harsini_Fincorp.png';
 import logoLight from '../../assets/images/Harsini_Fincorp.png';
@@ -83,7 +83,7 @@ const Topbar = ({ openLeftMenuCallBack, containerClass }: TopbarProps) => {
                 <div className="logo-box">
                     <Link to="/" className="logo logo-dark text-center">
                         <span className="logo-sm">
-                            <img src={logoSm} alt="logo-sm" height="22" />
+                            <img src={logoSm} alt="logo-sm" height="30" />
                         </span>
                         <span className="logo-lg">
                             <img src={logoDark} alt="logo-dark" width="150" />

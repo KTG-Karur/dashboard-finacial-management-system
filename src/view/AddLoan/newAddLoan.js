@@ -296,10 +296,10 @@ function Index() {
                 updatedFormFiledData[32] = {
                     formFields: [
                         {
-                            label: 'Tenure Period (in month)',
+                            label: 'Tenure Period (Month)',
                             name: 'tenurePeriod',
                             inputType: 'number',
-                            placeholder: 'Enter tenure (in month)',
+                            placeholder: 'Enter tenure (Month)',
                             optionList: 'tenurePeriod',
                             require: false,
                         },
