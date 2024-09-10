@@ -47,6 +47,8 @@ const WelcomeLetter = () => {
                 applicantName: getAddLoanDetailsList[0].applicantName,
                 coApplicantName: getAddLoanDetailsList[0].coApplicantName,
                 guarantorName: getAddLoanDetailsList[0].guarantorName,
+                applicantCode: getAddLoanDetailsList[0].applicantCode,
+                contactNo: getAddLoanDetailsList[0].contactNo,
 
                 categoryId: getAddLoanDetailsList[0].categoryId,
                 categoryName: getAddLoanDetailsList[0].categoryName,
@@ -125,7 +127,7 @@ const WelcomeLetter = () => {
 
     // WelcomeDetails
     const WelcomeDetails = {
-        customerCode: state?.applicantNo || '',
+        customerCode: state?.applicantCode || '',
         customer: state?.applicantName || '',
         coCustomer: state?.coApplicantName || '',
         guarantorName: state?.guarantorName || '',
