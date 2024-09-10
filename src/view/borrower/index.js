@@ -95,12 +95,12 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Customer Id',
+            Header: 'Borrower Id',
             accessor: 'applicantCode',
             sort: true,
         },
         {
-            Header: 'Customer Name',
+            Header: 'Borrower Name',
             accessor: 'applicantName',
             sort: false,
         },
@@ -113,11 +113,6 @@ function Index() {
             Header: 'Gender',
             accessor: 'genderName',
             sort: false,
-        },
-        {
-            Header: 'Customer Type',
-            accessor: 'applicantTypeName',
-            sort: true,
         },
         {
             Header: 'Actions',
@@ -295,7 +290,7 @@ function Index() {
     useEffect(() => {
         setIsLoading(true)
         const req={
-            isBorrower : 0
+            isBorrower : 1
         }
         dispatch(getApplicantRequest(req));
         dispatch(getProofTypeRequest());
@@ -547,17 +542,15 @@ function Index() {
     }
 
     const onFormSubmit = async () => {
-        const personalInfo = [multiStateValue[0]?.personalInfo] || []
+        const personalInfoData = multiStateValue[0]?.personalInfo
+        personalInfoData.isBorrower = 1
+        const personalInfo = [personalInfoData] || []
         const idProofInfo = multiStateValue[0]?.idProof || []
         const addressInfo = multiStateValue[0]?.addressInfo || []
-        const incomeInfo = !_.isEmpty(multiStateValue[0].incomeInfo) ? [multiStateValue[0].incomeInfo] : []
-        const additionalInfo = !_.isEmpty(multiStateValue[0].additionalInfo) ? [multiStateValue[0]?.additionalInfo] : []
         const submitRequest = {
             personalInfo: personalInfo,
             proofInfo: idProofInfo,
             addressInfo: addressInfo,
-            incomeInfo: incomeInfo,
-            additionalInfo: additionalInfo
         }
         if (isEdit) {
             dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
@@ -708,7 +701,7 @@ function Index() {
                             IsEditArrVal={IsEditArrVal}
                             setIsEditArrVal={setIsEditArrVal}
                             tblList={parentList}
-                            Title={'Customer Details'}
+                            Title={'Borrower Details'}
                             showSelectmodel={showSelectmodel}
                             showMultiAdd={showMultiAdd}
                             optionListState={optionListState}
@@ -760,7 +753,7 @@ function Index() {
                 ) :
                     <Table
                         columns={columns}
-                        Title={'Customer List'}
+                        Title={'Borrower List'}
                         data={parentList || []}
                         pageSize={5}
                         toggle={createModel}

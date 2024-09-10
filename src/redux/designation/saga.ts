@@ -30,7 +30,6 @@ function* createDesignationSaga(action: any): Generator<any, any, any> {
     const data = yield call(createDesignation, action.payload);
     yield put(createDesignationSuccess(data));
   } catch (error: any) {
-    console.log(error)
     const errorMessage = error.response && error.response.data && error.response.data.message
       ? error.response.data.message
       : error.message

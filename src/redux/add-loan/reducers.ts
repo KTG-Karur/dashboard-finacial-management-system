@@ -21,8 +21,6 @@ const initialState = {
 };
 
 export default function addLoanReducer(state = initialState, action: any) {
-  // console.log("action")
-  // console.log(action)
   switch (action.type) {
     case "GET_ADDLOAN_SUCCESS": {
       return {

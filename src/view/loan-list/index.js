@@ -463,7 +463,7 @@ function Index() {
                 setModel={setModal}
                 modelHeader={'Disbursed Loan Details'}
                 modelSize={'md'}
-                onlyHeader={true}
+                modelHead={true}
                 handleSubmit={() =>
                     showConfirmationDialog(
                         `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,

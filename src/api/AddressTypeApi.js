@@ -44,17 +44,17 @@ export async function updateAddressType(request, addressTypeId) {
   }
 }
 //DELETE---->
-// export async function deleteAddressType(addressTypeId) {
-//   try {
-//     const response = await apiReturnCallBack("DELETE", addressType+`/${addressTypeId}`);
-//     if (!response.ok) {
-//       throw new Error(data.message || JSON.stringify(data));
-//     }
-//     const data = await response.json();
-//     return data;
-//   } catch (error) {
-//     console.error('Fetch error:', error);
-//     throw error;
-//   }
-// }
+export async function deleteAddressType(addressTypeId) {
+  try {
+    const response = await apiReturnCallBack("DELETE", addressType+`/${addressTypeId}`);
+    if (!response.ok) {
+      throw new Error(data.message || JSON.stringify(data));
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Fetch error:', error);
+    throw error;
+  }
+}
 

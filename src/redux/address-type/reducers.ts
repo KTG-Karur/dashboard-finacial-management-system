@@ -95,29 +95,29 @@ export default function addressTypeReducer(state = initialState, action: any) {
       };
     }
 
-    // case "DELETE_ADDRESS_TYPE_SUCCESS": {
-    //   return {
-    //     ...state,
-    //     deleteAddressTypeSuccess: true,
-    //     deleteAddressTypeFailure: false,
-    //   };
-    // }
-    // case "DELETE_ADDRESS_TYPE_FAILURE": {
-    //   return {
-    //     ...state,
-    //     deleteAddressTypeFailure: true,
-    //     errorMessage: action.errorMessage,
-    //     deleteAddressTypeSuccess: false,
-    //   };
-    // }
-    // case "RESET_DELETE_ADDRESS_TYPE": {
-    //   return {
-    //     ...state,
-    //     deleteAddressTypeSuccess: false,
-    //     deleteAddressTypeFailure: false,
-    //     errorMessage: null,
-    //   };
-    // }
+    case "DELETE_ADDRESS_TYPE_SUCCESS": {
+      return {
+        ...state,
+        deleteAddressTypeSuccess: true,
+        deleteAddressTypeFailure: false,
+      };
+    }
+    case "DELETE_ADDRESS_TYPE_FAILURE": {
+      return {
+        ...state,
+        deleteAddressTypeFailure: true,
+        errorMessage: action.errorMessage,
+        deleteAddressTypeSuccess: false,
+      };
+    }
+    case "RESET_DELETE_ADDRESS_TYPE": {
+      return {
+        ...state,
+        deleteAddressTypeSuccess: false,
+        deleteAddressTypeFailure: false,
+        errorMessage: null,
+      };
+    }
 
     default: {
       return state;

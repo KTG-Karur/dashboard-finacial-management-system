@@ -58,21 +58,21 @@ export const resetUpdateAddressType = () => ({
   type: 'RESET_UPDATE_ADDRESS_TYPE',
 });
 //Delete Reducer Call--->
-// export const deleteAddressTypeRequest = ( id: string) => ({
-//   type: 'DELETE_ADDRESS_TYPE_REQUEST',
-//   payload: { id },
-// });
+export const deleteAddressTypeRequest = ( id: string) => ({
+  type: 'DELETE_ADDRESS_TYPE_REQUEST',
+  payload: { id },
+});
 
-// export const deleteAddressTypeSuccess = (data: any) => ({
-//   type: 'DELETE_ADDRESS_TYPE_SUCCESS',
-//   payload: { data },
-// });
+export const deleteAddressTypeSuccess = (data: any) => ({
+  type: 'DELETE_ADDRESS_TYPE_SUCCESS',
+  payload: { data },
+});
 
-// export const deleteAddressTypeFailure = (errorMessage: string) => ({
-//   type: 'DELETE_ADDRESS_TYPE_FAILURE',
-//   errorMessage: { errorMessage },
-// });
+export const deleteAddressTypeFailure = (errorMessage: string) => ({
+  type: 'DELETE_ADDRESS_TYPE_FAILURE',
+  errorMessage: { errorMessage },
+});
 
-// export const deleteUpdateAddressType = () => ({
-//   type: 'RESET_DELETE_ADDRESS_TYPE',
-// });
+export const deleteUpdateAddressType = () => ({
+  type: 'RESET_DELETE_ADDRESS_TYPE',
+});

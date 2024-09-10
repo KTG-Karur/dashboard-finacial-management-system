@@ -1,12 +1,14 @@
 // saga.ts
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { createAddressType, getAddressType, updateAddressType } from '../../api/AddressTypeApi'; // Adjust the path as needed
+import { createAddressType, deleteAddressType, getAddressType, updateAddressType } from '../../api/AddressTypeApi'; // Adjust the path as needed
 import { 
   getAddressTypeSuccess, getAddressTypeFailure,
   createAddressTypeSuccess,
   createAddressTypeFailure,
   updateAddressTypeSuccess,
   updateAddressTypeFailure,
+  deleteAddressTypeSuccess,
+  deleteAddressTypeFailure,
 } from './actions';
 
 // Saga to handle fetching addressTypes
@@ -58,18 +60,18 @@ function* updateAddressTypeSaga(action: any): Generator<any, any, any> {
 }
 
 // // Saga to handle updating a addressType
-// function* deleteAddressTypeSaga(action: any): Generator<any, any, any> {
-//   try {
-//     const data = yield call(deleteAddressType, action.payload.id);
-//     yield put(deleteAddressTypeSuccess(data));
-//   } catch (error: any) {
-//     yield put(deleteAddressTypeFailure(error.message));
-//   }
-// }
+function* deleteAddressTypeSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(deleteAddressType, action.payload.id);
+    yield put(deleteAddressTypeSuccess(data));
+  } catch (error: any) {
+    yield put(deleteAddressTypeFailure(error.message));
+  }
+}
 
 export default function* addressTypeSaga() {
   yield takeEvery('GET_ADDRESS_TYPE_REQUEST', fetchAddressTypeSaga);
   yield takeEvery('CREATE_ADDRESS_TYPE_REQUEST', createAddressTypeSaga);
   yield takeEvery('UPDATE_ADDRESS_TYPE_REQUEST', updateAddressTypeSaga);
-  // yield takeEvery('DELETE_ADDRESS_TYPE_REQUEST', deleteAddressTypeSaga);
+  yield takeEvery('DELETE_ADDRESS_TYPE_REQUEST', deleteAddressTypeSaga);
 }

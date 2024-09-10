@@ -1,6 +1,6 @@
 // saga.ts
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { createApplicant, getApplicant, getApplicantInfo, updateApplicant } from '../../api/ApplicantApi'; // Adjust the path as needed
+import { createApplicant, deleteApplicantAddressInfo, deleteApplicantProof, getApplicant, getApplicantInfo, updateApplicant } from '../../api/ApplicantApi'; // Adjust the path as needed
 import { 
   getApplicantSuccess, getApplicantFailure,
   createApplicantSuccess,
@@ -9,6 +9,10 @@ import {
   updateApplicantFailure,
   getApplicantInfoSuccess,
   getApplicantInfoFailure,
+  deleteApplicantAddressSuccess,
+  deleteApplicantAddressFailure,
+  deleteApplicantProofSuccess,
+  deleteApplicantProofFailure,
 } from './actions';
 
 // Saga to handle fetching applicants
@@ -75,19 +79,29 @@ function* updateApplicantSaga(action: any): Generator<any, any, any> {
 }
 
 // // Saga to handle updating a applicant
-// function* deleteApplicantSaga(action: any): Generator<any, any, any> {
-//   try {
-//     const data = yield call(deleteApplicant, action.payload.id);
-//     yield put(deleteApplicantSuccess(data));
-//   } catch (error: any) {
-//     yield put(deleteApplicantFailure(error.message));
-//   }
-// }
+function* deleteApplicantAddressSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(deleteApplicantAddressInfo, action.payload.id);
+    yield put(deleteApplicantAddressSuccess(data));
+  } catch (error: any) {
+    yield put(deleteApplicantAddressFailure(error.message));
+  }
+}
+
+function* deleteApplicantProofSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(deleteApplicantProof, action.payload.id);
+    yield put(deleteApplicantProofSuccess(data));
+  } catch (error: any) {
+    yield put(deleteApplicantProofFailure(error.message));
+  }
+}
 
 export default function* applicantSaga() {
   yield takeEvery('GET_APPLICANT_REQUEST', fetchApplicantSaga);
   yield takeEvery('GET_APPLICANT_INFO_REQUEST', fetchApplicantInfoSaga);
   yield takeEvery('CREATE_APPLICANT_REQUEST', createApplicantSaga);
   yield takeEvery('UPDATE_APPLICANT_REQUEST', updateApplicantSaga);
-  // yield takeEvery('DELETE_APPLICANT_REQUEST', deleteApplicantSaga);
+  yield takeEvery('DELETE_APPLICANT_ADDRESS_REQUEST', deleteApplicantAddressSaga);
+  yield takeEvery('DELETE_APPLICANT_PROOF_REQUEST', deleteApplicantProofSaga);
 }

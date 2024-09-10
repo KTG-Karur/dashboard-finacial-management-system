@@ -131,7 +131,7 @@ const applicantTabs = [
             {
                 formFields: [
                     {
-                        label: 'Proof Id No.',
+                        label: 'Id No.',
                         name: 'proofNo',
                         inputType: 'text',
                         placeholder: 'Enter Proof Id No',
@@ -164,6 +164,7 @@ const applicantTabs = [
                         displayKey: 'addressTypeName',
                         uniqueKey: 'addressTypeId',
                         onChange : "onHandleProofType",
+                        selectedObj : "addressTypeObj"
                     },
                 ],
             },
@@ -226,144 +227,7 @@ const applicantTabs = [
                 ],
             },
         ],
-    },
-    {
-        label: 'Income Info',
-        name: 'incomeInfo',
-        icon: 'mdi mdi-cash',
-        children: [
-            {
-                formFields: [
-                    {
-                        label: 'Applicant Type',
-                        name: 'applicantTypeId',
-                        inputType: 'select',
-                        optionList: 'applicantTypeList',
-                        displayKey: 'applicantTypeName',
-                        uniqueKey: 'applicantTypeId',
-                        onChange : "onHandleProofType",
-                        selectedObj : "applicantTypeObj"
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Company / Business Name',
-                        name: 'companyName',
-                        inputType: 'text',
-                        placeholder: 'Enter Company/Business Name',
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Company / Business Address',
-                        name: 'address',
-                        inputType: 'text',
-                        placeholder: 'Enter Company/Business Address',
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Starting Date',
-                        name: 'startDate',
-                        inputType: 'date',
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Monthly Income',
-                        name: 'monthlyIncome',
-                        inputType: 'number',
-                        placeholder: 'Enter Monthly Income',
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Office Contact No',
-                        name: 'officeContactNo',
-                        inputType: 'number',
-                        placeholder: 'Enter Office No',
-                        maxlength: 10,
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        label: 'Additional Info',
-        name: 'additionalInfo',
-        icon: 'mdi mdi-account-box-multiple',
-        children: [
-            {
-                formFields: [
-                    {
-                        label: 'Father Name',
-                        name: 'fatherName',
-                        inputType: 'text',
-                        placeholder: 'Enter Father Name',
-                    },
-                    {
-                        label: 'Father Contact',
-                        name: 'fatherContactNo',
-                        inputType: 'number',
-                        placeholder: 'Enter Father Contact',
-                        maxlength: 10,
-                    },
-                    {
-                        label: 'Father Occupation',
-                        name: 'fatherOccupation',
-                        inputType: 'text',
-                        placeholder: 'Enter Father Job',
-                    },
-                    {
-                        label: 'Father Income',
-                        name: 'fatherIncome',
-                        inputType: 'number',
-                        placeholder: 'Enter Father Income',
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Mother Name',
-                        name: 'motherName',
-                        inputType: 'text',
-                        placeholder: 'Enter Mother Name',
-                    },
-                    {
-                        label: 'Mother Contact',
-                        name: 'motherContactNo',
-                        inputType: 'text',
-                        placeholder: 'Enter Mother Contact',
-                        maxlength: 10,
-                    },
-                    {
-                        label: 'Mother Occupation',
-                        name: 'motherOccupation',
-                        inputType: 'text',
-                        placeholder: 'Enter Mother Job',
-                    },
-                    {
-                        label: 'Mother Income',
-                        name: 'motherIncome',
-                        inputType: 'text',
-                        placeholder: 'Enter Mother Income',
-                        maxlength: 10,
-                    },
-                ],
-            },
-        ],
-    },
+    }
 ];
 
 export { applicantTabs };
