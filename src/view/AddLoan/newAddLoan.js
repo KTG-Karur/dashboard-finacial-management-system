@@ -484,7 +484,7 @@ function Index() {
                 loanChargesDetailsId: item.loanChargesDetailsId,
             }));
 
-            const req = { categoryId: getAddLoanDetailsList[0]?.subCategoryId };
+            const req = { categoryId: getAddLoanDetailsList[0]?.categoryId};
             dispatch(getSubCategoryRequest(req));
             setState({
                 loanId: getAddLoanDetailsList[0]?.loanId || '',
