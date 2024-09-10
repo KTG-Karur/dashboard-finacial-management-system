@@ -20,7 +20,7 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Applicant',
+                label: 'Customer',
                 name: 'applicantId',
                 inputType: 'select',
                 optionList: 'applicantId',
@@ -33,7 +33,7 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Co-applicant',
+                label: 'Co-customer',
                 name: 'coApplicantId',
                 inputType: 'select',
                 optionList: 'coApplicantId',

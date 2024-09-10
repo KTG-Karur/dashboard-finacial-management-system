@@ -90,17 +90,17 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Application No.',
+            Header: 'Customer No.',
             accessor: 'applicationNo',
             sort: true,
         },
         {
-            Header: 'Applicant Code',
+            Header: 'Customer Code',
             accessor: 'applicantCode',
             sort: true,
         },
         {
-            Header: 'Name',
+            Header: 'Customer Name',
             accessor: 'applicantName',
             sort: true,
         },
