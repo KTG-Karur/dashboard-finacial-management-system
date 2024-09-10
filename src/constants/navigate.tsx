@@ -59,6 +59,37 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-bank',
         url: '/view/monthly-reciept',
     },
+    { label: 'Borrower Loan', isTitle: true },
+    {
+        label: 'Add Loan',
+        isTitle: false,
+        icon: 'mdi mdi-bank',
+        url: '/borrower/addloan',
+    },
+    {
+        label: 'Requested',
+        isTitle: false,
+        icon: 'mdi mdi-comment-text-multiple',
+        url: '/borrower/request',
+    },
+    {
+        label: 'Approved',
+        isTitle: false,
+        icon: 'mdi mdi-list-status',
+        url: '/borrower/approved',
+    },
+    {
+        label: 'Disbursed',
+        isTitle: false,
+        icon: 'mdi mdi-cash-check',
+        url: '/borrower/disbursed',
+    },
+    {
+        label: 'Cancelled',
+        isTitle: false,
+        icon: 'mdi mdi-book-cancel',
+        url: '/borrower/cancelled',
+    },
     { label: 'Loan', isTitle: true },
     {
         label: 'Add Loan',

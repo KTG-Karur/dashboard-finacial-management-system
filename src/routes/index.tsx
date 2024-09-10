@@ -113,6 +113,8 @@ import {
     InterestReceipt,
     InterestPdfReceipt,
     Borrower,
+    BorrowerLoan,
+    BorrowerLoanList,
 } from './Route_Menu';
 
 
@@ -313,6 +315,31 @@ const AllRoutes = () => {
                         {
                             path: 'role',
                             element: <LoadComponent component={Role} />,
+                        },
+                    ],
+                },
+                {
+                    path: 'borrower',
+                    children: [
+                        {
+                            path: 'addloan',
+                            element: <LoadComponent component={BorrowerLoan} />,
+                        },
+                        {
+                            path: 'request',
+                            element: <LoadComponent component={BorrowerLoanList} />,
+                        },
+                        {
+                            path: 'approved',
+                            element: <LoadComponent component={BorrowerLoanList} />,
+                        },
+                        {
+                            path: 'disbursed',
+                            element: <LoadComponent component={BorrowerLoanList} />,
+                        },
+                        {
+                            path: 'cancelled',
+                            element: <LoadComponent component={BorrowerLoanList} />,
                         },
                     ],
                 },

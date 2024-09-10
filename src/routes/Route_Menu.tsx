@@ -39,6 +39,8 @@ export const DuePayment = React.lazy(() => import('../view/due-payment')); // em
 export const InterestReceipt = React.lazy(() => import('../view/interest-receipt'));
 export const MontlyReceipt = React.lazy(() => import('../view/due-payment/receiptTemplate'));
 export const InterestPdfReceipt = React.lazy(() => import('../view/interest-receipt/receiptTemplate'));
+export const BorrowerLoan = React.lazy(() => import('../view/borrower-loan/newAddLoan'));
+export const BorrowerLoanList = React.lazy(() => import('../view/borrower-loan-list'));
 
 // Loan
 export const AddLoan = React.lazy(() => import('../view/addLoan/newAddLoan'));

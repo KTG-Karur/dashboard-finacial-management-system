@@ -755,7 +755,7 @@ function Index() {
                         columns={columns}
                         Title={'Borrower List'}
                         data={parentList || []}
-                        pageSize={5}
+                        pageSize={10}
                         toggle={createModel}
                     />}
 

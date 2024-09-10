@@ -3,7 +3,7 @@ const formContainer = [
     {
         formFields: [
             {
-                title: 'Create Loan Request',
+                title: 'Create Investor Loan',
                 inputType: 'title',
             },
         ],
