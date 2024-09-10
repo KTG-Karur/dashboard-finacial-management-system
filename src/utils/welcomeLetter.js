@@ -10,6 +10,7 @@ import {
     numberWithCommas,
     formatDate,
     DateMonthYear,
+    findLastDate,
 } from './AllFunction';
 import harshiniFincorpLogo from '../assets/images/Harsini_Fincorp.png';
 import { getAddLoanDetailsRequest, resetGetAddLoanDetails } from '../redux/actions';
@@ -84,7 +85,7 @@ const WelcomeLetter = () => {
     let remainingPrincipal = parseInt(state?.loanAmount || 0);
 
     const calCulationTable = async () => {
-        const initialDueDate = state?.dueDate || new Date();
+        const initialDueDate = new Date(state?.dueDate || new Date());
         // let remainingPrincipal = parseInt(state?.loanAmount || 0);
 
         // Use tenurePeriod directly, as it's in months
@@ -152,8 +153,8 @@ const WelcomeLetter = () => {
         dateofAgreement: DateMonthYear(formatDate(state?.createdAt)),
         disbursedMethod: state?.disbursedMethodName || '',
         disbursedDate: DateMonthYear(formatDate(state?.disbursedDate || '')),
-        firstInstallment: state?.dueDate || '',
-        lastInstallment: state?.lastDate || '',
+        firstInstallment: DateMonthYear(formatDate(state?.dueDate || '')),
+        lastInstallment: DateMonthYear(formatDate(findLastDate(state?.disbursedDate, state?.tenurePeriod))),
         footerDescription:
             'We request you to make the Monthly payment as per the Agreement. The Monthly Installment Schedule is attached herewith',
         footersubDescription: 'You Mobile No. as per our records is +91 1234567890 Please inform us,',

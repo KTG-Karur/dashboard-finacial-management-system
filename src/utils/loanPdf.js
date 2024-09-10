@@ -128,8 +128,6 @@ const LoanPdf = () => {
         Tenure: `${state?.tenurePeriod || ''} (Months)`,
         dateofAgreement: DateMonthYear(formatDate(state?.createdAt)),
         disbursedMethod: state?.disbursedMethodName || '',
-        firstInstallment: state?.dueDate || '',
-        lastInstallment: state?.lastDate || '',
         headerSubDescripion: 'We Wish to list Loan details which are as follows: ',
     };
 

@@ -90,17 +90,17 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Application No.',
+            Header: 'Customer No.',
             accessor: 'applicationNo',
             sort: true,
         },
         {
-            Header: 'Applicant Code',
+            Header: 'Customer Code',
             accessor: 'applicantCode',
             sort: true,
         },
         {
-            Header: 'Name',
+            Header: 'Customer Name',
             accessor: 'applicantName',
             sort: true,
         },
@@ -315,25 +315,32 @@ function Index() {
                 'Co Applicant Name': getAddLoanDetailsList[0]?.coApplicantName || '',
                 'Guarantor Name': getAddLoanDetailsList[0]?.guarantorName || '',
 
-                'Loan Type': getAddLoanDetailsList[0]?.categoryName || '',
+                'Loan Name': getAddLoanDetailsList[0]?.categoryName || '',
 
-                'Loan Amount': getAddLoanDetailsList[0]?.loanAmount || '',
-                'Interest Rate': getAddLoanDetailsList[0]?.interestRate || '',
+                'Loan Amount': `Rs. ${getAddLoanDetailsList[0]?.loanAmount || ''}`,
+                'Interest Rate': `${getAddLoanDetailsList[0]?.interestRate || ''} %`,
 
+                'Total Charges': `Rs. ${parseInt(getAddLoanDetailsList[0]?.loanAmount) - parseInt(getAddLoanDetailsList[0]?.disbursedAmount)}`,
                 'Created By': getAddLoanDetailsList[0]?.createdBy || '',
                 'Created Date': DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
 
                 'Disbursed Method': getAddLoanDetailsList[0]?.disbursedMethodName || '',
 
                 // 'Disbursed Amount': getAddLoanDetailsList[0]?.disbursedAmount || '',
-                'Total Charges': parseInt(getAddLoanDetailsList[0]?.loanAmount) - parseInt(getAddLoanDetailsList[0]?.disbursedAmount),
             };
+            let entries = Object.entries(stateValue);
+
             if (getAddLoanDetailsList[0]?.categoryId !== 1) {
-                stateValue.subCategoryName = getAddLoanDetailsList[0]?.subCategoryName || '';
-                stateValue.tenurePeriod = getAddLoanDetailsList[0]?.tenurePeriod || '';
+                entries.splice(5, 0, ["Loan Type", getAddLoanDetailsList[0]?.subCategoryName || '']);
+                entries.splice(8, 0, ["Tenure Period", `${getAddLoanDetailsList[0]?.tenurePeriod || ''} Months`]);
             }
 
-            const keyValueArray = objectToKeyValueArray(stateValue);
+            if (statusItem.statusId == 4) {
+                entries.splice(12, 0, ["Approved By", getAddLoanDetailsList[0]?.approvedBy || '']);
+                entries.splice(13, 0, ["Approved Date", DateMonthYear(formatDate(getAddLoanDetailsList[0]?.approvedDate))]);
+            }
+
+            const keyValueArray = objectToKeyValueArray(entries);
             setSelectedItem(keyValueArray);
             dispatch(resetGetAddLoanDetails());
         } else if (getAddLoanDetailsFailure) {
@@ -391,6 +398,11 @@ function Index() {
             req.approvedDate = formatDate(new Date());
         }
 
+        if (statusId === 1) {
+            req.approvedBy = null;
+            req.approvedDate = null;
+        }
+
         if (statusId == 4) {
             if (data.categoryId !== 1) {
                 const duedate = await findDueDate(currentDate?.disbursedDate || today);
@@ -415,6 +427,7 @@ function Index() {
                     dueEndDate: lastdate,
                 };
                 req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
+                req.dueDate = duedate;
             } else if (data.categoryId === 1) {
                 const duedate = await findDueDate(currentDate?.disbursedDate || today);
 
@@ -427,6 +440,7 @@ function Index() {
                     dueStartDate: duedate,
                 };
                 req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
+                req.dueDate = duedate;
             }
         }
         isEdit = true;
@@ -452,16 +466,16 @@ function Index() {
                     Title={`${capitalizeFirstLetter(location.pathname.split('/')[2])} Loan List`}
                     data={parentList || []}
                     pageSize={5}
-                    filterTbl={false}
-                    filterFormContainer={districtFormContainer}
-                    filterColNo={1}
+                // filterTbl={false}
+                // filterFormContainer={districtFormContainer}
+                // filterColNo={1}
                 />
             )}
 
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={'Disbursed Loan Details'}
+                modelHeader={`${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} Loan Details`}
                 modelSize={'md'}
                 modelHead={true}
                 handleSubmit={() =>
@@ -474,6 +488,13 @@ function Index() {
                     )
                 }>
                 <div style={{ marginBottom: '20px' }}>
+                    <Row style={{ marginBottom: '20px' }}>
+                        <Col>
+                            <h3>
+                                Harshini Fincorp
+                            </h3>
+                        </Col>
+                    </Row>
                     {(selectedItem || []).map((Item, i) => (
                         <Row key={i} style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
                             <Col md={5}>
