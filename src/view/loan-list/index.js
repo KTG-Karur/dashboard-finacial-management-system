@@ -330,14 +330,14 @@ function Index() {
             };
             let entries = Object.entries(stateValue);
 
-            if (statusItem.statusId == 4) {
-                entries.splice(12, 0, ["Approved By", getAddLoanDetailsList[0]?.approvedBy || '']);
-                entries.splice(13, 0, ["Approved Date", DateMonthYear(formatDate(getAddLoanDetailsList[0]?.approvedDate))]);
-            }
-
             if (getAddLoanDetailsList[0]?.categoryId !== 1) {
                 entries.splice(5, 0, ["Loan Type", getAddLoanDetailsList[0]?.subCategoryName || '']);
                 entries.splice(8, 0, ["Tenure Period", `${getAddLoanDetailsList[0]?.tenurePeriod || ''} Months`]);
+            }
+
+            if (statusItem.statusId == 4) {
+                entries.splice(12, 0, ["Approved By", getAddLoanDetailsList[0]?.approvedBy || '']);
+                entries.splice(13, 0, ["Approved Date", DateMonthYear(formatDate(getAddLoanDetailsList[0]?.approvedDate))]);
             }
 
             const keyValueArray = objectToKeyValueArray(entries);
