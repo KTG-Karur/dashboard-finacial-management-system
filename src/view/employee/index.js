@@ -55,7 +55,7 @@ function Index() {
 
     const columns = [
         {
-            Header: 'ID',
+            Header: 'S.No',
             accessor: 'id',
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
