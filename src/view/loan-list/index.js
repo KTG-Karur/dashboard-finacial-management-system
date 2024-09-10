@@ -36,6 +36,7 @@ import _ from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FormLayout from '../../utils/formLayout';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
+import CompanyDetails from '../../components/Atom/CompanyDetails';
 
 let isEdit = false;
 let StatusName = 'Update';
@@ -490,9 +491,7 @@ function Index() {
                 <div style={{ marginBottom: '20px' }}>
                     <Row style={{ marginBottom: '20px' }}>
                         <Col>
-                            <h3>
-                                Harshini Fincorp
-                            </h3>
+                            <CompanyDetails fontSize="12px" imgSize="150px" classStyle="d-flex justify-content-center flex-column align-items-center" />
                         </Col>
                     </Row>
                     {(selectedItem || []).map((Item, i) => (

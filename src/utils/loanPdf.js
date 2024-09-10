@@ -11,9 +11,9 @@ import {
     formatDate,
     DateMonthYear,
 } from './AllFunction';
-import harshiniFincorpLogo from '../assets/images/Harsini_Fincorp.png';
 import { getAddLoanDetailsRequest, resetGetAddLoanDetails, } from '../redux/actions';
 import { useRedux } from '../hooks';
+import CompanyDetails from '../components/Atom/CompanyDetails';
 
 const LoanPdf = () => {
     const { dispatch, appSelector } = useRedux();
@@ -77,7 +77,7 @@ const LoanPdf = () => {
     // EMI table Calculation
     let remainingPrincipal = parseInt(state?.loanAmount || 0);
     const calCulationTable = async () => {
-        const initialDueDate = state?.dueDate || new Date();
+        const initialDueDate = new Date(state?.dueDate || new Date());
         // let remainingPrincipal = parseInt(state?.loanAmount || 0);
 
         // Use tenurePeriod directly, as it's in months
@@ -154,13 +154,7 @@ const LoanPdf = () => {
                         <div className="panel-body">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="">
-                                    <h3>
-                                        <img
-                                            src={harshiniFincorpLogo}
-                                            alt="harshiniFincorpLogo"
-                                            style={{ width: '200px' }}
-                                        />
-                                    </h3>
+                                    <CompanyDetails fontSize="12px" imgSize="200px" />
                                 </div>
                                 <div className="">
                                     <h4>

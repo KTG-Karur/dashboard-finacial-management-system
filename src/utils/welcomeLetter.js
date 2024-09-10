@@ -12,9 +12,9 @@ import {
     DateMonthYear,
     findLastDate,
 } from './AllFunction';
-import harshiniFincorpLogo from '../assets/images/Harsini_Fincorp.png';
 import { getAddLoanDetailsRequest, resetGetAddLoanDetails } from '../redux/actions';
 import { useRedux } from '../hooks';
+import CompanyDetails from '../components/Atom/CompanyDetails';
 
 const WelcomeLetter = () => {
     const { dispatch, appSelector } = useRedux();
@@ -203,13 +203,7 @@ const WelcomeLetter = () => {
                         <div className="panel-body">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div className="">
-                                    <h3>
-                                        <img
-                                            src={harshiniFincorpLogo}
-                                            alt="harshiniFincorpLogo"
-                                            style={{ width: '200px' }}
-                                        />
-                                    </h3>
+                                    <CompanyDetails fontSize="12px" imgSize="200px"/>
                                 </div>
                                 <div className="">
                                     <h4>
