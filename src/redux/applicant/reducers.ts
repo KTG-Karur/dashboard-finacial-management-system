@@ -1,12 +1,15 @@
 // employee/reducers.ts
 const initialState = {
   getApplicantList: [],
+  getApplicantInfoList: [],
   createApplicantData: null,
   updateApplicantData: null,
   isLoading: false,
   errorMessage: null,
   getApplicantSuccess: false,
+  getApplicantInfoSuccess: false,
   getApplicantFailure: false,
+  getApplicantInfoFailure: false,
   createApplicantSuccess: false,
   createApplicantFailure: false,
   updateApplicantSuccess: false,
@@ -120,29 +123,53 @@ export default function applicantReducer(state = initialState, action: any) {
       };
     }
 
-    // case "DELETE_APPLICANT_SUCCESS": {
-    //   return {
-    //     ...state,
-    //     deleteApplicantSuccess: true,
-    //     deleteApplicantFailure: false,
-    //   };
-    // }
-    // case "DELETE_APPLICANT_FAILURE": {
-    //   return {
-    //     ...state,
-    //     deleteApplicantFailure: true,
-    //     errorMessage: action.errorMessage.errorMessage,
-    //     deleteApplicantSuccess: false,
-    //   };
-    // }
-    // case "RESET_DELETE_APPLICANT": {
-    //   return {
-    //     ...state,
-    //     deleteApplicantSuccess: false,
-    //     deleteApplicantFailure: false,
-    //     errorMessage: null,
-    //   };
-    // }
+    case "DELETE_APPLICANT_ADDRESS_SUCCESS": {
+      return {
+        ...state,
+        deleteApplicantAddressSuccess: true,
+        deleteApplicantAddressFailure: false,
+      };
+    }
+    case "DELETE_APPLICANT_ADDRESS_FAILURE": {
+      return {
+        ...state,
+        deleteApplicantAddressFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        deleteApplicantAddressSuccess: false,
+      };
+    }
+    case "RESET_DELETE_APPLICANT_ADDRESS": {
+      return {
+        ...state,
+        deleteApplicantAddressSuccess: false,
+        deleteApplicantAddressFailure: false,
+        errorMessage: null,
+      };
+    }
+
+    case "DELETE_APPLICANT_PROOF_SUCCESS": {
+      return {
+        ...state,
+        deleteApplicantProofSuccess: true,
+        deleteApplicantProofFailure: false,
+      };
+    }
+    case "DELETE_APPLICANT_PROOF_FAILURE": {
+      return {
+        ...state,
+        deleteApplicantProofFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        deleteApplicantProofSuccess: false,
+      };
+    }
+    case "RESET_DELETE_APPLICANT_PROOF": {
+      return {
+        ...state,
+        deleteApplicantProofSuccess: false,
+        deleteApplicantProofFailure: false,
+        errorMessage: null,
+      };
+    }
 
     default: {
       return state;

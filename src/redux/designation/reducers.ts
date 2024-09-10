@@ -26,7 +26,6 @@ export default function designationReducer(state = initialState, action: any) {
       };
     }
     case "GET_DESIGNATION_FAILURE": {
-      console.log(action.errorMessage)
       return {
         ...state,
         getDesignationFailure: true,

@@ -25,6 +25,7 @@ import loanChargesReducer from './loan-charges/reducers';
 import applicantReducer from './applicant/reducers';
 import employeeReducer from './employee/reducers';
 import loanChargesTypeReducer from './loan-charges-type/reducers';
+import duePaymentReducer from './due-payment/reducers';
 
 export default combineReducers({
     Auth,
@@ -52,4 +53,5 @@ export default combineReducers({
     applicantReducer,
     employeeReducer,
     loanChargesTypeReducer,
+    duePaymentReducer,
 });

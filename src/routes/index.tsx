@@ -106,6 +106,11 @@ import {
     LoanList,
     Role,
     LoanChargesType,
+    DuePayment,
+    MontlyReceipt,
+    InterestReceipt,
+    InterestPdfReceipt,
+    Borrower,
 } from './Route_Menu';
 
 const loading = () => <div className=""></div>;
@@ -199,8 +204,28 @@ const AllRoutes = () => {
                     path: 'view',
                     children: [
                         {
+                            path: 'borrower',
+                            element: <LoadComponent component={Borrower} />,
+                        },
+                        {
+                            path: 'monthly-receipt-pdf',
+                            element: <LoadComponent component={MontlyReceipt} />,
+                        },
+                        {
+                            path: 'interest-receipt-pdf',
+                            element: <LoadComponent component={InterestPdfReceipt} />,
+                        },
+                        {
+                            path: 'interest-receipt',
+                            element: <LoadComponent component={InterestReceipt} />,
+                        },
+                        {
                             path: 'employee',
                             element: <LoadComponent component={Employee} />,
+                        },
+                        {
+                            path: 'monthly-reciept',
+                            element: <LoadComponent component={DuePayment} />,
                         },
                         {
                             path: 'department',

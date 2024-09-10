@@ -11,7 +11,6 @@ const FormLayout = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         validateFormFields,
     }));
-
     // Validation
     const validateFormFields = async () => {
         let arr = [];

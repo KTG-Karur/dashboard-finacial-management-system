@@ -15,8 +15,6 @@ const LoanPdf = (props) => {
 
     const { principal = 1300000, annualInterest = 14.65, tenurePeriod = 17 } = props
 
-    // console.log("multiStateValue in loan pdf")
-    // console.log(multiStateValue[0])
     const [loanState, setLoanState] = useState([]);
     let remainingPrincipal = principal;
 

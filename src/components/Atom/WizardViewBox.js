@@ -65,6 +65,7 @@ const WizardWithProgressbar = (props) => {
             setState(multiStateValue[0][tabList?.[tabIndex]?.name] || {});
             if (Array.isArray(multiStateValue[0][tabList?.[tabIndex]?.name])) {
                 setArrVal(multiStateValue[0][tabList?.[tabIndex]?.name]);
+                setState({})
             }
         }
     }, [tabIndex]);
@@ -80,6 +81,10 @@ const WizardWithProgressbar = (props) => {
         }, 0);
     };
 
+    console.log("state")
+    console.log(state)
+    console.log("arrVal")
+    console.log(arrVal)
     // Add
     const handleAdd = async () => {
         if (IsEditArrVal) {
@@ -90,8 +95,9 @@ const WizardWithProgressbar = (props) => {
                     setPerVal(0);
                 }
             }
-            const updata = await updateData(arrVal, state?.id, data);
-            setArrVal(updata);
+            // const updata = await updateData(arrVal, state?.id, data);
+            arrVal[state.selectedIdx] = data
+            setArrVal(arrVal);
             setIsEditArrVal(false);
             setState({});
         } else {
@@ -125,9 +131,11 @@ const WizardWithProgressbar = (props) => {
         } else {
             setTab(tabList?.[tabIndex + 1]?.name);
             setTabIndex((prev) => prev + 1);
+            console.log("in----->")
             setState(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || {});
             if (showMultiAdd.includes(tabList[tabIndex + 1].name)) {
                 setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || []);
+                setState({});
             }
             next();
         }

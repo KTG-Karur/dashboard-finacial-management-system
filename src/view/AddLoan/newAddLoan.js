@@ -274,9 +274,6 @@ function Index() {
         dispatch(getLoanChargesRequest());
     }, []);
 
-    console.log('state');
-    console.log(state);
-
     // Category
     useEffect(() => {
         if (getCategorySuccess) {
@@ -317,10 +314,6 @@ function Index() {
 
     // loan-charges
     useEffect(() => {
-        // console.log("getLoanChargesSuccess")
-        // console.log(getLoanChargesSuccess)
-        // console.log("getLoanChargesList")
-        // console.log(getLoanChargesList)
         if (getLoanChargesSuccess) {
             setIsLoading(false);
             setOptionListState({
@@ -436,7 +429,6 @@ function Index() {
 
     // handleSubmit
     // const handleSubmit = async () => {
-    //     console.log('handleSubmitted');
     //     navigate('/dashboard', { state: { state } });
     // };
 

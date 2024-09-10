@@ -22,6 +22,9 @@ const apiContainer = {
   addLoan: "/loan",
   employee: "/employee",
   applicantInfo: "/applicant-info",
+  duePayment: "/due-payment",
+  applicantAddress: "/applicant-address",
+  applicantProof: "/applicant-proof",
 };
 
 export default apiContainer;

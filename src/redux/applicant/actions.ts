@@ -77,22 +77,41 @@ export const updateApplicantFailure = (errorMessage: string) => ({
 export const resetUpdateApplicant = () => ({
   type: 'RESET_UPDATE_APPLICANT',
 });
-//Delete Reducer Call--->
-// export const deleteApplicantRequest = ( id: string) => ({
-//   type: 'DELETE_APPLICANT_REQUEST',
-//   payload: { id },
-// });
+//Delete Reducer Call---> Applicant Address
+export const deleteApplicantAddressRequest = ( id: string) => ({
+  type: 'DELETE_APPLICANT_ADDRESS_REQUEST',
+  payload: { id },
+});
 
-// export const deleteApplicantSuccess = (data: any) => ({
-//   type: 'DELETE_APPLICANT_SUCCESS',
-//   payload: { data },
-// });
+export const deleteApplicantAddressSuccess = (data: any) => ({
+  type: 'DELETE_APPLICANT_ADDRESS_SUCCESS',
+  payload: { data },
+});
 
-// export const deleteApplicantFailure = (errorMessage: string) => ({
-//   type: 'DELETE_APPLICANT_FAILURE',
-//   errorMessage: { errorMessage },
-// });
+export const deleteApplicantAddressFailure = (errorMessage: string) => ({
+  type: 'DELETE_APPLICANT_ADDRESS_FAILURE',
+  errorMessage: { errorMessage },
+});
 
-// export const deleteUpdateApplicant = () => ({
-//   type: 'RESET_DELETE_APPLICANT',
-// });
+export const deleteUpdateApplicantAddress = () => ({
+  type: 'RESET_DELETE_APPLICANT_ADDRESS',
+});
+//Delete Reducer Call---> Applicant Proof
+export const deleteApplicantProofRequest = ( id: string) => ({
+  type: 'DELETE_APPLICANT_PROOF_REQUEST',
+  payload: { id },
+});
+
+export const deleteApplicantProofSuccess = (data: any) => ({
+  type: 'DELETE_APPLICANT_PROOF_SUCCESS',
+  payload: { data },
+});
+
+export const deleteApplicantProofFailure = (errorMessage: string) => ({
+  type: 'DELETE_APPLICANT_PROOF_FAILURE',
+  errorMessage: { errorMessage },
+});
+
+export const deleteUpdateApplicantProof = () => ({
+  type: 'RESET_DELETE_APPLICANT_PROOF',
+});

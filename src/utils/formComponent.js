@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FormInput } from '../components/form';
 import Select from 'react-select';
 import { Button, Form } from 'react-bootstrap';
-import { formatDate, findObj } from './AllFunction';
+import { formatDate, findObj, dateConversion } from './AllFunction';
 import _ from 'lodash';
 
 function FormComponent(props) {
@@ -21,7 +21,6 @@ function FormComponent(props) {
     } = props;
 
     const handleChange = async (e, formType, formName, uniqueKey = null) => {
-        alert(e)
         switch (formType) {
             case 'text':
             case 'number':
@@ -51,10 +50,6 @@ function FormComponent(props) {
                 }));
                 break;
             case 'file':
-                console.log('[formName]');
-                console.log(formName);
-                console.log('e.target.files[0]');
-                console.log(e.target.files[0]);
                 setState((prev) => ({
                     ...prev,
                     [formName]: [e.target.files[0]],
@@ -157,7 +152,7 @@ function FormComponent(props) {
                                     placeholder={form?.placeholder}
                                     required={form?.require}
                                     value={state[form.name] || ''}
-                                    disabled={form?.isDisabled}
+                                    disabled={form?.isDisabled || false}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
                                         handleChange(e, 'text', form?.name);
@@ -253,7 +248,7 @@ function FormComponent(props) {
                                     key={index}
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={state[form?.name]}
+                                    value={state[form?.name] ? dateConversion(state[form?.name] ,"YYYY-MM-DD") : ""}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -303,7 +298,7 @@ function FormComponent(props) {
                                     // getOptionLabel={(option) => option?.label}
                                     getOptionLabel={(option) => form.displayKey ? option[form.displayKey] : option.label}
                                     getOptionValue={(option) => form.uniqueKey ? option[form.uniqueKey] : option}
-                                    value={findObj(optionListState[form?.optionList], form.uniqueKey, state[form.name])}
+                                    value={findObj(optionListState[form?.optionList], form.uniqueKey, parseInt(state[form.name]))}
                                     className="react-select react-select-container"
                                     classNamePrefix="react-select"
                                     isSearchable
@@ -596,7 +591,7 @@ function FormComponent(props) {
                                                     id={`basic-radio-${i}`}
                                                     name={form?.name || ''}
                                                     className={'mb-2 form-check-Primary mx-2'}
-                                                    defaultChecked={item[form.uniqueKey] === state[form?.name] || i === 0}
+                                                    checked={item[form.uniqueKey] == state[form?.name]}
                                                     value={state[form?.name] || ""}
                                                     onChange={(e) => {
                                                         form.onChange

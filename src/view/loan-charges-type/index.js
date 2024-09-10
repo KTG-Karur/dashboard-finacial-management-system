@@ -116,7 +116,7 @@ function Index() {
                 percentageStatusName: "yes"
             },
             {
-                percentageStatusId: 0,
+                percentageStatusId: 2,
                 percentageStatusName: "No"
             },
         ]
@@ -199,7 +199,7 @@ function Index() {
         setState({
             ...state,
             loanChargesName: data?.loanChargesName || "",
-            isPercentage: data?.isPercentage || 0,
+            isPercentage: data?.isPercentage === 1 ? 1 : 2,
             chargesAmount: data?.chargesAmount || "",
         });
         isEdit = true;
@@ -213,10 +213,9 @@ function Index() {
     }
 
     const onFormSubmit = async () => {
-        console.log(state?.isPercentage)
         const submitRequest = {
             loanChargesName: state?.loanChargesName || "",
-            isPercentage: state?.isPercentage || 0,
+            isPercentage: state?.isPercentage === 1 ? 1 : 0,
             chargesAmount: state?.chargesAmount || "",
         }
         if (isEdit) {
