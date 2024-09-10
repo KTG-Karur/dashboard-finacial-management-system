@@ -134,7 +134,7 @@ function Index() {
 
     const columns = [
         {
-            Header: 'S.no',
+            Header: 'S.No',
             accessor: 'id',
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
@@ -243,9 +243,12 @@ function Index() {
 
     //Dispatch Called
     useEffect(() => {
+        const getReq={
+            isActive : 1
+        }
         dispatch(getCategoryRequest());
-        dispatch(getLoanChargesTypeRequest());
-        dispatch(getApplicantRequest());
+        dispatch(getLoanChargesTypeRequest(getReq));
+        dispatch(getApplicantRequest(getReq));
         dispatch(getBankAccountRequest());
     }, []);
 

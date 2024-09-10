@@ -33,7 +33,7 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Co-applicant',
+                label: 'Co-Applicant',
                 name: 'coApplicantId',
                 inputType: 'select',
                 optionList: 'coApplicantId',
@@ -46,7 +46,7 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Select Guardian',
+                label: 'Guarantor',
                 name: 'guarantorId',
                 inputType: 'select',
                 optionList: 'guarantorId',
@@ -115,7 +115,7 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Loan amount',
+                label: 'Loan Amount',
                 name: 'loanAmount',
                 inputType: 'number',
                 placeholder: 'Enter Loan amount',

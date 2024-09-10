@@ -517,6 +517,8 @@ function Index() {
         onFormClear()
         setWizardModel(false)
         setTab('personalInfo')
+        setArrVal([])
+        setMultiStateValue([{}])
         setTabIndex(0)
         setIsEdit(false);
         setTabList(applicantTabs)
@@ -613,6 +615,8 @@ function Index() {
 
     //------->
     const onHandleProofType = (data, name, uniqueKey, displayKey, selectedObj) => {
+        // alert(data)
+        // alert(uniqueKey)
         const nameData = data[displayKey]
         // console.log("data", data);
         setState({

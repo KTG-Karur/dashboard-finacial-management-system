@@ -22,7 +22,7 @@ const loanTabs = [
             {
                 formFields: [
                     {
-                        label: 'Co-applicant',
+                        label: 'Co-Applicant',
                         name: 'coApplicant',
                         inputType: 'select',
                         optionList: 'coApplicant',
@@ -35,7 +35,7 @@ const loanTabs = [
             {
                 formFields: [
                     {
-                        label: 'Select Guardian',
+                        label: 'Guarantor',
                         name: 'guardiance',
                         inputType: 'select',
                         optionList: 'guardiance',
