@@ -3,7 +3,7 @@ import { VerticalForm } from '../form';
 import { Modal, Button } from 'react-bootstrap';
 
 function ModelViewBox(props) {
-    const { modal, setModel, children, modelHeader, modelSize, handleSubmit, isEdit, modelHead = false } = props;
+    const { modal, setModel, children, modelHeader, modelSize, handleSubmit, isEdit, modelHead = false, backgroundColor="", headerBg="" } = props;
 
     const handleClose = () => {
         setModel(false);
@@ -12,10 +12,10 @@ function ModelViewBox(props) {
     return (
         <React.Fragment>
             <Modal show={modal} onHide={handleClose} centered size={modelSize}>
-                <Modal.Header closeButton>
+                <Modal.Header style={{backgroundColor: headerBg}} closeButton>
                     <Modal.Title as="h4">{`${isEdit ? 'Edit ' : modelHead ? '' : 'Add'} ${modelHeader}`}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body style={{backgroundColor: backgroundColor}}>
                     <VerticalForm onSubmit={() => { }} defaultValues={{}}>
                         {children}
 

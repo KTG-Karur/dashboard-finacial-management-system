@@ -25,3 +25,4 @@ export * from './applicant/actions';
 export * from './employee/actions';
 export * from './loan-charges-type/actions';
 export * from './due-payment/actions';
+export * from './investment/actions';

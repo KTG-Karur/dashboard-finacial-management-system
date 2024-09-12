@@ -26,6 +26,8 @@ const apiContainer = {
   duePayment: "/due-payment",
   applicantAddress: "/applicant-address",
   applicantProof: "/applicant-proof",
+  investment: "/investment",
+  investmentDetails: "/investment-details",
 };
 
 export default apiContainer;

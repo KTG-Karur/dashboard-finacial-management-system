@@ -13,142 +13,233 @@ export type NavigateTypes = {
 };
 
 const Navigate: NavigateTypes[] = [
-    { label: 'Navigation', isTitle: true },
+    { label: 'Dashboard', isTitle: true },
     {
         label: 'Dashboard',
         isTitle: false,
-        icon: 'mdi mdi-view-dashboard-outline',
-        url: '/dashboard',
+        icon: 'mdi mdi-chart-bar',
+        children: [
+            {
+                label: 'Home',
+                url: '/dashboard',
+                parentKey: 'Dashboard',
+            },
+            {
+                label: 'Loan Calculator',
+                url: '/loan/dashboard',
+                parentKey: 'Dashboard',
+            },
+        ]
     },
-    {
-        label: 'Loan Calculator',
-        isTitle: false,
-        icon: 'mdi mdi-calculator',
-        url: '/loan/dashboard',
-    },
+    // {
+    //     label: 'Dashboard',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-view-dashboard-outline',
+    //     url: '/dashboard',
+    // },
+    // {
+    //     label: 'Loan Calculator',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-calculator',
+    //     url: '/loan/dashboard',
+    // },
     { label: 'Applicants', isTitle: true },
+    // {
+    //     label: 'Applicants',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-account-group',
+    //     children: [
+    //         {
+    //             label: 'Customer',
+    //             url: '/view/applicant',
+    //             parentKey: 'Applicants',
+    //         },
+    //         {
+    //             label: 'Invenstors',
+    //             url: '/view/borrower',
+    //             parentKey: 'Applicants',
+    //         },
+    //     ]
+    // },
     {
         label: 'Customer',
         isTitle: false,
-        icon: 'mdi mdi-bank',
+        icon: 'mdi mdi-account-check',
         url: '/view/applicant',
     },
     {
-        label: 'Borrower',
+        label: 'Invenstors',
         isTitle: false,
-        icon: 'mdi mdi-bank',
+        icon: 'mdi mdi-account-cash',
         url: '/view/borrower',
     },
-    { label: 'Loan Recepit', isTitle: true },
+    { label: 'Recepit', isTitle: true },
     {
         label: 'EMI Reciept',
         isTitle: false,
-        icon: 'mdi mdi-bank',
+        icon: 'mdi mdi-book-edit',
         url: '/view/monthly-reciept',
     },
     {
         label: 'Interest Reciept',
         isTitle: false,
-        icon: 'mdi mdi-bank',
+        icon: 'mdi mdi-cash-register',
         url: '/view/interest-receipt',
     },
-    { label: 'Borrower Recepit', isTitle: true },
     {
         label: 'Borrower Reciept',
         isTitle: false,
-        icon: 'mdi mdi-bank',
+        icon: 'mdi mdi-cash-refund',
         url: '/view/monthly-reciept',
-    },
-    { label: 'Borrower Loan', isTitle: true },
-    {
-        label: 'Add Loan',
-        isTitle: false,
-        icon: 'mdi mdi-bank',
-        url: '/borrower/addloan',
-    },
-    {
-        label: 'Requested',
-        isTitle: false,
-        icon: 'mdi mdi-comment-text-multiple',
-        url: '/borrower/request',
-    },
-    {
-        label: 'Approved',
-        isTitle: false,
-        icon: 'mdi mdi-list-status',
-        url: '/borrower/approved',
-    },
-    {
-        label: 'Disbursed',
-        isTitle: false,
-        icon: 'mdi mdi-cash-check',
-        url: '/borrower/disbursed',
-    },
-    {
-        label: 'Cancelled',
-        isTitle: false,
-        icon: 'mdi mdi-book-cancel',
-        url: '/borrower/cancelled',
     },
     { label: 'Loan', isTitle: true },
     {
-        label: 'Add Loan',
+        label: 'Loans',
         isTitle: false,
-        icon: 'mdi mdi-bank',
-        url: '/loan/addloan',
+        icon: 'mdi mdi-account-cash-outline',
+        children: [
+            {
+                label: 'Add Loan',
+                url: '/loan/addloan',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Requested',
+                url: '/loan/request',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Approved',
+                url: '/loan/approved',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Disbursed',
+                url: '/loan/disbursed',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Cancelled',
+                url: '/loan/cancelled',
+                parentKey: 'Loans',
+            },
+        ]
     },
+    // {
+    //     label: 'Add Loan',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-bank',
+    //     url: '/loan/addloan',
+    // },
+    // {
+    //     label: 'Requested',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-comment-text-multiple',
+    //     url: '/loan/request',
+    // },
+    // {
+    //     label: 'Approved',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-list-status',
+    //     url: '/loan/approved',
+    // },
+    // {
+    //     label: 'Disbursed',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-cash-check',
+    //     url: '/loan/disbursed',
+    // },
+    // {
+    //     label: 'Cancelled',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-book-cancel',
+    //     url: '/loan/cancelled',
+    // },
     {
-        label: 'Requested',
+        label: 'Investments',
         isTitle: false,
-        icon: 'mdi mdi-comment-text-multiple',
-        url: '/loan/request',
+        icon: 'mdi mdi-account-group',
+        children: [
+            {
+                label: 'Investment Pitch',
+                url: '/borrower/addloan',
+                parentKey: 'Investments',
+            },
+            {
+                label: 'Proposal Clearance',
+                url: '/borrower/request',
+                parentKey: 'Investments',
+            },
+            {
+                label: 'Investment List',
+                url: '/borrower/approved',
+                parentKey: 'Investments',
+            },
+        ]
     },
+    // { label: 'Investments', isTitle: true },
+    // {
+    //     label: 'Investment Pitch',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-bank',
+    //     url: '/borrower/addloan',
+    // },
+    // {
+    //     label: 'Proposal',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-comment-text-multiple',
+    //     url: '/borrower/request',
+    // },
+    // {
+    //     label: 'Clearance',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-list-status',
+    //     url: '/borrower/approved',
+    // },
+    { label: 'Budget Entry', isTitle: true },
     {
-        label: 'Approved',
+        label: 'Budget Entry',
         isTitle: false,
-        icon: 'mdi mdi-list-status',
-        url: '/loan/approved',
+        icon: 'mdi mdi-cash-register',
+        children: [
+            {
+                label: 'Income Entry',
+                url: '/view/income-entry',
+                parentKey: 'Budget Entry',
+            },
+            {
+                label: 'Expense Entry',
+                url: '/view/expense-entry',
+                parentKey: 'Budget Entry',
+            },
+        ]
     },
-    {
-        label: 'Disbursed',
-        isTitle: false,
-        icon: 'mdi mdi-cash-check',
-        url: '/loan/disbursed',
-    },
-    {
-        label: 'Cancelled',
-        isTitle: false,
-        icon: 'mdi mdi-book-cancel',
-        url: '/loan/cancelled',
-    },
-    { label: 'Entry', isTitle: true },
-    {
-        label: 'Income Entry',
-        isTitle: false,
-        icon: 'mdi mdi-book-arrow-left',
-        url: '/view/income-entry',
-    },
-    {
-        label: 'Expense Entry',
-        isTitle: false,
-        icon: 'mdi mdi-newspaper-variant',
-        url: '/view/expense-entry',
-    },
+    // {
+    //     label: 'Income Entry',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-book-arrow-left',
+    //     url: '/view/income-entry',
+    // },
+    // {
+    //     label: 'Expense Entry',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-newspaper-variant',
+    //     url: '/view/expense-entry',
+    // },
     { label: 'Employee', isTitle: true },
     {
         label: 'Employee',
         isTitle: false,
         icon: 'mdi mdi-account-hard-hat',
         url: '/view/employee',
-    },
-    { label: 'Role Permission', isTitle: true },
+    },    
+    { label: 'General', isTitle: true },
     {
         label: 'Role',
         isTitle: false,
         icon: 'mdi mdi-account-check',
         url: '/view/role',
     },
-    { label: 'master', isTitle: true },
     {
         label: 'Master',
         isTitle: false,
@@ -367,104 +458,104 @@ const Navigate: NavigateTypes[] = [
     //         },
     //     ],
     // },
-    // { label: 'Components', isTitle: true },
-    // {
-    //     label: 'Base UI',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-briefcase-outline',
-    //     children: [
-    //         {
-    //             label: 'Buttons',
-    //             url: '/base-ui/buttons',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Cards',
-    //             url: '/base-ui/cards',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Avatars',
-    //             url: '/base-ui/avatars',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Tabs & Accordions',
-    //             url: '/base-ui/tabs-accordions',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Modals',
-    //             url: '/base-ui/modals',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Progress',
-    //             url: '/base-ui/progress',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Notifications',
-    //             url: '/base-ui/notifications',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Offcanvas',
-    //             url: '/base-ui/offcanvas',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Placeholders',
-    //             url: '/base-ui/placeholders',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Spinners',
-    //             url: '/base-ui/spinners',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Images',
-    //             url: '/base-ui/images',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Carousel',
-    //             url: '/base-ui/carousel',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Embed Video',
-    //             url: '/base-ui/embedvideo',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Dropdowns',
-    //             url: '/base-ui/dropdowns',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Tooltips & Popovers',
-    //             url: '/base-ui/popovers-tooltips',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'General UI',
-    //             url: '/base-ui/general',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Typography',
-    //             url: '/base-ui/typography',
-    //             parentKey: 'Base UI',
-    //         },
-    //         {
-    //             label: 'Grid',
-    //             url: '/base-ui/grid',
-    //             parentKey: 'Base UI',
-    //         },
-    //     ],
-    // },
+    { label: 'Components', isTitle: true },
+    {
+        label: 'Base UI',
+        isTitle: false,
+        icon: 'mdi mdi-briefcase-outline',
+        children: [
+            {
+                label: 'Buttons',
+                url: '/base-ui/buttons',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Cards',
+                url: '/base-ui/cards',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Avatars',
+                url: '/base-ui/avatars',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Tabs & Accordions',
+                url: '/base-ui/tabs-accordions',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Modals',
+                url: '/base-ui/modals',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Progress',
+                url: '/base-ui/progress',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Notifications',
+                url: '/base-ui/notifications',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Offcanvas',
+                url: '/base-ui/offcanvas',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Placeholders',
+                url: '/base-ui/placeholders',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Spinners',
+                url: '/base-ui/spinners',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Images',
+                url: '/base-ui/images',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Carousel',
+                url: '/base-ui/carousel',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Embed Video',
+                url: '/base-ui/embedvideo',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Dropdowns',
+                url: '/base-ui/dropdowns',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Tooltips & Popovers',
+                url: '/base-ui/popovers-tooltips',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'General UI',
+                url: '/base-ui/general',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Typography',
+                url: '/base-ui/typography',
+                parentKey: 'Base UI',
+            },
+            {
+                label: 'Grid',
+                url: '/base-ui/grid',
+                parentKey: 'Base UI',
+            },
+        ],
+    },
     // {
     //     label: 'Widgets',
     //     isTitle: false,

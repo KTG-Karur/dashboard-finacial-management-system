@@ -18,11 +18,13 @@ function CompanyDetails(props) {
                 Thanthoni Malai,
                 Karur - 639 007.
             </div>
-            <div style={{ fontSize }}>
-                support@harshinifincorp.com
-            </div>
-            <div style={{ fontSize }}>
-                +91 9876543210
+            <div>
+            <span style={{ fontSize }}>
+            <i className={'fe-mail'}></i> support@harshinifincorp.com
+            </span>
+            <span style={{ fontSize }} className='mx-2'>
+            <i className={'fe-mail'}></i> +91 9876543210 
+            </span>
             </div>
         </div>
     )

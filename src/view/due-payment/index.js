@@ -258,6 +258,11 @@ function Index() {
         dispatch(updateDuePaymentRequest(submitRequest, selectedItem.duePaymentId))
     };
 
+    const generateReceipt = () =>{
+        alert("in--->")
+        
+    }
+
     return (
         <React.Fragment>
             <NotificationContainer />
@@ -271,6 +276,8 @@ function Index() {
                     Title={'EMI Receipt List'}
                     data={parentList || []}
                     pageSize={10}
+                    btnName = {"Generate Receipt"}
+                    toggle={generateReceipt}
                 />}
 
             <ModelViewBox

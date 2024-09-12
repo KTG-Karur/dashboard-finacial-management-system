@@ -71,7 +71,7 @@ const Table = (props) => {
     const sizePerPageListData = sizePerPageList
     const columnData = props['columns']
     const columnLength = columnData.length || 4
-    const { toggle = null, Title, filterFormContainer, optionListState, filterSubmitFunction, onChangeCallBack, state, setState, filterColNo } = props;
+    const { toggle = null, btnName=false, Title, filterFormContainer, optionListState, filterSubmitFunction, onChangeCallBack, state, setState, filterColNo } = props;
 
     let otherProps = {};
 
@@ -165,7 +165,7 @@ const Table = (props) => {
                                             </Col>
                                             <Col md={8} xs={12} className="d-flex justify-content-end">
                                                 <Row>
-                                                    <Col xs={8}>
+                                                    <Col xs={6}>
                                                         {isSearchable && (
                                                             <GlobalFilter
                                                                 preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
@@ -175,14 +175,14 @@ const Table = (props) => {
                                                             />
                                                         )}
                                                     </Col>
-                                                    <Col xs={4}>
+                                                    <Col xs={6}>
                                                         {
                                                             toggle && <Button
                                                                 variant="success"
                                                                 className="waves-effect waves-light"
                                                                 onClick={toggle}>
                                                                 <i className="mdi mdi-plus-circle "></i>
-                                                                Add
+                                                                {btnName ? btnName : "Add"}
                                                             </Button>
                                                         }
                                                     </Col>

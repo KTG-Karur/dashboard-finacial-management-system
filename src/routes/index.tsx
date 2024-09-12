@@ -115,6 +115,7 @@ import {
     Borrower,
     BorrowerLoan,
     BorrowerLoanList,
+    BorrowerLoanActiveList,
 } from './Route_Menu';
 
 
@@ -331,7 +332,7 @@ const AllRoutes = () => {
                         },
                         {
                             path: 'approved',
-                            element: <LoadComponent component={BorrowerLoanList} />,
+                            element: <LoadComponent component={BorrowerLoanActiveList} />,
                         },
                         {
                             path: 'disbursed',

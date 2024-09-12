@@ -3,7 +3,7 @@ const formContainer = [
     {
         formFields: [
             {
-                title: 'Create Investor Loan',
+                title: 'Investment Proposal',
                 inputType: 'title',
             },
         ],
@@ -20,10 +20,10 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Customer',
-                name: 'applicantId',
+                label: 'Investor',
+                name: 'investorId',
                 inputType: 'select',
-                optionList: 'applicantId',
+                optionList: 'applicantList',
                 displayKey: 'applicantName',
                 uniqueKey: 'applicantId',
                 require: true,
@@ -33,28 +33,16 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Co-Customer',
-                name: 'coApplicantId',
-                inputType: 'select',
-                optionList: 'coApplicantId',
-                displayKey: 'applicantName',
-                uniqueKey: 'applicantId',
+                label: 'Refered By',
+                name: 'referedBy',
+                inputType: 'text',
+                placeholder: 'Enter Refered By',
                 require: true,
             },
         ],
     },
     {
-        formFields: [
-            {
-                label: 'Guarantor',
-                name: 'guarantorId',
-                inputType: 'select',
-                optionList: 'guarantorId',
-                displayKey: 'applicantName',
-                uniqueKey: 'applicantId',
-                require: true,
-            },
-        ],
+        formFields: [],
     },
     {
         formFields: [],
@@ -84,7 +72,7 @@ const formContainer = [
                 label: 'Category',
                 name: 'categoryId',
                 inputType: 'select',
-                optionList: 'categoryId',
+                optionList: 'categoryList',
                 displayKey: 'categoryName',
                 uniqueKey: 'categoryId',
                 onChange: 'handleCategorySelect',
@@ -115,10 +103,10 @@ const formContainer = [
     {
         formFields: [
             {
-                label: 'Loan Amount',
-                name: 'loanAmount',
+                label: 'Investment Amount',
+                name: 'investmentAmount',
                 inputType: 'number',
-                placeholder: 'Enter Loan amount',
+                placeholder: 'Enter Investment amount',
                 require: true,
             },
         ],
@@ -153,7 +141,7 @@ const formContainer = [
                 label: 'Loan Charges',
                 name: 'loanChargeId',
                 inputType: 'select',
-                optionList: 'loanChargeId',
+                optionList: 'loanChargeList',
                 onChange: 'handleDocumentSelect',
                 displayKey: 'loanChargesName',
                 uniqueKey: 'loanChargesId',
@@ -216,6 +204,17 @@ const formContainer = [
     {
         formFields: [
             {
+                label: 'Lock Period (Month)',
+                name: 'lockPeriod',
+                inputType: 'number',
+                placeholder: 'Enter Lock Period (Month)',
+                require: false,
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
                 label: 'Disbursed Method',
                 name: 'disbursedMethodId',
                 inputType: 'select',
@@ -225,9 +224,6 @@ const formContainer = [
                 require: true,
             },
         ],
-    },
-    {
-        formFields: [],
     },
     {
         formFields: [],

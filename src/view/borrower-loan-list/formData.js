@@ -19,10 +19,19 @@ const disbursedDateFormContainer = [
     {
         formFields: [
             {
-                // 'label': "Disbursed Date",
+                'label': "Recevied Date",
                 'name': "disbursedDate",
                 'inputType': "date",
-                'require': false
+                'require': true,
+                "classStyle" : "col-6"
+            },
+            {
+                'label': "Transaction Id",
+                'name': "transactionId",
+                'inputType': "text",
+                'placeholder' : "Enter Transaction ID",
+                'require': true,
+                "classStyle" : "col-6"
             },
         ],
     },

@@ -8,10 +8,11 @@ import { NotificationContainer } from 'react-notifications';
 import { useLocation, useNavigate } from 'react-router-dom';
 import CompanyDetails from '../../components/Atom/CompanyDetails';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
-import { disbursedDateFormContainer } from './formData';
+// import { disbursedDateFormContainer } from './formData';
 import FormLayout from '../../utils/formLayout';
 import moment from 'moment';
 import _ from "lodash";
+import CustomTabComponent from '../../components/Custom-Component/TabComponent';
 
 let isEdit = false;
 let isCancel = false;
@@ -50,7 +51,7 @@ function Index() {
         errorMessage: state.investmentReducer.errorMessage,
     }));
 
-    const columns = [
+    const activeColumns = [
         {
             Header: 'S.No',
             accessor: 'id',
@@ -81,26 +82,15 @@ function Index() {
             accessor: 'investmentAmount',
             sort: true,
         },
-        // {
-        //     Header: 'Status',
-        //     accessor: 'isActive',
-        //     Cell: ({ row }) => (
-        //         <div>
-        //             {row?.original?.isActive ? (
-        //                 <Badge bg={'success'}>Active</Badge>
-        //             ) : (
-        //                 <Badge bg={'danger'}>In active</Badge>
-        //             )}
-        //         </div>
-        //     ),
-        // },
+        {
+            Header: 'Approved By',
+            accessor: 'approvedBy',
+            sort: true,
+        },
         {
             Header: 'Actions',
             accessor: 'actions',
             Cell: ({ row }) => {
-                const activeChecker = row.original.isActive
-                const iconColor = activeChecker ? "text-danger" : "text-warning";
-                const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
                 return (
                     <div>
                         <span className="text-primary  me-2 cursor-pointer"
@@ -139,52 +129,58 @@ function Index() {
         },
     ];
 
-    const investmentDetailsColumns = [
+    const closedColumns = [
         {
-            "title": "Application No.",
-            "keyValue": "applicantNo",
-            "prefix": "#"
+            Header: 'S.No',
+            accessor: 'id',
+            Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            "title": "Name",
-            "keyValue": "investorName"
+            Header: 'Application No.',
+            accessor: 'applicantNo',
+            sort: true,
         },
         {
-            "title": "Code",
-            "keyValue": "investorCode"
+            Header: 'Investor Code',
+            accessor: 'investorCode',
+            sort: true,
         },
         {
-            "title": "Contact No.",
-            "keyValue": "contactNo",
-            "prefix": "+91-"
+            Header: 'Name',
+            accessor: 'investorName',
+            sort: true,
         },
         {
-            "title": "Refered By",
-            "keyValue": "referedBy"
+            Header: 'Contact No.',
+            accessor: 'contactNo',
+            sort: true,
         },
         {
-            "title": "Interest Rate",
-            "keyValue": "interestRate",
-            "suffix": "%"
+            Header: 'Amount',
+            accessor: 'investmentAmount',
+            sort: true,
         },
         {
-            "title": "Investment Amount",
-            "keyValue": "investmentAmount",
-            "prefix": "Rs."
+            Header: 'Closed By',
+            accessor: 'approvedBy',
+            sort: true,
         },
         {
-            "title": "Lock Period",
-            "keyValue": "lockPeriod"
+            Header: 'Actions',
+            accessor: 'actions',
+            Cell: ({ row }) => {
+                return (
+                    <div>
+                        <span
+                            className="text-success  me-2 cursor-pointer"
+                            onClick={() => onApprovedForm(row.original, row.index)}>
+                            <i className={'fas fa-eye'}></i>
+                        </span>
+                    </div>
+                )
+            },
         },
-        {
-            "title": "Due Amount",
-            "keyValue": "dueAmount"
-        },
-        {
-            "title": "Created By",
-            "keyValue": "createdBy"
-        },
-    ]
+    ];
 
     const [state, setState] = useState({
         investmentDetails: [],
@@ -199,26 +195,29 @@ function Index() {
 
     useEffect(() => {
         setIsLoading(true)
-        const getInvestmentReqObj={
-            investmentStatusId : 1
-        }
-        dispatch(getInvestmentRequest(getInvestmentReqObj));
+        // const getInvestmentReqObj = {
+        //     investmentStatusId: 4
+        // }
+        dispatch(getInvestmentRequest());
     }, []);
-
-    useEffect(() => {
-        if (investmentData && isCreated) {
-            dispatch(createInvestmentRequest(investmentData));
-        } else if (investmentData && isCreated === false) {
-            isEdit = true;
-            dispatch(updateInvestmentRequest(investmentData, updateId));
-        }
-        navigate(location.pathname, { state: { investmentData: false, isCreated: false } });
-    }, [investmentData, isCreated]);
 
     useEffect(() => {
         if (getInvestmentSuccess) {
             setIsLoading(false)
-            setParentList(getInvestmentList)
+            let activeArr = []
+            let closeArr = []
+            getInvestmentList.map((ele,idx)=>{
+                if(ele.investmentStatusId === 4){
+                    activeArr.push(ele)
+                }else if(ele.investmentStatusId === 3){
+                    closeArr.push(ele)
+                }
+            })
+            setState({
+                ...state,
+                activeLoansData : activeArr,
+                closedLoanData : closeArr
+            })
             dispatch(resetGetInvestment())
         } else if (getInvestmentFailure) {
             setIsLoading(false)
@@ -313,7 +312,7 @@ function Index() {
 
     const onCancelForm = (data, index) => {
         const cancelReq = {
-            investmentStatusId : 3,
+            investmentStatusId: 3,
             approvedBy: 1
         }
         isCancel = true
@@ -323,7 +322,7 @@ function Index() {
 
     const onApproveSubmit = () => {
         const approvedReq = {
-            investmentStatusId : 4,
+            investmentStatusId: 4,
             disbursedDate: state?.disbursedDate || "",
             transactionId: state?.transactionId || "",
             dueDate: moment().add(1, 'months').date(10).format("YYYY-MM-DD"),
@@ -331,6 +330,23 @@ function Index() {
         }
         dispatch(updateInvestmentRequest(approvedReq, selectedItem.investmentId))
     }
+
+    const columns2 = [
+        {
+            title: 'Active Loans',
+            keyId: 1,
+            keyEvent : "activeLoan",
+            tableColumns: activeColumns,
+            tableData: state?.activeLoansData || []
+        },
+        {
+            title: 'Closed Loans',
+            keyId: 1,
+            keyEvent : "closedLoan",
+            tableColumns: closedColumns,
+            tableData: state?.closedLoanData || []
+        },
+    ]
 
     return (
         <React.Fragment>
@@ -340,14 +356,10 @@ function Index() {
                     <Spinner className='mt-5 mb-5' animation="border" />
                 </div>
             </div> :
-                <Table
-                    columns={columns}
-                    Title={'Investment List'}
-                    data={parentList || []}
-                    pageSize={10}
-                />}
+                <CustomTabComponent title={"Investment Loans"} activeKey="activeLoan" tabContents={columns2} ></CustomTabComponent>
+            }
 
-            <ModelViewBox
+            {/* <ModelViewBox   
                 modal={modal}
                 setModel={setModal}
                 modelHeader={'Confirmation Investment Clearance'}
@@ -382,7 +394,7 @@ function Index() {
                         <FormLayout dynamicForm={disbursedDateFormContainer} handleSubmit={onApproveSubmit} setState={setState} state={state} ref={errorHandle} noOfColumns={1} errors={errors} setErrors={setErrors} />
                     </Card.Body>
                 </Card>
-            </ModelViewBox>
+            </ModelViewBox> */}
 
 
         </React.Fragment>
