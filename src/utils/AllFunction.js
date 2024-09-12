@@ -170,7 +170,7 @@ const emiCalculation = (principal, annualInterest, tenurePeriod) => {
 const findDueDate = (disbursedDate = formatDate()) => {
     const disbursedDateArr = disbursedDate.split('-');
     const year = disbursedDateArr[0];
-    const day = disbursedDateArr[2];
+    const day = 10;
     let month = parseInt(disbursedDateArr[1]) + 1;
     if (parseInt(disbursedDateArr[1]) >= 12) {
         month = 1;
@@ -183,7 +183,7 @@ const findLastDate = (disbursedDate = formatDate(), tenurePeriod) => {
     const disbursedDateArr = disbursedDate.split('-');
     let year = parseInt(disbursedDateArr[0]);
     let month = parseInt(disbursedDateArr[1]);
-    let day = disbursedDateArr[2];
+    let day = 10;
 
     let additionalYears = Math.floor(tenurePeriod / 12);
     let additionalMonths = tenurePeriod % 12;
