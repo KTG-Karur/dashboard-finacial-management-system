@@ -116,6 +116,19 @@ import {
     BorrowerLoan,
     BorrowerLoanList,
     BorrowerLoanActiveList,
+    DayBook,
+    HomeScreen,
+    EmployeeLedger,
+    EmployeeLedgerTemplate,
+    BorrowerReceipt,
+    BorrowerPdfReceipt,
+    BorrowerInterestReceipt,
+    LoanReportDashboard,
+    EmployeeAttendance,
+    EmployeeAttendanceReport,
+    Enquiry,
+    Faq,
+    LoanReport,
 } from './Route_Menu';
 
 
@@ -199,11 +212,19 @@ const AllRoutes = () => {
             element: <PrivateRoute roles={'Admin'} component={Layout} />,
             children: [
                 {
+                    path: 'home',
+                    element: <LoadComponent component={HomeScreen} />,
+                },
+                {
                     path: 'dashboard',
                     element: <LoadComponent component={DashBoard1} />,
                 },
                 {
-                    path: '/loan/dashboard',
+                    path: 'loan-report',
+                    element: <LoadComponent component={LoanReportDashboard} />,
+                },
+                {
+                    path: '/loan-calculator',
                     element: <LoadComponent component={LoanDashBoard} />,
                 },
                 {
@@ -217,6 +238,18 @@ const AllRoutes = () => {
                 {
                     path: 'view',
                     children: [
+                        {
+                            path: 'enquiry',
+                            element: <LoadComponent component={Enquiry} />,
+                        },
+                        {
+                            path: 'faq',
+                            element: <LoadComponent component={Faq} />,
+                        },
+                        {
+                            path: 'day-book',
+                            element: <LoadComponent component={DayBook} />,
+                        },
                         {
                             path: 'borrower',
                             element: <LoadComponent component={Borrower} />,
@@ -236,6 +269,14 @@ const AllRoutes = () => {
                         {
                             path: 'employee',
                             element: <LoadComponent component={Employee} />,
+                        },
+                        {
+                            path: 'employee-attendance',
+                            element: <LoadComponent component={EmployeeAttendance} />,
+                        },
+                        {
+                            path: 'attendance-report',
+                            element: <LoadComponent component={EmployeeAttendanceReport} />,
                         },
                         {
                             path: 'monthly-reciept',
@@ -342,6 +383,31 @@ const AllRoutes = () => {
                             path: 'cancelled',
                             element: <LoadComponent component={BorrowerLoanList} />,
                         },
+                        {
+                            path: 'borrower-emi-receipt',
+                            element: <LoadComponent component={BorrowerReceipt} />,
+                        },
+                        {
+                            path: 'borrower-interest-receipt',
+                            element: <LoadComponent component={BorrowerInterestReceipt} />,
+                        },
+                        // {
+                        //     path: 'borrower-interest-receipt',
+                        //     element: <LoadComponent component={BorrowerReceipt} />,
+                        // },
+                        {
+                            path: 'borrower-receipt-pdf',
+                            element: <LoadComponent component={BorrowerPdfReceipt} />,
+                        },
+                    ],
+                },
+                {
+                    path: 'report',
+                    children: [
+                        {
+                            path: 'loan-report',
+                            element: <LoadComponent component={LoanReport} />,
+                        },
                     ],
                 },
                 {
@@ -366,6 +432,31 @@ const AllRoutes = () => {
                         {
                             path: 'cancelled',
                             element: <LoadComponent component={LoanList} />,
+                        },
+                    ],
+                },
+                {
+                    path: 'ledger',
+                    children: [
+                        // {
+                        //     path: 'customer',
+                        //     element: <LoadComponent component={CustomerLedger} />,
+                        // },
+                        {
+                            path: 'employee',
+                            element: <LoadComponent component={EmployeeLedger} />,
+                        },
+                        // {
+                        //     path: 'investor',
+                        //     element: <LoadComponent component={InvestorLedger} />,
+                        // },
+                        // {
+                        //     path: 'template',
+                        //     element: <LoadComponent component={CustomerLedgerTemplate} />,
+                        // },
+                        {
+                            path: 'employee-template',
+                            element: <LoadComponent component={EmployeeLedgerTemplate} />,
                         },
                     ],
                 },

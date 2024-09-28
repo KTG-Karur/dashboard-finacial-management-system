@@ -25,15 +25,21 @@ const PrivateRoute = ({ component: RouteComponent, roles, ...rest }: PrivateRout
     /**
      * not logged in so redirect to login page with the return url
      */
-    if (api.isUserAuthenticated() === false) {
+    // if (api.isUserAuthenticated() === false) {
+    //     return <Navigate to={'/auth/login'} state={{ from: location }} replace />;
+    // }
+
+    const loginData = sessionStorage.getItem('loginInfo') || []
+    const loginStatus = loginData.length > 0 ? true : false
+    if (!loginStatus) {
         return <Navigate to={'/auth/login'} state={{ from: location }} replace />;
     }
 
     // check if route is restricted by role
-    if (roles && roles.indexOf(loggedInUser.role) === -1) {
-        // role not authorised so redirect to home page
-        return <Navigate to={{ pathname: '/' }} />;
-    }
+    // if (roles && roles.indexOf(loggedInUser.role) === -1) {
+    //     // role not authorised so redirect to home page
+    //     return <Navigate to={{ pathname: '/' }} />;
+    // }
 
     return <RouteComponent />;
 };

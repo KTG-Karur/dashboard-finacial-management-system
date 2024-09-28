@@ -17,6 +17,64 @@ export const getDuePaymentFailure = (errorMessage: string) => ({
 export const resetGetDuePayment = () => ({
   type: 'RESET_GET_DUE_PAYMENT',
 });
+//Get Reducer Call--->
+export const getInvestorDuePaymentRequest = (params?: any) => ({
+  type: 'GET_INVESTOR_DUE_PAYMENT_REQUEST',
+  payload: params,
+});
+
+export const getInvestorDuePaymentSuccess = (data: any) => ({
+  type: 'GET_INVESTOR_DUE_PAYMENT_SUCCESS',
+  payload: { data },
+});
+
+export const getInvestorDuePaymentFailure = (errorMessage: string) => ({
+  type: 'GET_INVESTOR_DUE_PAYMENT_FAILURE',
+  errorMessage: { errorMessage },
+});
+
+export const resetGetInvestorDuePayment = () => ({
+  type: 'RESET_GET_INVESTOR_DUE_PAYMENT',
+});
+//Get Reducer Call--->
+export const getInvestorDuePaymentDetailsRequest = (params?: any) => ({
+  type: 'GET_INVESTOR_DUE_PAYMENT_DETAILS_REQUEST',
+  payload: params,
+});
+
+export const getInvestorDuePaymentDetailsSuccess = (data: any) => ({
+  type: 'GET_INVESTOR_DUE_PAYMENT_DETAILS_SUCCESS',
+  payload: { data },
+});
+
+export const getInvestorDuePaymentDetailsFailure = (errorMessage: string) => ({
+  type: 'GET_INVESTOR_DUE_PAYMENT_DETAILS_FAILURE',
+  errorMessage: { errorMessage },
+});
+
+export const resetGetInvestorDuePaymentDetails = () => ({
+  type: 'RESET_GET_INVESTOR_DUE_PAYMENT_DETAILS',
+});
+
+//Get Reducer Call--->
+export const getDuePaymentDetailsRequest = (params?: any) => ({
+  type: 'GET_DUE_PAYMENT_DETAILS_REQUEST',
+  payload: params,
+});
+
+export const getDuePaymentDetailsSuccess = (data: any) => ({
+  type: 'GET_DUE_PAYMENT_DETAILS_SUCCESS',
+  payload: { data },
+});
+
+export const getDuePaymentDetailsFailure = (errorMessage: string) => ({
+  type: 'GET_DUE_PAYMENT_DETAILS_FAILURE',
+  errorMessage: { errorMessage },
+});
+
+export const resetGetDueDetailsPayment = () => ({
+  type: 'RESET_GET_DUE_PAYMENT_DETAILS',
+});
 
 //Create Reducer Call--->
 export const createDuePaymentRequest = (data: any) => ({

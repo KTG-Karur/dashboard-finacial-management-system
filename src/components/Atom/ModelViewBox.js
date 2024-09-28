@@ -3,7 +3,7 @@ import { VerticalForm } from '../form';
 import { Modal, Button } from 'react-bootstrap';
 
 function ModelViewBox(props) {
-    const { modal, setModel, children, modelHeader, modelSize, handleSubmit, isEdit, modelHead = false, backgroundColor="", headerBg="" } = props;
+    const { modal, setModel, children, modelHeader, cancelBtn = true, modelSize,saveBtn = true, handleSubmit, btnName = false, isEdit, modelHead = false, backgroundColor = "", headerBg = "" } = props;
 
     const handleClose = () => {
         setModel(false);
@@ -12,24 +12,24 @@ function ModelViewBox(props) {
     return (
         <React.Fragment>
             <Modal show={modal} onHide={handleClose} centered size={modelSize}>
-                <Modal.Header style={{backgroundColor: headerBg}} closeButton>
+                <Modal.Header style={{ backgroundColor: headerBg }} closeButton>
                     <Modal.Title as="h4">{`${isEdit ? 'Edit ' : modelHead ? '' : 'Add'} ${modelHeader}`}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body style={{backgroundColor: backgroundColor}}>
+                <Modal.Body style={{ backgroundColor: backgroundColor }}>
                     <VerticalForm onSubmit={() => { }} defaultValues={{}}>
                         {children}
 
                         <div className='d-flex justify-content-end'>
-                            <Button
+                            {saveBtn && <Button
                                 variant="primary"
                                 className="waves-effect waves-light me-1"
                                 type="button"
                                 onClick={handleSubmit}>
-                                {`${isEdit ? 'Update' : 'Save'}`}
-                            </Button>
-                            <Button variant="danger" className="waves-effect waves-light" onClick={handleClose}>
+                                {`${isEdit ? 'Update' : btnName ? btnName : 'Save'}`}
+                            </Button>}
+                            {cancelBtn && <Button variant="danger" className="waves-effect waves-light" onClick={handleClose}>
                                 Cancel
-                            </Button>
+                            </Button>}
                         </div>
                     </VerticalForm>
                 </Modal.Body>

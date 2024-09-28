@@ -1,201 +1,186 @@
-import { Card, Col, Row, Form } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Card, Col, Dropdown, Row } from 'react-bootstrap';
+import StatisticsWidget1 from '../../components/StatisticsWidget1';
+import StatisticsWidget2 from '../../components/StatisticsWidget2';
 import Chart from 'react-apexcharts';
-import React, { useState, useEffect } from 'react';
-import { emiCalculation, calculateTotalInterestPayable, numberWithCommas } from '../../utils/AllFunction';
-import Statistics from '../../pages/dashboards/DashBoard1/Statistics';
+import CompanyDetails from '../../components/Atom/CompanyDetails';
+import FormLayout from '../../utils/formLayout';
+import { formContainer } from './formData';
 
 
 const Index = () => {
+
+    const [state, setState] = useState({});
+
+    const columnsMonthly = [
+        {
+            title: "Active Loans",
+            subTitle: "Monthly",
+            keyValue: "activeLoans",
+            color: "#02db1f",
+            target: "64",
+            statusValue: "72"
+        },
+        {
+            title: "Closed Loans",
+            subTitle: "Monthly",
+            keyValue: "closedLoans",
+            color: "#217dff",
+            target: "24",
+            statusValue: "15"
+        },
+        {
+            title: "Requested",
+            subTitle: "Monthly",
+            keyValue: "requestedLoans",
+            color: "#ffb921",
+            target: "29",
+            statusValue: "29"
+        },
+        {
+            title: "Cancelled",
+            subTitle: "Monthly",
+            keyValue: "requestedLoans",
+            color: "#ff2130",
+            target: "45",
+            statusValue: "29"
+        },
+    ]
+
     const apexOpts = {
         chart: {
-            type: 'donut',
+            type: 'bar',
+            toolbar: {
+                show: false,
+            },
         },
         plotOptions: {
-            pie: {
-                expandOnClick: true,
-                donut: {
-                    labels: {
-                        show: true,
-                        name: {
-                            show: true,
-                            formatter: (val) => val,
-                            offsetY: 4,
-                            color: '#98a6ad',
-                        },
-                        value: {
-                            show: true,
-                            formatter: (val) => val,
-                            color: '#98a6ad',
-                        },
-                    },
-                },
+            bar: {
+                columnWidth: '25%',
             },
         },
         dataLabels: {
             enabled: false,
         },
-        colors: ['#6658dd', '#ff8acc'],
-        legend: {
-            show: true,
-            position: 'bottom',
-            height: 40,
+        stroke: {
+            show: false,
+        },
+        xaxis: {
+            categories: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUNE', 'JULY', 'AUG', 'SEP', 'OCT', 'NOV', "DEC"],
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
             labels: {
-                useSeriesColors: true,
+                style: {
+                    colors: '#adb5bd',
+                },
             },
         },
-        labels: ['Loan Amount', 'Total Interest'],
+        yaxis: {
+            labels: {
+                style: {
+                    colors: '#adb5bd',
+                },
+            },
+        },
+        grid: {
+            show: false,
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+            },
+        },
+        fill: {
+            opacity: 1,
+        },
+        colors: ['#188ae2'],
         tooltip: {
-            enabled: false,
+            theme: 'dark',
         },
     };
 
-    const [chartValue, setChartValue] = useState({
-        principalPer: 50,
-        interestPer: 50,
-    });
+    const apexData = [
+        {
+            name: 'Current Year',
+            data: [75, 42, 75, 38, 19, 93, 77, 63, 82, 11, 20, 70],
+        },
+    ];
 
-    const apexData = [parseFloat(chartValue.principalPer), parseFloat(chartValue.interestPer)];
+    const onSearchDate = () => {
 
-    const [state, setState] = useState({
-        loanAmount: 0,
-        interestRate: 0,
-        loanTenure: 0,
-    });
-
-    const [emiValue, setEmiValue] = useState({
-        loanEmi: 0,
-        interestPayable: 0,
-        totalPayment: 0,
-    });
-
-    useEffect(() => {
-        const { loanAmount, interestRate, loanTenure } = state;
-
-        if (loanAmount > 0 && interestRate > 0 && loanTenure > 0) {
-            const emi = emiCalculation(loanAmount, interestRate, loanTenure / 12);
-            const interest = calculateTotalInterestPayable(loanAmount, interestRate, loanTenure / 12);
-            const totalPayment = loanAmount + parseFloat(interest);
-
-            const principalAmtPer = (loanAmount / totalPayment) * 100;
-            const interestPer = (interest / totalPayment) * 100;
-
-            setEmiValue({
-                loanEmi: parseFloat(emi).toFixed(2),
-                interestPayable: parseFloat(interest).toFixed(2),
-                totalPayment: parseFloat(totalPayment).toFixed(2),
-            });
-
-            setChartValue({
-                principalPer: parseFloat(principalAmtPer).toFixed(1),
-                interestPer: parseFloat(interestPer).toFixed(1),
-            });
-        }
-    }, [state]);
-
-    const onChange = (event) => {
-        const { value, name } = event.target;
-        setState({
-            ...state,
-            [name]: parseFloat(value) || 0,
-        });
-    };
-
+    }
 
     return (
         <React.Fragment>
-            <Statistics />
-
-            <h4 className="header-title mt-0">EMI Calculator</h4>
-
-            <Row className="mt-3">
-                <Col xs={12} md={4} >
-                    <Card >
-                        <Card.Body style={{ height: "350px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
-                            <div className="mb-2">
-                                <Form.Label>Loan Amount</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="loanAmount"
-                                    className="mb-1"
-                                    placeholder="Enter Loan Amount"
-                                    onChange={onChange}
+            <CompanyDetails fontSize="12px" imgSize="240px" classStyle="d-flex justify-content-center flex-column align-items-center" />
+            <div className='d-flex justify-content-center'>
+                <div className='mt-3' style={{ position: "relative", width: "35%" }}>
+                    <FormLayout
+                        dynamicForm={formContainer}
+                        setState={setState}
+                        state={state}
+                        noOfColumns={1}
+                    />
+                </div>
+            </div>
+            <div className='d-flex justify-content-center'>
+                <Button
+                    variant="primary"
+                    className="waves-effect waves-light"
+                    onClick={onSearchDate}>
+                    <i className={`mdi mdi-clipboard-text-search mx-1 `}></i>
+                    {"Search"}
+                </Button>
+            </div>
+            <Row className='mt-2'>
+                {columnsMonthly.map((itm, idx) => {
+                    return (
+                        <>
+                            <Col xl={3} md={6}>
+                                <StatisticsWidget1
+                                    title={itm?.title || ""}
+                                    data={itm?.target || ""}
+                                    stats={itm?.statusValue || ""}
+                                    color={itm?.color || ""}
+                                    subTitle={itm?.subTitle || ""}
                                 />
-                            </div>
-                            <div className="mb-2">
-                                <Form.Label>Interest Rate</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="interestRate"
-                                    className="mb-1"
-                                    placeholder="Enter Interest Rate"
-                                    onChange={onChange}
-                                />
-                            </div>
-                            <div className="mb-2">
-                                <Form.Label>Loan Tenure {"(Months)"}</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    name="loanTenure"
-                                    className="mb-1"
-                                    placeholder="Enter Loan Tenure"
-                                    onChange={onChange}
-                                />
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
-
-                <Col xs={12} md={4}>
+                            </Col>
+                        </>
+                    )
+                })}
+                {/* <Col xl={3} md={6}>
+                <StatisticsWidget2
+                    variant="pink"
+                    title="Daily Sales"
+                    trendValue="32%"
+                    trendIcon="mdi mdi-trending-up"
+                    stats={158}
+                    subTitle="Revenue today"
+                    progress={77}
+                />
+            </Col> */}
+            </Row>
+            <Row>
+                <Col xs={12} lg={12}>
                     <Card>
-                        <Card.Body style={{ height: "350px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
-                            <div className="d-flex justify-content-center">
-                                <div>
-                                    <h4>Loan EMI</h4>
-                                    <p className="text-center" style={{ fontSize: '18px' }}>
-                                        <strong>{numberWithCommas(emiValue.loanEmi)}</strong>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <div>
-                                    <h4>Total Interest Payable</h4>
-                                    <p className="text-center" style={{ fontSize: '18px' }}>
-                                        <strong>{numberWithCommas(emiValue.interestPayable)}</strong>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className="d-flex justify-content-center">
-                                <div>
-                                    <h4 className='text-center'>Total Payment</h4>
-                                    <h5>{"(Principal + Interest)"}</h5>
-                                    <p className="text-center" style={{ fontSize: '18px' }}>
-                                        <strong>{numberWithCommas(emiValue.totalPayment)}</strong>
-                                    </p>
-                                </div>
-                            </div>
-                        </Card.Body>
-                    </Card>
-                </Col>
+                        <Card.Body>
+                            <h4 className="header-title mt-0">Year</h4>
 
-                <Col xs={12} md={4}>
-                    <Card>
-                        <Card.Body style={{ height: "350px", display: "flex", justifyContent: "center", flexDirection: "column" }}>
                             <div dir="ltr">
-                                <Chart
-                                    options={apexOpts}
-                                    series={apexData}
-                                    type="donut"
-                                    height={302}
-                                    className="apex-charts mt-2"
-                                />
+                                <Chart options={apexOpts} series={apexData} type="bar" height={268} className="apex-charts mt-2" />
                             </div>
                         </Card.Body>
                     </Card>
                 </Col>
+
             </Row>
         </React.Fragment>
     );
 };
 
 export default Index;
-

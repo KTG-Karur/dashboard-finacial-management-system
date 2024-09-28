@@ -95,12 +95,12 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Borrower Id',
+            Header: 'Investor Code',
             accessor: 'applicantCode',
             sort: true,
         },
         {
-            Header: 'Borrower Name',
+            Header: 'Investor Name',
             accessor: 'applicantName',
             sort: false,
         },
@@ -512,6 +512,8 @@ function Index() {
         onFormClear()
         setWizardModel(false)
         setTab('personalInfo')
+        setArrVal([])
+        setMultiStateValue([{}])
         setTabIndex(0)
         setIsEdit(false);
         setTabList(applicantTabs)
@@ -701,7 +703,7 @@ function Index() {
                             IsEditArrVal={IsEditArrVal}
                             setIsEditArrVal={setIsEditArrVal}
                             tblList={parentList}
-                            Title={'Borrower Details'}
+                            Title={'Investor Details'}
                             showSelectmodel={showSelectmodel}
                             showMultiAdd={showMultiAdd}
                             optionListState={optionListState}
@@ -753,7 +755,7 @@ function Index() {
                 ) :
                     <Table
                         columns={columns}
-                        Title={'Borrower List'}
+                        Title={'Investor List'}
                         data={parentList || []}
                         pageSize={10}
                         toggle={createModel}

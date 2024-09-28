@@ -71,7 +71,7 @@ const Table = (props) => {
     const sizePerPageListData = sizePerPageList
     const columnData = props['columns']
     const columnLength = columnData.length || 4
-    const { toggle = null, btnName=false, Title, filterFormContainer, optionListState, filterSubmitFunction, onChangeCallBack, state, setState, filterColNo } = props;
+    const { toggle = null, addBtn = true, defaultState = [], tableIcon = false, footerTable = false, btnName = false, Title, filterFormContainer, optionListState, filterSubmitFunction, onChangeCallBack, state, setState, filterColNo } = props;
 
     let otherProps = {};
 
@@ -165,7 +165,7 @@ const Table = (props) => {
                                             </Col>
                                             <Col md={8} xs={12} className="d-flex justify-content-end">
                                                 <Row>
-                                                    <Col xs={6}>
+                                                    <Col xs={6} >
                                                         {isSearchable && (
                                                             <GlobalFilter
                                                                 preGlobalFilteredRows={dataTable.preGlobalFilteredRows}
@@ -175,15 +175,15 @@ const Table = (props) => {
                                                             />
                                                         )}
                                                     </Col>
-                                                    <Col xs={6}>
+                                                    <Col xs={6} className="d-flex justify-content-end">
                                                         {
-                                                            toggle && <Button
+                                                            toggle && addBtn ? <Button
                                                                 variant="success"
                                                                 className="waves-effect waves-light"
                                                                 onClick={toggle}>
-                                                                <i className="mdi mdi-plus-circle "></i>
+                                                                <i className={`mdi ${tableIcon ? tableIcon : "mdi-plus-circle"} `}></i>
                                                                 {btnName ? btnName : "Add"}
-                                                            </Button>
+                                                            </Button> : ""
                                                         }
                                                     </Col>
                                                 </Row>
@@ -192,7 +192,7 @@ const Table = (props) => {
                                                 {
                                                     filterTbl && <FormLayout
                                                         dynamicForm={filterFormContainer}
-                                                        optionListState ={optionListState}
+                                                        optionListState={optionListState}
                                                         handleSubmit={filterSubmitFunction}
                                                         onChangeCallBack={onChangeCallBack}
                                                         setState={setState}
@@ -255,11 +255,40 @@ const Table = (props) => {
                                                     </tr>
                                                 );
                                             })}
+                                        {
+                                            footerTable ?
+                                                (
+                                                    <>
+                                                        <tr>
+                                                            <td colSpan={columnLength -3}></td>
+                                                            <td><b>Total Amount</b></td>
+                                                            <td><b>RS. {defaultState?.totalCreditAmount || 0}</b></td>
+                                                            <td><b>Rs. {defaultState?.totalDebitAmount || 0}</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan={columnLength-3}></td>
+                                                            <td colSpan={2}><b>Today's Closing</b></td>
+                                                            <td><b>RS. {defaultState?.closingAmount || 0}</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan={columnLength-3}></td>
+                                                            <td colSpan={2}><b>Opening Amount</b></td>
+                                                            <td><b>RS. {defaultState?.openingAmount || 0}</b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colSpan={columnLength-3}></td>
+                                                            <td colSpan={2}><b>Total Closing</b></td>
+                                                            <td><b>RS. {defaultState?.totalClosingAmount || 0}</b></td>
+                                                        </tr>
+                                                    </>
+                                                )
+                                                : ""
+                                        }
                                     </tbody>
                                 </table>
                             </div>
 
-                            {pagination && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageListData} />}
+                            {pagination === true && <Pagination tableProps={dataTable} sizePerPageList={sizePerPageListData} />}
                         </Card.Body>
                     </Card>
                 </Col>

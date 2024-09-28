@@ -54,6 +54,7 @@ const employeeFormContainer = [
                 'name': "contactNo",
                 'inputType': "number",
                 'classStyle' : 'col-6',
+                'maxlength': '10',
                 'placeholder': "Enter Contact Number",
                 'require': true
             },

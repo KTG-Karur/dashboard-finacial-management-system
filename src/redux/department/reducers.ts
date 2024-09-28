@@ -95,29 +95,29 @@ export default function departmentReducer(state = initialState, action: any) {
       };
     }
 
-    // case "DELETE_DEPARTMENT_SUCCESS": {
-    //   return {
-    //     ...state,
-    //     deleteDepartmentSuccess: true,
-    //     deleteDepartmentFailure: false,
-    //   };
-    // }
-    // case "DELETE_DEPARTMENT_FAILURE": {
-    //   return {
-    //     ...state,
-    //     deleteDepartmentFailure: true,
-    //     errorMessage: action.errorMessage.errorMessage,
-    //     deleteDepartmentSuccess: false,
-    //   };
-    // }
-    // case "RESET_DELETE_DEPARTMENT": {
-    //   return {
-    //     ...state,
-    //     deleteDepartmentSuccess: false,
-    //     deleteDepartmentFailure: false,
-    //     errorMessage: null,
-    //   };
-    // }
+    case "DELETE_DEPARTMENT_SUCCESS": {
+      return {
+        ...state,
+        deleteDepartmentSuccess: true,
+        deleteDepartmentFailure: false,
+      };
+    }
+    case "DELETE_DEPARTMENT_FAILURE": {
+      return {
+        ...state,
+        deleteDepartmentFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        deleteDepartmentSuccess: false,
+      };
+    }
+    case "RESET_DELETE_DEPARTMENT": {
+      return {
+        ...state,
+        deleteDepartmentSuccess: false,
+        deleteDepartmentFailure: false,
+        errorMessage: null,
+      };
+    }
 
     default: {
       return state;

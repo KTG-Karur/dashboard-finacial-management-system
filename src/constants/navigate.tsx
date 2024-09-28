@@ -21,12 +21,22 @@ const Navigate: NavigateTypes[] = [
         children: [
             {
                 label: 'Home',
-                url: '/dashboard',
+                url: '/home',
                 parentKey: 'Dashboard',
             },
             {
                 label: 'Loan Calculator',
-                url: '/loan/dashboard',
+                url: '/loan-calculator',
+                parentKey: 'Dashboard',
+            },
+            {
+                label: 'Loan Report',
+                url: '/loan-report',
+                parentKey: 'Dashboard',
+            },
+            {
+                label: 'Analaysis',
+                url: '/dashboard',
                 parentKey: 'Dashboard',
             },
         ]
@@ -75,23 +85,57 @@ const Navigate: NavigateTypes[] = [
     },
     { label: 'Recepit', isTitle: true },
     {
-        label: 'EMI Reciept',
+        label: 'Customer Recepit',
         isTitle: false,
-        icon: 'mdi mdi-book-edit',
-        url: '/view/monthly-reciept',
+        icon: 'mdi mdi-account-cash-outline',
+        children: [
+            {
+                label: 'EMI Reciept',
+                url: '/view/monthly-reciept',
+                parentKey: 'Customer Recepit',
+            },
+            {
+                label: 'Interest Reciept',
+                url: '/view/interest-receipt',
+                parentKey: 'Customer Recepit',
+            },
+        ]
     },
     {
-        label: 'Interest Reciept',
+        label: 'Investor Recepit',
         isTitle: false,
-        icon: 'mdi mdi-cash-register',
-        url: '/view/interest-receipt',
+        icon: 'mdi mdi-account-cash-outline',
+        children: [
+            {
+                label: 'B-EMI Reciept',
+                url: '/borrower/borrower-emi-receipt',
+                parentKey: 'Investor Recepit',
+            },
+            {
+                label: 'B-Interest Reciept',
+                url: '/borrower/borrower-interest-receipt',
+                parentKey: 'Investor Recepit',
+            },
+        ]
     },
-    {
-        label: 'Borrower Reciept',
-        isTitle: false,
-        icon: 'mdi mdi-cash-refund',
-        url: '/view/monthly-reciept',
-    },
+    // {
+    //     label: 'EMI Reciept',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-book-edit',
+    //     url: '/view/monthly-reciept',
+    // },
+    // {
+    //     label: 'Interest Reciept',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-cash-register',
+    //     url: '/view/interest-receipt',
+    // },
+    // {
+    //     label: 'Borrower Reciept',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-cash-refund',
+    //     url: '/borrower/borrower-receipt',
+    // },
     { label: 'Loan', isTitle: true },
     {
         label: 'Loans',
@@ -99,17 +143,17 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-account-cash-outline',
         children: [
             {
-                label: 'Add Loan',
+                label: 'Loan Pitch',
                 url: '/loan/addloan',
                 parentKey: 'Loans',
             },
             {
-                label: 'Requested',
+                label: 'Proposal',
                 url: '/loan/request',
                 parentKey: 'Loans',
             },
             {
-                label: 'Approved',
+                label: 'Clearance',
                 url: '/loan/approved',
                 parentKey: 'Loans',
             },
@@ -196,7 +240,42 @@ const Navigate: NavigateTypes[] = [
     //     icon: 'mdi mdi-list-status',
     //     url: '/borrower/approved',
     // },
+    // { label: 'Ledger', isTitle: true },
+    // {
+    //     label: 'Ledger Book',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-cash-register',
+    //     children: [
+    //         {
+    //             label: 'Customer Ledger',
+    //             url: '/ledger/customer',
+    //             parentKey: 'Ledger Book',
+    //         },
+    //         {
+    //             label: 'Employee Ledger',
+    //             url: '/ledger/employee',
+    //             parentKey: 'Ledger Book',
+    //         },
+    //         {
+    //             label: 'Investor Ledger',
+    //             url: '/ledger/investor',
+    //             parentKey: 'Ledger Book',
+    //         },
+    //     ]
+    // },
     { label: 'Budget Entry', isTitle: true },
+    {
+        label: 'Day Book',
+        isTitle: false,
+        icon: 'mdi mdi-account-check',
+        url: '/view/day-book',
+    },
+    {
+        label: 'Ledger Book',
+        isTitle: false,
+        icon: 'mdi mdi-account-check',
+        url: '/ledger/employee',
+    },
     {
         label: 'Budget Entry',
         isTitle: false,
@@ -233,6 +312,18 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-account-hard-hat',
         url: '/view/employee',
     },    
+    {
+        label: 'Employee Attendance',
+        isTitle: false,
+        icon: 'mdi mdi-account-hard-hat',
+        url: '/view/employee-attendance',
+    },    
+    {
+        label: 'Attendance Report',
+        isTitle: false,
+        icon: 'mdi mdi-account-hard-hat',
+        url: '/view/attendance-report',
+    },    
     { label: 'General', isTitle: true },
     {
         label: 'Role',
@@ -240,11 +331,28 @@ const Navigate: NavigateTypes[] = [
         icon: 'mdi mdi-account-check',
         url: '/view/role',
     },
+    { label: 'Report', isTitle: true },
+    {
+        label: 'Over All Report',
+        isTitle: false,
+        icon: 'mdi mdi-account-check',
+        url: '/report/loan-report',
+    },
     {
         label: 'Master',
         isTitle: false,
         icon: 'mdi mdi-chart-donut-variant',
         children: [
+            {
+                label: 'Faq',
+                url: '/view/faq',
+                parentKey: 'Master',
+            },
+            {
+                label: 'Enquiry',
+                url: '/view/enquiry',
+                parentKey: 'Master',
+            },
             {
                 label: 'Address Type',
                 url: '/view/address-type',
