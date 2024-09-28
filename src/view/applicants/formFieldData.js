@@ -222,6 +222,7 @@ const applicantTabs = [
                         name: 'pincode',
                         inputType: 'number',
                         placeholder: 'Enter Pincode',
+                        maxlength: '6',
                     },
                 ],
             },

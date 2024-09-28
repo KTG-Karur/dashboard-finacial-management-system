@@ -35,11 +35,11 @@ const AuthLayout = ({ hasLogo, bottomLinks, children }: AccountLayoutProps) => {
                         {hasLogo && (
                             <div className="text-center">
                                 <div className="auth-logo">
-                                    <Link to="/" className="logo logo-dark text-center">
+                                    {/* <Link to="/" className="logo logo-dark text-center">
                                         <span className="logo-lg">
                                             <img src={LogoDark} alt="" width="150" />
                                         </span>
-                                    </Link>
+                                    </Link> */}
 
                                     <Link to="/" className="logo logo-light text-center">
                                         <span className="logo-lg">
@@ -51,7 +51,7 @@ const AuthLayout = ({ hasLogo, bottomLinks, children }: AccountLayoutProps) => {
                             </div>
                         )}
                         <Card>
-                            <Card.Body className="p-4">{children}</Card.Body>
+                            <Card.Body className="p-4" style={{borderRadius: "5px"}}>{children}</Card.Body>
                         </Card>
 
                         {/* bottom links */}

@@ -119,6 +119,7 @@ const formContainer = [
                 name: 'loanAmount',
                 inputType: 'number',
                 placeholder: 'Enter Loan amount',
+                onChange : "onLoanAmountHandle",
                 require: true,
             },
         ],

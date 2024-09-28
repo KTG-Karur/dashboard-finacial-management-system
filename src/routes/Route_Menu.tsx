@@ -9,7 +9,7 @@ export const Logout = React.lazy(() => import('../pages/auth/Logout'));
 
 // dashboards
 export const DashBoard1 = React.lazy(() => import('../pages/dashboards/DashBoard1/'));
-export const LoanDashBoard = React.lazy(() => import('../view/dashboard'));
+export const LoanDashBoard = React.lazy(() => import('../view/loan-calculator'));
 
 // master
 export const Employee = React.lazy(() => import('../view/employee'));
@@ -38,10 +38,24 @@ export const WelcomeLetter = React.lazy(() => import('../utils/welcomeLetter'));
 export const DuePayment = React.lazy(() => import('../view/due-payment')); // emi receipt
 export const InterestReceipt = React.lazy(() => import('../view/interest-receipt'));
 export const MontlyReceipt = React.lazy(() => import('../view/due-payment/receiptTemplate'));
+export const BorrowerReceipt = React.lazy(() => import('../view/browwer-receipt-emi'));
+export const BorrowerInterestReceipt = React.lazy(() => import('../view/browwer-receipt-interest'));
+export const BorrowerPdfReceipt = React.lazy(() => import('../view/browwer-receipt-emi/receiptTemplate'));
 export const InterestPdfReceipt = React.lazy(() => import('../view/interest-receipt/receiptTemplate'));
 export const BorrowerLoan = React.lazy(() => import('../view/borrower-loan/newAddLoan'));
 export const BorrowerLoanList = React.lazy(() => import('../view/borrower-loan-list/index'));
 export const BorrowerLoanActiveList = React.lazy(() => import('../view/borrower-approved-list'));
+export const DayBook = React.lazy(() => import('../view/day-book'));
+export const HomeScreen = React.lazy(() => import('../view/home'));
+export const EmployeeLedger = React.lazy(() => import('../view/ledger/employee-ledger'));
+export const EmployeeLedgerTemplate = React.lazy(() => import('../view/ledger/employee-ledger/employeeLedgerTemplate'));
+export const LoanReportDashboard = React.lazy(() => import('../view/dashboard'));
+export const EmployeeAttendance = React.lazy(() => import('../view/employee-attendance'));
+export const EmployeeAttendanceReport = React.lazy(() => import('../view/attendance-report'));
+export const Enquiry = React.lazy(() => import('../view/enquiry'));
+export const Faq = React.lazy(() => import('../view/faq'));
+export const LoanReport = React.lazy(() => import('../view/loan-report/loan-report'));
+
 
 // Loan
 export const AddLoan = React.lazy(() => import('../view/addLoan/newAddLoan'));

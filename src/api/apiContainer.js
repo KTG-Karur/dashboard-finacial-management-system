@@ -28,6 +28,22 @@ const apiContainer = {
   applicantProof: "/applicant-proof",
   investment: "/investment",
   investmentDetails: "/investment-details",
+  duePaymentDetails: "/due-payment-details",
+  duePaymentHistory: "/due-payment-history",
+  dayBook: "/day-book",
+  dayBookHistory: "/day-book-history",
+  employeeLedger: "/employee-ledger",
+  customerLedger: "/customer-ledger",
+  ledgerDetails: "/ledger-details",
+  investorDuePaymentHistory: "/investment-receipt",
+  investorDuePaymentDetails: "/investment-receipt-details",
+  searchApplicant: "/search-applicant",
+  searchApplicantDetails: "/search-applicant-details",
+  employeeAttendance: "/employee-attendance",
+  employeeAttendanceReport: "/employee-attendance-report",
+  enquiry: "/enquiry",
+  employeeLogin: "/organization-login",
+  faq: "/faq",
 };
 
 export default apiContainer;

@@ -1,12 +1,15 @@
 // employee/reducers.ts
 const initialState = {
   getDuePaymentList: [],
+  getDuePaymentDetailsList: [],
   createDuePaymentData: null,
   updateDuePaymentData: null,
   isLoading: false,
   errorMessage: null,
   getDuePaymentSuccess: false,
   getDuePaymentFailure: false,
+  getDuePaymentDetailsSuccess: false,
+  getDuePaymentDetailsFailure: false,
   createDuePaymentSuccess: false,
   createDuePaymentFailure: false,
   updateDuePaymentSuccess: false,
@@ -17,6 +20,7 @@ const initialState = {
 
 export default function duePaymentReducer(state = initialState, action: any) {
   switch (action.type) {
+    
     case "GET_DUE_PAYMENT_SUCCESS": {
       return {
         ...state,
@@ -39,6 +43,84 @@ export default function duePaymentReducer(state = initialState, action: any) {
         getDuePaymentSuccess: false,
         getDuePaymentFailure: false,
         getDuePaymentList: [],
+        errorMessage: null,
+      };
+    }
+
+    case "GET_INVESTOR_DUE_PAYMENT_SUCCESS": {
+      return {
+        ...state,
+        getInvestorDuePaymentSuccess: true,
+        getInvestorDuePaymentList: action.payload.data.data,
+        getInvestorDuePaymentFailure: false,
+      };
+    }
+    case "GET_INVESTOR_DUE_PAYMENT_FAILURE": {
+      return {
+        ...state,
+        getInvestorDuePaymentFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        getInvestorDuePaymentSuccess: false,
+      };
+    }
+    case "RESET_GET_INVESTOR_DUE_PAYMENT": {
+      return {
+        ...state,
+        getInvestorDuePaymentSuccess: false,
+        getInvestorDuePaymentFailure: false,
+        getInvestorDuePaymentList: [],
+        errorMessage: null,
+      };
+    }
+
+    case "GET_INVESTOR_DUE_PAYMENT_DETAILS_SUCCESS": {
+      return {
+        ...state,
+        getInvestorDuePaymentDetailsSuccess: true,
+        getInvestorDuePaymentDetailsList: action.payload.data.data,
+        getInvestorDuePaymentDetailsFailure: false,
+      };
+    }
+    case "GET_INVESTOR_DUE_PAYMENT_DETAILS_FAILURE": {
+      return {
+        ...state,
+        getInvestorDuePaymentDetailsFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        getInvestorDuePaymentDetailsSuccess: false,
+      };
+    }
+    case "RESET_GET_INVESTOR_DUE_PAYMENT_DETAILS": {
+      return {
+        ...state,
+        getInvestorDuePaymentDetailsSuccess: false,
+        getInvestorDuePaymentDetailsFailure: false,
+        getInvestorDuePaymentDetailsList: [],
+        errorMessage: null,
+      };
+    }
+
+    case "GET_DUE_PAYMENT_DETAILS_SUCCESS": {
+      return {
+        ...state,
+        getDuePaymentDetailsSuccess: true,
+        getDuePaymentDetailsList: action.payload.data.data,
+        getDuePaymentDetailsFailure: false,
+      };
+    }
+    case "GET_DUE_PAYMENT_DETAILS_FAILURE": {
+      return {
+        ...state,
+        getDuePaymentDetailsFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        getDuePaymentDetailsSuccess: false,
+      };
+    }
+    case "RESET_GET_DUE_PAYMENT_DETAILS": {
+      return {
+        ...state,
+        getDuePaymentDetailsSuccess: false,
+        getDuePaymentDetailsFailure: false,
+        getDuePaymentDetailsList: [],
         errorMessage: null,
       };
     }

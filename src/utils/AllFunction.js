@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { NotificationManager } from 'react-notifications';
 import moment from 'moment';
+import _ from 'lodash';
 import ReactDOM from 'react-dom';
 
 const showMessage = (type, msg, title = null) => {
@@ -107,6 +108,7 @@ function objectToKeyValueArray(obj) {
 const showConfirmationDialog = (
     message,
     callback,
+    sucessViewFalse = false,
     confirmButtonText = 'Yes',
     action = 'Successfully',
     successTitle = 'Successfully',
@@ -126,7 +128,9 @@ const showConfirmationDialog = (
             icon: 'swal-icon-custom',
         },
     }).then((result) => {
-        if (result.isConfirmed) {
+        if (result.isConfirmed && sucessViewFalse) {
+            callback();
+        }else if (result.isConfirmed) {
             Swal.fire({
                 title: action,
                 text: successTitle,
@@ -168,14 +172,15 @@ const emiCalculation = (principal, annualInterest, tenurePeriod) => {
 };
 
 const findDueDate = (disbursedDate = formatDate()) => {
-    const disbursedDateArr = disbursedDate.split('-');
-    const year = disbursedDateArr[0];
-    const day = 10;
-    let month = parseInt(disbursedDateArr[1]) + 1;
-    if (parseInt(disbursedDateArr[1]) >= 12) {
-        month = 1;
-    }
-    return `${year}-${month}-${day}`;
+    // const disbursedDateArr = disbursedDate.split('-');
+    // const year = disbursedDateArr[0];
+    // const day = 10;
+    // let month = parseInt(disbursedDateArr[1]) + 1;
+    // if (parseInt(disbursedDateArr[1]) >= 12) {
+    //     month = 1;
+    // }
+    // return `${year}-${month}-${day}`;
+    return moment(disbursedDate).add(1, 'months').date(10).format("YYYY-MM-DD")
 };
 
 const findLastDate = (disbursedDate = formatDate(), tenurePeriod) => {
@@ -234,9 +239,14 @@ const calculateTotalInterestPayable = (principal, annualInterest, tenurePeriod) 
     return totalInterestPayable;
 };
 
+const removeNullKeyFromObj = (obj) => {
+    return _.omitBy(obj, (value) => value === null)
+  }
+
 
 export {
     showMessage,
+    removeNullKeyFromObj,
     getFormFieldName,
     formatDate,
     showConfirmationDialog,

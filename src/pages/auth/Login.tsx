@@ -1,15 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Alert, Row, Col } from 'react-bootstrap';
 import { Navigate, Link, useLocation } from 'react-router-dom';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useTranslation } from 'react-i18next';
+import LogoDark from '../../assets/images/Harsini_Fincorp.png';
+import { APICore } from '../../helpers/api/apiCore';
 
 // hooks
 import { useRedux } from '../../hooks/';
 
 // actions
-import { resetAuth, loginUser } from '../../redux/actions';
+import { resetAuth, loginUser, getEmployeeLoginRequest, resetGetEmployeeLogin } from '../../redux/actions';
 
 // components
 import { VerticalForm, FormInput } from '../../components/form/';
@@ -33,18 +35,18 @@ const BottomLink = () => {
     return (
         <Row className="mt-3">
             <Col xs={12} className="text-center">
-                <p className="text-muted">
+                <p className="text-muted text-light">
                     <Link to="/auth/forget-password" className="text-muted ms-1">
                         <i className="fa fa-lock me-1"></i>
                         {t('Forgot your password?')}
                     </Link>
                 </p>
-                <p className="text-muted">
+                {/* <p className="text-muted">
                     {t("Don't have an account?")}{' '}
                     <Link to={'/auth/register'} className="text-dark ms-1">
                         <b>{t('Sign Up')}</b>
                     </Link>
-                </p>
+                </p> */}
             </Col>
         </Row>
     );
@@ -53,17 +55,41 @@ const BottomLink = () => {
 const Login = () => {
     const { t } = useTranslation();
     const { dispatch, appSelector } = useRedux();
+    const [loading, setLoading] = useState(false);
+    const [userLoggedIn, setUserLoggedIn] = useState(false);
 
-    const { user, userLoggedIn, loading, error } = appSelector((state) => ({
-        user: state.Auth.user,
-        loading: state.Auth.loading,
-        error: state.Auth.error,
-        userLoggedIn: state.Auth.userLoggedIn,
+    // const { user, userLoggedIn, loading, error } = appSelector((state) => ({
+    //     user: state.Auth.user,
+    //     loading: state.Auth.loading,
+    //     error: state.Auth.error,
+    //     userLoggedIn: state.Auth.userLoggedIn,
+    // }));
+
+    const {
+        getEmployeeLoginSuccess, getEmployeeLoginList, getEmployeeLoginFailure, error
+
+    } = appSelector((state) => ({
+        getEmployeeLoginSuccess: state.loginReducer.getEmployeeLoginSuccess,
+        getEmployeeLoginList: state.loginReducer.getEmployeeLoginList,
+        getEmployeeLoginFailure: state.loginReducer.getEmployeeLoginFailure,
+
+        error: state.loginReducer.errorMessage,
     }));
 
     useEffect(() => {
-        dispatch(resetAuth());
+        localStorage.clear();
+        dispatch(resetGetEmployeeLogin())
     }, [dispatch]);
+
+    useEffect(() => {
+        if (getEmployeeLoginSuccess) {
+            setUserLoggedIn(true)
+            setLoading(false)
+            sessionStorage.setItem("loginInfo", JSON.stringify(getEmployeeLoginList));
+        } else if (getEmployeeLoginFailure) {
+            dispatch(resetGetEmployeeLogin())
+        }
+    }, [getEmployeeLoginSuccess, getEmployeeLoginFailure]);
 
     /*
     form validation schema
@@ -79,7 +105,12 @@ const Login = () => {
     handle form submission
     */
     const onSubmit = (formData: UserData) => {
-        dispatch(loginUser(formData['email'], formData['password']));
+        const sumbitReq={
+            userName : formData['email'],
+            password : formData['password']
+        }
+        setLoading(true)
+        dispatch(getEmployeeLoginRequest(sumbitReq))
     };
 
     const location = useLocation();
@@ -87,16 +118,21 @@ const Login = () => {
 
     if (location.state) {
         const { from } = location.state as LocationState;
-        redirectUrl = from ? from.pathname : '/';
+        redirectUrl = from ? from.pathname : '/home';
     }
 
     return (
         <>
-            {userLoggedIn && user && <Navigate to={redirectUrl} replace />}
+            {userLoggedIn && <Navigate to={redirectUrl} replace />}
 
             <AuthLayout bottomLinks={<BottomLink />}>
                 <div className="text-center mb-4">
-                    <h4 className="text-uppercase mt-0">{t('Sign In')}</h4>
+                    {/* <h4 className="text-uppercase mt-0">{t('Sign In')}</h4> */}
+                    <Link to="/" className="logo logo-dark text-center">
+                        <span className="logo-lg">
+                            <img src={LogoDark} alt="" width="150" />
+                        </span>
+                    </Link>
                 </div>
 
                 {error && (
@@ -109,12 +145,12 @@ const Login = () => {
                 <VerticalForm<UserData>
                     onSubmit={onSubmit}
                     resolver={schemaResolver}
-                    defaultValues={{ email: 'adminto@coderthemes.com', password: 'test' }}
+                    defaultValues={{ email: 'suki@harshinifincop.com', password: '123456' }}
                 >
                     <FormInput
                         type="email"
                         name="email"
-                        label={t('Email address')}
+                        label={t('User Name')}
                         placeholder={t('hello@coderthemes.com')}
                         containerClass={'mb-3'}
                     />

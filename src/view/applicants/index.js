@@ -294,8 +294,8 @@ function Index() {
 
     useEffect(() => {
         setIsLoading(true)
-        const req={
-            isBorrower : 0
+        const req = {
+            isBorrower: 0
         }
         dispatch(getApplicantRequest(req));
         dispatch(getProofTypeRequest());
@@ -430,6 +430,17 @@ function Index() {
         if (createApplicantSuccess) {
             const temp_state = [createApplicantData[0], ...parentList];
             setParentList(temp_state)
+
+            // let filterImageName = []
+            // state.proofImage.map((ele) => {
+            //     const originalFile = ele[0];
+            //     const renamedFile = new File([originalFile], `${createApplicantData[0].applicantCode}-${originalFile.name}`, {
+            //         type: originalFile.type,
+            //         lastModified: originalFile.lastModified,
+            //     });
+            //     filterImageName.push([renamedFile]);
+            // })
+            // console.log(filterImageName)
             showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateApplicant())
@@ -549,6 +560,18 @@ function Index() {
     }
 
     const onFormSubmit = async () => {
+        let proofImage = []
+        multiStateValue[0].idProof.map((item, index) => {
+            if (item.imageProof) {
+                const file = item.imageProof
+                multiStateValue[0].idProof[index].imageName = file[0].name
+                proofImage.push(item.imageProof)
+            }
+        })
+        setState({
+            ...state,
+            proofImage: proofImage
+        })
         const personalInfo = [multiStateValue[0]?.personalInfo] || []
         const idProofInfo = multiStateValue[0]?.idProof || []
         const addressInfo = multiStateValue[0]?.addressInfo || []
@@ -562,8 +585,20 @@ function Index() {
             additionalInfo: additionalInfo
         }
         if (isEdit) {
-            dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
+            // dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
         } else {
+            // console.log(submitRequest)
+            // let filterImageName = []
+            // state.proofImage.map((ele) => {
+            //     const originalFile = ele[0];
+            //     const renamedFile = new File([originalFile], `CUS-0001-${originalFile.name}`, {
+            //         type: originalFile.type,
+            //         lastModified: originalFile.lastModified,
+            //     });
+            //     filterImageName.push([renamedFile]);
+            // })
+            // console.log(filterImageName)
+            // console.log(state.proofImage)
             dispatch(createApplicantRequest(submitRequest))
         }
     };
@@ -591,7 +626,7 @@ function Index() {
 
     const onDeleteForm = (data, index, activeChecker) => {
         const submitRequest = {
-            personalInfo:[{
+            personalInfo: [{
                 isActive: activeChecker == 0 ? 1 : 0
             }]
         }

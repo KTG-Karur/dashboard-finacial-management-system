@@ -58,21 +58,21 @@ export const resetUpdateDepartment = () => ({
   type: 'RESET_UPDATE_DEPARTMENT',
 });
 //Delete Reducer Call--->
-// export const deleteDepartmentRequest = ( id: string) => ({
-//   type: 'DELETE_DEPARTMENT_REQUEST',
-//   payload: { id },
-// });
+export const deleteDepartmentRequest = ( id: string) => ({
+  type: 'DELETE_DEPARTMENT_REQUEST',
+  payload: { id },
+});
 
-// export const deleteDepartmentSuccess = (data: any) => ({
-//   type: 'DELETE_DEPARTMENT_SUCCESS',
-//   payload: { data },
-// });
+export const deleteDepartmentSuccess = (data: any) => ({
+  type: 'DELETE_DEPARTMENT_SUCCESS',
+  payload: { data },
+});
 
-// export const deleteDepartmentFailure = (errorMessage: string) => ({
-//   type: 'DELETE_DEPARTMENT_FAILURE',
-//   errorMessage: { errorMessage },
-// });
+export const deleteDepartmentFailure = (errorMessage: string) => ({
+  type: 'DELETE_DEPARTMENT_FAILURE',
+  errorMessage: { errorMessage },
+});
 
-// export const deleteUpdateDepartment = () => ({
-//   type: 'RESET_DELETE_DEPARTMENT',
-// });
+export const deleteUpdateDepartment = () => ({
+  type: 'RESET_DELETE_DEPARTMENT',
+});

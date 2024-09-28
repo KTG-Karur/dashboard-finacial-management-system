@@ -64,7 +64,7 @@ const StatisticsWidget1 = ({ title, data, color, stats, subTitle }: StatisticsWi
     return (
         <Card>
             <Card.Body>
-                <Dropdown className="float-end" align="end">
+                {/* <Dropdown className="float-end" align="end">
                     <Dropdown.Toggle as="a" className="cursor-pointer card-drop">
                         <i className="mdi mdi-dots-vertical"></i>
                     </Dropdown.Toggle>
@@ -74,7 +74,7 @@ const StatisticsWidget1 = ({ title, data, color, stats, subTitle }: StatisticsWi
                         <Dropdown.Item>Something Else</Dropdown.Item>
                         <Dropdown.Item>Separated link</Dropdown.Item>
                     </Dropdown.Menu>
-                </Dropdown>
+                </Dropdown> */}
                 <h4 className="header-title mt-0 mb-4">{title}</h4>
                 <div className="widget-chart-1">
                     <div className="widget-chart-box-1 float-start">

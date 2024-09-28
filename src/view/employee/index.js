@@ -4,7 +4,7 @@ import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
 import { employeeFormContainer, employeeFormEditContainer } from './formFieldData';
 import Table from '../../components/Table';
-import { dateConversion, showConfirmationDialog, showMessage } from '../../utils/AllFunction';
+import { capitalizeFirstLetter, dateConversion, showConfirmationDialog, showMessage } from '../../utils/AllFunction';
 import { createEmployeeRequest, getCountryRequest, getDepartmentRequest, getDesignationRequest, getEmployeeRequest, getRoleRequest, getStateRequest, resetCreateEmployee, resetGetCountry, resetGetDepartment, resetGetDesignation, resetGetEmployee, resetUpdateEmployee, updateEmployeeRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
@@ -294,6 +294,8 @@ function Index() {
             roleId: '',
             dateOfJoining: '',
             address: '',
+            userName: '',
+            password: '',
         });
 
     };
@@ -335,8 +337,8 @@ function Index() {
     const onFormSubmit = async () => {
         const submitRequest = {
             "isUser": state.isUser === true ? 1 : 0,
-            "firstName": state?.firstName || "",
-            "lastName": state?.lastName || "",
+            "firstName": state.firstName ? capitalizeFirstLetter(state.firstName) : "",
+            "lastName": state.lastName ? capitalizeFirstLetter(state.lastName) : "",
             "dob": state?.dob || "",
             "contactNo": state?.contactNo || "",
             "emailId": state?.emailId || "",
@@ -405,7 +407,7 @@ function Index() {
                     columns={columns}
                     Title={'Employee List'}
                     data={parentList || []}
-                    pageSize={5}
+                    pageSize={10}
                     toggle={createModel}
                 />}
 

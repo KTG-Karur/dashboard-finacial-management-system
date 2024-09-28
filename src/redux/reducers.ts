@@ -27,6 +27,15 @@ import employeeReducer from './employee/reducers';
 import loanChargesTypeReducer from './loan-charges-type/reducers';
 import duePaymentReducer from './due-payment/reducers';
 import investmentReducer from './investment/reducers';
+import duePaymentHistoryReducer from './due-payment-history/reducers';
+import dayBookReducer from './day-book/reducers';
+import dayBookHistoryReducer from './day-book-history/reducers';
+import ledgerReducer from './ledger/reducers';
+import searchApplicantReducer from './search-applicant/reducers';
+import employeeAttendanceReducer from './employee-attendace/reducers';
+import enquiryReducer from './enquiry/reducers';
+import loginReducer from './login/reducers';
+import faqReducer from './faq/reducers';
 
 export default combineReducers({
     Auth,
@@ -56,4 +65,13 @@ export default combineReducers({
     loanChargesTypeReducer,
     duePaymentReducer,
     investmentReducer,
+    duePaymentHistoryReducer,
+    dayBookReducer,
+    dayBookHistoryReducer,
+    ledgerReducer,
+    searchApplicantReducer,
+    employeeAttendanceReducer,
+    enquiryReducer,
+    loginReducer,
+    faqReducer,
 });

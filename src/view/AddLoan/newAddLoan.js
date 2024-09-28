@@ -244,7 +244,8 @@ function Index() {
     //Dispatch Called
     useEffect(() => {
         const getReq={
-            isActive : 1
+            isActive : 1,
+            isBorrower : 0
         }
         dispatch(getCategoryRequest());
         dispatch(getLoanChargesTypeRequest(getReq));
@@ -894,6 +895,14 @@ function Index() {
         }));
     };
 
+    const onLoanAmountHandle = (event)=>{
+       console.log(state.loanChargesInfo)
+        setState({
+            ...state,
+            [event.target.name] : event.target.value
+        })
+    }
+
     return (
         <React.Fragment>
             <NotificationContainer />
@@ -960,6 +969,7 @@ function Index() {
                                     handleBankSelect: handleBankSelect,
                                     handleCategorySelect: handleCategorySelect,
                                     handlesubCategorySelect: handlesubCategorySelect,
+                                    onLoanAmountHandle: onLoanAmountHandle,
                                 }}
                                 editData={state}
                                 noOfColumns={4}

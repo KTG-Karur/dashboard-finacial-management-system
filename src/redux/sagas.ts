@@ -26,6 +26,15 @@ import employeeSaga from './employee/saga';
 import loanChargesTypeSaga from './loan-charges-type/saga';
 import duePaymentSaga from './due-payment/saga';
 import investmentSaga from './investment/saga';
+import duePaymentHistorySaga from './due-payment-history/saga';
+import dayBookSaga from './day-book/saga';
+import dayBookHistorySaga from './day-book-history/saga';
+import ledgerSaga from './ledger/saga';
+import searchApplicantSaga from './search-applicant/saga';
+import employeeAttendanceSaga from './employee-attendace/saga';
+import enquirySaga from './enquiry/saga';
+import loginSaga from './login/saga';
+import faqSaga from './faq/saga';
 
 export default function* rootSaga() {
     yield all([
@@ -55,5 +64,14 @@ export default function* rootSaga() {
         loanChargesTypeSaga(),
         duePaymentSaga(),
         investmentSaga(),
+        duePaymentHistorySaga(),
+        dayBookSaga(),
+        dayBookHistorySaga(),
+        ledgerSaga(),
+        searchApplicantSaga(),
+        employeeAttendanceSaga(),
+        enquirySaga(),
+        loginSaga(),
+        faqSaga(),
     ]);
 }

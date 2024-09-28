@@ -23,7 +23,7 @@ const DefaultLayout = () => {
     const userDetail = sessionStorage.getItem('adminto_user');
 
     if (userDetail) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to="/home" replace />;
     }
 
     return <Suspense fallback={loading()}><Outlet /></Suspense>;

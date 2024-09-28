@@ -13,17 +13,17 @@ function CompanyDetails(props) {
                 />
             </h3>
             <div style={{ fontSize }}>
-                Plot No: 11,
+               <b><i style={{color: 'red'}} className={'fe-map-pin'}></i> Plot No: 11,
                 Opposite District Collectorate,
                 Thanthoni Malai,
-                Karur - 639 007.
+                Karur - 639 007.</b>
             </div>
             <div>
             <span style={{ fontSize }}>
-            <i className={'fe-mail'}></i> support@harshinifincorp.com
+           <b> <i style={{color: 'orange'}} className={'fe-mail'}></i> support@harshinifincorp.com</b>
             </span>
             <span style={{ fontSize }} className='mx-2'>
-            <i className={'fe-mail'}></i> +91 9876543210 
+            <b><i style={{color: 'blue'}} className={'fe-phone'}></i> +91 9876543210 </b>
             </span>
             </div>
         </div>

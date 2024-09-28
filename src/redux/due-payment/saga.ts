@@ -1,13 +1,9 @@
 // saga.ts
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { createDuePayment, getDuePayment, updateDuePayment } from '../../api/DuePaymentApi'; // Adjust the path as needed
-import { 
-  getDuePaymentSuccess, getDuePaymentFailure,
-  createDuePaymentSuccess,
-  createDuePaymentFailure,
-  updateDuePaymentSuccess,
-  updateDuePaymentFailure,
+import { createDuePayment, getDuePayment, getDuePaymentDetails, updateDuePayment } from '../../api/DuePaymentApi'; // Adjust the path as needed
+import {  getDuePaymentSuccess, getDuePaymentFailure,createDuePaymentSuccess, createDuePaymentFailure, updateDuePaymentSuccess, updateDuePaymentFailure, getDuePaymentDetailsSuccess, getDuePaymentDetailsFailure, getInvestorDuePaymentSuccess, getInvestorDuePaymentFailure,
 } from './actions';
+import { getInvestorDuePaymentDetails, getInvestorDuePaymentHistory } from '../../api/DuePaymentHistoryApi';
 
 // Saga to handle fetching duePayments
 function* fetchDuePaymentSaga(action: any): Generator<any, any, any> {
@@ -24,12 +20,11 @@ function* fetchDuePaymentSaga(action: any): Generator<any, any, any> {
     yield put(getDuePaymentFailure(errorMessage));
   }
 }
-
-// // Saga to handle creating a duePayment
-function* createDuePaymentSaga(action: any): Generator<any, any, any> {
+// Saga to handle fetching duePayments
+function* fetchInvestorDuePaymentSaga(action: any): Generator<any, any, any> {
   try {
-    const data = yield call(createDuePayment, action.payload);
-    yield put(createDuePaymentSuccess(data));
+    const data = yield call(getInvestorDuePaymentHistory, action.payload);
+    yield put(getInvestorDuePaymentSuccess(data));
   } catch (error: any) {
     const errorMessage = error.response && error.response.data && error.response.data.message
     ? error.response.data.message
@@ -37,6 +32,50 @@ function* createDuePaymentSaga(action: any): Generator<any, any, any> {
       ? error.message
       : 'An unexpected error occurred';
 
+    yield put(getInvestorDuePaymentFailure(errorMessage));
+  }
+}
+// Saga to handle fetching duePayments
+function* fetchInvestorDuePaymentDetailsSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(getInvestorDuePaymentDetails, action.payload);
+    yield put(getInvestorDuePaymentSuccess(data));
+  } catch (error: any) {
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(getInvestorDuePaymentFailure(errorMessage));
+  }
+}
+// Saga to handle fetching duePayments
+function* fetchDuePaymentDetailsSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(getDuePaymentDetails, action.payload);
+    yield put(getDuePaymentDetailsSuccess(data));
+  } catch (error: any) {
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(getDuePaymentDetailsFailure(errorMessage));
+  }
+}
+
+// // Saga to handle creating a duePayment
+function* createDuePaymentSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(createDuePayment, action.payload);
+    yield put(createDuePaymentSuccess(data));
+  } catch (error: any) {
+    
+    const errorMessage = error ? error
+      : 'An unexpected error occurred';
+    console.log(error)
     yield put(createDuePaymentFailure(errorMessage));
   }
 }
@@ -69,6 +108,9 @@ function* updateDuePaymentSaga(action: any): Generator<any, any, any> {
 
 export default function* duePaymentSaga() {
   yield takeEvery('GET_DUE_PAYMENT_REQUEST', fetchDuePaymentSaga);
+  yield takeEvery('GET_INVESTOR_DUE_PAYMENT_REQUEST', fetchInvestorDuePaymentSaga);
+  yield takeEvery('GET_INVESTOR_DUE_PAYMENT_DETAILS_REQUEST', fetchInvestorDuePaymentDetailsSaga);
+  yield takeEvery('GET_DUE_PAYMENT_DETAILS_REQUEST', fetchDuePaymentDetailsSaga);
   yield takeEvery('CREATE_DUE_PAYMENT_REQUEST', createDuePaymentSaga);
   yield takeEvery('UPDATE_DUE_PAYMENT_REQUEST', updateDuePaymentSaga);
   // yield takeEvery('DELETE_DUE_PAYMENT_REQUEST', deleteDuePaymentSaga);

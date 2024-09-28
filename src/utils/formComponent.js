@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FormInput } from '../components/form';
 import Select from 'react-select';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import { formatDate, findObj, dateConversion } from './AllFunction';
 import _ from 'lodash';
 
@@ -37,6 +37,12 @@ function FormComponent(props) {
                     [formName]: formate,
                 }));
                 break;
+            case 'time':
+                setState((prev) => ({
+                    ...prev,
+                    [formName]: e.target.value,
+                }));
+                break;
             case 'select':
                 setState((prev) => ({
                     ...prev,
@@ -53,6 +59,12 @@ function FormComponent(props) {
                 setState((prev) => ({
                     ...prev,
                     [formName]: [e.target.files[0]],
+                }));
+                break;
+            case 'checkbox':
+                setState((prev) => ({
+                    ...prev,
+                    [formName]: e,
                 }));
                 break;
             default:
@@ -144,6 +156,7 @@ function FormComponent(props) {
                                     disabled={form?.isDisabled || false}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
+                                        form.onChange ? onChangeCallBack[form.onChange](e) :
                                         handleChange(e, 'text', form?.name);
                                     }}
                                 />
@@ -203,11 +216,13 @@ function FormComponent(props) {
                                     required={form?.require}
                                     value={state[form?.name] || ""}
                                     disabled={form?.isDisabled}
+                                    onWheel={(e) => e.target.blur()}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
                                         const value = e.target.value;
                                         // Check if the value exceeds the maxlength
                                         if (!form?.maxlength || value.length <= form?.maxlength) {
+                                            form.onChange ? onChangeCallBack[form.onChange](e) : 
                                             handleChange(e, 'number', form?.name);
                                         }
                                     }}
@@ -240,7 +255,7 @@ function FormComponent(props) {
                                     key={index}
                                     placeholder={form?.placeholder}
                                     required={form?.require}
-                                    value={state[form?.name] ? dateConversion(state[form?.name] ,"YYYY-MM-DD") : ""}
+                                    value={state[form?.name] ? dateConversion(state[form?.name], "YYYY-MM-DD") : ""}
                                     disabled={form?.isDisabled}
                                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                     onChange={(e) => {
@@ -322,24 +337,27 @@ function FormComponent(props) {
                                     }
                                 </p>
                                 {
-                                    (optionListState?.[form?.optionList] || []) > 0 ?
-                                        (optionListState?.[form?.optionList] || []).map((item, i) => {
-                                            return (
-                                                <Form.Check
-                                                    key={i}
-                                                    label={form?.label || ""}
-                                                    value={state[form?.name]}
-                                                    type="checkbox"
-                                                    id={`basic-checkbox-${i}`}
-                                                    name={form?.name}
-                                                    className={'mb-2 form-check-Primary'}
-                                                    defaultChecked={i == 0}
-                                                    onChange={(e) => {
-                                                        handleChange(item, 'checkbox', form?.name);
-                                                    }}
-                                                />
-                                            );
-                                        }) :
+                                    (optionListState?.[form?.optionList] || []).length > 0 ?
+                                        (<Row>
+                                            {(optionListState?.[form?.optionList] || []).map((item, i) => {
+                                                return (
+                                                    <Col xs={form?.colValue || "3"}>
+                                                        <Form.Check
+                                                            key={i}
+                                                            label={form.displayKey ? item[form?.displayKey] || form?.label : ""}
+                                                            value={state[form?.name]}
+                                                            checked={state[form?.name] === item[form?.uniqueKey]}
+                                                            type="checkbox"
+                                                            id={`basic-checkbox-${i}`}
+                                                            name={form?.name}
+                                                            className={'mb-2 form-check-Primary'}
+                                                            defaultChecked={i == 0}
+                                                            onChange={(e) => {
+                                                                handleChange(item[form?.uniqueKey], 'checkbox', form?.name);
+                                                            }}
+                                                        /></Col>
+                                                );
+                                            })}</Row>) :
                                         (<Form.Check
                                             key={"2"}
                                             label={form?.label || ""}
@@ -389,45 +407,45 @@ function FormComponent(props) {
                                 </div>
                             )
                         );
-                    case 'number':
-                        return (
-                            (
-                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
-                                    <Form.Label>
-                                        <span>
-                                            {form?.label}{' '}
-                                            {form?.require ? (
-                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
-                                            ) : null}
-                                        </span>
-                                    </Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name={form?.name}
-                                        className="mb-1"
-                                        placeholder={form?.placeholder}
-                                        required={form?.require}
-                                        value={state[form?.name]}
-                                        disabled={form?.isDisabled}
-                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
-                                        onChange={(e) => {
-                                            const value = e.target.value;
-                                            // Check if the value exceeds the maxlength
-                                            if (!form?.maxlength || value.length <= form?.maxlength) {
-                                                form.onChange
-                                                    ? onChangeCallBack[form.onChange](e.target.value, form.name)
-                                                    : handleChange(e, 'number', form.name);
-                                            }
-                                        }}
-                                    />
-                                    {errors?.includes(form?.name) && (
-                                        <p
-                                            className="text-danger"
-                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
-                                    )}
-                                </div>
-                            )
-                        );
+                    // case 'number':
+                    //     return (
+                    //         (
+                    //             <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                    //                 <Form.Label>
+                    //                     <span>
+                    //                         {form?.label}{' '}
+                    //                         {form?.require ? (
+                    //                             <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                    //                         ) : null}
+                    //                     </span>
+                    //                 </Form.Label>
+                    //                 <Form.Control
+                    //                     type="number"
+                    //                     name={form?.name}
+                    //                     className="mb-1"
+                    //                     placeholder={form?.placeholder}
+                    //                     required={form?.require}
+                    //                     value={state[form?.name]}
+                    //                     disabled={form?.isDisabled}
+                    //                     onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                    //                     onChange={(e) => {
+                    //                         const value = e.target.value;
+                    //                         // Check if the value exceeds the maxlength
+                    //                         if (!form?.maxlength || value.length <= form?.maxlength) {
+                    //                             form.onChange
+                    //                                 ? onChangeCallBack[form.onChange](e.target.value, form.name)
+                    //                                 : handleChange(e, 'number', form.name);
+                    //                         }
+                    //                     }}
+                    //                 />
+                    //                 {errors?.includes(form?.name) && (
+                    //                     <p
+                    //                         className="text-danger"
+                    //                         style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                    //                 )}
+                    //             </div>
+                    //         )
+                    //     );
                     case 'date':
                         return (
                             (
@@ -452,6 +470,40 @@ function FormComponent(props) {
                                         onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
                                         onChange={(e) => {
                                             handleChange(e, 'date', form?.name);
+                                        }}
+                                    />
+                                    {errors?.includes(form?.name) && (
+                                        <p
+                                            className="text-danger"
+                                            style={{ fontWeight: 'bold' }}>{`* Please Enter ${form?.name}`}</p>
+                                    )}
+                                </div>
+                            )
+                        );
+                    case 'time':
+                        return (
+                            (
+                                <div key={index} className={`${form?.classStyle || ''} mb-2`}>
+                                    <Form.Label>
+                                        <span>
+                                            {form?.label}{' '}
+                                            {form?.require ? (
+                                                <span style={{ fontWeight: 'bold', color: 'red' }}>*</span>
+                                            ) : null}
+                                        </span>
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="time" 
+                                        name={form?.name}
+                                        className="mb-2"
+                                        key={index}
+                                        placeholder={form?.placeholder}
+                                        required={form?.require}
+                                        value={state[form?.name]}
+                                        disabled={form?.isDisabled}
+                                        onFocus={form?.require ? () => removeHanldeErrors(form?.name) : null}
+                                        onChange={(e) => {
+                                            handleChange(e, 'time', form?.name); 
                                         }}
                                     />
                                     {errors?.includes(form?.name) && (
