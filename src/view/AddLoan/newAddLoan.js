@@ -610,7 +610,7 @@ function Index() {
                 ...optionListState,
                 loanChargeId: tempState,
             });
-            copyLoanChargesId = tempState;
+            copyLoanChargesId = [createLoanChargesTypeData[0], ...copyLoanChargesId];
             dispatch(resetCreateLoanChargesType());
         } else if (createLoanChargesTypeFailure) {
             showMessage('warning', errorMessage);
@@ -641,7 +641,7 @@ function Index() {
             const chargesAmt = parseInt(chargeAmount);
             if (isPercentage === 1) {
                 const percentageValues = percentageVal(loanAmt, chargesAmt);
-                perVal = parseInt(percentageValues);
+                perVal = parseFloat(percentageValues);
             } else {
                 perVal = chargesAmt;
             }
@@ -734,6 +734,7 @@ function Index() {
                     loanChargeId: state.loanChargeId,
                     loanChargesName: state.loanChargesName,
                     isPercentage: state.isPercentage,
+                    realPercentage: state.chargeAmount,
                     chargeAmount: perVal,
                 };
                 const updata = await updateData(state.loanChargesInfo, state?.id, editData);
@@ -749,6 +750,7 @@ function Index() {
                     loanChargeId: state.loanChargeId,
                     loanChargesName: state.loanChargesName,
                     isPercentage: state.isPercentage,
+                    realPercentage: state.chargeAmount,
                     chargeAmount: perVal,
                 };
                 setState((prev) => ({
@@ -761,8 +763,17 @@ function Index() {
                 ...prevState,
                 loanChargeId: '',
                 isPercentage: '',
+                loanChargesName: '',
                 chargeAmount: '',
             }));
+        }
+        else {
+            if (state?.loanAmount == undefined || state?.loanAmount == '') {
+                showMessage('warning', "Loan amount is empty, must be provided");
+            }
+            else {
+                showMessage('warning', "Loan charges filed required, must be provided");
+            }
         }
     };
 
@@ -772,11 +783,12 @@ function Index() {
             ...prev,
             loanChargeId: '',
             isPercentage: '',
+            loanChargesName: '',
             chargeAmount: '',
         }));
         setIsEditArrVal(true);
-        const updatedState = { ...data, id: id };
-        const arrValue = copyLoanChargesId.find((item) => item.loanChargesId === data.loanChargeId);
+        const updatedState = { ...data };
+        const arrValue = await copyLoanChargesId.find((item) => item.loanChargesId === data.loanChargeId);
         setOptionListState((prev) => ({
             ...prev,
             loanChargeId: [...optionListState.loanChargeId, arrValue],
@@ -895,13 +907,21 @@ function Index() {
         }));
     };
 
-    const onLoanAmountHandle = (event)=>{
-       console.log(state.loanChargesInfo)
+    const onLoanAmountHandle = (event) => {
+        const EventLoanAmount = event.target.value;
+        if (state.loanChargesInfo.length >= 0) {
+            (state.loanChargesInfo || []).map((item, i) => {
+                if (item.isPercentage) {
+                    const pertoVal = percentageVal(EventLoanAmount, item.realPercentage);
+                    item.chargeAmount = pertoVal;
+                }
+            });
+        }
         setState({
             ...state,
-            [event.target.name] : event.target.value
-        })
-    }
+            [event.target.name]: EventLoanAmount,
+        });
+    };
 
     return (
         <React.Fragment>

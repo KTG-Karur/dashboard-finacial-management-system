@@ -108,10 +108,10 @@ const LoanPdf = () => {
                 const data = {
                     month,
                     dueDate: formattedDueDate,
-                    principalRepayment: principalRepay.toFixed(2),
-                    interestForMonth: monthInterestAmount.toFixed(2),
-                    principalRepaymentAndInterest: emi.toFixed(2),
-                    principalRemain: remainingPrincipal.toFixed(2),
+                    principalRepayment: parseInt(principalRepay),
+                    interestForMonth: parseInt(monthInterestAmount),
+                    principalRepaymentAndInterest: parseInt(emi),
+                    principalRemain:parseInt(remainingPrincipal),
                 };
                 setLoanState((prev) => [...prev, data]);
             }
