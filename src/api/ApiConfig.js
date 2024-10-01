@@ -24,11 +24,11 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
 
   if (object) {
     if (method === 'FORMPUT' || method === 'FORMPOST') {
-      const formData = new FormData();
-      Object.keys(object).forEach((key) => {
-        formData.append(key, object[key]);
-      });
-      fetchConfig.body = formData;
+      // const formData = new FormData();
+      // Object.keys(object).forEach((key) => {
+      //   formData.append(key, object[key]);
+      // });
+      fetchConfig.body = object;
       fetchConfig.headers['Content-Type'] = 'multipart/form-data';
     } else if (method === 'GET') {
       const queryParams = new URLSearchParams(object).toString();
@@ -37,6 +37,5 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
       fetchConfig.body = JSON.stringify(object);
     }
   }
-
   return fetch(getBaseUrl(url), fetchConfig);
 }

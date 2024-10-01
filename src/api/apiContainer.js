@@ -44,6 +44,7 @@ const apiContainer = {
   enquiry: "/enquiry",
   employeeLogin: "/organization-login",
   faq: "/faq",
+  uploadImages: "/upload-proof",
 };
 
 export default apiContainer;

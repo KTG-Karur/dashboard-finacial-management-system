@@ -12,6 +12,7 @@ import { NotificationContainer } from 'react-notifications';
 import _ from 'lodash';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
+import { createUploadImages } from '../../api/UploadImagesApi';
 
 function Index() {
 
@@ -431,16 +432,19 @@ function Index() {
             const temp_state = [createApplicantData[0], ...parentList];
             setParentList(temp_state)
 
-            // let filterImageName = []
-            // state.proofImage.map((ele) => {
-            //     const originalFile = ele[0];
-            //     const renamedFile = new File([originalFile], `${createApplicantData[0].applicantCode}-${originalFile.name}`, {
-            //         type: originalFile.type,
-            //         lastModified: originalFile.lastModified,
-            //     });
-            //     filterImageName.push([renamedFile]);
-            // })
-            // console.log(filterImageName)
+            let filterImageName = []
+            state.proofImage.map((ele) => {
+                const originalFile = ele[0];
+                const renamedFile = new File([originalFile], `${createApplicantData[0].applicantCode}-${originalFile.name}`, {
+                    type: originalFile.type,
+                    lastModified: originalFile.lastModified,
+                });
+                filterImageName.push([renamedFile]);
+            })
+            const formData = new FormData();
+            formData.append("proofImages", filterImageName);
+            dispatch(createUploadImages(formData))
+
             showMessage('success', 'Created Successfully');
             closeModel()
             dispatch(resetCreateApplicant())

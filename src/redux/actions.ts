@@ -35,3 +35,4 @@ export * from './employee-attendace/actions';
 export * from './enquiry/actions';
 export * from './login/actions';
 export * from './faq/actions';
+export * from './uploads/actions';
