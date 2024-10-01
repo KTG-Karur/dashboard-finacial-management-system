@@ -81,11 +81,11 @@ function findArrObj(arr, id) {
 }
 
 function percentageVal(amount, percentage) {
-    return (parseInt(amount) * parseInt(percentage)) / 100;
+    return (parseFloat(amount) * parseFloat(percentage)) / 100;
 }
 
-function ValtoPercentage(amount, percentage) {
-    return (parseInt(amount) / parseInt(percentage)) * 100;
+function ValtoPercentage(chargeAmount, loanAmt) {
+    return (parseFloat(chargeAmount) / parseFloat(loanAmt)) * 100;
 }
 
 const dateConversion = (date, format = 'DD-MM-YYYY') => {
@@ -241,7 +241,7 @@ const calculateTotalInterestPayable = (principal, annualInterest, tenurePeriod) 
 
 const removeNullKeyFromObj = (obj) => {
     return _.omitBy(obj, (value) => value === null)
-  }
+}
 
 
 export {

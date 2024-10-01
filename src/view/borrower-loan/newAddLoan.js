@@ -355,7 +355,7 @@ function Index() {
             const arrList = arr.map((item, idx) => ({
                 id: idx,
                 chargeAmount: item.chargeAmount,
-                loanChargeId: item.loanChargeTypeId,
+                loanChargeId: item.loanChargeId,
                 loanChargesName: item.loanChargeTypeName,
                 loanChargesDetailsId: item.loanChargesDetailsId,
             }));
@@ -426,14 +426,14 @@ function Index() {
         if (getLoanChargesTypeSuccess) {
             setOptionListState({
                 ...optionListState,
-                loanChargeList: getLoanChargesTypeList,
+                loanChargeId: getLoanChargesTypeList,
             });
             copyLoanChargesId = getLoanChargesTypeList;
             dispatch(resetGetLoanChargesType());
         } else if (getLoanChargesTypeFailure) {
             setOptionListState({
                 ...optionListState,
-                loanChargeList: [],
+                loanChargeId: [],
             });
             copyLoanChargesId = [];
             dispatch(resetGetLoanChargesType());
@@ -472,7 +472,7 @@ function Index() {
                 ...optionListState,
                 loanChargeId: tempState,
             });
-            copyLoanChargesId = tempState;
+            copyLoanChargesId = [createLoanChargesTypeData[0], ...copyLoanChargesId];
             dispatch(resetCreateLoanChargesType());
         } else if (createLoanChargesTypeFailure) {
             showMessage('warning', errorMessage);
@@ -503,7 +503,7 @@ function Index() {
             const chargesAmt = parseInt(chargeAmount);
             if (isPercentage === 1) {
                 const percentageValues = percentageVal(loanAmt, chargesAmt);
-                perVal = parseInt(percentageValues);
+                perVal = parseFloat(percentageValues);
             } else {
                 perVal = chargesAmt;
             }
@@ -560,11 +560,11 @@ function Index() {
             investorId: state?.investorId || '',
             referedBy: state?.referedBy || '',
             categoryId: state?.categoryId || '',
-            
+
             interestRate: parseInt(state?.interestRate) || '',
             investmentAmount: state?.investmentAmount || '',
             dueAmount: dueAmt.toFixed(2).toString() || '',
-            lockPeriod : state?.lockPeriod || "",
+            lockPeriod: state?.lockPeriod || "",
             disbursedMethodId: state?.disbursedMethodId || '',
             bankAccountId: state?.disbursedMethodId === 6 ? state?.bankAccountId || 1 : 0,
             createdBy: 1,
@@ -579,7 +579,7 @@ function Index() {
             submitRequest.loanId = state?.loanId || '';
         }
         const url = loc ? loc : '/borrower/request';
-        navigate(url, { state: { investmentData: submitRequest, isCreated: isUpdate ? false : true,updateId : state?.investmentId || false, selectIdx : selectIdx >= 0 ? selectIdx : false } });
+        navigate(url, { state: { investmentData: submitRequest, isCreated: isUpdate ? false : true, updateId: state?.investmentId || false, selectIdx: selectIdx >= 0 ? selectIdx : false } });
     };
 
     const onTableSubmit = async () => {
@@ -592,6 +592,7 @@ function Index() {
                     loanChargeId: state.loanChargeId,
                     loanChargesName: state.loanChargesName,
                     isPercentage: state.isPercentage,
+                    realPercentage: state.chargeAmount,
                     chargeAmount: perVal,
                 };
                 const updata = await updateData(state.loanChargesInfo, state?.id, editData);
@@ -607,6 +608,7 @@ function Index() {
                     loanChargeId: state.loanChargeId,
                     loanChargesName: state.loanChargesName,
                     isPercentage: state.isPercentage,
+                    realPercentage: state.chargeAmount,
                     chargeAmount: perVal,
                 };
                 setState((prev) => ({
@@ -619,8 +621,16 @@ function Index() {
                 ...prevState,
                 loanChargeId: '',
                 isPercentage: '',
+                loanChargesName: '',
                 chargeAmount: '',
             }));
+        } else {
+            if (state?.investmentAmount == undefined || state?.investmentAmount == '') {
+                showMessage('warning', "Invesment amount is empty, must be provided");
+            }
+            else {
+                showMessage('warning', "Loan charges filed required, must be provided");
+            }
         }
     };
 
@@ -630,11 +640,12 @@ function Index() {
             ...prev,
             loanChargeId: '',
             isPercentage: '',
+            loanChargesName: '',
             chargeAmount: '',
         }));
         setIsEditArrVal(true);
         const updatedState = { ...data, id: id };
-        const arrValue = copyLoanChargesId.find((item) => item.loanChargesId === data.loanChargeId);
+        const arrValue = await copyLoanChargesId.find((item) => item.loanChargesId === data.loanChargeId);
         setOptionListState((prev) => ({
             ...prev,
             loanChargeId: [...optionListState.loanChargeId, arrValue],
@@ -647,7 +658,7 @@ function Index() {
         }));
 
         if (updatedState?.chargeAmount && updatedState?.isPercentage === 1) {
-            updatedState.chargeAmount = await ValtoPercentage(updatedState.chargeAmount, state.loanAmount);
+            updatedState.chargeAmount = await ValtoPercentage(updatedState.chargeAmount, state.investmentAmount);
         }
         setState((prev) => ({
             ...prev,
@@ -753,6 +764,23 @@ function Index() {
         }));
     };
 
+    const onInvesmentAmountHandle = (event) => {
+        const EventInvestmentAmount = event.target.value;
+        if (state.loanChargesInfo.length >= 0) {
+            (state.loanChargesInfo || []).map((item, i) => {
+                if (item.isPercentage) {
+                    const pertoVal = percentageVal(EventInvestmentAmount, item.realPercentage);
+                    item.chargeAmount = pertoVal;
+                }
+            });
+        }
+        setState({
+            ...state,
+            [event.target.name]: EventInvestmentAmount,
+        });
+    };
+
+
     return (
         <React.Fragment>
             <NotificationContainer />
@@ -819,6 +847,7 @@ function Index() {
                                     handleBankSelect: handleBankSelect,
                                     handleCategorySelect: handleCategorySelect,
                                     handlesubCategorySelect: handlesubCategorySelect,
+                                    onInvesmentAmountHandle: onInvesmentAmountHandle,
                                 }}
                                 editData={state}
                                 noOfColumns={4}
