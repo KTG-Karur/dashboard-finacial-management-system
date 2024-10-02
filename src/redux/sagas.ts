@@ -36,6 +36,7 @@ import enquirySaga from './enquiry/saga';
 import loginSaga from './login/saga';
 import faqSaga from './faq/saga';
 import uploadImagesSaga from './uploads/saga';
+import contraSaga from './contra/saga';
 
 export default function* rootSaga() {
     yield all([
@@ -75,5 +76,6 @@ export default function* rootSaga() {
         loginSaga(),
         faqSaga(),
         uploadImagesSaga(),
+        contraSaga(),
     ]);
 }

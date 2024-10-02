@@ -1,15 +1,11 @@
 const formContainer = [
     {
         formFields: [
-            // {
-            //     label: 'Applicant',
-            //     name: 'applicantId',
-            //     inputType: 'select',
-            //     optionList: 'applicantList',
-            //     displayKey: 'applicantName',
-            //     uniqueKey: 'applicantId',
-            //     // require: true,
-            // },
+            {
+                'displayLabel' : "Is Company Account",
+                'name': "companyAccount",
+                'inputType': "checkbox",
+            },
             {
                 'label': "Account Holder Name",
                 'name': "accountHolderName",

@@ -6,13 +6,15 @@ import { applicantTabs } from './formFieldData';
 import Table from '../../components/Table';
 import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
 import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
-import { createAddressTypeRequest, createApplicantRequest, createDistrictRequest, createProofTypeRequest, createStateRequest, deleteAddressTypeRequest, deleteApplicantAddressRequest, deleteApplicantProofRequest, getAddressTypeRequest, getApplicantInfoRequest, getApplicantRequest, getApplicantTypeRequest, getDistrictRequest, getProofTypeRequest, getStateRequest, resetCreateAddressType, resetCreateApplicant, resetCreateProofType, resetCreateState, resetGetAddressType, resetGetApplicant, resetGetApplicantInfo, resetGetApplicantType, resetGetDistrict, resetGetProofType, resetGetState, resetUpdateApplicant, updateApplicantRequest } from '../../redux/actions';
+import { createAddressTypeRequest, createApplicantRequest, createDistrictRequest, createProofTypeRequest, createStateRequest, createUploadImagesFailure, createUploadImagesRequest, deleteAddressTypeRequest, deleteApplicantAddressRequest, deleteApplicantProofRequest, getAddressTypeRequest, getApplicantInfoRequest, getApplicantRequest, getApplicantTypeRequest, getDistrictRequest, getProofTypeRequest, getStateRequest, resetCreateAddressType, resetCreateApplicant, resetCreateProofType, resetCreateState, resetCreateUploadImages, resetGetAddressType, resetGetApplicant, resetGetApplicantInfo, resetGetApplicantType, resetGetDistrict, resetGetProofType, resetGetState, resetUpdateApplicant, updateApplicantRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
 import _ from 'lodash';
 import { Form } from 'react-bootstrap';
 import Select from 'react-select';
 import { createUploadImages } from '../../api/UploadImagesApi';
+
+let uploadImages = false;
 
 function Index() {
 
@@ -27,6 +29,7 @@ function Index() {
         getStateSuccess, getStateList, getStateFailure,
         getProofTypeSuccess, getProofTypeList, getProofTypeFailure,
         createApplicantSuccess, createApplicantData, createApplicantFailure,
+        createUploadImagesSuccess, createUploadImagesData, createUploadImagesFailure,
         createProofTypeSuccess, createProofTypeData, createProofTypeFailure,
         createAddressTypeSuccess, createAddressTypeData, createAddressTypeFailure,
         createStateSuccess, createStateData, createStateFailure,
@@ -65,6 +68,10 @@ function Index() {
         createApplicantSuccess: state.applicantReducer.createApplicantSuccess,
         createApplicantData: state.applicantReducer.createApplicantData,
         createApplicantFailure: state.applicantReducer.createApplicantFailure,
+
+        createUploadImagesSuccess: state.uploadImagesReducer.createUploadImagesSuccess,
+        createUploadImagesData: state.uploadImagesReducer.createUploadImagesData,
+        createUploadImagesFailure: state.uploadImagesReducer.createUploadImagesFailure,
 
         createProofTypeSuccess: state.proofTypeReducer.createProofTypeSuccess,
         createProofTypeData: state.proofTypeReducer.createProofTypeData,
@@ -109,16 +116,6 @@ function Index() {
             Header: 'Contact No.',
             accessor: 'contactNo',
             sort: false,
-        },
-        {
-            Header: 'Gender',
-            accessor: 'genderName',
-            sort: false,
-        },
-        {
-            Header: 'Customer Type',
-            accessor: 'applicantTypeName',
-            sort: true,
         },
         {
             Header: 'Actions',
@@ -296,7 +293,7 @@ function Index() {
     useEffect(() => {
         setIsLoading(true)
         const req = {
-            isBorrower: 0
+            applicantCategory : 18
         }
         dispatch(getApplicantRequest(req));
         dispatch(getProofTypeRequest());
@@ -431,23 +428,22 @@ function Index() {
         if (createApplicantSuccess) {
             const temp_state = [createApplicantData[0], ...parentList];
             setParentList(temp_state)
+            showMessage('success', 'Created Successfully');
+            closeModel()
+            dispatch(resetCreateApplicant())
 
-            let filterImageName = []
+            
+            const formData = new FormData();
             state.proofImage.map((ele) => {
                 const originalFile = ele[0];
                 const renamedFile = new File([originalFile], `${createApplicantData[0].applicantCode}-${originalFile.name}`, {
                     type: originalFile.type,
                     lastModified: originalFile.lastModified,
                 });
-                filterImageName.push([renamedFile]);
+                formData.append("proofImages", renamedFile);
+                // filterImageName.push([renamedFile]);
             })
-            const formData = new FormData();
-            formData.append("proofImages", filterImageName);
-            dispatch(createUploadImages(formData))
-
-            showMessage('success', 'Created Successfully');
-            closeModel()
-            dispatch(resetCreateApplicant())
+            dispatch(createUploadImagesRequest(formData))
         } else if (createApplicantFailure) {
             showMessage('warning', errorMessage);
             dispatch(resetCreateApplicant())
@@ -468,6 +464,15 @@ function Index() {
             dispatch(resetCreateProofType())
         }
     }, [createProofTypeSuccess, createProofTypeFailure]);
+
+    useEffect(() => {
+        if (createUploadImagesSuccess) {
+            dispatch(resetCreateUploadImages())
+        } else if (createUploadImagesFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetCreateUploadImages())
+        }
+    }, [createUploadImagesSuccess, createUploadImagesFailure]);
 
     useEffect(() => {
         if (createStateSuccess) {
@@ -522,6 +527,19 @@ function Index() {
             isEdit && showMessage('success', 'Updated Successfully');
             closeModel()
             dispatch(resetUpdateApplicant())
+            if(uploadImages){
+                uploadImages = false;
+                const formData = new FormData();
+                state.proofImage.map((ele) => {
+                    const originalFile = ele[0];
+                    const renamedFile = new File([originalFile], `${updateApplicantData[0].applicantCode}-${originalFile.name}`, {
+                        type: originalFile.type,
+                        lastModified: originalFile.lastModified,
+                    });
+                    formData.append("proofImages", renamedFile);
+                })
+                dispatch(createUploadImagesRequest(formData))
+            }
         } else if (updateApplicantFailure) {
             showMessage('warning', errorMessage);
             dispatch(resetUpdateApplicant())
@@ -567,6 +585,7 @@ function Index() {
         let proofImage = []
         multiStateValue[0].idProof.map((item, index) => {
             if (item.imageProof) {
+                uploadImages = true;
                 const file = item.imageProof
                 multiStateValue[0].idProof[index].imageName = file[0].name
                 proofImage.push(item.imageProof)
@@ -577,6 +596,7 @@ function Index() {
             proofImage: proofImage
         })
         const personalInfo = [multiStateValue[0]?.personalInfo] || []
+        personalInfo[0].applicantCategory = 18
         const idProofInfo = multiStateValue[0]?.idProof || []
         const addressInfo = multiStateValue[0]?.addressInfo || []
         const incomeInfo = !_.isEmpty(multiStateValue[0].incomeInfo) ? [multiStateValue[0].incomeInfo] : []
@@ -589,20 +609,8 @@ function Index() {
             additionalInfo: additionalInfo
         }
         if (isEdit) {
-            // dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
+            dispatch(updateApplicantRequest(submitRequest, selectedItem.applicantId))
         } else {
-            // console.log(submitRequest)
-            // let filterImageName = []
-            // state.proofImage.map((ele) => {
-            //     const originalFile = ele[0];
-            //     const renamedFile = new File([originalFile], `CUS-0001-${originalFile.name}`, {
-            //         type: originalFile.type,
-            //         lastModified: originalFile.lastModified,
-            //     });
-            //     filterImageName.push([renamedFile]);
-            // })
-            // console.log(filterImageName)
-            // console.log(state.proofImage)
             dispatch(createApplicantRequest(submitRequest))
         }
     };
@@ -654,10 +662,7 @@ function Index() {
 
     //------->
     const onHandleProofType = (data, name, uniqueKey, displayKey, selectedObj) => {
-        // alert(data)
-        // alert(uniqueKey)
         const nameData = data[displayKey]
-        // console.log("data", data);
         setState({
             ...state,
             [name]: data[uniqueKey],
@@ -805,7 +810,7 @@ function Index() {
                         columns={columns}
                         Title={'Customer List'}
                         data={parentList || []}
-                        pageSize={10}
+                        pageSize={25}
                         toggle={createModel}
                     />}
 

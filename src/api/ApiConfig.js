@@ -28,8 +28,11 @@ export function apiReturnCallBack(method, url, object = null, config = null) {
       // Object.keys(object).forEach((key) => {
       //   formData.append(key, object[key]);
       // });
+      fetchConfig.method = 'POST';
       fetchConfig.body = object;
-      fetchConfig.headers['Content-Type'] = 'multipart/form-data';
+      delete fetchConfig.headers['Content-Type'];
+      // fetchConfig.headers['Content-Type'] = 'multipart/form-data';
+      // fetchConfig.headers['content-type'] = 'multipart/form-data';
     } else if (method === 'GET') {
       const queryParams = new URLSearchParams(object).toString();
       url += `?${queryParams}`;

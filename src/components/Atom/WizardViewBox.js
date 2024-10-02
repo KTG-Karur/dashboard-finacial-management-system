@@ -14,7 +14,7 @@ let reinsertIndex = 0;
 let checkIsNotlastPrevious = '';
 
 const WizardWithProgressbar = (props) => {
-    const {
+    let {
         //state
         arrVal,
         setArrVal,
@@ -33,6 +33,7 @@ const WizardWithProgressbar = (props) => {
         setIsEditArrVal,
         perVal = 0,
         setPerVal,
+        uploadImages,
         //const value
         Title,
         showSelectmodel,
@@ -80,11 +81,6 @@ const WizardWithProgressbar = (props) => {
             errorHandle.current.validateFormFields();
         }, 0);
     };
-
-    console.log("state")
-    console.log(state)
-    console.log("arrVal")
-    console.log(arrVal)
     // Add
     const handleAdd = async () => {
         if (IsEditArrVal) {
@@ -102,6 +98,7 @@ const WizardWithProgressbar = (props) => {
             setState({});
         } else {
             const data = { id: arrVal.length, ...state };
+            // if(data.imageProof)
             if (perVal != 0) {
                 if (data?.chargesAmount) {
                     data.chargesAmount = perVal;
@@ -126,12 +123,10 @@ const WizardWithProgressbar = (props) => {
         setMultiStateValue(temp_state);
 
         if (tabIndex === tabList.length - 1) {
-            console.log("tabIndex working")
             submitWizardCall = true;
         } else {
             setTab(tabList?.[tabIndex + 1]?.name);
             setTabIndex((prev) => prev + 1);
-            console.log("in----->")
             setState(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || {});
             if (showMultiAdd.includes(tabList[tabIndex + 1].name)) {
                 setArrVal(multiStateValue[reinsertIndex][tabList?.[tabIndex + 1]?.name] || []);

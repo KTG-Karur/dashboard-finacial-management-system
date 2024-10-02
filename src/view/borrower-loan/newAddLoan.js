@@ -4,6 +4,7 @@ import { Row, Col, Card, Button } from 'react-bootstrap';
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
 import {
+    dateConversion,
     deleteData, emiCalculation, percentageVal, showConfirmationDialog, showMessage, updateData, ValtoPercentage,
 } from '../../utils/AllFunction';
 import { getInvestmentDetailsRequest, resetGetInvestmentDetails,
@@ -165,7 +166,7 @@ function Index() {
 
     useEffect(() => {
         const getReq={
-            isBorrower : 1,
+            applicantCategory : 20,
             isActive : 1
         }
         dispatch(getCategoryRequest());
@@ -367,6 +368,7 @@ function Index() {
                 investorId: getInvestmentDetailsList[0]?.investorId || '',
                 // loanStatusId: getInvestmentDetailsList[0]?.loanStatusId || '',
                 referedBy: getInvestmentDetailsList[0]?.referedBy || '',
+                loanDate: getInvestmentDetailsList[0].loanDate ? dateConversion(getInvestmentDetailsList[0].loanDate,"YYYY-MM-DD") : '',
                 categoryId: getInvestmentDetailsList[0]?.categoryId || '',
                 subCategoryId: getInvestmentDetailsList[0]?.subCategoryId || '',
                 interestRate: getInvestmentDetailsList[0]?.interestRate || '',
@@ -483,10 +485,11 @@ function Index() {
     //bank
     useEffect(() => {
         if (createBankAccountSuccess) {
-            const tempState = [createBankAccountData[0], ...optionListState.bankAccountId];
+            const tempState = [createBankAccountData[0], ...optionListState.bankAccountList];
+            console.log(createBankAccountData[0])
             setOptionListState({
                 ...optionListState,
-                bankAccountId: tempState,
+                bankAccountList: tempState,
             });
             showMessage('success', 'Bank Created Successfully');
             dispatch(resetCreateBankAccount());
@@ -559,6 +562,7 @@ function Index() {
         const submitRequest = {
             investorId: state?.investorId || '',
             referedBy: state?.referedBy || '',
+            loanDate: state.loanDate ? dateConversion(state.loanDate, "YYYY-MM-DD") : '',
             categoryId: state?.categoryId || '',
 
             interestRate: parseInt(state?.interestRate) || '',
@@ -806,7 +810,7 @@ function Index() {
                 <Row>
                     <Col className="d-flex justify-content-end">
                         <div>
-                            <Link to={'/loan/request'}>
+                            <Link to={'/borrower/request'}>
                                 <Button className="mb-2">
                                     Back
                                     <span className="cursor-pointer ms-1">

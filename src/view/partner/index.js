@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Badge, Spinner } from 'react-bootstrap';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import FormLayout from '../../utils/formLayout';
-import { applicantTabs } from './formFieldData';
+import { applicantTabs } from '../borrower/formFieldData';
 import Table from '../../components/Table';
 import { WizardWithProgressbar } from '../../components/Atom/WizardViewBox';
 import { showConfirmationDialog, showMessage } from '../../utils/AllFunction';
@@ -43,7 +43,7 @@ function Index() {
         getApplicantInfoSuccess: state.applicantReducer.getApplicantInfoSuccess,
         getApplicantInfoList: state.applicantReducer.getApplicantInfoList,
         getApplicantInfoFailure: state.applicantReducer.getApplicantInfoFailure,
-
+        
         createUploadImagesSuccess: state.uploadImagesReducer.createUploadImagesSuccess,
         createUploadImagesData: state.uploadImagesReducer.createUploadImagesData,
         createUploadImagesFailure: state.uploadImagesReducer.createUploadImagesFailure,
@@ -102,12 +102,12 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Investor Code',
+            Header: 'Partner Code',
             accessor: 'applicantCode',
             sort: true,
         },
         {
-            Header: 'Investor Name',
+            Header: 'Partner Name',
             accessor: 'applicantName',
             sort: false,
         },
@@ -263,10 +263,10 @@ function Index() {
             { genderId: 2, genderName: 'Female' },
             { genderId: 3, genderName: 'Others' },
         ],
-        // maritalStatusList: [
-        //     { martialStatusId: 1, maritalStatusName: 'Married' },
-        //     { martialStatusId: 2, maritalStatusName: 'Single' },
-        // ],
+        maritalStatusList: [
+            { martialStatusId: 1, maritalStatusName: 'Married' },
+            { martialStatusId: 2, maritalStatusName: 'Single' },
+        ],
     })
 
     const [wizardModel, setWizardModel] = useState(false);
@@ -292,7 +292,7 @@ function Index() {
     useEffect(() => {
         setIsLoading(true)
         const req={
-            applicantCategory : 20
+            applicantCategory : 19
         }
         dispatch(getApplicantRequest(req));
         dispatch(getProofTypeRequest());
@@ -450,15 +450,6 @@ function Index() {
     }, [createApplicantSuccess, createApplicantFailure]);
 
     useEffect(() => {
-        if (createUploadImagesSuccess) {
-            dispatch(resetCreateUploadImages())
-        } else if (createUploadImagesFailure) {
-            showMessage('warning', errorMessage);
-            dispatch(resetCreateUploadImages())
-        }
-    }, [createUploadImagesSuccess, createUploadImagesFailure]);
-
-    useEffect(() => {
         if (createProofTypeSuccess) {
             const temp_state = [createProofTypeData[0], ...optionListState.proofTypeList];
             setOptionListState({
@@ -517,6 +508,15 @@ function Index() {
             dispatch(resetCreateAddressType())
         }
     }, [createAddressTypeSuccess, createAddressTypeFailure]);
+
+    useEffect(() => {
+        if (createUploadImagesSuccess) {
+            dispatch(resetCreateUploadImages())
+        } else if (createUploadImagesFailure) {
+            showMessage('warning', errorMessage);
+            dispatch(resetCreateUploadImages())
+        }
+    }, [createUploadImagesSuccess, createUploadImagesFailure]);
 
     useEffect(() => {
         if (updateApplicantSuccess) {
@@ -596,7 +596,7 @@ function Index() {
         })
 
         const personalInfoData = multiStateValue[0]?.personalInfo
-        personalInfoData.applicantCategory = 20
+        personalInfoData.applicantCategory = 19
         const personalInfo = [personalInfoData] || []
         const idProofInfo = multiStateValue[0]?.idProof || []
         const addressInfo = multiStateValue[0]?.addressInfo || []
@@ -754,7 +754,7 @@ function Index() {
                             IsEditArrVal={IsEditArrVal}
                             setIsEditArrVal={setIsEditArrVal}
                             tblList={parentList}
-                            Title={'Investor Details'}
+                            Title={'Partner Details'}
                             showSelectmodel={showSelectmodel}
                             showMultiAdd={showMultiAdd}
                             optionListState={optionListState}
@@ -806,7 +806,7 @@ function Index() {
                 ) :
                     <Table
                         columns={columns}
-                        Title={'Investor List'}
+                        Title={'Partner List'}
                         data={parentList || []}
                         pageSize={25}
                         toggle={createModel}

@@ -41,6 +41,96 @@ const Navigate: NavigateTypes[] = [
             },
         ]
     },
+    { label: 'Invesment', isTitle: true },
+    {
+        label: 'Invesment',
+        isTitle: false,
+        icon: 'mdi mdi-chart-bar',
+        children: [
+            {
+                label: 'Partner',
+                url: '/view/partner',
+                parentKey: 'Invesment',
+            },
+            {
+                label: 'Investor',
+                url: '/view/borrower',
+                parentKey: 'Invesment',
+            },
+        ]
+    },
+    {
+        label: 'Customer',
+        isTitle: false,
+        icon: 'mdi mdi-account-check',
+        url: '/view/applicant',
+    },
+    { label: 'Loan', isTitle: true },
+    {
+        label: 'Loans',
+        isTitle: false,
+        icon: 'mdi mdi-account-cash-outline',
+        children: [
+            {
+                label: 'Loan Pitch',
+                url: '/loan/addloan',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Proposal',
+                url: '/loan/request',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Clearance',
+                url: '/loan/approved',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Disbursed',
+                url: '/loan/disbursed',
+                parentKey: 'Loans',
+            },
+            {
+                label: 'Cancelled',
+                url: '/loan/cancelled',
+                parentKey: 'Loans',
+            },
+        ]
+    },
+    {
+        label: 'Investments',
+        isTitle: false,
+        icon: 'mdi mdi-account-group',
+        children: [
+            {
+                label: 'Investment Pitch',
+                url: '/borrower/addloan',
+                parentKey: 'Investments',
+            },
+            {
+                label: 'Proposal Clearance',
+                url: '/borrower/request',
+                parentKey: 'Investments',
+            },
+            {
+                label: 'Terminate List',
+                url: '/borrower/cancelled',
+                parentKey: 'Investments',
+            },
+            // {
+            //     label: 'Investment List',
+            //     url: '/borrower/approved',
+            //     parentKey: 'Investments',
+            // },
+        ]
+    },
+    // {
+    //     label: 'Invenstors',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-account-cash',
+    //     url: '/view/borrower',
+    // },
     // {
     //     label: 'Dashboard',
     //     isTitle: false,
@@ -53,7 +143,7 @@ const Navigate: NavigateTypes[] = [
     //     icon: 'mdi mdi-calculator',
     //     url: '/loan/dashboard',
     // },
-    { label: 'Applicants', isTitle: true },
+    // { label: 'Applicants', isTitle: true },
     // {
     //     label: 'Applicants',
     //     isTitle: false,
@@ -71,18 +161,18 @@ const Navigate: NavigateTypes[] = [
     //         },
     //     ]
     // },
-    {
-        label: 'Customer',
-        isTitle: false,
-        icon: 'mdi mdi-account-check',
-        url: '/view/applicant',
-    },
-    {
-        label: 'Invenstors',
-        isTitle: false,
-        icon: 'mdi mdi-account-cash',
-        url: '/view/borrower',
-    },
+    // {
+    //     label: 'Customer',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-account-check',
+    //     url: '/view/applicant',
+    // },
+    // {
+    //     label: 'Invenstors',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-account-cash',
+    //     url: '/view/borrower',
+    // },
     { label: 'Recepit', isTitle: true },
     {
         label: 'Customer Recepit',
@@ -136,39 +226,39 @@ const Navigate: NavigateTypes[] = [
     //     icon: 'mdi mdi-cash-refund',
     //     url: '/borrower/borrower-receipt',
     // },
-    { label: 'Loan', isTitle: true },
-    {
-        label: 'Loans',
-        isTitle: false,
-        icon: 'mdi mdi-account-cash-outline',
-        children: [
-            {
-                label: 'Loan Pitch',
-                url: '/loan/addloan',
-                parentKey: 'Loans',
-            },
-            {
-                label: 'Proposal',
-                url: '/loan/request',
-                parentKey: 'Loans',
-            },
-            {
-                label: 'Clearance',
-                url: '/loan/approved',
-                parentKey: 'Loans',
-            },
-            {
-                label: 'Disbursed',
-                url: '/loan/disbursed',
-                parentKey: 'Loans',
-            },
-            {
-                label: 'Cancelled',
-                url: '/loan/cancelled',
-                parentKey: 'Loans',
-            },
-        ]
-    },
+    // { label: 'Loan', isTitle: true },
+    // {
+    //     label: 'Loans',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-account-cash-outline',
+    //     children: [
+    //         {
+    //             label: 'Loan Pitch',
+    //             url: '/loan/addloan',
+    //             parentKey: 'Loans',
+    //         },
+    //         {
+    //             label: 'Proposal',
+    //             url: '/loan/request',
+    //             parentKey: 'Loans',
+    //         },
+    //         {
+    //             label: 'Clearance',
+    //             url: '/loan/approved',
+    //             parentKey: 'Loans',
+    //         },
+    //         {
+    //             label: 'Disbursed',
+    //             url: '/loan/disbursed',
+    //             parentKey: 'Loans',
+    //         },
+    //         {
+    //             label: 'Cancelled',
+    //             url: '/loan/cancelled',
+    //             parentKey: 'Loans',
+    //         },
+    //     ]
+    // },
     // {
     //     label: 'Add Loan',
     //     isTitle: false,
@@ -199,28 +289,28 @@ const Navigate: NavigateTypes[] = [
     //     icon: 'mdi mdi-book-cancel',
     //     url: '/loan/cancelled',
     // },
-    {
-        label: 'Investments',
-        isTitle: false,
-        icon: 'mdi mdi-account-group',
-        children: [
-            {
-                label: 'Investment Pitch',
-                url: '/borrower/addloan',
-                parentKey: 'Investments',
-            },
-            {
-                label: 'Proposal Clearance',
-                url: '/borrower/request',
-                parentKey: 'Investments',
-            },
-            {
-                label: 'Investment List',
-                url: '/borrower/approved',
-                parentKey: 'Investments',
-            },
-        ]
-    },
+    // {
+    //     label: 'Investments',
+    //     isTitle: false,
+    //     icon: 'mdi mdi-account-group',
+    //     children: [
+    //         {
+    //             label: 'Investment Pitch',
+    //             url: '/borrower/addloan',
+    //             parentKey: 'Investments',
+    //         },
+    //         {
+    //             label: 'Proposal Clearance',
+    //             url: '/borrower/request',
+    //             parentKey: 'Investments',
+    //         },
+    //         {
+    //             label: 'Investment List',
+    //             url: '/borrower/approved',
+    //             parentKey: 'Investments',
+    //         },
+    //     ]
+    // },
     // { label: 'Investments', isTitle: true },
     // {
     //     label: 'Investment Pitch',
@@ -311,19 +401,19 @@ const Navigate: NavigateTypes[] = [
         isTitle: false,
         icon: 'mdi mdi-account-hard-hat',
         url: '/view/employee',
-    },    
+    },
     {
         label: 'Employee Attendance',
         isTitle: false,
         icon: 'mdi mdi-account-hard-hat',
         url: '/view/employee-attendance',
-    },    
+    },
     {
         label: 'Attendance Report',
         isTitle: false,
         icon: 'mdi mdi-account-hard-hat',
         url: '/view/attendance-report',
-    },    
+    },
     { label: 'General', isTitle: true },
     {
         label: 'Role',

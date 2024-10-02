@@ -33,6 +33,15 @@ const formContainer = [
     {
         formFields: [
             {
+                label: 'Loan Date',
+                name: 'loanDate',
+                inputType: 'date',
+            },
+        ],
+    },
+    {
+        formFields: [
+            {
                 label: 'Refered By',
                 name: 'referedBy',
                 inputType: 'text',
@@ -40,9 +49,6 @@ const formContainer = [
                 require: true,
             },
         ],
-    },
-    {
-        formFields: [],
     },
     {
         formFields: [],

@@ -64,7 +64,7 @@ function FormComponent(props) {
             case 'checkbox':
                 setState((prev) => ({
                     ...prev,
-                    [formName]: e,
+                    [formName]: e.target.checked,
                 }));
                 break;
             default:
@@ -222,7 +222,7 @@ function FormComponent(props) {
                                         const value = e.target.value;
                                         // Check if the value exceeds the maxlength
                                         if (!form?.maxlength || value.length <= form?.maxlength) {
-                                            form.onChange ? onChangeCallBack[form.onChange](e) : 
+                                            form.onChange ? onChangeCallBack[form.onChange](e, form?.name) : 
                                             handleChange(e, 'number', form?.name);
                                         }
                                     }}
@@ -261,6 +261,8 @@ function FormComponent(props) {
                                     onChange={(e) => {
                                         handleChange(e, 'date', form?.name);
                                     }}
+                                    // min={new Date().toISOString().split("T")[0]}
+                                    min={form.minmumDate ? state[form.minmumDate] : "" }
                                 />
                                 {errors?.includes(form?.name) && (
                                     <p
@@ -360,7 +362,7 @@ function FormComponent(props) {
                                             })}</Row>) :
                                         (<Form.Check
                                             key={"2"}
-                                            label={form?.label || ""}
+                                            label={form?.displayLabel || ""}
                                             value={state[form?.name]}
                                             type="checkbox"
                                             id={`basic-checkbox-c`}

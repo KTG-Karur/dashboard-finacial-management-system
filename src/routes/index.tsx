@@ -129,6 +129,8 @@ import {
     Enquiry,
     Faq,
     LoanReport,
+    Partner,
+    CancelledInvestment,
 } from './Route_Menu';
 
 
@@ -238,6 +240,10 @@ const AllRoutes = () => {
                 {
                     path: 'view',
                     children: [
+                        {
+                            path: 'partner',
+                            element: <LoadComponent component={Partner} />,
+                        },
                         {
                             path: 'enquiry',
                             element: <LoadComponent component={Enquiry} />,
@@ -370,6 +376,10 @@ const AllRoutes = () => {
                         {
                             path: 'request',
                             element: <LoadComponent component={BorrowerLoanList} />,
+                        },
+                        {
+                            path: 'cancelled',
+                            element: <LoadComponent component={CancelledInvestment} />,
                         },
                         {
                             path: 'approved',

@@ -37,6 +37,7 @@ import enquiryReducer from './enquiry/reducers';
 import loginReducer from './login/reducers';
 import faqReducer from './faq/reducers';
 import uploadImagesReducer from './uploads/reducers';
+import contraReducer from './contra/reducers';
 
 export default combineReducers({
     Auth,
@@ -76,4 +77,5 @@ export default combineReducers({
     loginReducer,
     faqReducer,
     uploadImagesReducer,
+    contraReducer,
 });

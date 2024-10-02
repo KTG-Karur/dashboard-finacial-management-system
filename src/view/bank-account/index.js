@@ -190,6 +190,7 @@ function Index() {
             ...state,
             applicantId: '',
             accountHolderName: '',
+            companyAccount: false,
             bankName: '',
             branchName: '',
             accountNo: '',
@@ -208,6 +209,7 @@ function Index() {
             ...state,
             applicantId: data?.applicantId || "",
             accountHolderName: data?.accountHolderName || "",
+            companyAccount: data.companyAccount === 1 ? true : false,
             bankName: data?.bankName || "",
             branchName: data?.branchName || "",
             accountNo: data?.accountNo || "",
@@ -227,6 +229,7 @@ function Index() {
         const submitRequest = {
              applicantId: state?.applicantId || "",
              accountHolderName: state?.accountHolderName || "",
+             companyAccount: state.companyAccount ? 1 : 0,
              bankName: state?.bankName || "",
              branchName: state?.branchName || "",
              accountNo: state?.accountNo || "",
@@ -259,7 +262,7 @@ function Index() {
                 columns={columns}
                 Title={'Bank Account List'}
                 data={parentList || []}
-                pageSize={5}
+                pageSize={25}
                 toggle={createModel}
             />}
 

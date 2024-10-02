@@ -70,43 +70,43 @@ const applicantTabs = [
                     },
                 ],
             },
-            {
-                formFields: [
-                    {
-                        label: 'Gender',
-                        name: 'genderId',
-                        inputType: 'select',
-                        optionList: 'genderList',
-                        displayKey: 'genderName',
-                        uniqueKey: 'genderId',
-                        require: true,
-                        selectedObj : "genderObj"
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Qualification',
-                        name: 'qualification',
-                        placeholder: 'Qualification',
-                        inputType: 'text',
-                    },
-                ],
-            },
-            {
-                formFields: [
-                    {
-                        label: 'Marital Status',
-                        name: 'martialStatusId',
-                        inputType: 'select',
-                        optionList: 'maritalStatusList',
-                        displayKey: 'maritalStatusName',
-                        uniqueKey: 'martialStatusId',
-                        selectedObj : "maritalStatusObj"
-                    },
-                ],
-            },
+            // {
+            //     formFields: [
+            //         {
+            //             label: 'Gender',
+            //             name: 'genderId',
+            //             inputType: 'select',
+            //             optionList: 'genderList',
+            //             displayKey: 'genderName',
+            //             uniqueKey: 'genderId',
+            //             require: true,
+            //             selectedObj : "genderObj"
+            //         },
+            //     ],
+            // },
+            // {
+            //     formFields: [
+            //         {
+            //             label: 'Qualification',
+            //             name: 'qualification',
+            //             placeholder: 'Qualification',
+            //             inputType: 'text',
+            //         },
+            //     ],
+            // },
+            // {
+            //     formFields: [
+            //         {
+            //             label: 'Marital Status',
+            //             name: 'martialStatusId',
+            //             inputType: 'select',
+            //             optionList: 'maritalStatusList',
+            //             displayKey: 'maritalStatusName',
+            //             uniqueKey: 'martialStatusId',
+            //             selectedObj : "maritalStatusObj"
+            //         },
+            //     ],
+            // },
         ],
     },
     {
