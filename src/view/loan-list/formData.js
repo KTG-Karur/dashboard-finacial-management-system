@@ -19,10 +19,22 @@ const disbursedDateFormContainer = [
     {
         formFields: [
             {
-                // 'label': "Disbursed Date",
+                'label': "Disbursed Date",
                 'name': "disbursedDate",
                 'inputType': "date",
-                'require': false
+                'require': false,
+                "minmumDate" : "loanDate",
+                "classStyle" : "col-6"
+            },
+            {
+                label: 'Recevied To',
+                name: 'contraId',
+                inputType: 'select',
+                optionList: 'contraList',
+                displayKey: 'contraName',
+                uniqueKey: 'contraId',
+                classStyle : "col-6",
+                onChange : "onHandleContra",
             },
         ],
     },

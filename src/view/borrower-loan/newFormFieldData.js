@@ -15,7 +15,14 @@ const formContainer = [
         formFields: [],
     },
     {
-        formFields: [],
+        formFields: [
+            {
+                'label': "Share Holder",
+                'name': "isShareCapital",
+                'inputType': "checkbox",
+                'onChange' : "handleCheckbox",
+            },
+        ],
     },
     {
         formFields: [

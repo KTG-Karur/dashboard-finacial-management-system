@@ -28,6 +28,8 @@ import {
     updateAddLoanRequest,
     getAddLoanDetailsRequest,
     resetGetAddLoanDetails,
+    getContraRequest,
+    resetGetContra,
 } from '../../redux/actions';
 import { useRedux } from '../../hooks';
 import { NotificationContainer } from 'react-notifications';
@@ -37,6 +39,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import FormLayout from '../../utils/formLayout';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import CompanyDetails from '../../components/Atom/CompanyDetails';
+import { cashHistoryFormContainer } from '../borrower-loan-list/formData';
 
 let isEdit = false;
 let StatusName = 'Update';
@@ -63,6 +66,7 @@ function Index() {
         getAddLoanDetailsSuccess,
         getAddLoanDetailsList,
         getAddLoanDetailsFailure,
+        getContraSuccess, getContraList, getContraFailure,
         // error
         errorMessage,
     } = appSelector((state) => ({
@@ -70,6 +74,10 @@ function Index() {
         getAddLoanSuccess: state.addLoanReducer.getAddLoanSuccess,
         getAddLoanList: state.addLoanReducer.getAddLoanList,
         getAddLoanFailure: state.addLoanReducer.getAddLoanFailure,
+
+        getContraSuccess: state.contraReducer.getContraSuccess,
+        getContraList: state.contraReducer.getContraList,
+        getContraFailure: state.contraReducer.getContraFailure,
         //loan details
         getAddLoanDetailsSuccess: state.addLoanReducer.getAddLoanDetailsSuccess,
         getAddLoanDetailsList: state.addLoanReducer.getAddLoanDetailsList,
@@ -214,7 +222,7 @@ function Index() {
                             </span>
                         )}
                         {/* Cancelled */}
-                        {row?.original?.loanStatusId !== 3 && row?.original?.loanStatusId !== 4 && (
+                        {row?.original?.loanStatusId !== 1 && row?.original?.loanStatusId !== 3 && row?.original?.loanStatusId !== 4 && (
                             <span
                                 className="text-danger  me-2 cursor-pointer"
                                 onClick={() => {
@@ -251,8 +259,13 @@ function Index() {
     const [currentDate, setCurrentDate] = useState({
         disbursedDate: today,
     });
+    const [optionListState, setOptionListState] = useState({
+        contraList: []
+    })
     const [modal, setModal] = useState(false);
+    const [formData, setFormData] = useState(disbursedDateFormContainer);
     const [isLoading, setIsLoading] = useState(false);
+    const [cancelModal, setCancelModal] = useState(false);
     const [parentList, setParentList] = useState([]);
     const [selectedItem, setSelectedItem] = useState([]);
     const [statusItem, setStatusdItem] = useState([]);
@@ -280,6 +293,10 @@ function Index() {
         dispatch(getAddLoanRequest(req));
     };
 
+    useEffect(() => {
+        dispatch(getContraRequest());
+    }, []);
+
     //Create update addLoan dispatch
     useEffect(() => {
         if (loanData && isCreated) {
@@ -306,6 +323,22 @@ function Index() {
         }
     }, [getAddLoanSuccess, getAddLoanFailure]);
 
+    useEffect(() => {
+        if (getContraSuccess) {
+            setOptionListState({
+                ...optionListState,
+                contraList: getContraList,
+            });
+            dispatch(resetGetContra());
+        } else if (getContraFailure) {
+            setOptionListState({
+                ...optionListState,
+                contraList: [],
+            });
+            dispatch(resetGetContra());
+        }
+    }, [getContraSuccess, getContraFailure]);
+
     // loan Details
     useEffect(() => {
         if (getAddLoanDetailsSuccess) {
@@ -313,8 +346,8 @@ function Index() {
             stateValue = {
                 'Application No': getAddLoanDetailsList[0]?.applicationNo || '',
                 'Applicant Name': getAddLoanDetailsList[0]?.applicantName || '',
-                'Co Applicant Name': getAddLoanDetailsList[0]?.coApplicantName || '',
-                'Guarantor Name': getAddLoanDetailsList[0]?.guarantorName || '',
+                // 'Co Applicant Name': getAddLoanDetailsList[0]?.coApplicantName || '',
+                // 'Guarantor Name': getAddLoanDetailsList[0]?.guarantorName || '', 
 
                 'Loan Name': getAddLoanDetailsList[0]?.categoryName || '',
 
@@ -323,9 +356,9 @@ function Index() {
 
                 'Total Charges': `Rs. ${parseInt(getAddLoanDetailsList[0]?.loanAmount) - parseInt(getAddLoanDetailsList[0]?.disbursedAmount)}`,
                 'Created By': getAddLoanDetailsList[0]?.createdBy || '',
-                'Created Date': DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
+                // 'Created Date': DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
 
-                'Disbursed Method': getAddLoanDetailsList[0]?.disbursedMethodName || '',
+                // 'Disbursed Method': getAddLoanDetailsList[0]?.disbursedMethodName || '',
 
                 // 'Disbursed Amount': getAddLoanDetailsList[0]?.disbursedAmount || '',
             };
@@ -337,11 +370,16 @@ function Index() {
             }
 
             if (statusItem.statusId == 4) {
-                entries.splice(12, 0, ["Approved By", getAddLoanDetailsList[0]?.approvedBy || '']);
+                // entries.splice(12, 0, ["Approved By", getAddLoanDetailsList[0]?.approvedBy || '']);
                 entries.splice(13, 0, ["Approved Date", DateMonthYear(formatDate(getAddLoanDetailsList[0]?.approvedDate))]);
             }
 
             const keyValueArray = objectToKeyValueArray(entries);
+            setCurrentDate({
+                ...currentDate,
+                loanDate: getAddLoanDetailsList[0]?.loanDate || '',
+                loanDetails : getAddLoanDetailsList
+            })
             setSelectedItem(keyValueArray);
             dispatch(resetGetAddLoanDetails());
         } else if (getAddLoanDetailsFailure) {
@@ -387,8 +425,8 @@ function Index() {
         const req = { loanId: data?.loanId || '' };
         dispatch(getAddLoanDetailsRequest(req));
         setModal(true);
-    };
-
+    }
+    
     const onChangeStatus = async (data, statusId) => {
         let req = {
             loanStatusId: statusId,
@@ -396,12 +434,38 @@ function Index() {
         setModal(false);
         if (statusId === 2) {
             req.approvedBy = 1;
+            // req.cashHistory = {
+            //     contraId: state?.contraId || "",
+            //     twoThousCount: state?.twoThousCount || 0,
+            //     fiveHundCount: state?.fiveHundCount || 0,
+            //     hundCount: state?.hundCount || 0,
+            //     fivtyCount: state?.fivtyCount || 0,
+            //     twentyCount: state?.twentyCount || 0,
+            //     tenCount: state?.tenCount || 0,
+            //     fiveCoinCount: state?.fiveCoinCount || 0,
+            //     twoCoinCount: state?.twoCoinCount || 0,
+            //     oneCoinCount: state?.oneCoinCount || 0,
+            //     amount: state?.loanDetails[0]?.loanAmount || 0,
+            // }
             req.approvedDate = formatDate(new Date());
         }
 
         if (statusId === 1) {
             req.approvedBy = null;
             req.approvedDate = null;
+            // req.cashHistory = {
+            //     contraId: state?.contraId || "",
+            //     twoThousCount: state?.twoThousCount || 0,
+            //     fiveHundCount: state?.fiveHundCount || 0,
+            //     hundCount: state?.hundCount || 0,
+            //     fivtyCount: state?.fivtyCount || 0,
+            //     twentyCount: state?.twentyCount || 0,
+            //     tenCount: state?.tenCount || 0,
+            //     fiveCoinCount: state?.fiveCoinCount || 0,
+            //     twoCoinCount: state?.twoCoinCount || 0,
+            //     oneCoinCount: state?.oneCoinCount || 0,
+            //     amount: state?.loanDetails[0]?.loanAmount || 0,
+            // }
         }
 
         if (statusId == 4) {
@@ -427,6 +491,19 @@ function Index() {
                     dueStartDate: duedate,
                     dueEndDate: lastdate,
                 };
+                // req.cashHistory = {
+                //     contraId: state?.contraId || "",
+                //     twoThousCount: state?.twoThousCount || 0,
+                //     fiveHundCount: state?.fiveHundCount || 0,
+                //     hundCount: state?.hundCount || 0,
+                //     fivtyCount: state?.fivtyCount || 0,
+                //     twentyCount: state?.twentyCount || 0,
+                //     tenCount: state?.tenCount || 0,
+                //     fiveCoinCount: state?.fiveCoinCount || 0,
+                //     twoCoinCount: state?.twoCoinCount || 0,
+                //     oneCoinCount: state?.oneCoinCount || 0,
+                //     amount: state?.loanDetails[0]?.loanAmount || 0,
+                // }
                 req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
                 req.dueDate = duedate;
             } else if (data.categoryId === 1) {
@@ -440,6 +517,19 @@ function Index() {
                     dueAmount: percentageVal(data.loanAmount, data.interestRate).toString(),
                     dueStartDate: duedate,
                 };
+                // req.cashHistory = {
+                //     contraId: state?.contraId || "",
+                //     twoThousCount: state?.twoThousCount || 0,
+                //     fiveHundCount: state?.fiveHundCount || 0,
+                //     hundCount: state?.hundCount || 0,
+                //     fivtyCount: state?.fivtyCount || 0,
+                //     twentyCount: state?.twentyCount || 0,
+                //     tenCount: state?.tenCount || 0,
+                //     fiveCoinCount: state?.fiveCoinCount || 0,
+                //     twoCoinCount: state?.twoCoinCount || 0,
+                //     oneCoinCount: state?.oneCoinCount || 0,
+                //     amount: state?.loanDetails[0]?.loanAmount || 0,
+                // }
                 req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
                 req.dueDate = duedate;
             }
@@ -450,6 +540,78 @@ function Index() {
             disbursedDate: today,
         });
     };
+
+
+    const onHandleContra = (data, name, uniqueKey) => {
+        const totalval = data.contraId != 1 ? currentDate?.loanDetails[0]?.loanAmount : 0;
+        setCurrentDate({
+            ...currentDate,
+            [name]: data[uniqueKey],
+            contraTotalAmount: totalval,
+            transactionId: "",
+            twoThousCount: 0,
+            fiveHundCount: 0,
+            hundCount: 0,
+            fivtyCount: 0,
+            twentyCount: 0,
+            tenCount: 0,
+            fiveCoinCount: 0,
+            twoCoinCount: 0,
+            oneCoinCount: 0,
+        })
+        let formArr = disbursedDateFormContainer[0].formFields
+        let filteredArr = _.filter(formArr, (value, index) => index === 0 || index === 1);
+        if (data.contraId != 1) {
+            let addTransctionField = {
+                'label': "Transaction Id",
+                'name': "transactionId",
+                'inputType': "text",
+                'placeholder': "Enter Transaction ID",
+            }
+            filteredArr.push(addTransctionField);
+            let tempArr = [
+                {
+                    formFields: []
+                }
+            ];
+            tempArr[0].formFields = filteredArr
+            setFormData(tempArr);
+        } else {
+            let tempArr = [
+                {
+                    formFields: []
+                }
+            ];
+            tempArr[0].formFields = _.concat(filteredArr, cashHistoryFormContainer)
+            setFormData(tempArr);
+        }
+    }
+
+    const onHandleCashAmount = (event, name) => {
+        let total = 0
+        let enterVal = event.target.value
+
+        const twoThousand = name === 'twoThousCount' ? enterVal * 2000 : currentDate.twoThousCount * 2000;
+        const fiveHund = name === 'fiveHundCount' ? enterVal * 500 : currentDate.fiveHundCount * 500;
+        const hund = name === 'hundCount' ? enterVal * 100 : currentDate.hundCount * 100;
+        const fivty = name === 'fivtyCount' ? enterVal * 50 : currentDate.fivtyCount * 50;
+        const twenty = name === 'twentyCount' ? enterVal * 20 : currentDate.twentyCount * 20;
+        const ten = name === 'tenCount' ? enterVal * 10 : currentDate.tenCount * 10;
+        const fiveCoin = name === 'fiveCoinCount' ? enterVal * 5 : currentDate.fiveCoinCount * 5;
+        const twoCoin = name === 'twoCoinCount' ? enterVal * 2 : currentDate.twoCoinCount * 2;
+        const oneCoin = name === 'oneCoinCount' ? enterVal * 1 : currentDate.oneCoinCount * 1;
+        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
+
+        if (total > currentDate?.loanDetails[0]?.loanAmount) {
+            showMessage('warning', 'Its Crossing Your Loan Limit...!')
+            return false;
+        }
+        setCurrentDate({
+            ...currentDate,
+            [name]: enterVal,
+            contraTotalAmount: total
+        })
+    }
 
     return (
         <React.Fragment>
@@ -510,16 +672,21 @@ function Index() {
                     <div>
                         {statusItem.statusId === 4 && (
                             <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
-                                <Col md={5}>
+                                {/* <Col md={5}>
                                     <h5 style={{ margin: '0px' }}>{'Disbursed Date'}</h5>
                                 </Col>
-                                <Col md={1}>{':'}</Col>
-                                <Col md={5}>
+                                <Col md={1}>{':'}</Col> */}
+                                <div className='mx-2'>
+                                    <hr ></hr>
+                                </div>
+                                <Col md={12}>
                                     <FormLayout
-                                        dynamicForm={disbursedDateFormContainer}
+                                        dynamicForm={formData}
                                         noOfColumns={1}
                                         state={currentDate}
                                         setState={setCurrentDate}
+                                        optionListState={optionListState}
+                                        onChangeCallBack={{ onHandleContra: onHandleContra, onHandleCashAmount: onHandleCashAmount }}
                                     />
                                 </Col>
                             </Row>

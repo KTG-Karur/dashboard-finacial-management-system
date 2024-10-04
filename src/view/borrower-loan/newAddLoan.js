@@ -3,6 +3,7 @@ import { formContainer, modelFormContainer, modelFormBankContainer } from './new
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
+import _ from 'lodash';
 import {
     dateConversion,
     deleteData, emiCalculation, percentageVal, showConfirmationDialog, showMessage, updateData, ValtoPercentage,
@@ -536,9 +537,9 @@ function Index() {
 
     const onFormSubmit = async () => {
         let dueAmt = 0;
-        if (state.categoryId !== 1) {
+        if (state.categoryId !== 1 && state.categoryId !== undefined) {
             dueAmt = await emiCalculation(state.investmentAmount, state.interestRate, state.lockPeriod);
-        } else {
+        } else  if (state.categoryId !== "") {
             dueAmt = await percentageVal(state.investmentAmount, state.interestRate);
         }
 
@@ -575,12 +576,20 @@ function Index() {
             investmentStatusId: state?.loanStatusId,
             investmentChargesInfo: allChargestList || [],
         };
+        
         if (state.categoryId !== 1) {
             submitRequest.subCategoryId = state?.subCategoryId || 0;
         }
+        
 
         if (isUpdate) {
             submitRequest.loanId = state?.loanId || '';
+        }
+        if(state.isShareCapital){
+            delete submitRequest.categoryId
+            delete submitRequest.interestRate
+            delete submitRequest.dueAmount
+            delete submitRequest.subCategoryId
         }
         const url = loc ? loc : '/borrower/request';
         navigate(url, { state: { investmentData: submitRequest, isCreated: isUpdate ? false : true, updateId: state?.investmentId || false, selectIdx: selectIdx >= 0 ? selectIdx : false } });
@@ -784,6 +793,32 @@ function Index() {
         });
     };
 
+    const handleCheckbox = (event, name)=>{
+        if(event.target.checked === true){
+            const formData = _.concat(_.slice(formContainer, 0, 8), _.slice(formContainer, 20));
+            const formFieldData = {
+                formFields: [
+                    {
+                        label: 'Investment Amount',
+                        name: 'investmentAmount',
+                        inputType: 'number',
+                        onChange: "onInvesmentAmountHandle",
+                        placeholder: 'Enter Investment amount',
+                        require: true,
+                    },
+                ],
+            }
+            formData[7] = formFieldData
+            setFormFiledData(formData)
+        }else{
+            setFormFiledData(formContainer)
+        }
+        setState({
+            ...state,
+            [name] : event.target.checked
+        })
+    }
+
 
     return (
         <React.Fragment>
@@ -852,6 +887,7 @@ function Index() {
                                     handleCategorySelect: handleCategorySelect,
                                     handlesubCategorySelect: handlesubCategorySelect,
                                     onInvesmentAmountHandle: onInvesmentAmountHandle,
+                                    handleCheckbox : handleCheckbox
                                 }}
                                 editData={state}
                                 noOfColumns={4}

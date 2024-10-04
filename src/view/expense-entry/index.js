@@ -5,9 +5,11 @@ import FormLayout from '../../utils/formLayout';
 import { formContainer } from './formFieldData';
 import Table from '../../components/Table';
 import { dateConversion, showConfirmationDialog, showMessage } from '../../utils/AllFunction';
-import { createExpenseEntryRequest, getExpenseEntryRequest, getExpensiveTypeRequest, resetCreateExpenseEntry, resetGetExpenseEntry, resetGetExpensiveType, resetUpdateExpenseEntry, updateExpenseEntryRequest } from '../../redux/actions';
+import { createExpenseEntryRequest, getContraRequest, getExpenseEntryRequest, getExpensiveTypeRequest, resetCreateExpenseEntry, resetGetContra, resetGetExpenseEntry, resetGetExpensiveType, resetUpdateExpenseEntry, updateExpenseEntryRequest } from '../../redux/actions';
 import { useRedux } from '../../hooks'
 import { NotificationContainer } from 'react-notifications';
+import { cashHistoryFormContainer } from '../borrower-loan-list/formData';
+import _ from 'lodash';
 
 let isEdit = false;
 
@@ -17,6 +19,7 @@ function Index() {
 
     const { getExpenseEntrySuccess, getExpenseEntryList, getExpenseEntryFailure,
         getExpensiveTypeSuccess, getExpensiveTypeList, getExpensiveTypeFailure,
+        getContraSuccess, getContraList, getContraFailure,
         createExpenseEntrySuccess, createExpenseEntryData, createExpenseEntryFailure,
         updateExpenseEntrySuccess, updateExpenseEntryData, updateExpenseEntryFailure,errorMessage
 
@@ -24,6 +27,10 @@ function Index() {
         getExpenseEntrySuccess: state.expenseEntryReducer.getExpenseEntrySuccess,
         getExpenseEntryList: state.expenseEntryReducer.getExpenseEntryList,
         getExpenseEntryFailure: state.expenseEntryReducer.getExpenseEntryFailure,
+
+        getContraSuccess: state.contraReducer.getContraSuccess,
+        getContraList: state.contraReducer.getContraList,
+        getContraFailure: state.contraReducer.getContraFailure,        
 
         getExpensiveTypeSuccess: state.expensiveTypeReducer.getExpensiveTypeSuccess,
         getExpensiveTypeList: state.expensiveTypeReducer.getExpensiveTypeList,
@@ -47,12 +54,12 @@ function Index() {
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
         {
-            Header: 'Expense Type',
+            Header: 'Type',
             accessor: 'expenseTypeName',
             sort: true,
         },
         {
-            Header: 'Expense Amount',
+            Header: 'Amount',
             accessor: 'expenseAmount',
             sort: true,
         },
@@ -65,19 +72,6 @@ function Index() {
             Header: 'Created By',
             accessor: 'employeeName',
             sort: true,
-        },
-        {
-            Header: 'Status',
-            accessor: 'isActive',
-            Cell: ({ row }) => (
-                <div>
-                    {row?.original?.isActive ? (
-                        <Badge bg={'success'}>Active</Badge>
-                    ) : (
-                        <Badge bg={'danger'}>In active</Badge>
-                    )}
-                </div>
-            ),
         },
         {
             Header: 'Actions',
@@ -134,6 +128,7 @@ function Index() {
     const [modal, setModal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState([]);
+    const [formData, setFormData] = useState(formContainer);
 
     const errorHandle = useRef();
 
@@ -141,6 +136,7 @@ function Index() {
         setIsLoading(true)
         dispatch(getExpenseEntryRequest());
         dispatch(getExpensiveTypeRequest());
+        dispatch(getContraRequest());
     }, []);
 
     useEffect(() => {
@@ -172,6 +168,22 @@ function Index() {
             dispatch(resetGetExpensiveType())
         }
     }, [getExpensiveTypeSuccess, getExpensiveTypeFailure]);
+
+    useEffect(() => {
+        if (getContraSuccess) {
+            setOptionListState({
+                ...optionListState,
+                contraList: getContraList,
+            });
+            dispatch(resetGetContra());
+        } else if (getContraFailure) {
+            setOptionListState({
+                ...optionListState,
+                contraList: [],
+            });
+            dispatch(resetGetContra());
+        }
+    }, [getContraSuccess, getContraFailure]);
 
     useEffect(() => {
         if (createExpenseEntrySuccess) {
@@ -222,6 +234,82 @@ function Index() {
         isEdit = false;
         setModal(true)
     };
+
+    const onHandleContra = (data, name, uniqueKey) => {
+        if(state.expenseAmount > 0){
+            const totalval = data.contraId != 1 ? state?.expenseAmount : 0;
+            setState({
+                ...state,
+                [name]: data[uniqueKey],
+                contraTotalAmount: totalval,
+                transactionId: "",
+                twoThousCount: 0,
+                fiveHundCount: 0,
+                hundCount: 0,
+                fivtyCount: 0,
+                twentyCount: 0,
+                tenCount: 0,
+                fiveCoinCount: 0,
+                twoCoinCount: 0,
+                oneCoinCount: 0,
+            })
+            let formArr = formContainer[0].formFields
+            // let filteredArr = formArr
+            if (data.contraId != 1) {
+                let addTransctionField = {
+                    'label': "Transaction Id",
+                    'name': "transactionId",
+                    'inputType': "text",
+                    'placeholder': "Enter Transaction ID",
+                }
+                formArr.splice(4, 0, addTransctionField);
+                formArr.push(addTransctionField);
+                let tempArr = [
+                    {
+                        formFields: []
+                    }
+                ];
+                tempArr[0].formFields = formArr
+                setFormData(tempArr);
+            } else {
+                let tempArr = [
+                    {
+                        formFields: []
+                    }
+                ];
+                tempArr[0].formFields = _.concat(formArr, cashHistoryFormContainer)
+                setFormData(tempArr);
+            }
+        }else{
+            showMessage('warning','Please Enter Amount...')
+        }
+    }
+
+    const onHandleCashAmount = (event, name) => {
+        let total = 0
+        let enterVal = event.target.value
+
+        const twoThousand = name === 'twoThousCount' ? enterVal * 2000 : state.twoThousCount * 2000;
+        const fiveHund = name === 'fiveHundCount' ? enterVal * 500 : state.fiveHundCount * 500;
+        const hund = name === 'hundCount' ? enterVal * 100 : state.hundCount * 100;
+        const fivty = name === 'fivtyCount' ? enterVal * 50 : state.fivtyCount * 50;
+        const twenty = name === 'twentyCount' ? enterVal * 20 : state.twentyCount * 20;
+        const ten = name === 'tenCount' ? enterVal * 10 : state.tenCount * 10;
+        const fiveCoin = name === 'fiveCoinCount' ? enterVal * 5 : state.fiveCoinCount * 5;
+        const twoCoin = name === 'twoCoinCount' ? enterVal * 2 : state.twoCoinCount * 2;
+        const oneCoin = name === 'oneCoinCount' ? enterVal * 1 : state.oneCoinCount * 1;
+        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
+
+        if (total > state?.expenseAmount) {
+            showMessage('warning', 'Its Crossing Your Loan Limit...!')
+            return false;
+        }
+        setState({
+            ...state,
+            [name]: enterVal,
+            contraTotalAmount: total
+        })
+    }
 
     const onEditForm = (data, index) => {
         setState({
@@ -275,21 +363,22 @@ function Index() {
             </div> :
             <Table
                 columns={columns}
-                Title={'ExpenseEntry List'}
+                Title={'Journal'}
                 data={parentList || []}
-                pageSize={5}
+                pageSize={25}
                 toggle={createModel}
             />}
 
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={'ExpenseEntry'}
+                modelHeader={'Journal Note'}
                 modelSize={'md'}
                 isEdit={isEdit}
+                modelHead={true}
                 handleSubmit={handleValidation}>
                 <FormLayout
-                    dynamicForm={formContainer}
+                    dynamicForm={formData}
                     handleSubmit={onFormSubmit}
                     optionListState={optionListState}
                     setState={setState}
@@ -298,6 +387,9 @@ function Index() {
                     noOfColumns={1}
                     errors={errors}
                     setErrors={setErrors}
+                    onChangeCallBack={{ onHandleContra: onHandleContra,
+                         onHandleCashAmount: onHandleCashAmount
+                         }} 
                 />
             </ModelViewBox>
         </React.Fragment>

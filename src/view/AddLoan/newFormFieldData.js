@@ -20,6 +20,25 @@ const formContainer = [
     {
         formFields: [
             {
+                label: 'Loan Date',
+                name: 'loanDate',
+                inputType: 'date',
+                require: true,
+            },
+        ],
+    },
+    {
+        formFields: [],
+    },
+    {
+        formFields: [],
+    },
+    {
+        formFields: [],
+    },
+    {
+        formFields: [
+            {
                 label: 'Customer',
                 name: 'applicantId',
                 inputType: 'select',

@@ -6,7 +6,8 @@ const formContainer = [
                 'name': "expenseDate",
                 'inputType': "date",
                 // 'placeholder': "Enter Description",
-                'require': true
+                'require': true,
+                'classStyle' : "col-6"
             },
             {
                 label: 'Expense Type',
@@ -16,6 +17,7 @@ const formContainer = [
                 displayKey: 'expensiveTypeName',
                 uniqueKey: 'expensiveTypeId',
                 require: true,
+                'classStyle' : "col-6"
             },
             {
                 'label': "Expense Amount",
@@ -25,21 +27,22 @@ const formContainer = [
                 'require': true
             },
             {
+                label: 'Send via',
+                name: 'contraId',
+                inputType: 'select',
+                optionList: 'contraList',
+                displayKey: 'contraName',
+                uniqueKey: 'contraId',
+                onChange : "onHandleContra",
+            },
+            {
                 'label': "Description",
                 'name': "description",
-                'inputType': "text",
+                'inputType': "textarea",
                 'placeholder': "Enter Description",
                 'require': true
             },
-            {
-                label: 'Created By',
-                name: 'createdBy',
-                inputType: 'select',
-                optionList: 'employeeList',
-                displayKey: 'employeeName',
-                uniqueKey: 'employeeId',
-                require: true,
-            },
+            
         ]
     },
 ]

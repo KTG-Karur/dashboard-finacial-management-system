@@ -510,6 +510,8 @@ function Index() {
         })
     }
 
+    
+
     return (
         <React.Fragment>
             <NotificationContainer />
@@ -557,7 +559,16 @@ function Index() {
                             })
                         }
                         <hr className='mt-2'></hr>
-                        <FormLayout dynamicForm={formData} onChangeCallBack={{ onHandleContra: onHandleContra, onHandleCashAmount: onHandleCashAmount }} optionListState={optionListState} handleSubmit={onApproveSubmit} setState={setState} state={state} ref={errorHandle} noOfColumns={1} errors={errors} setErrors={setErrors} />
+                        <FormLayout dynamicForm={formData}
+                        onChangeCallBack={{ onHandleContra: onHandleContra, onHandleCashAmount: onHandleCashAmount }} 
+                        optionListState={optionListState} 
+                        handleSubmit={onApproveSubmit} 
+                        setState={setState} 
+                        state={state} 
+                        ref={errorHandle} 
+                        noOfColumns={1} 
+                        errors={errors} 
+                        setErrors={setErrors} />
                     </Card.Body>
                 </Card>
             </ModelViewBox>

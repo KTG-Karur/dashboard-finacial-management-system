@@ -125,6 +125,34 @@ const Navigate: NavigateTypes[] = [
             // },
         ]
     },
+    { label: 'Accounts', isTitle: true },
+    {
+        label: 'Accounts',
+        isTitle: false,
+        icon: 'mdi mdi-account-cash-outline',
+        children: [
+            {
+                label: 'Payment',
+                url: '/loan/addloan',
+                parentKey: 'Accounts',
+            },
+            {
+                label: 'Recepit',
+                url: '/loan/request',
+                parentKey: 'Accounts',
+            },
+            {
+                label: 'Journal',
+                url: '/view/expense-entry',
+                parentKey: 'Accounts',
+            },
+            {
+                label: 'Contra',
+                url: '/loan/approved',
+                parentKey: 'Accounts',
+            },
+        ]
+    },
     // {
     //     label: 'Invenstors',
     //     isTitle: false,

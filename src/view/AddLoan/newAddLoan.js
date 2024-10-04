@@ -5,6 +5,7 @@ import { Row, Col, Card, Button } from 'react-bootstrap';
 import FormLayout from '../../utils/formLayout';
 import Table from '../../components/Table';
 import {
+    dateConversion,
     deleteData,
     emiCalculation,
     percentageVal,
@@ -43,6 +44,7 @@ import { useRedux } from '../../hooks';
 import ModelViewBox from '../../components/Atom/ModelViewBox';
 import { NotificationContainer } from 'react-notifications';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 let copyApplicantList = [];
 let copyLoanChargesId = [];
@@ -180,6 +182,7 @@ function Index() {
     const [state, setState] = useState({
         loanStatusId: 1,
         loanChargesInfo: [],
+        loanDate : moment().format("YYYY-MM-DD")
     });
     const [modalState, setModalState] = useState({});
     const [errors, setErrors] = useState([]);
@@ -245,7 +248,7 @@ function Index() {
     useEffect(() => {
         const getReq={
             isActive : 1,
-            isBorrower : 0
+            applicantCategory : 18
         }
         dispatch(getCategoryRequest());
         dispatch(getLoanChargesTypeRequest(getReq));
@@ -283,7 +286,7 @@ function Index() {
                     tenurePeriod: '',
                 });
             } else {
-                updatedFormFiledData[13] = {
+                updatedFormFiledData[17] = {
                     formFields: [
                         {
                             label: 'Sub-category',
@@ -297,7 +300,7 @@ function Index() {
                         },
                     ],
                 };
-                updatedFormFiledData[32] = {
+                updatedFormFiledData[36] = {
                     formFields: [
                         {
                             label: 'Tenure Period (Month)',
@@ -309,7 +312,7 @@ function Index() {
                         },
                     ],
                 };
-                updatedFormFiledData[33] = {
+                updatedFormFiledData[37] = {
                     formFields: [
                         {
                             label: 'Disbursed Method',
@@ -493,6 +496,7 @@ function Index() {
             setState({
                 loanId: getAddLoanDetailsList[0]?.loanId || '',
                 loanStatusId: getAddLoanDetailsList[0]?.loanStatusId || '',
+                loanDate: getAddLoanDetailsList[0].loanDate ? dateConversion(getAddLoanDetailsList[0].loanDate, "YYYY-MM-DD") : '',
 
                 applicantId: getAddLoanDetailsList[0]?.applicantId || '',
                 coApplicantId: getAddLoanDetailsList[0]?.coApplicantId || '',
@@ -699,6 +703,7 @@ function Index() {
             coApplicantId: state?.coApplicantId || '',
             guarantorId: state?.guarantorId || '',
             categoryId: state?.categoryId || '',
+            loanDate: state.loanDate ? dateConversion(state.loanDate, "YYYY-MM-DD") : '',
 
             interestRate: parseInt(state?.interestRate) || '',
             loanAmount: state?.loanAmount || '',

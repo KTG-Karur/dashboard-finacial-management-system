@@ -134,7 +134,9 @@ const Index = () => {
     };
 
     // useStates
-    const [state, setState] = useState({});
+    const [state, setState] = useState({
+        loanDate : moment().format("YYYY-MM-DD")
+    });
     const [optionListState, setOptionListState] = useState({
         applicant: [],
         coApplicant: [],
