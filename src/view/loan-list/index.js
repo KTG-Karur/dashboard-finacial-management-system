@@ -33,7 +33,7 @@ import {
 } from '../../redux/actions';
 import { useRedux } from '../../hooks';
 import { NotificationContainer } from 'react-notifications';
-import { disbursedDateFormContainer, districtFormContainer } from './formData';
+import { disbursedDateFormContainer, districtFormContainer, callcelledFormContainer } from './formData';
 import _ from 'lodash';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FormLayout from '../../utils/formLayout';
@@ -198,7 +198,7 @@ function Index() {
                             <span
                                 className="text-primary  me-2 cursor-pointer"
                                 onClick={() => {
-                                    showLoanDetailsModal(row?.original, 2);
+                                    showLoanDetailsModal(row?.original, 2, false);
                                     StatusName = 'Approval';
                                 }}>
                                 <i className={'fas fa-solid fa-bell'}></i>
@@ -209,7 +209,7 @@ function Index() {
                             <span
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() => {
-                                    showLoanDetailsModal(row?.original, 4);
+                                    showLoanDetailsModal(row?.original, 4, false);
                                     StatusName = 'Disbursed';
                                 }}>
                                 <i className={'fas fa-check-circle'}></i>
@@ -226,11 +226,7 @@ function Index() {
                             <span
                                 className="text-danger  me-2 cursor-pointer"
                                 onClick={() => {
-                                    showConfirmationDialog(
-                                        'You want to Cancelled this loan Applicantion',
-                                        () => onChangeStatus(row.original, 3),
-                                        'Yes'
-                                    );
+                                    showLoanDetailsModal(row?.original, 3, true)
                                     StatusName = 'Cancelled';
                                 }}>
                                 <i className={'fas fa-power-off'}></i>
@@ -258,18 +254,20 @@ function Index() {
 
     const [currentDate, setCurrentDate] = useState({
         disbursedDate: today,
+        reason: '',
     });
     const [optionListState, setOptionListState] = useState({
         contraList: []
     })
     const [modal, setModal] = useState(false);
+    const [errors, setErrors] = useState([]);
     const [formData, setFormData] = useState(disbursedDateFormContainer);
     const [isLoading, setIsLoading] = useState(false);
     const [cancelModal, setCancelModal] = useState(false);
     const [parentList, setParentList] = useState([]);
     const [selectedItem, setSelectedItem] = useState([]);
-    const [statusItem, setStatusdItem] = useState([]);
-
+    const [statusItem, setStatusdItem] = useState({});
+    const errorHandle = useRef();
     const callDispatchStatus = () => {
         const req = {};
         const pathName = location.pathname.split('/')[2];
@@ -412,7 +410,24 @@ function Index() {
         isEdit = false;
     }, [updateAddLoanSuccess, updateAddLoanFailure]);
 
-    const showLoanDetailsModal = async (data, statusId) => {
+    useEffect(() => {
+        if (!modal) {
+            setCancelModal(false);
+            setCurrentDate({
+                disbursedDate: today,
+                reason: '',
+            });
+            setSelectedItem([]);
+            setStatusdItem({});
+            setFormData(disbursedDateFormContainer);
+        }
+    }, [modal])
+
+    const handleValidation = () => {
+        errorHandle.current.validateFormFields();
+    };
+
+    const showLoanDetailsModal = async (data, statusId, isCancel = false) => {
         setStatusdItem({
             categoryId: data.categoryId,
             dueAmount: data.dueAmount,
@@ -424,51 +439,97 @@ function Index() {
         });
         const req = { loanId: data?.loanId || '' };
         dispatch(getAddLoanDetailsRequest(req));
+        if (isCancel) {
+            setCancelModal(true);
+        }
         setModal(true);
     }
-    
+
     const onChangeStatus = async (data, statusId) => {
         let req = {
             loanStatusId: statusId,
         };
-        setModal(false);
+
+        // request to approval or clearance
         if (statusId === 2) {
             req.approvedBy = 1;
+            console.log("Request");
+            console.log(req)
             // req.cashHistory = {
-            //     contraId: state?.contraId || "",
-            //     twoThousCount: state?.twoThousCount || 0,
-            //     fiveHundCount: state?.fiveHundCount || 0,
-            //     hundCount: state?.hundCount || 0,
-            //     fivtyCount: state?.fivtyCount || 0,
-            //     twentyCount: state?.twentyCount || 0,
-            //     tenCount: state?.tenCount || 0,
-            //     fiveCoinCount: state?.fiveCoinCount || 0,
-            //     twoCoinCount: state?.twoCoinCount || 0,
-            //     oneCoinCount: state?.oneCoinCount || 0,
-            //     amount: state?.loanDetails[0]?.loanAmount || 0,
+            //     contraId: currentDate?.contraId || "",
+            //     twoThousCount: currentDate?.twoThousCount || 0,
+            //     fiveHundCount: currentDate?.fiveHundCount || 0,
+            //     hundCount: currentDate?.hundCount || 0,
+            //     fivtyCount: currentDate?.fivtyCount || 0,
+            //     twentyCount: currentDate?.twentyCount || 0,
+            //     tenCount: currentDate?.tenCount || 0,
+            //     fiveCoinCount: currentDate?.fiveCoinCount || 0,
+            //     twoCoinCount: currentDate?.twoCoinCount || 0,
+            //     oneCoinCount: currentDate?.oneCoinCount || 0,
+            //     amount: currentDate?.loanDetails[0]?.loanAmount || 0,
             // }
             req.approvedDate = formatDate(new Date());
         }
 
+        //cancellation restored to request
         if (statusId === 1) {
             req.approvedBy = null;
             req.approvedDate = null;
+            console.log("Cancelation to Restore Request")
+            console.log(req)
             // req.cashHistory = {
-            //     contraId: state?.contraId || "",
-            //     twoThousCount: state?.twoThousCount || 0,
-            //     fiveHundCount: state?.fiveHundCount || 0,
-            //     hundCount: state?.hundCount || 0,
-            //     fivtyCount: state?.fivtyCount || 0,
-            //     twentyCount: state?.twentyCount || 0,
-            //     tenCount: state?.tenCount || 0,
-            //     fiveCoinCount: state?.fiveCoinCount || 0,
-            //     twoCoinCount: state?.twoCoinCount || 0,
-            //     oneCoinCount: state?.oneCoinCount || 0,
-            //     amount: state?.loanDetails[0]?.loanAmount || 0,
+            //     contraId: currentDate?.contraId || "",
+            //     twoThousCount: currentDate?.twoThousCount || 0,
+            //     fiveHundCount: currentDate?.fiveHundCount || 0,
+            //     hundCount: currentDate?.hundCount || 0,
+            //     fivtyCount: currentDate?.fivtyCount || 0,
+            //     twentyCount: currentDate?.twentyCount || 0,
+            //     tenCount: currentDate?.tenCount || 0,
+            //     fiveCoinCount: currentDate?.fiveCoinCount || 0,
+            //     twoCoinCount: currentDate?.twoCoinCount || 0,
+            //     oneCoinCount: currentDate?.oneCoinCount || 0,
+            //     amount: currentDate?.loanDetails[0]?.loanAmount || 0,
             // }
         }
 
+        //approval to Cancelation
+        if (statusId == 3) {
+            req.cancelledBy = 1;
+            req.cancelledDate = currentDate.disbursedDate;
+            req.reasonData = currentDate.reason;
+            console.log("Cancelation")
+            console.log(req)
+        }
+
+        // approval to disbursed
         if (statusId == 4) {
+
+            if (currentDate.contraTotalAmount > currentDate?.loanDetails[0]?.loanAmount || !currentDate.contraTotalAmount) {
+                showMessage('warning', `It's Not Equal to Loan Amount...!`)
+                return;
+            }
+
+            //check contra cash or bank
+            if (currentDate.contraId == 1) {
+                req.contraId = currentDate.contraId;
+                req.cashHistory = {
+                    contraId: currentDate?.contraId || "",
+                    twoThousCount: currentDate?.twoThousCount || 0,
+                    fiveHundCount: currentDate?.fiveHundCount || 0,
+                    hundCount: currentDate?.hundCount || 0,
+                    fivtyCount: currentDate?.fivtyCount || 0,
+                    twentyCount: currentDate?.twentyCount || 0,
+                    tenCount: currentDate?.tenCount || 0,
+                    fiveCoinCount: currentDate?.fiveCoinCount || 0,
+                    twoCoinCount: currentDate?.twoCoinCount || 0,
+                    oneCoinCount: currentDate?.oneCoinCount || 0,
+                    amount: currentDate?.loanDetails[0]?.loanAmount || 0,
+                }
+            } else {
+                req.contraId = currentDate.contraId;
+                req.transactionId = currentDate.transactionId;
+            }
+
             if (data.categoryId !== 1) {
                 const duedate = await findDueDate(currentDate?.disbursedDate || today);
                 const lastdate = await findLastDate(
@@ -491,24 +552,11 @@ function Index() {
                     dueStartDate: duedate,
                     dueEndDate: lastdate,
                 };
-                // req.cashHistory = {
-                //     contraId: state?.contraId || "",
-                //     twoThousCount: state?.twoThousCount || 0,
-                //     fiveHundCount: state?.fiveHundCount || 0,
-                //     hundCount: state?.hundCount || 0,
-                //     fivtyCount: state?.fivtyCount || 0,
-                //     twentyCount: state?.twentyCount || 0,
-                //     tenCount: state?.tenCount || 0,
-                //     fiveCoinCount: state?.fiveCoinCount || 0,
-                //     twoCoinCount: state?.twoCoinCount || 0,
-                //     oneCoinCount: state?.oneCoinCount || 0,
-                //     amount: state?.loanDetails[0]?.loanAmount || 0,
-                // }
+
                 req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
                 req.dueDate = duedate;
             } else if (data.categoryId === 1) {
                 const duedate = await findDueDate(currentDate?.disbursedDate || today);
-
                 req.duePaymentInfo = {
                     loanId: data.loanId,
                     totalAmount: parseInt(data.loanAmount).toString(),
@@ -517,27 +565,22 @@ function Index() {
                     dueAmount: percentageVal(data.loanAmount, data.interestRate).toString(),
                     dueStartDate: duedate,
                 };
-                // req.cashHistory = {
-                //     contraId: state?.contraId || "",
-                //     twoThousCount: state?.twoThousCount || 0,
-                //     fiveHundCount: state?.fiveHundCount || 0,
-                //     hundCount: state?.hundCount || 0,
-                //     fivtyCount: state?.fivtyCount || 0,
-                //     twentyCount: state?.twentyCount || 0,
-                //     tenCount: state?.tenCount || 0,
-                //     fiveCoinCount: state?.fiveCoinCount || 0,
-                //     twoCoinCount: state?.twoCoinCount || 0,
-                //     oneCoinCount: state?.oneCoinCount || 0,
-                //     amount: state?.loanDetails[0]?.loanAmount || 0,
-                // }
                 req.disbursedDate = currentDate.disbursedDate || formatDate(new Date());
                 req.dueDate = duedate;
             }
+
+            console.log("Disbursed")
+            console.log(req)
         }
+        console.log("loanId")
+        console.log(data.loanId)
+        setModal(false);
+        return;
         isEdit = true;
         dispatch(updateAddLoanRequest(req, data.loanId));
         setCurrentDate({
             disbursedDate: today,
+            reason: '',
         });
     };
 
@@ -567,6 +610,7 @@ function Index() {
                 'name': "transactionId",
                 'inputType': "text",
                 'placeholder': "Enter Transaction ID",
+                'require': true,
             }
             filteredArr.push(addTransctionField);
             let tempArr = [
@@ -638,17 +682,19 @@ function Index() {
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={`${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} Loan Details`}
+                modelHeader={`${cancelModal ? 'Loan Cancellation' : statusItem.statusId == 2 ? 'Approval' : 'Disbursed'}  ${cancelModal ? '' : 'Loan Details'}`}
                 modelSize={'md'}
                 modelHead={true}
-                handleSubmit={() =>
-                    showConfirmationDialog(
-                        `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,
-                        () => onChangeStatus(statusItem, statusItem.statusId),
-                        'Yes',
-                        'Approval',
-                        'Approval Successfully'
-                    )
+                handleSubmit={
+                    statusItem.statusId !== 2 ? handleValidation :
+                        () =>
+                            showConfirmationDialog(
+                                `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,
+                                () => onChangeStatus(statusItem, statusItem.statusId),
+                                'Yes',
+                                'Approval',
+                                'Approval Successfully'
+                            )
                 }>
                 <div style={{ marginBottom: '20px' }}>
                     <Row style={{ marginBottom: '20px' }}>
@@ -656,21 +702,24 @@ function Index() {
                             <CompanyDetails fontSize="12px" imgSize="150px" classStyle="d-flex justify-content-center flex-column align-items-center" />
                         </Col>
                     </Row>
-                    {(selectedItem || []).map((Item, i) => (
-                        <Row key={i} style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
-                            <Col md={5}>
-                                <h5 style={{ margin: '0px' }}> {Item.Key}</h5>
-                            </Col>
-                            <Col md={1}>{':'}</Col>
+                    {
+                        !cancelModal &&
+                        (selectedItem || []).map((Item, i) => (
+                            <Row key={i} style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
+                                <Col md={5}>
+                                    <h5 style={{ margin: '0px' }}> {Item.Key}</h5>
+                                </Col>
+                                <Col md={1}>{':'}</Col>
 
-                            <Col md={5}>
-                                <h5 style={{ margin: '0px' }}> {Item.Value}</h5>
-                            </Col>
-                        </Row>
-                    ))}
+                                <Col md={5}>
+                                    <h5 style={{ margin: '0px' }}> {Item.Value}</h5>
+                                </Col>
+                            </Row>
+                        ))
+                    }
 
                     <div>
-                        {statusItem.statusId === 4 && (
+                        {(statusItem.statusId === 4 || cancelModal) && (
                             <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
                                 {/* <Col md={5}>
                                     <h5 style={{ margin: '0px' }}>{'Disbursed Date'}</h5>
@@ -681,10 +730,24 @@ function Index() {
                                 </div>
                                 <Col md={12}>
                                     <FormLayout
-                                        dynamicForm={formData}
+                                        dynamicForm={cancelModal ? callcelledFormContainer : formData}
                                         noOfColumns={1}
                                         state={currentDate}
                                         setState={setCurrentDate}
+                                        ref={errorHandle}
+                                        errors={errors}
+                                        setErrors={setErrors}
+                                        handleSubmit={
+                                            () => {
+                                                showConfirmationDialog(
+                                                    `You want to ${cancelModal ? 'Cancelled' : 'Disbursed'} this loan Applicantion`,
+                                                    () => onChangeStatus(statusItem, statusItem.statusId),
+                                                    'Yes',
+                                                    `${cancelModal ? 'Cancelled' : 'Disbursed'}`,
+                                                    `${cancelModal ? 'Cancelled' : 'Disbursed'} Successfully`
+                                                )
+                                            }
+                                        }
                                         optionListState={optionListState}
                                         onChangeCallBack={{ onHandleContra: onHandleContra, onHandleCashAmount: onHandleCashAmount }}
                                     />
