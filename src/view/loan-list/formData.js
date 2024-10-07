@@ -14,6 +14,20 @@ const districtFormContainer = [
     },
 ];
 
+const callcelledFormContainer = [
+    {
+        formFields: [
+            {
+                label: 'Reason',
+                name: 'reason',
+                inputType: 'textarea',
+                placeholder: "Enter Cancellation Reason",
+                require: true,
+            },
+        ],
+    },
+];
+
 
 const disbursedDateFormContainer = [
     {
@@ -22,9 +36,9 @@ const disbursedDateFormContainer = [
                 'label': "Disbursed Date",
                 'name': "disbursedDate",
                 'inputType': "date",
-                'require': false,
-                "minmumDate" : "loanDate",
-                "classStyle" : "col-6"
+                'require': true,
+                "minmumDate": "loanDate",
+                "classStyle": "col-6"
             },
             {
                 label: 'Recevied To',
@@ -33,8 +47,9 @@ const disbursedDateFormContainer = [
                 optionList: 'contraList',
                 displayKey: 'contraName',
                 uniqueKey: 'contraId',
-                classStyle : "col-6",
-                onChange : "onHandleContra",
+                classStyle: "col-6",
+                require: true,
+                onChange: "onHandleContra",
             },
         ],
     },
@@ -42,4 +57,4 @@ const disbursedDateFormContainer = [
 
 
 
-export { districtFormContainer, disbursedDateFormContainer };
+export { districtFormContainer, disbursedDateFormContainer, callcelledFormContainer };
