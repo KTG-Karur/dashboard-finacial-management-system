@@ -66,7 +66,9 @@ function Index() {
         getAddLoanDetailsSuccess,
         getAddLoanDetailsList,
         getAddLoanDetailsFailure,
-        getContraSuccess, getContraList, getContraFailure,
+        getContraSuccess,
+        getContraList,
+        getContraFailure,
         // error
         errorMessage,
     } = appSelector((state) => ({
@@ -198,7 +200,7 @@ function Index() {
                             <span
                                 className="text-primary  me-2 cursor-pointer"
                                 onClick={() => {
-                                    showLoanDetailsModal(row?.original, 2, false);
+                                    showLoanDetailsModal(row?.original, 2);
                                     StatusName = 'Approval';
                                 }}>
                                 <i className={'fas fa-solid fa-bell'}></i>
@@ -209,7 +211,7 @@ function Index() {
                             <span
                                 className="text-success  me-2 cursor-pointer"
                                 onClick={() => {
-                                    showLoanDetailsModal(row?.original, 4, false);
+                                    showLoanDetailsModal(row?.original, 4);
                                     StatusName = 'Disbursed';
                                 }}>
                                 <i className={'fas fa-check-circle'}></i>
@@ -222,16 +224,18 @@ function Index() {
                             </span>
                         )}
                         {/* Cancelled */}
-                        {row?.original?.loanStatusId !== 1 && row?.original?.loanStatusId !== 3 && row?.original?.loanStatusId !== 4 && (
-                            <span
-                                className="text-danger  me-2 cursor-pointer"
-                                onClick={() => {
-                                    showLoanDetailsModal(row?.original, 3, true)
-                                    StatusName = 'Cancelled';
-                                }}>
-                                <i className={'fas fa-power-off'}></i>
-                            </span>
-                        )}
+                        {row?.original?.loanStatusId !== 1 &&
+                            row?.original?.loanStatusId !== 3 &&
+                            row?.original?.loanStatusId !== 4 && (
+                                <span
+                                    className="text-danger  me-2 cursor-pointer"
+                                    onClick={() => {
+                                        showLoanDetailsModal(row?.original, 3);
+                                        StatusName = 'Cancelled';
+                                    }}>
+                                    <i className={'fas fa-power-off'}></i>
+                                </span>
+                            )}
                         {row?.original?.loanStatusId === 3 && (
                             <span
                                 className="text-danger  me-2 cursor-pointer"
@@ -257,8 +261,8 @@ function Index() {
         reason: '',
     });
     const [optionListState, setOptionListState] = useState({
-        contraList: []
-    })
+        contraList: [],
+    });
     const [modal, setModal] = useState(false);
     const [errors, setErrors] = useState([]);
     const [formData, setFormData] = useState(disbursedDateFormContainer);
@@ -345,14 +349,16 @@ function Index() {
                 'Application No': getAddLoanDetailsList[0]?.applicationNo || '',
                 'Applicant Name': getAddLoanDetailsList[0]?.applicantName || '',
                 // 'Co Applicant Name': getAddLoanDetailsList[0]?.coApplicantName || '',
-                // 'Guarantor Name': getAddLoanDetailsList[0]?.guarantorName || '', 
+                // 'Guarantor Name': getAddLoanDetailsList[0]?.guarantorName || '',
 
                 'Loan Name': getAddLoanDetailsList[0]?.categoryName || '',
 
                 'Loan Amount': `Rs. ${getAddLoanDetailsList[0]?.loanAmount || ''}`,
                 'Interest Rate': `${getAddLoanDetailsList[0]?.interestRate || ''} %`,
 
-                'Total Charges': `Rs. ${parseInt(getAddLoanDetailsList[0]?.loanAmount) - parseInt(getAddLoanDetailsList[0]?.disbursedAmount)}`,
+                'Total Charges': `Rs. ${
+                    parseInt(getAddLoanDetailsList[0]?.loanAmount) - parseInt(getAddLoanDetailsList[0]?.disbursedAmount)
+                }`,
                 'Created By': getAddLoanDetailsList[0]?.createdBy || '',
                 // 'Created Date': DateMonthYear(formatDate(getAddLoanDetailsList[0]?.createdAt)),
 
@@ -363,21 +369,24 @@ function Index() {
             let entries = Object.entries(stateValue);
 
             if (getAddLoanDetailsList[0]?.categoryId !== 1) {
-                entries.splice(5, 0, ["Loan Type", getAddLoanDetailsList[0]?.subCategoryName || '']);
-                entries.splice(8, 0, ["Tenure Period", `${getAddLoanDetailsList[0]?.tenurePeriod || ''} Months`]);
+                entries.splice(5, 0, ['Loan Type', getAddLoanDetailsList[0]?.subCategoryName || '']);
+                entries.splice(8, 0, ['Tenure Period', `${getAddLoanDetailsList[0]?.tenurePeriod || ''} Months`]);
             }
 
             if (statusItem.statusId == 4) {
                 // entries.splice(12, 0, ["Approved By", getAddLoanDetailsList[0]?.approvedBy || '']);
-                entries.splice(13, 0, ["Approved Date", DateMonthYear(formatDate(getAddLoanDetailsList[0]?.approvedDate))]);
+                entries.splice(13, 0, [
+                    'Approved Date',
+                    DateMonthYear(formatDate(getAddLoanDetailsList[0]?.approvedDate)),
+                ]);
             }
 
             const keyValueArray = objectToKeyValueArray(entries);
             setCurrentDate({
                 ...currentDate,
                 loanDate: getAddLoanDetailsList[0]?.loanDate || '',
-                loanDetails : getAddLoanDetailsList
-            })
+                loanDetails: getAddLoanDetailsList,
+            });
             setSelectedItem(keyValueArray);
             dispatch(resetGetAddLoanDetails());
         } else if (getAddLoanDetailsFailure) {
@@ -421,13 +430,13 @@ function Index() {
             setStatusdItem({});
             setFormData(disbursedDateFormContainer);
         }
-    }, [modal])
+    }, [modal]);
 
     const handleValidation = () => {
         errorHandle.current.validateFormFields();
     };
 
-    const showLoanDetailsModal = async (data, statusId, isCancel = false) => {
+    const showLoanDetailsModal = async (data, statusId) => {
         setStatusdItem({
             categoryId: data.categoryId,
             dueAmount: data.dueAmount,
@@ -439,11 +448,30 @@ function Index() {
         });
         const req = { loanId: data?.loanId || '' };
         dispatch(getAddLoanDetailsRequest(req));
-        if (isCancel) {
+        if (statusId === 3) {
             setCancelModal(true);
         }
+        if (statusId === 2) {
+            setFormData([
+                {
+                    formFields: [
+                        {
+                            label: 'Loan Charges Recevied To',
+                            name: 'contraId',
+                            inputType: 'select',
+                            optionList: 'contraList',
+                            displayKey: 'contraName',
+                            uniqueKey: 'contraId',
+                            classStyle: 'col-12',
+                            require: true,
+                            onChange: 'onHandleContra',
+                        },
+                    ],
+                },
+            ]);
+        }
         setModal(true);
-    }
+    };
 
     const onChangeStatus = async (data, statusId) => {
         let req = {
@@ -452,34 +480,55 @@ function Index() {
 
         // request to approval or clearance
         if (statusId === 2) {
+            const totalChargesAmt =
+                parseInt(currentDate?.loanDetails[0]?.loanAmount) -
+                parseInt(currentDate?.loanDetails[0]?.disbursedAmount);
+            if (
+                currentDate.contraTotalAmount > totalChargesAmt ||
+                !currentDate.contraTotalAmount
+            ) {
+                showMessage('warning', `It's Not Equal to Loan Amount...!`);
+                return;
+            }
             req.approvedBy = 1;
-            console.log("Request");
-            console.log(req)
-            // req.cashHistory = {
-            //     contraId: currentDate?.contraId || "",
-            //     twoThousCount: currentDate?.twoThousCount || 0,
-            //     fiveHundCount: currentDate?.fiveHundCount || 0,
-            //     hundCount: currentDate?.hundCount || 0,
-            //     fivtyCount: currentDate?.fivtyCount || 0,
-            //     twentyCount: currentDate?.twentyCount || 0,
-            //     tenCount: currentDate?.tenCount || 0,
-            //     fiveCoinCount: currentDate?.fiveCoinCount || 0,
-            //     twoCoinCount: currentDate?.twoCoinCount || 0,
-            //     oneCoinCount: currentDate?.oneCoinCount || 0,
-            //     amount: currentDate?.loanDetails[0]?.loanAmount || 0,
-            // }
             req.approvedDate = formatDate(new Date());
+            
+            //check contra cash or bank
+            req.contraId = currentDate.contraId;
+            req.documentCharges = totalChargesAmt;
+            if (currentDate.contraId == 1) {
+                req.cashHistory = {
+                    contraId: currentDate?.contraId || '',
+                    twoThousCount: currentDate?.twoThousCount || 0,
+                    fiveHundCount: currentDate?.fiveHundCount || 0,
+                    twoHund: currentDate?.twoHund || 0,
+                    hundCount: currentDate?.hundCount || 0,
+                    fivtyCount: currentDate?.fivtyCount || 0,
+                    twentyCount: currentDate?.twentyCount || 0,
+                    tenCount: currentDate?.tenCount || 0,
+                    fiveCoinCount: currentDate?.fiveCoinCount || 0,
+                    twoCoinCount: currentDate?.twoCoinCount || 0,
+                    oneCoinCount: currentDate?.oneCoinCount || 0,
+                    amount: totalChargesAmt || 0,
+                };
+            } else {
+                req.transactionId = currentDate.transactionId;
+            }
+
+            console.log('Request');
+            console.log(req);
         }
 
         //cancellation restored to request
         if (statusId === 1) {
             req.approvedBy = null;
             req.approvedDate = null;
-            console.log("Cancelation to Restore Request")
-            console.log(req)
+            console.log('Cancelation to Restore Request');
+            console.log(req);
             // req.cashHistory = {
             //     contraId: currentDate?.contraId || "",
             //     twoThousCount: currentDate?.twoThousCount || 0,
+            //     twoHund: currentDate?.twoHund || 0,
             //     fiveHundCount: currentDate?.fiveHundCount || 0,
             //     hundCount: currentDate?.hundCount || 0,
             //     fivtyCount: currentDate?.fivtyCount || 0,
@@ -496,26 +545,30 @@ function Index() {
         if (statusId == 3) {
             req.cancelledBy = 1;
             req.cancelledDate = currentDate.disbursedDate;
-            req.reasonData = currentDate.reason;
-            console.log("Cancelation")
-            console.log(req)
+            req.reason = currentDate.reason;
+            console.log('Cancelation');
+            console.log(req);
         }
 
         // approval to disbursed
         if (statusId == 4) {
-
-            if (currentDate.contraTotalAmount > currentDate?.loanDetails[0]?.loanAmount || !currentDate.contraTotalAmount) {
-                showMessage('warning', `It's Not Equal to Loan Amount...!`)
+            if (
+                currentDate.contraTotalAmount > currentDate?.loanDetails[0]?.loanAmount ||
+                !currentDate.contraTotalAmount
+            ) {
+                showMessage('warning', `It's Not Equal to Loan Amount...!`);
                 return;
             }
 
+            req.contraId = currentDate.contraId;
+            req.contraTotalAmount  = currentDate?.loanDetails[0]?.loanAmount;
             //check contra cash or bank
             if (currentDate.contraId == 1) {
-                req.contraId = currentDate.contraId;
                 req.cashHistory = {
-                    contraId: currentDate?.contraId || "",
+                    contraId: currentDate?.contraId || '',
                     twoThousCount: currentDate?.twoThousCount || 0,
                     fiveHundCount: currentDate?.fiveHundCount || 0,
+                    twoHund: currentDate?.twoHund || 0,
                     hundCount: currentDate?.hundCount || 0,
                     fivtyCount: currentDate?.fivtyCount || 0,
                     twentyCount: currentDate?.twentyCount || 0,
@@ -524,9 +577,8 @@ function Index() {
                     twoCoinCount: currentDate?.twoCoinCount || 0,
                     oneCoinCount: currentDate?.oneCoinCount || 0,
                     amount: currentDate?.loanDetails[0]?.loanAmount || 0,
-                }
+                };
             } else {
-                req.contraId = currentDate.contraId;
                 req.transactionId = currentDate.transactionId;
             }
 
@@ -569,11 +621,11 @@ function Index() {
                 req.dueDate = duedate;
             }
 
-            console.log("Disbursed")
-            console.log(req)
+            console.log('Disbursed');
+            console.log(req);
         }
-        console.log("loanId")
-        console.log(data.loanId)
+        console.log('loanId');
+        console.log(data.loanId);
         setModal(false);
         return;
         isEdit = true;
@@ -584,15 +636,22 @@ function Index() {
         });
     };
 
-
     const onHandleContra = (data, name, uniqueKey) => {
-        const totalval = data.contraId != 1 ? currentDate?.loanDetails[0]?.loanAmount : 0;
+        const totalChargesAmt =
+            parseInt(currentDate?.loanDetails[0]?.loanAmount) - parseInt(currentDate?.loanDetails[0]?.disbursedAmount);
+        const totalval =
+            data.contraId != 1
+                ? statusItem.statusId === 4
+                    ? currentDate?.loanDetails[0]?.loanAmount
+                    : totalChargesAmt
+                : 0;
         setCurrentDate({
             ...currentDate,
             [name]: data[uniqueKey],
             contraTotalAmount: totalval,
-            transactionId: "",
+            transactionId: '',
             twoThousCount: 0,
+            twoHund: 0,
             fiveHundCount: 0,
             hundCount: 0,
             fivtyCount: 0,
@@ -601,42 +660,59 @@ function Index() {
             fiveCoinCount: 0,
             twoCoinCount: 0,
             oneCoinCount: 0,
-        })
-        let formArr = disbursedDateFormContainer[0].formFields
+        });
+        let formArr =
+            statusItem.statusId === 4
+                ? disbursedDateFormContainer[0].formFields
+                : [
+                      {
+                          label: 'Loan Charges Recevied To',
+                          name: 'contraId',
+                          inputType: 'select',
+                          optionList: 'contraList',
+                          displayKey: 'contraName',
+                          uniqueKey: 'contraId',
+                          classStyle: 'col-12',
+                          require: true,
+                          onChange: 'onHandleContra',
+                      },
+                  ];
+
         let filteredArr = _.filter(formArr, (value, index) => index === 0 || index === 1);
         if (data.contraId != 1) {
             let addTransctionField = {
-                'label': "Transaction Id",
-                'name': "transactionId",
-                'inputType': "text",
-                'placeholder': "Enter Transaction ID",
-                'require': true,
-            }
+                label: 'Transaction Id',
+                name: 'transactionId',
+                inputType: 'text',
+                placeholder: 'Enter Transaction ID',
+                require: true,
+            };
             filteredArr.push(addTransctionField);
             let tempArr = [
                 {
-                    formFields: []
-                }
+                    formFields: [],
+                },
             ];
-            tempArr[0].formFields = filteredArr
+            tempArr[0].formFields = filteredArr;
             setFormData(tempArr);
         } else {
             let tempArr = [
                 {
-                    formFields: []
-                }
+                    formFields: [],
+                },
             ];
-            tempArr[0].formFields = _.concat(filteredArr, cashHistoryFormContainer)
+            tempArr[0].formFields = _.concat(filteredArr, cashHistoryFormContainer);
             setFormData(tempArr);
         }
-    }
+    };
 
     const onHandleCashAmount = (event, name) => {
-        let total = 0
-        let enterVal = event.target.value
+        let total = 0;
+        let enterVal = event.target.value;
 
         const twoThousand = name === 'twoThousCount' ? enterVal * 2000 : currentDate.twoThousCount * 2000;
         const fiveHund = name === 'fiveHundCount' ? enterVal * 500 : currentDate.fiveHundCount * 500;
+        const twoHund = name === 'twoHund' ? enterVal * 200 : currentDate.twoHund * 200;
         const hund = name === 'hundCount' ? enterVal * 100 : currentDate.hundCount * 100;
         const fivty = name === 'fivtyCount' ? enterVal * 50 : currentDate.fivtyCount * 50;
         const twenty = name === 'twentyCount' ? enterVal * 20 : currentDate.twentyCount * 20;
@@ -644,18 +720,40 @@ function Index() {
         const fiveCoin = name === 'fiveCoinCount' ? enterVal * 5 : currentDate.fiveCoinCount * 5;
         const twoCoin = name === 'twoCoinCount' ? enterVal * 2 : currentDate.twoCoinCount * 2;
         const oneCoin = name === 'oneCoinCount' ? enterVal * 1 : currentDate.oneCoinCount * 1;
-        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
+        total =
+            parseInt(twoThousand) +
+            parseInt(fiveHund) +
+            parseInt(twoHund) +
+            parseInt(hund) +
+            parseInt(fivty) +
+            parseInt(twenty) +
+            parseInt(ten) +
+            parseInt(fiveCoin) +
+            parseInt(twoCoin) +
+            parseInt(oneCoin);
 
-        if (total > currentDate?.loanDetails[0]?.loanAmount) {
-            showMessage('warning', 'Its Crossing Your Loan Limit...!')
-            return false;
+        if (statusItem.statusId === 4) {
+            if (total > currentDate?.loanDetails[0]?.loanAmount) {
+                showMessage('warning', 'Its Crossing Your Loan Limit...!');
+                return false;
+            }
+        } else if (statusItem.statusId === 2) {
+            const totalChargesAmt =
+                parseInt(currentDate?.loanDetails[0]?.loanAmount) -
+                parseInt(currentDate?.loanDetails[0]?.disbursedAmount);
+
+            if (total > totalChargesAmt) {
+                showMessage('warning', 'Its Crossing Your Loan Charges Limit...!');
+                return false;
+            }
         }
+
         setCurrentDate({
             ...currentDate,
             [name]: enterVal,
-            contraTotalAmount: total
-        })
-    }
+            contraTotalAmount: total,
+        });
+    };
 
     return (
         <React.Fragment>
@@ -673,37 +771,45 @@ function Index() {
                     Title={`${capitalizeFirstLetter(location.pathname.split('/')[2])} Loan List`}
                     data={parentList || []}
                     pageSize={10}
-                // filterTbl={false}
-                // filterFormContainer={districtFormContainer}
-                // filterColNo={1}
+                    // filterTbl={false}
+                    // filterFormContainer={districtFormContainer}
+                    // filterColNo={1}
                 />
             )}
 
             <ModelViewBox
                 modal={modal}
                 setModel={setModal}
-                modelHeader={`${cancelModal ? 'Loan Cancellation' : statusItem.statusId == 2 ? 'Approval' : 'Disbursed'}  ${cancelModal ? '' : 'Loan Details'}`}
+                modelHeader={`${
+                    cancelModal ? 'Loan Cancellation' : statusItem.statusId == 2 ? 'Approval' : 'Disbursed'
+                }  ${cancelModal ? '' : 'Loan Details'}`}
                 modelSize={'md'}
                 modelHead={true}
                 handleSubmit={
-                    statusItem.statusId !== 2 ? handleValidation :
-                        () =>
-                            showConfirmationDialog(
-                                `You want to ${statusItem.statusId == 2 ? 'Approval' : 'Disbursed'} this loan Applicantion`,
-                                () => onChangeStatus(statusItem, statusItem.statusId),
-                                'Yes',
-                                'Approval',
-                                'Approval Successfully'
-                            )
+                    statusItem.statusId !== 2
+                        ? handleValidation
+                        : () =>
+                              showConfirmationDialog(
+                                  `You want to ${
+                                      statusItem.statusId == 2 ? 'Approval' : 'Disbursed'
+                                  } this loan Applicantion`,
+                                  () => onChangeStatus(statusItem, statusItem.statusId),
+                                  'Yes',
+                                  'Approval',
+                                  'Approval Successfully'
+                              )
                 }>
                 <div style={{ marginBottom: '20px' }}>
                     <Row style={{ marginBottom: '20px' }}>
                         <Col>
-                            <CompanyDetails fontSize="12px" imgSize="150px" classStyle="d-flex justify-content-center flex-column align-items-center" />
+                            <CompanyDetails
+                                fontSize="12px"
+                                imgSize="150px"
+                                classStyle="d-flex justify-content-center flex-column align-items-center"
+                            />
                         </Col>
                     </Row>
-                    {
-                        !cancelModal &&
+                    {!cancelModal &&
                         (selectedItem || []).map((Item, i) => (
                             <Row key={i} style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
                                 <Col md={5}>
@@ -715,45 +821,47 @@ function Index() {
                                     <h5 style={{ margin: '0px' }}> {Item.Value}</h5>
                                 </Col>
                             </Row>
-                        ))
-                    }
+                        ))}
 
                     <div>
-                        {(statusItem.statusId === 4 || cancelModal) && (
-                            <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
-                                {/* <Col md={5}>
+                        {/* {(statusItem.statusId === 4 || cancelModal) && ( */}
+                        <Row style={{ display: 'flex', justifyContent: 'center', marginBottom: '5px' }}>
+                            {/* <Col md={5}>
                                     <h5 style={{ margin: '0px' }}>{'Disbursed Date'}</h5>
                                 </Col>
                                 <Col md={1}>{':'}</Col> */}
-                                <div className='mx-2'>
-                                    <hr ></hr>
-                                </div>
-                                <Col md={12}>
-                                    <FormLayout
-                                        dynamicForm={cancelModal ? callcelledFormContainer : formData}
-                                        noOfColumns={1}
-                                        state={currentDate}
-                                        setState={setCurrentDate}
-                                        ref={errorHandle}
-                                        errors={errors}
-                                        setErrors={setErrors}
-                                        handleSubmit={
-                                            () => {
-                                                showConfirmationDialog(
-                                                    `You want to ${cancelModal ? 'Cancelled' : 'Disbursed'} this loan Applicantion`,
-                                                    () => onChangeStatus(statusItem, statusItem.statusId),
-                                                    'Yes',
-                                                    `${cancelModal ? 'Cancelled' : 'Disbursed'}`,
-                                                    `${cancelModal ? 'Cancelled' : 'Disbursed'} Successfully`
-                                                )
-                                            }
-                                        }
-                                        optionListState={optionListState}
-                                        onChangeCallBack={{ onHandleContra: onHandleContra, onHandleCashAmount: onHandleCashAmount }}
-                                    />
-                                </Col>
-                            </Row>
-                        )}
+                            <div className="mx-2">
+                                <hr></hr>
+                            </div>
+                            <Col md={12}>
+                                <FormLayout
+                                    dynamicForm={cancelModal ? callcelledFormContainer : formData}
+                                    noOfColumns={1}
+                                    state={currentDate}
+                                    setState={setCurrentDate}
+                                    ref={errorHandle}
+                                    errors={errors}
+                                    setErrors={setErrors}
+                                    handleSubmit={() => {
+                                        showConfirmationDialog(
+                                            `You want to ${
+                                                cancelModal ? 'Cancelled' : 'Disbursed'
+                                            } this loan Applicantion`,
+                                            () => onChangeStatus(statusItem, statusItem.statusId),
+                                            'Yes',
+                                            `${cancelModal ? 'Cancelled' : 'Disbursed'}`,
+                                            `${cancelModal ? 'Cancelled' : 'Disbursed'} Successfully`
+                                        );
+                                    }}
+                                    optionListState={optionListState}
+                                    onChangeCallBack={{
+                                        onHandleContra: onHandleContra,
+                                        onHandleCashAmount: onHandleCashAmount,
+                                    }}
+                                />
+                            </Col>
+                        </Row>
+                        {/* )} */}
                     </div>
                 </div>
             </ModelViewBox>
