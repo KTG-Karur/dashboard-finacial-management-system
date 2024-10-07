@@ -1,12 +1,14 @@
 // saga.ts
 import { call, put, takeEvery } from 'redux-saga/effects';
-import { createContra, getContra, updateContra } from '../../api/ContraApi'; // Adjust the path as needed
+import { createContra, getContra, getContraDetails, updateContra } from '../../api/ContraApi'; // Adjust the path as needed
 import { 
   getContraSuccess, getContraFailure,
   createContraSuccess,
   createContraFailure,
   updateContraSuccess,
   updateContraFailure,
+  getContraDetailsSuccess,
+  getContraDetailsFailure,
 } from './actions';
 
 // Saga to handle fetching contras
@@ -22,6 +24,22 @@ function* fetchContraSaga(action: any): Generator<any, any, any> {
       : 'An unexpected error occurred';
 
     yield put(getContraFailure(errorMessage));
+  }
+}
+
+// Saga to handle fetching contras
+function* fetchContraDetailsSaga(action: any): Generator<any, any, any> {
+  try {
+    const data = yield call(getContraDetails, action.payload);
+    yield put(getContraDetailsSuccess(data));
+  } catch (error: any) {
+    const errorMessage = error.response && error.response.data && error.response.data.message
+    ? error.response.data.message
+    : error.message
+      ? error.message
+      : 'An unexpected error occurred';
+
+    yield put(getContraDetailsFailure(errorMessage));
   }
 }
 
@@ -69,6 +87,7 @@ function* updateContraSaga(action: any): Generator<any, any, any> {
 
 export default function* contraSaga() {
   yield takeEvery('GET_CONTRA_REQUEST', fetchContraSaga);
+  yield takeEvery('GET_CONTRA_DETAILS_REQUEST', fetchContraDetailsSaga);
   yield takeEvery('CREATE_CONTRA_REQUEST', createContraSaga);
   yield takeEvery('UPDATE_CONTRA_REQUEST', updateContraSaga);
   // yield takeEvery('DELETE_CONTRA_REQUEST', deleteContraSaga);

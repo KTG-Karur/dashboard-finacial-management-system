@@ -143,12 +143,12 @@ const Navigate: NavigateTypes[] = [
             },
             {
                 label: 'Journal',
-                url: '/view/expense-entry',
+                url: '/accounts/expense-entry',
                 parentKey: 'Accounts',
             },
             {
                 label: 'Contra',
-                url: '/loan/approved',
+                url: '/accounts/contra',
                 parentKey: 'Accounts',
             },
         ]

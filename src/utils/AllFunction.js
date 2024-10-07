@@ -21,6 +21,12 @@ const showMessage = (type, msg, title = null) => {
     }
 };
 
+const amountFormat = (amount)=>{
+    console.log(amount)
+    let formattedNumber = parseInt(amount).toFixed(2);
+    return formattedNumber;
+}
+
 const getFormFieldName = (dynamicForm) => {
     let arr = [];
     dynamicForm.forEach((formDataArr) => {
@@ -267,6 +273,7 @@ export {
     calculateTotalInterestPayable,
     numberWithCommas,
     DateMonthYear,
+    amountFormat,
     capitalizeFirstLetter,
     objectToKeyValueArray,
 };

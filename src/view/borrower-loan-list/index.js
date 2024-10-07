@@ -364,7 +364,7 @@ function Index() {
     }
 
     const onApproveSubmit = () => {
-        if (state.contraTotalAmount > state?.investmentDetails[0]?.investmentAmount) {
+        if (state.contraTotalAmount >state?.investmentDetails[0]?.investmentAmount) {
             showMessage('warning', `It's Not Equal to Investment...!`)
             return false;
         }
@@ -380,6 +380,7 @@ function Index() {
                 contraId: state?.contraId || "",
                 twoThousCount: state?.twoThousCount || 0,
                 fiveHundCount: state?.fiveHundCount || 0,
+                twoHund: state?.twoHund || 0,
                 hundCount: state?.hundCount || 0,
                 fivtyCount: state?.fivtyCount || 0,
                 twentyCount: state?.twentyCount || 0,
@@ -418,6 +419,7 @@ function Index() {
             transactionId: "",
             twoThousCount: 0,
             fiveHundCount: 0,
+            twoHund: 0,
             hundCount: 0,
             fivtyCount: 0,
             twentyCount: 0,
@@ -458,6 +460,7 @@ function Index() {
         if (state.twoThousCount != 0 || state.fiveHundCount != 0 || state.hundCount != 0 || state.fivtyCount != 0 || state.twentyCount != 0 || state.tenCount != 0 || state.fiveCoinCount != 0 || state.twoCoinCount != 0 || state.oneCoinCount) {
             const twoThousand = state.twoThousCount * 2000;
             const fiveHund = state.fiveHundCount * 500;
+            const twoHund = state.twoHund * 200;
             const hund = state.hundCount * 100;
             const fivty = state.fivtyCount * 50;
             const twenty = state.twentyCount * 20;
@@ -465,7 +468,7 @@ function Index() {
             const fiveCoin = state.fiveCoinCount * 5;
             const twoCoin = state.twoCoinCount * 2;
             const oneCoin = state.oneCoinCount * 1;
-            const total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
+            const total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(twoHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
             if (total > state?.investmentDetails[0]?.investmentAmount) {
                 // showMessage('warning', 'Its Crossing Your Loan Limit...!')
                 return false;
@@ -476,13 +479,12 @@ function Index() {
                 })
             }
         } else {
-            console.log("in--->data")
             setState({
                 ...state,
                 contraTotalAmount: 0
             })
         }
-    }, [state.twoThousCount, state.fiveHundCount, state.hundCount, state.fivtyCount, state.twentyCount, state.tenCount, state.fiveCoinCount, state.twoCoinCount, state.oneCoinCount]);
+    }, [state.twoThousCount, state.fiveHundCount, state.twoHund, state.hundCount, state.fivtyCount, state.twentyCount, state.tenCount, state.fiveCoinCount, state.twoCoinCount, state.oneCoinCount]);
 
     const onHandleCashAmount = (event, name) => {
         let total = 0
@@ -490,6 +492,7 @@ function Index() {
 
         const twoThousand = name === 'twoThousCount' ? enterVal * 2000 : state.twoThousCount * 2000;
         const fiveHund = name === 'fiveHundCount' ? enterVal * 500 : state.fiveHundCount * 500;
+        const twoHund = name === 'twoHund' ? enterVal * 200 : state.twoHund * 200;
         const hund = name === 'hundCount' ? enterVal * 100 : state.hundCount * 100;
         const fivty = name === 'fivtyCount' ? enterVal * 50 : state.fivtyCount * 50;
         const twenty = name === 'twentyCount' ? enterVal * 20 : state.twentyCount * 20;
@@ -497,7 +500,7 @@ function Index() {
         const fiveCoin = name === 'fiveCoinCount' ? enterVal * 5 : state.fiveCoinCount * 5;
         const twoCoin = name === 'twoCoinCount' ? enterVal * 2 : state.twoCoinCount * 2;
         const oneCoin = name === 'oneCoinCount' ? enterVal * 1 : state.oneCoinCount * 1;
-        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
+        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(twoHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
 
         if (total > state?.investmentDetails[0]?.investmentAmount) {
             showMessage('warning', 'Its Crossing Your Loan Limit...!')

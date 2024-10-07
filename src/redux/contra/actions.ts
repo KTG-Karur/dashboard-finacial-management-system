@@ -17,6 +17,25 @@ export const getContraFailure = (errorMessage: string) => ({
 export const resetGetContra = () => ({
   type: 'RESET_GET_CONTRA',
 });
+//Get Reducer Call--->
+export const getContraDetailsRequest = (params?: any) => ({
+  type: 'GET_CONTRA_DETAILS_REQUEST',
+  payload: params,
+});
+
+export const getContraDetailsSuccess = (data: any) => ({
+  type: 'GET_CONTRA_DETAILS_SUCCESS',
+  payload: { data },
+});
+
+export const getContraDetailsFailure = (errorMessage: string) => ({
+  type: 'GET_CONTRA_DETAILS_FAILURE',
+  errorMessage: { errorMessage },
+});
+
+export const resetGetContraDetails = () => ({
+  type: 'RESET_GET_CONTRA_DETAILS',
+});
 
 //Create Reducer Call--->
 export const createContraRequest = (data: any) => ({

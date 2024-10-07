@@ -70,6 +70,13 @@ const cashHistoryFormContainer = [
         "onChange" : "onHandleCashAmount"
     },
     {
+        'label': "Two Hundred's",
+        'name': "twoHund",
+        'inputType': "number",
+        "classStyle" : "col-6",
+        "onChange" : "onHandleCashAmount"
+    },
+    {
         'label': "Hundred's",
         'name': "hundCount",
         'inputType': "number",
@@ -80,21 +87,21 @@ const cashHistoryFormContainer = [
         'label': "Fifty",
         'name': "fivtyCount",
         'inputType': "number",
-        "classStyle" : "col-6",
+        "classStyle" : "col-4",
         "onChange" : "onHandleCashAmount"
     },
     {
         'label': "Twenty",
         'name': "twentyCount",
         'inputType': "number",
-        "classStyle" : "col-6",
+        "classStyle" : "col-4",
         "onChange" : "onHandleCashAmount"
     },
     {
         'label': "Ten's",
         'name': "tenCount",
         'inputType': "number",
-        "classStyle" : "col-6",
+        "classStyle" : "col-4",
         "onChange" : "onHandleCashAmount"
     },
     {

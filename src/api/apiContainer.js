@@ -46,6 +46,7 @@ const apiContainer = {
   faq: "/faq",
   uploadImages: "/upload-proof",
   contra: "/contra",
+  contraDetails: "/contra-history-details",
 };
 
 export default apiContainer;

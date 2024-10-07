@@ -131,6 +131,8 @@ import {
     LoanReport,
     Partner,
     CancelledInvestment,
+    Contra,
+    ContraDetails,
 } from './Route_Menu';
 
 
@@ -345,10 +347,6 @@ const AllRoutes = () => {
                             element: <LoadComponent component={BankAccount} />,
                         },
                         {
-                            path: 'expense-entry',
-                            element: <LoadComponent component={ExpenseEntry} />,
-                        },
-                        {
                             path: 'income-entry',
                             element: <LoadComponent component={IncomeEntry} />,
                         },
@@ -408,6 +406,23 @@ const AllRoutes = () => {
                         {
                             path: 'borrower-receipt-pdf',
                             element: <LoadComponent component={BorrowerPdfReceipt} />,
+                        },
+                    ],
+                },
+                {
+                    path: 'accounts',
+                    children: [
+                        {
+                            path: 'expense-entry',
+                            element: <LoadComponent component={ExpenseEntry} />,
+                        },
+                        {
+                            path: 'contra',
+                            element: <LoadComponent component={Contra} />,
+                        },
+                        {
+                            path: 'contra-details',
+                            element: <LoadComponent component={ContraDetails} />,
                         },
                     ],
                 },

@@ -1,12 +1,15 @@
 // employee/reducers.ts
 const initialState = {
   getContraList: [],
+  getContraDetailsList: [],
   createContraData: null,
   updateContraData: null,
   isLoading: false,
   errorMessage: null,
   getContraSuccess: false,
   getContraFailure: false,
+  getContraDetailsSuccess: false,
+  getContraDetailsFailure: false,
   createContraSuccess: false,
   createContraFailure: false,
   updateContraSuccess: false,
@@ -39,6 +42,32 @@ export default function contraReducer(state = initialState, action: any) {
         getContraSuccess: false,
         getContraFailure: false,
         getContraList: [],
+        errorMessage: null,
+      };
+    }
+
+    case "GET_CONTRA_DETAILS_SUCCESS": {
+      return {
+        ...state,
+        getContraDetailsSuccess: true,
+        getContraDetailsList: action.payload.data.data,
+        getContraDetailsFailure: false,
+      };
+    }
+    case "GET_CONTRA_DETAILS_FAILURE": {
+      return {
+        ...state,
+        getContraDetailsFailure: true,
+        errorMessage: action.errorMessage.errorMessage,
+        getContraDetailsSuccess: false,
+      };
+    }
+    case "RESET_GET_CONTRA_DETAILS": {
+      return {
+        ...state,
+        getContraDetailsSuccess: false,
+        getContraDetailsFailure: false,
+        getContraDetailsList: [],
         errorMessage: null,
       };
     }

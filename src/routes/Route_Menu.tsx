@@ -57,6 +57,8 @@ export const Faq = React.lazy(() => import('../view/faq'));
 export const LoanReport = React.lazy(() => import('../view/loan-report/loan-report'));
 export const Partner = React.lazy(() => import('../view/partner'));
 export const CancelledInvestment = React.lazy(() => import('../view/borrower-cancel-list'));
+export const Contra = React.lazy(() => import('../view/contra'));
+export const ContraDetails = React.lazy(() => import('../view/contra/contraDetails'));
 
 
 // Loan

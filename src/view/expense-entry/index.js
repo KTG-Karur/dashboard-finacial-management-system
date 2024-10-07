@@ -21,7 +21,7 @@ function Index() {
         getExpensiveTypeSuccess, getExpensiveTypeList, getExpensiveTypeFailure,
         getContraSuccess, getContraList, getContraFailure,
         createExpenseEntrySuccess, createExpenseEntryData, createExpenseEntryFailure,
-        updateExpenseEntrySuccess, updateExpenseEntryData, updateExpenseEntryFailure,errorMessage
+        updateExpenseEntrySuccess, updateExpenseEntryData, updateExpenseEntryFailure, errorMessage
 
     } = appSelector((state) => ({
         getExpenseEntrySuccess: state.expenseEntryReducer.getExpenseEntrySuccess,
@@ -30,7 +30,7 @@ function Index() {
 
         getContraSuccess: state.contraReducer.getContraSuccess,
         getContraList: state.contraReducer.getContraList,
-        getContraFailure: state.contraReducer.getContraFailure,        
+        getContraFailure: state.contraReducer.getContraFailure,
 
         getExpensiveTypeSuccess: state.expensiveTypeReducer.getExpensiveTypeSuccess,
         getExpensiveTypeList: state.expensiveTypeReducer.getExpensiveTypeList,
@@ -73,53 +73,53 @@ function Index() {
             accessor: 'employeeName',
             sort: true,
         },
-        {
-            Header: 'Actions',
-            accessor: 'actions',
-            Cell: ({ row }) => {
-                const activeChecker = row.original.isActive
-                const iconColor = activeChecker ? "text-danger" : "text-warning";
-                const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
-                return (
-                    <div>
-                        <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
-                            <i className={'fe-edit-1'}></i>
-                        </span>
-                        <span
-                            className={`${iconColor} cursor-pointer`}
-                            onClick={() =>
-                                showConfirmationDialog(
-                                    deleteMessage,
-                                    () => onDeleteForm(row.original, row.index, activeChecker),
-                                    'Yes'
-                                )
-                            }>
-                            {
-                                row?.original?.isActive ? <i className={'fe-trash-2'}></i> : <i className={'fas fa-recycle'}></i>
-                            }
-                        </span>
-                    </div>
-                )
-            },
-        },
+        // {
+        //     Header: 'Actions',
+        //     accessor: 'actions',
+        //     Cell: ({ row }) => {
+        //         const activeChecker = row.original.isActive
+        //         const iconColor = activeChecker ? "text-danger" : "text-warning";
+        //         const deleteMessage = activeChecker ? "You want to In-Active...?" : "You want to retrive this Data...?";
+        //         return (
+        //             <div>
+        //                 <span className="text-success  me-2 cursor-pointer" onClick={() => onEditForm(row.original, row.index)}>
+        //                     <i className={'fe-edit-1'}></i>
+        //                 </span>
+        //                 <span
+        //                     className={`${iconColor} cursor-pointer`}
+        //                     onClick={() =>
+        //                         showConfirmationDialog(
+        //                             deleteMessage,
+        //                             () => onDeleteForm(row.original, row.index, activeChecker),
+        //                             'Yes'
+        //                         )
+        //                     }>
+        //                     {
+        //                         row?.original?.isActive ? <i className={'fe-trash-2'}></i> : <i className={'fas fa-recycle'}></i>
+        //                     }
+        //                 </span>
+        //             </div>
+        //         )
+        //     },
+        // },
     ];
 
     const [state, setState] = useState({});
     const [parentList, setParentList] = useState([]);
     const [optionListState, setOptionListState] = useState({
-        expenseTypeList : [],
-        employeeList : [
+        expenseTypeList: [],
+        employeeList: [
             {
-                employeeId : 1,
-                employeeName : "Mohan"
+                employeeId: 1,
+                employeeName: "Mohan"
             },
             {
-                employeeId : 2,
-                employeeName : "Kathir"
+                employeeId: 2,
+                employeeName: "Kathir"
             },
             {
-                employeeId : 3,
-                employeeName : "Naveen"
+                employeeId: 3,
+                employeeName: "Naveen"
             },
         ]
     })
@@ -156,14 +156,14 @@ function Index() {
             setIsLoading(false)
             setOptionListState({
                 ...optionListState,
-                expenseTypeList :getExpensiveTypeList
+                expenseTypeList: getExpensiveTypeList
             })
             dispatch(resetGetExpensiveType())
         } else if (getExpensiveTypeFailure) {
             setIsLoading(false)
             setOptionListState({
                 ...optionListState,
-                expenseTypeList : []
+                expenseTypeList: []
             })
             dispatch(resetGetExpensiveType())
         }
@@ -236,7 +236,7 @@ function Index() {
     };
 
     const onHandleContra = (data, name, uniqueKey) => {
-        if(state.expenseAmount > 0){
+        if (state.expenseAmount > 0) {
             const totalval = data.contraId != 1 ? state?.expenseAmount : 0;
             setState({
                 ...state,
@@ -247,6 +247,7 @@ function Index() {
                 fiveHundCount: 0,
                 hundCount: 0,
                 fivtyCount: 0,
+                twoHund: 0,
                 twentyCount: 0,
                 tenCount: 0,
                 fiveCoinCount: 0,
@@ -280,8 +281,8 @@ function Index() {
                 tempArr[0].formFields = _.concat(formArr, cashHistoryFormContainer)
                 setFormData(tempArr);
             }
-        }else{
-            showMessage('warning','Please Enter Amount...')
+        } else {
+            showMessage('warning', 'Please Enter Amount...')
         }
     }
 
@@ -291,6 +292,7 @@ function Index() {
 
         const twoThousand = name === 'twoThousCount' ? enterVal * 2000 : state.twoThousCount * 2000;
         const fiveHund = name === 'fiveHundCount' ? enterVal * 500 : state.fiveHundCount * 500;
+        const twoHund = name === 'twoHund' ? enterVal * 200 : state.twoHund * 500;
         const hund = name === 'hundCount' ? enterVal * 100 : state.hundCount * 100;
         const fivty = name === 'fivtyCount' ? enterVal * 50 : state.fivtyCount * 50;
         const twenty = name === 'twentyCount' ? enterVal * 20 : state.twentyCount * 20;
@@ -298,7 +300,7 @@ function Index() {
         const fiveCoin = name === 'fiveCoinCount' ? enterVal * 5 : state.fiveCoinCount * 5;
         const twoCoin = name === 'twoCoinCount' ? enterVal * 2 : state.twoCoinCount * 2;
         const oneCoin = name === 'oneCoinCount' ? enterVal * 1 : state.oneCoinCount * 1;
-        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
+        total = parseInt(twoThousand) + parseInt(fiveHund) + parseInt(twoHund) + parseInt(hund) + parseInt(fivty) + parseInt(twenty) + parseInt(ten) + parseInt(fiveCoin) + parseInt(twoCoin) + parseInt(oneCoin)
 
         if (total > state?.expenseAmount) {
             showMessage('warning', 'Its Crossing Your Loan Limit...!')
@@ -331,17 +333,39 @@ function Index() {
     }
 
     const onFormSubmit = async () => {
-        const submitRequest = {
+        let submitRequest = {
             expenseDate: state?.expenseDate || "",
-            expenseTypeId: state?.expenseTypeId || "",
+            expensiveTypeId: state?.expenseTypeId || "",
             description: state?.description || "",
-            createdBy: state?.createdBy || "",
+            createdBy: state?.createdBy || 1,
             expenseAmount: state?.expenseAmount || "",
+            contraId: state?.contraId || "",
+            transactionId: state?.transactionId || "",
+            cashHistory: {
+                contraId: state?.contraId || "",
+                twoThousCount: state?.twoThousCount || 0,
+                fiveHundCount: state?.fiveHundCount || 0,
+                twoHund: state?.twoHund || 0,
+                hundCount: state?.hundCount || 0,
+                fivtyCount: state?.fivtyCount || 0,
+                twentyCount: state?.twentyCount || 0,
+                tenCount: state?.tenCount || 0,
+                fiveCoinCount: state?.fiveCoinCount || 0,
+                twoCoinCount: state?.twoCoinCount || 0,
+                oneCoinCount: state?.oneCoinCount || 0,
+                amount: state?.expenseAmount || 0,
+            },
         }
-        if (isEdit) {
-            dispatch(updateExpenseEntryRequest(submitRequest, selectedItem.expenseEntryId))
+        if (submitRequest.contraId === 1) {
+            delete submitRequest.transactionId
         } else {
-            dispatch(createExpenseEntryRequest(submitRequest))
+            delete submitRequest.cashHistory
+        }
+        console.log(JSON.stringify(submitRequest))
+        if (isEdit) {
+            // dispatch(updateExpenseEntryRequest(submitRequest, selectedItem.expenseEntryId))
+        } else {
+            // dispatch(createExpenseEntryRequest(submitRequest))
         }
     };
 
@@ -355,19 +379,19 @@ function Index() {
 
     return (
         <React.Fragment>
-        <NotificationContainer />
-           { isLoading ? <div className='bg-light opacity-0.25'>
-            <div className="d-flex justify-content-center m-5">
-                <Spinner className='mt-5 mb-5' animation="border" />
-            </div>
+            <NotificationContainer />
+            {isLoading ? <div className='bg-light opacity-0.25'>
+                <div className="d-flex justify-content-center m-5">
+                    <Spinner className='mt-5 mb-5' animation="border" />
+                </div>
             </div> :
-            <Table
-                columns={columns}
-                Title={'Journal'}
-                data={parentList || []}
-                pageSize={25}
-                toggle={createModel}
-            />}
+                <Table
+                    columns={columns}
+                    Title={'Journal'}
+                    data={parentList || []}
+                    pageSize={25}
+                    toggle={createModel}
+                />}
 
             <ModelViewBox
                 modal={modal}
@@ -379,7 +403,13 @@ function Index() {
                 handleSubmit={handleValidation}>
                 <FormLayout
                     dynamicForm={formData}
-                    handleSubmit={onFormSubmit}
+                    handleSubmit={() =>
+                        showConfirmationDialog(
+                            'You Cant Edit Or Delete this Data Once Recorded...!',
+                            () => onFormSubmit(),
+                            'Okey'
+                        )
+                    }
                     optionListState={optionListState}
                     setState={setState}
                     state={state}
@@ -387,9 +417,10 @@ function Index() {
                     noOfColumns={1}
                     errors={errors}
                     setErrors={setErrors}
-                    onChangeCallBack={{ onHandleContra: onHandleContra,
-                         onHandleCashAmount: onHandleCashAmount
-                         }} 
+                    onChangeCallBack={{
+                        onHandleContra: onHandleContra,
+                        onHandleCashAmount: onHandleCashAmount
+                    }}
                 />
             </ModelViewBox>
         </React.Fragment>
