@@ -96,7 +96,7 @@ function Index() {
     }, []);
 
     const onContraDetailsView =(data, index)=>{
-        alert("in---->")
+        console.log(data)
         const req={
             contraId : data.contraId
         }
@@ -119,19 +119,20 @@ function Index() {
     useEffect(() => {
         if (getContraDetailsSuccess) {
             setIsLoading(false)
+            const url = '/accounts/contra-details'
             if(selectedItem.contraId == 1){
                 setState({
                     ...state,
                     cashCountDetails : getContraDetailsList.cashHistoryHistoryDetails,
                     cashHistoryDetails : getContraDetailsList.contraHistoryDetails
                 })
-                const url = '/accounts/contra-details'
                 navigate(url, { state: { contraDetails: getContraDetailsList.cashHistoryHistoryDetails, contraHistory : getContraDetailsList.contraHistoryDetails, selectedData: selectedItem} });
             }else{
                 setState({
                     ...state,
                     contraDetails : getContraDetailsList,
                 })
+                navigate(url, { state: { contraDetails: [], contraHistory : getContraDetailsList, selectedData: selectedItem} });
             }
             // setParentList(getContraDetailsList)
             dispatch(resetGetContraDetails())

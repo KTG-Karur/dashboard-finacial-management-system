@@ -494,9 +494,9 @@ function Index() {
 
         //approval to Cancelation
         if (statusId == 3) {
-            req.cancelledBy = 1;
-            req.cancelledDate = currentDate.disbursedDate;
-            req.reasonData = currentDate.reason;
+            req.approvedBy = 1;
+            req.disbursedDate = currentDate.disbursedDate;
+            req.reason = currentDate.reason;
             console.log("Cancelation")
             console.log(req)
         }

@@ -59,6 +59,7 @@ export const Partner = React.lazy(() => import('../view/partner'));
 export const CancelledInvestment = React.lazy(() => import('../view/borrower-cancel-list'));
 export const Contra = React.lazy(() => import('../view/contra'));
 export const ContraDetails = React.lazy(() => import('../view/contra/contraDetails'));
+export const LedgerReport = React.lazy(() => import('../view/ledger-report/ledger'));
 
 
 // Loan

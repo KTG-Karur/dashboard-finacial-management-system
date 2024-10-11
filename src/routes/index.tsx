@@ -133,6 +133,7 @@ import {
     CancelledInvestment,
     Contra,
     ContraDetails,
+    LedgerReport,
 } from './Route_Menu';
 
 
@@ -432,6 +433,10 @@ const AllRoutes = () => {
                         {
                             path: 'loan-report',
                             element: <LoadComponent component={LoanReport} />,
+                        },
+                        {
+                            path: 'ledger-report',
+                            element: <LoadComponent component={LedgerReport} />,
                         },
                     ],
                 },

@@ -23,7 +23,7 @@ const ContraDetails = () => {
     const { contraDetails, contraHistory, selectedData } = location.state || false;
 
     useEffect(() => {
-        console.log(contraHistory)
+        console.log(selectedData.contraId != 1)
     }, []);
 
     const columns = [
@@ -79,18 +79,12 @@ const ContraDetails = () => {
         },
     ]
 
-    const tableColumns = [
+    const tableCashColumns = [
         {
             Header: 'S.No',
             accessor: 'id',
             Cell: (row) => <div>{row?.row?.index + 1}</div>,
         },
-        // {
-        //     Header: 'Created Date',
-        //     accessor: 'createdAt',
-        //     sort: true,
-        //     Cell: (row) => <div>{dateConversion(row.original.createdAt, "DD-MM-YYYY") }</div>,
-        // },
         {
             Header: 'Created Date',
             accessor: 'createdAt',
@@ -112,7 +106,7 @@ const ContraDetails = () => {
             accessor: 'isCredit',
             Cell: ({ row }) => (
                 <div>
-                    {row?.original?.isCredit ? (
+                    {row?.original?.isCredit === 1 ? (
                         <Badge bg={'success'}>Credit</Badge>
                     ) : (
                         <Badge bg={'danger'}>Debit</Badge>
@@ -122,8 +116,47 @@ const ContraDetails = () => {
         },
     ];
 
-    const onSearchDate = () => {
-    }
+    const tableNeftColumns = [
+        {
+            Header: 'S.No',
+            accessor: 'id',
+            Cell: (row) => <div>{row?.row?.index + 1}</div>,
+        },
+        {
+            Header: 'Created Date',
+            accessor: 'createdAt',
+            Cell: ({ row }) => {
+                return (
+                    <div>
+                       {dateConversion(row.original.createdAt, "DD-MM-YYYY") }
+                    </div>
+                )
+            },
+        },
+        {
+            Header: 'Transaction ID',
+            accessor: 'transactionId',
+            sort: true,
+        },
+        {
+            Header: 'Amount',
+            accessor: 'amount',
+            sort: true,
+        },
+        {
+            Header: 'Status',
+            accessor: 'isCredit',
+            Cell: ({ row }) => (
+                <div>
+                    {row?.original?.isCredit == 1 ? (
+                        <Badge bg={'success'}>Credit</Badge>
+                    ) : (
+                        <Badge bg={'danger'}>Debit</Badge>
+                    )}
+                </div>
+            ),
+        },
+    ];
 
     return (
         <Row>
@@ -151,12 +184,12 @@ const ContraDetails = () => {
                                 </div>
                                 <div className="">
                                     <h4>Type : {selectedData.contraId != 1 ? "NEFT" : "CASH"} </h4>
-                                    <h4>Balance Amount : {amountFormat(contraDetails[0]?.totalAmount || 0)} </h4>
+                                    <h4>Balance Amount : {amountFormat(selectedData?.totalAmount || 0)} </h4>
                                 </div>
                             </div>
                             <hr />
                         </div>
-                        <Row>
+                       {selectedData.contraId == 1 && <Row>
                             {
                                 columns.map((item, index) => (
                                     <Col xl={4} lg={4} md={6} sm={6} key={index}>
@@ -174,27 +207,16 @@ const ContraDetails = () => {
                                     </Col>
                                 ))
                             }
-                        </Row>
+                        </Row>}
                     </Card.Body>
                     <Table
-                        columns={tableColumns}
+                        columns={selectedData.contraId != 1 ? tableNeftColumns : tableCashColumns}
                         Title={'Contra History'}
                         data={contraHistory || []}
                         pageSize={25}
                         // toggle={createModel}
                         // btnName={'Transfer'}
                     />
-
-                    <div className='d-flex justify-content-end mb-5 mx-2'>
-                        <Button
-                            variant="primary"
-                            className="waves-effect waves-light"
-                            onClick={onSearchDate}>
-                            <i className={`mdi mdi-clipboard-text-search mx-1 `}></i>
-                            {"Cash History >>"}
-                        </Button>
-                    </div>
-
                 </Card>
 
             </Col>

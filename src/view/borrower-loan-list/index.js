@@ -248,9 +248,13 @@ function Index() {
     useEffect(() => {
         if (getInvestmentDetailsSuccess) {
             setIsLoading(false)
+            const chargesInfoDetails = getInvestmentDetailsList[0]?.investmentChargesInfo || []
+            let documentCharges = _.sumBy(chargesInfoDetails, 'chargeAmount')
+
             setState({
                 ...state,
                 investmentDetails: getInvestmentDetailsList,
+                documentCharges: documentCharges,
                 loanDate: dateConversion(getInvestmentDetailsList[0].loanDate, "YYYY-MM-DD")
             })
             setModal(true)
@@ -375,7 +379,9 @@ function Index() {
             dueDate: moment(state.disbursedDate).add(1, 'months').date(10).format("YYYY-MM-DD"),
             approvedBy: 1,
             contraId: state?.contraId || "",
+            isCredit: 1,
             contraTotalAmount: state?.investmentDetails[0]?.investmentAmount,
+            documentCharges: state?.documentCharges,
             cashHistory: {
                 contraId: state?.contraId || "",
                 twoThousCount: state?.twoThousCount || 0,

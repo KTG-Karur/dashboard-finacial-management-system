@@ -43,7 +43,7 @@ const Navigate: NavigateTypes[] = [
     },
     { label: 'Invesment', isTitle: true },
     {
-        label: 'Invesment',
+        label: 'Investment',
         isTitle: false,
         icon: 'mdi mdi-chart-bar',
         children: [
@@ -153,12 +153,31 @@ const Navigate: NavigateTypes[] = [
             },
         ]
     },
-    // {
-    //     label: 'Invenstors',
-    //     isTitle: false,
-    //     icon: 'mdi mdi-account-cash',
-    //     url: '/view/borrower',
-    // },
+    {
+        label: 'Day Book',
+        isTitle: false,
+        icon: 'mdi mdi-account-check',
+        url: '/view/day-book',
+    },
+    { label: 'Reports', isTitle: true },
+    {
+        label: 'Ledger Report',
+        isTitle: false,
+        icon: 'mdi mdi-account-cash-outline',
+        children: [
+            {
+                label: 'Ledger',
+                url: '/report/ledger-report',
+                parentKey: 'Ledger Report',
+            },
+        ]
+    },
+    {
+        label: 'Collection Report',
+        isTitle: false,
+        icon: 'mdi mdi-account-cash',
+        url: '/view/monthly-reciept',
+    },
     // {
     //     label: 'Dashboard',
     //     isTitle: false,
@@ -382,12 +401,6 @@ const Navigate: NavigateTypes[] = [
     //     ]
     // },
     { label: 'Budget Entry', isTitle: true },
-    {
-        label: 'Day Book',
-        isTitle: false,
-        icon: 'mdi mdi-account-check',
-        url: '/view/day-book',
-    },
     {
         label: 'Ledger Book',
         isTitle: false,

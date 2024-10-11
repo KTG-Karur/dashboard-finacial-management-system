@@ -340,6 +340,7 @@ function Index() {
             createdBy: state?.createdBy || 1,
             expenseAmount: state?.expenseAmount || "",
             contraId: state?.contraId || "",
+            isCredit: 0,
             transactionId: state?.transactionId || "",
             cashHistory: {
                 contraId: state?.contraId || "",
@@ -361,11 +362,10 @@ function Index() {
         } else {
             delete submitRequest.cashHistory
         }
-        console.log(JSON.stringify(submitRequest))
         if (isEdit) {
-            // dispatch(updateExpenseEntryRequest(submitRequest, selectedItem.expenseEntryId))
+            dispatch(updateExpenseEntryRequest(submitRequest, selectedItem.expenseEntryId))
         } else {
-            // dispatch(createExpenseEntryRequest(submitRequest))
+            dispatch(createExpenseEntryRequest(submitRequest))
         }
     };
 

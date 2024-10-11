@@ -146,7 +146,7 @@ function Index() {
         setIsLoading(true)
         const req = {
             categoryId: 2,
-            paymentStatusId : 10
+            paymentStatusId: 10
         }
         dispatch(getDuePaymentRequest(req));
     }, []);
@@ -173,16 +173,21 @@ function Index() {
         if (getDuePaymentDetailsSuccess) {
             setIsLoading(false)
             let duePaymentHistoryCreateReq = []
-            getDuePaymentDetailsList.map((itm, idx) => {
-                const pushReq = {
-                    duePaymentId: itm?.duePaymentId || "",
-                    createdBy: 1,
-                    categoryId: 2,
-                    dueDate: itm.dueStartDate ? dateConversion(itm.dueStartDate, "YYYY-MM-DD") : ""
-                }
-                duePaymentHistoryCreateReq.push(pushReq)
-            })
-            dispatch(createDuePaymentHistoryRequest(duePaymentHistoryCreateReq))
+            console.log(getDuePaymentDetailsList)
+            if (getDuePaymentDetailsList.length > 0) {
+                // getDuePaymentDetailsList.map((itm, idx) => {
+                //     const pushReq = {
+                //         duePaymentId: itm?.duePaymentId || "",
+                //         createdBy: 1,
+                //         categoryId: 2,
+                //         dueDate: itm.dueStartDate ? dateConversion(itm.dueStartDate, "YYYY-MM-DD") : ""
+                //     }
+                //     duePaymentHistoryCreateReq.push(pushReq)
+                // })
+                // dispatch(createDuePaymentHistoryRequest(duePaymentHistoryCreateReq))
+            } else {
+                showMessage('warning', 'Loan Not Founded...!')
+            }
             dispatch(resetGetDueDetailsPayment())
         } else if (getDuePaymentDetailsFailure) {
             setIsLoading(false)
@@ -268,7 +273,7 @@ function Index() {
         setModal(true)
     };
 
-    const onDownloadReceipt = (data, index)=>{
+    const onDownloadReceipt = (data, index) => {
         navigate('/view/monthly-receipt-pdf', { state: { data: data } });
     }
 
@@ -323,7 +328,7 @@ function Index() {
 
     const generateReceipt = () => {
         const req = {
-            categoryId: 2,
+            // categoryId: 2,
             dueDate: moment().date(10).format('YYYY-MM-DD'),
             isForceClose: 0
         }
@@ -340,13 +345,14 @@ function Index() {
             </div> :
                 <Table
                     columns={columns}
-                    Title={'EMI Receipt List'}
+                    Title={'Collection Report'}
                     data={parentList || []}
-                    pageSize={10}
+                    pageSize={25}
                     btnName={"Generate Receipt"}
                     addBtn={!buttonStatus}
                     toggle={generateReceipt}
-                />}
+                />
+            }
 
             <ModelViewBox
                 modal={modal}
